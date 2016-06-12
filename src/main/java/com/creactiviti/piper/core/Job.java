@@ -4,7 +4,7 @@ public class Job {
 
   private String id;
   private String pipelineId;
-  private String pipeline;
+  private JobStatus status;
 
   public String getId() {
     return id;
@@ -20,6 +20,14 @@ public class Job {
   
   public void setPipelineId(String aPipelineId) {
     pipelineId = aPipelineId;
+  }
+  
+  public JobStatus getStatus() {
+    return status;
+  }
+  
+  public void setStatus(JobStatus aStatus) {
+    status = aStatus;
   }
   
 }

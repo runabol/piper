@@ -1,11 +1,11 @@
 package com.creactiviti.piper.core;
 
-public enum JobStatus {
+public enum TaskStatus {
 
-  CREATED,
+  QUEUED,
   STARTED,
-  STOPPED,
   FAILED,
+  CANCELLED,
   COMPLETED
   
 }

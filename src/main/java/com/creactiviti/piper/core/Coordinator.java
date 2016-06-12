@@ -36,4 +36,14 @@ public interface Coordinator {
    */
   Job resume (String aJobId);
   
+  /**
+   * Retrieve a Job instance by its ID. 
+   * 
+   * @param aJobId
+   *          The ID of the job
+   * @return The Job instance.
+   */
+  Job get (String aJobId);
+  
+  
 }
