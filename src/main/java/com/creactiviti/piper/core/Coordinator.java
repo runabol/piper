@@ -1,14 +1,39 @@
 package com.creactiviti.piper.core;
 
 /**
- * The central interface responsible for coordinating all 
- * jobs on the system.
+ * The central interface responsible for coordinating 
+ * and executing jobs.
  * 
  * @author Arik Cohen
  * @since Jun 12, 2016
  */
 public interface Coordinator {
 
-  void start ();
+  /**
+   * Starts a job instance.
+   * 
+   * @param aPipelineId
+   *          The ID of the pipeline that will execute the job.
+   * @param aContext
+   *          The context (variables) to start the job with.
+   * @return
+   */
+  Job start (String aPipelineId, Context aContext);
+  
+  /**
+   * Stop a running job.
+   * 
+   * @param aJobId
+   *          The id of the job to stop
+   */
+  Job stop (String aJobId);
+
+  /**
+   * Resume a stopped or failed job.
+   * 
+   * @param aJobId
+   *          The id of the job to resume.
+   */
+  Job resume (String aJobId);
   
 }
