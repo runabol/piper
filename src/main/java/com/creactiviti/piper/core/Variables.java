@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.apache.commons.beanutils.ConvertUtils;
 
-public class SmartMap implements Map<String, Object> {
+public class Variables implements Map<String, Object> {
 
   private final Map<String, Object> map = new HashMap<String, Object> ();;
 
@@ -57,8 +57,8 @@ public class SmartMap implements Map<String, Object> {
   }
 
   @Override
-  public void putAll(Map<? extends String, ? extends Object> aM) {
-    map.putAll(aM);
+  public void putAll(Map<? extends String, ? extends Object> aVariables) {
+    map.putAll(aVariables);
   }
 
   @Override
