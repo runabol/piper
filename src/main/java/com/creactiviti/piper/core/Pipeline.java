@@ -8,7 +8,7 @@ public interface Pipeline {
 
   String getName ();
   
-  List<Task> getTasks ();
+  List<Step> getSteps ();
 
   boolean isActive ();
   

@@ -11,7 +11,7 @@ import org.apache.commons.beanutils.ConvertUtils;
  * @author Arik Cohen
  * @since Jun 12, 2016
  */
-public class Variables implements Map<String, Object> {
+public class MapObject implements Map<String, Object> {
 
   private final Map<String, Object> map = new HashMap<String, Object> ();;
 
