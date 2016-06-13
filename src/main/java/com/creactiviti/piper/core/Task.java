@@ -4,6 +4,6 @@ public interface Task {
 
   String getId ();
 
-  Variables getVariables ();
+  Variables getParameters ();
   
 }

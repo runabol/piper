@@ -14,11 +14,10 @@ public interface Coordinator {
    * 
    * @param aPipelineId
    *          The ID of the pipeline that will execute the job.
-   * @param aContext
-   *          The context (variables) to start the job with.
-   * @return
+   * @return Job
+   *           The instance of the Job
    */
-  Job start (String aPipelineId, Variables aVariables);
+  Job start (String aPipelineId);
   
   /**
    * Stop a running job.

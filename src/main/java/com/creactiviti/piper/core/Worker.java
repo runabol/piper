@@ -9,7 +9,7 @@ package com.creactiviti.piper.core;
  * on a seperate node altogether.</p>
  * 
  * <p>Communication between the two is decoupled through the 
- * {@link Messager} interface.</p>
+ * {@link Messenger} interface.</p>
  * 
  * @author Arik Cohen
  * @since Jun 12, 2016
