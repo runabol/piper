@@ -18,7 +18,7 @@ public interface Coordinator {
    *          The context (variables) to start the job with.
    * @return
    */
-  Job start (String aPipelineId, Context aContext);
+  Job start (String aPipelineId, Variables aVariables);
   
   /**
    * Stop a running job.
