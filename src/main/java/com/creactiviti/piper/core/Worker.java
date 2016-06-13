@@ -18,7 +18,8 @@ package com.creactiviti.piper.core;
 public interface Worker {
 
   /**
-   * Start the execution of a {@link Task} asynchronously. 
+   * Start the execution of a {@link Task}. Implementors
+   * are expected to execute the task asynchronously. 
    * 
    * @param aTask
    *          The task to execute.
@@ -29,6 +30,7 @@ public interface Worker {
    * Stop the execution of a running task.
    * 
    * @param aTaskId
+   *          The ID of the task to stop.
    */
   void stop (String aTaskId);
   

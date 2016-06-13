@@ -1,7 +1,7 @@
 package com.creactiviti.piper.core;
 
-public interface Task {
+public interface JobRepository {
 
-  String getId ();
+  
   
 }

@@ -1,6 +1,6 @@
 package com.creactiviti.piper.core;
 
-public interface Task {
+public interface Pipeline {
 
   String getId ();
   
