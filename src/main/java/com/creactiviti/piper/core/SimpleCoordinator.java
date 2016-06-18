@@ -19,6 +19,7 @@ public class SimpleCoordinator implements Coordinator {
     String pipelineId = (String) aInput.get(aInput.get(PIPELINE_ID));
     Assert.notNull(pipelineId,String.format("Missing mandatory parameter %s", PIPELINE_ID));
     Pipeline pipeline = pipelineRepository.find(pipelineId);
+    Assert.notNull(pipeline,String.format("Unkown pipeline %s", pipelineId));
     return new SimpleJob(pipeline);
   }
 
