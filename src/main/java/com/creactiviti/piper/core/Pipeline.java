@@ -22,8 +22,8 @@ public interface Pipeline {
   String getName ();
   
   /**
-   * Returns the steps that make up the pipeline.
+   * Returns the tasks that make up the pipeline.
    */
-  List<PipelineStep> getSteps ();
+  List<Task> getTasks ();
 
 }
