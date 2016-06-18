@@ -6,7 +6,7 @@ package com.creactiviti.piper.core;
  * @author Arik Cohen
  * @since Jun 12, 2016
  */
-public interface Job extends Accessor {
+public interface Job {
 
   /**
    * Return the ID of the job.
