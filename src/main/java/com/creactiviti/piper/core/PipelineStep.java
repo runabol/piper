@@ -1,13 +1,15 @@
 package com.creactiviti.piper.core;
 
 
-public interface Step {
+public interface PipelineStep {
 
   String getHandler ();
   
   String getReturns ();
   
   Object get (String aKey);
+  
+  <T> T get (String aKey, Class<T> aReturnType);
   
   String getString (String aKey);
   
