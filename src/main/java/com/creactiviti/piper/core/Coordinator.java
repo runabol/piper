@@ -1,5 +1,7 @@
 package com.creactiviti.piper.core;
 
+import java.util.Map;
+
 /**
  * The central interface responsible for coordinating 
  * and executing jobs.
@@ -17,7 +19,7 @@ public interface Coordinator {
    * @return Job
    *           The instance of the Job
    */
-  Job start (String aPipelineId);
+  Job start (Map<String, Object> aInput);
   
   /**
    * Stop a running job.

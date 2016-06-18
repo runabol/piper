@@ -19,8 +19,8 @@ public class JobController {
   private Coordinator coordinator;
   
   @RequestMapping(value="/start",method=RequestMethod.POST)
-  public Job start (@RequestBody Map<String, Object> aRequest) {
-    return coordinator.start((String)aRequest.get("pipeline"));
+  public Job start (@RequestBody Map<String, Object> aJobRequest) {
+    return coordinator.start(aJobRequest);
   }
   
 }
