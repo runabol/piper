@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnProperty(name="piper.messenger.provider",havingValue="local")
-public class Local implements Messenger {
+public class LocalMessenger implements Messenger {
 
   @Override
   public void send (String aRoutingKey, Object aMessage) {
