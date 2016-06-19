@@ -26,6 +26,11 @@ public class SimpleTask extends MapObject implements Task {
   }
   
   @Override
+  public String getNode() {
+    return getString("node");
+  }
+  
+  @Override
   public TaskStatus getTaskStatus() {
     return taskStatus;
   }

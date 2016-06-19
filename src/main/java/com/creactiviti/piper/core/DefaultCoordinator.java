@@ -31,6 +31,7 @@ public class DefaultCoordinator implements Coordinator {
     Pipeline pipeline = aJob.getPipeline();
     if(pipeline.hasNextTask()) {
       Task nextTask = pipeline.nextTask();
+      messenger.send(nextTask.getNode(), nextTask);
     }
     else {
       aJob.complete();
