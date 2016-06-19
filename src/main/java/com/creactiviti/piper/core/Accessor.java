@@ -2,24 +2,26 @@ package com.creactiviti.piper.core;
 
 public interface Accessor {
 
-  Object get (String aKey);
+  Object get (Object aKey);
   
-  <T> T get (String aKey, Class<T> aReturnType);
+  <T> T get (Object aKey, Class<T> aReturnType);
   
-  String getString (String aKey);
+  <T> T get (Object aKey, Class<T> aReturnType, T aDefaultValue);
   
-  String getString (String aKey, String aDefaultValue);
+  String getString (Object aKey);
   
-  Long getLong (String aKey);
+  String getString (Object aKey, String aDefaultValue);
   
-  Long getLong (String aKey, long aDefaultValue);
+  Long getLong (Object aKey);
+  
+  Long getLong (Object aKey, long aDefaultValue);
 
-  Double getDouble (String aKey);
+  Double getDouble (Object aKey);
   
-  Double getDouble (String aKey, double aDefaultValue);
+  Double getDouble (Object aKey, double aDefaultValue);
   
-  Integer getInteger (String aKey);
+  Integer getInteger (Object aKey);
   
-  Integer getInteger (String aKey, int aDefaultValue);
+  Integer getInteger (Object aKey, int aDefaultValue);
   
 }

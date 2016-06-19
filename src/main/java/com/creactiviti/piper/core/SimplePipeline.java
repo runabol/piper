@@ -2,6 +2,8 @@ package com.creactiviti.piper.core;
 
 import java.util.List;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 public class SimplePipeline implements Pipeline {
 
   private final String id;
@@ -28,5 +30,9 @@ public class SimplePipeline implements Pipeline {
   public List<Task> getTasks() {
     return tasks;
   }
-  
+
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this);
+  }
 }

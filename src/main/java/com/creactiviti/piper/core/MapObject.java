@@ -1,7 +1,6 @@
 package com.creactiviti.piper.core;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -11,9 +10,13 @@ import org.apache.commons.beanutils.ConvertUtils;
  * @author Arik Cohen
  * @since Jun 12, 2016
  */
-public class MapObject implements Map<String, Object> {
+public class MapObject implements Map<String, Object>, Accessor {
 
-  private final Map<String, Object> map = new HashMap<String, Object> ();;
+  private final Map<String, Object> map;
+  
+  public MapObject (Map<String, Object> aSource) {
+    map = aSource;
+  }
 
   @Override
   public int size() {
@@ -40,11 +43,13 @@ public class MapObject implements Map<String, Object> {
     return map.get(aKey);
   }
   
+  @Override
   public String getString (Object aKey) {
     Object value = get(aKey);
     return ConvertUtils.convert(value);
   }
   
+  @Override
   public String getString (Object aKey, String aDefault) {
     String value = getString(aKey);
     return value != null ? value : aDefault;
@@ -83,6 +88,54 @@ public class MapObject implements Map<String, Object> {
   @Override
   public Set<java.util.Map.Entry<String, Object>> entrySet() {
     return map.entrySet();
+  }
+
+  @Override
+  public <T> T get(Object aKey, Class<T> aReturnType) {
+    Object value = get(aKey);
+    if(value == null) {
+      return null;
+    }
+    return (T) ConvertUtils.convert(value, aReturnType);
+  }
+  
+  @Override
+  public <T> T get(Object aKey, Class<T> aReturnType, T aDefaultValue) {
+    Object value = get(aKey);
+    if(value == null) {
+      return aDefaultValue;
+    }
+    return (T) ConvertUtils.convert(value, aReturnType);
+  }
+
+  @Override
+  public Long getLong(Object aKey) {
+    return get(aKey,Long.class);
+  }
+
+  @Override
+  public Long getLong(Object aKey, long aDefaultValue) {
+    return get(aKey,Long.class,aDefaultValue);
+  }
+
+  @Override
+  public Double getDouble(Object aKey) {
+    return get(aKey,Double.class);
+  }
+
+  @Override
+  public Double getDouble(Object aKey, double aDefaultValue) {
+    return get(aKey,Double.class,aDefaultValue);
+  }
+
+  @Override
+  public Integer getInteger(Object aKey) {
+    return get(aKey,Integer.class);
+  }
+
+  @Override
+  public Integer getInteger(Object aKey, int aDefaultValue) {
+    return get(aKey, Integer.class, aDefaultValue);
   }
   
 }

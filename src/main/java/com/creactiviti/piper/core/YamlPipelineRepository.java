@@ -1,10 +1,10 @@
 package com.creactiviti.piper.core;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
@@ -34,11 +34,14 @@ public class YamlPipelineRepository implements PipelineRepository  {
 
   private Pipeline read (Resource aResource) {
     try {
+      String uri = aResource.getURI().toString();
+      String id = uri.substring(uri.lastIndexOf("pipelines/")+10,uri.lastIndexOf('.'));
       String yaml = IOUtils.toString(aResource.getInputStream());
       ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
       Map<String,Object> yamlMap = mapper.readValue(yaml, Map.class);
-      List<Map<String,Object>> tasks = (List<Map<String, Object>>) yamlMap.get("tasks");
-      return new SimplePipeline(aResource.getFilename(), (String)yamlMap.get("name"), new ArrayList<Task>());
+      List<Map<String,Object>> rawTasks = (List<Map<String, Object>>) yamlMap.get("tasks");
+      List<Task> tasks = rawTasks.stream().map(rt -> new SimpleTask(rt)).collect(Collectors.toList());
+      return new SimplePipeline(id, (String)yamlMap.get("name"), tasks);
     }
     catch (IOException e) {
       throw Throwables.propagate(e);
@@ -47,8 +50,9 @@ public class YamlPipelineRepository implements PipelineRepository  {
 
   @Override
   public Pipeline find(String aId) {
-    findAll();
-    return null;
+    List<Pipeline> pipelines = findAll();
+    Optional<Pipeline> findFirst = pipelines.stream().filter(p->p.getId().equals(aId)).findFirst();
+    return findFirst.isPresent()?findFirst.get():null;
   }
 
 }
