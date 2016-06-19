@@ -10,7 +10,7 @@ import org.springframework.util.Assert;
 public class DefaultCoordinator implements Coordinator {
 
   @Autowired private Messenger messenger;
-  @Autowired private PipelineRepository pipelineRepository;
+  @Autowired private PipelineFactory pipelineRepository;
   
   private static final String PIPELINE_ID = "pipelineId";
   
@@ -18,7 +18,7 @@ public class DefaultCoordinator implements Coordinator {
   public Job start(Map<String, Object> aInput) {
     String pipelineId = (String) aInput.get(PIPELINE_ID);
     Assert.notNull(pipelineId,String.format("Missing mandatory parameter %s", PIPELINE_ID));
-    Pipeline pipeline = pipelineRepository.find(pipelineId);
+    Pipeline pipeline = pipelineRepository.create(pipelineId);
     Assert.notNull(pipeline,String.format("Unkown pipeline: %s", pipelineId));
     return new SimpleJob(pipeline);
   }

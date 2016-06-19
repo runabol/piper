@@ -18,10 +18,9 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Throwables;
 
 @Component
-public class YamlPipelineRepository implements PipelineRepository  {
+public class YamlPipelineRepository implements PipelineFactory  {
 
-  @Override
-  public List<Pipeline> findAll() {
+  private List<Pipeline> pipelines () {
     try {
       ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
       Resource[] resources = resolver.getResources("classpath:pipelines/**/*.yaml");
@@ -49,8 +48,8 @@ public class YamlPipelineRepository implements PipelineRepository  {
   }
 
   @Override
-  public Pipeline find(String aId) {
-    List<Pipeline> pipelines = findAll();
+  public Pipeline create (String aId) {
+    List<Pipeline> pipelines = pipelines();
     Optional<Pipeline> findFirst = pipelines.stream().filter(p->p.getId().equals(aId)).findFirst();
     return findFirst.isPresent()?findFirst.get():null;
   }
