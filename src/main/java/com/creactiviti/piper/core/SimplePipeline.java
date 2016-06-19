@@ -9,6 +9,7 @@ public class SimplePipeline implements Pipeline {
   private final String id;
   private final String name;
   private final List<Task> tasks;
+  private int currentTask = 0;
   
   public SimplePipeline(String aId, String aName, List<Task> aTasks) {
     id = aId;
@@ -29,6 +30,16 @@ public class SimplePipeline implements Pipeline {
   @Override
   public List<Task> getTasks() {
     return tasks;
+  }
+  
+  @Override
+  public Task nextTask() {
+    return tasks.get(currentTask);
+  }
+  
+  @Override
+  public boolean hasNextTask() {
+    return currentTask < tasks.size();
   }
 
   @Override

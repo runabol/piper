@@ -26,4 +26,8 @@ public interface Pipeline {
    */
   List<Task> getTasks ();
 
+  boolean hasNextTask ();
+  
+  Task nextTask ();
+
 }

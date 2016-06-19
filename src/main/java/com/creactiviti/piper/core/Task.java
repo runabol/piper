@@ -8,4 +8,6 @@ public interface Task extends Accessor {
   
   String getReturns ();
   
+  TaskStatus getTaskStatus ();
+  
 }

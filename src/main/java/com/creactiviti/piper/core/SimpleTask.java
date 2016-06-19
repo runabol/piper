@@ -4,6 +4,8 @@ import java.util.Map;
 
 public class SimpleTask extends MapObject implements Task {
 
+  private TaskStatus taskStatus = TaskStatus.CREATED;
+  
   public SimpleTask(Map<String, Object> aSource) {
     super(aSource);
   }
@@ -21,6 +23,11 @@ public class SimpleTask extends MapObject implements Task {
   @Override
   public String getReturns() {
     return getString("returns");
+  }
+  
+  @Override
+  public TaskStatus getTaskStatus() {
+    return taskStatus;
   }
   
 }

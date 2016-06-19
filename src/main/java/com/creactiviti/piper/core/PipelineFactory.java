@@ -11,8 +11,8 @@ import java.util.List;
  */
 public interface PipelineFactory {
   
-  Pipeline getPipeline (String aId);
+  Pipeline createPipeline (String aId);
   
-  List<Pipeline> getPipelines ();
+  List<Pipeline> createPipelines ();
 
 }

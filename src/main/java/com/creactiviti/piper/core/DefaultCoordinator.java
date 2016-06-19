@@ -11,16 +11,31 @@ public class DefaultCoordinator implements Coordinator {
 
   @Autowired private Messenger messenger;
   @Autowired private PipelineFactory pipelineFactory;
+  @Autowired private JobRepository jobRepository;
   
   private static final String PIPELINE_ID = "pipelineId";
   
   @Override
-  public Job start(Map<String, Object> aInput) {
+  public Job start (Map<String, Object> aInput) {
     String pipelineId = (String) aInput.get(PIPELINE_ID);
     Assert.notNull(pipelineId,String.format("Missing mandatory parameter %s", PIPELINE_ID));
-    Pipeline pipeline = pipelineFactory.getPipeline(pipelineId);
+    Pipeline pipeline = pipelineFactory.createPipeline(pipelineId);
     Assert.notNull(pipeline,String.format("Unkown pipeline: %s", pipelineId));
-    return new SimpleJob(pipeline);
+    SimpleJob simpleJob = new SimpleJob(pipeline);
+    jobRepository.save(simpleJob);
+    run(simpleJob);
+    return simpleJob;
+  }
+  
+  private void run (Job aJob) {
+    Pipeline pipeline = aJob.getPipeline();
+    if(pipeline.hasNextTask()) {
+      Task nextTask = pipeline.nextTask();
+    }
+    else {
+      aJob.complete();
+      jobRepository.save(aJob);
+    }
   }
 
   @Override

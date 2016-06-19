@@ -18,5 +18,8 @@ public interface Job {
    * on which the job is based. 
    */
   Pipeline getPipeline ();
+
+  JobStatus getStatus ();
   
+  void complete ();
 }

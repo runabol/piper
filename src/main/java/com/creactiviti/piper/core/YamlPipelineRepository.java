@@ -21,7 +21,7 @@ import com.google.common.base.Throwables;
 public class YamlPipelineRepository implements PipelineFactory  {
 
   @Override
-  public List<Pipeline> getPipelines () {
+  public List<Pipeline> createPipelines () {
     try {
       ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
       Resource[] resources = resolver.getResources("classpath:pipelines/**/*.yaml");
@@ -49,8 +49,8 @@ public class YamlPipelineRepository implements PipelineFactory  {
   }
 
   @Override
-  public Pipeline getPipeline (String aId) {
-    List<Pipeline> pipelines = getPipelines ();
+  public Pipeline createPipeline (String aId) {
+    List<Pipeline> pipelines = createPipelines ();
     Optional<Pipeline> findFirst = pipelines.stream().filter(p->p.getId().equals(aId)).findFirst();
     return findFirst.isPresent()?findFirst.get():null;
   }
