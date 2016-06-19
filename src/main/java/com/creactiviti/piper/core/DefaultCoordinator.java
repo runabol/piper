@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 @Component
-public class SimpleCoordinator implements Coordinator {
+public class DefaultCoordinator implements Coordinator {
 
   @Autowired private Messenger messenger;
   @Autowired private PipelineRepository pipelineRepository;
