@@ -12,7 +12,6 @@ package com.creactiviti.piper.core;
  */
 public interface Messenger {
 
-  void send (String aRoutingKey, Object aMessage);
+  void send (Object aMessage);
   
-  void receive (String aRoutingKey, MessageListener aMessageListener);
 }
