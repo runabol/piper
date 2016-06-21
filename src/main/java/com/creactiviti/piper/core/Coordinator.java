@@ -36,6 +36,22 @@ public interface Coordinator {
    *          The id of the job to resume.
    */
   Job resume (String aJobId);
+
+  /**
+   * Complete a task of a given job.
+   * 
+   * @param aTask
+   *          The task to complete.
+   */
+  void complete (Task aTask);
+  
+  /**
+   * Handle and erroring task.
+   * 
+   * @param aTask
+   *          The task to handle.
+   */
+  void error (Task aTask);
   
   /**
    * Retrieve a Job instance by its ID. 

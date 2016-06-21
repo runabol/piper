@@ -31,6 +31,15 @@ public class SimpleTask extends MapObject implements Task {
   }
   
   @Override
+  public String getJobId() {
+    return getString("jobId");
+  }
+  
+  public void setJobId(String aJobId) {
+    put("jobId", aJobId);
+  }
+  
+  @Override
   public TaskStatus getTaskStatus() {
     return taskStatus;
   }

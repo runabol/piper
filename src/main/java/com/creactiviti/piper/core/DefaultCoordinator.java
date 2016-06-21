@@ -31,7 +31,7 @@ public class DefaultCoordinator implements Coordinator {
     Pipeline pipeline = aJob.getPipeline();
     if(pipeline.hasNextTask()) {
       Task nextTask = pipeline.nextTask();
-      messenger.send(nextTask);
+      messenger.send(nextTask.getNode(), nextTask);
     }
     else {
       aJob.complete();
@@ -52,6 +52,14 @@ public class DefaultCoordinator implements Coordinator {
   @Override
   public Job get (String aJobId) {
     return null;
+  }
+
+  @Override
+  public void complete (Task aTask) {
+  }
+
+  @Override
+  public void error (Task aTask) {
   }
 
 }
