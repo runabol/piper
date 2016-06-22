@@ -3,6 +3,7 @@ package com.creactiviti.piper.core;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -12,6 +13,7 @@ public class DefaultCoordinator implements Coordinator {
   @Autowired private Messenger messenger;
   @Autowired private PipelineFactory pipelineFactory;
   @Autowired private JobRepository jobRepository;
+  @Autowired private ApplicationEventPublisher eventPublisher;
   
   private static final String PIPELINE_ID = "pipelineId";
   
@@ -60,6 +62,11 @@ public class DefaultCoordinator implements Coordinator {
 
   @Override
   public void error (Task aTask) {
+  }
+
+  @Override
+  public void on (Object aEvent) {
+    eventPublisher.publishEvent (aEvent);    
   }
 
 }

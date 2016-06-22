@@ -61,6 +61,14 @@ public interface Coordinator {
    * @return The Job instance.
    */
   Job get (String aJobId);
+
+  /**
+   * Handles application events. 
+   * 
+   * @param aEvent
+   *          The event to handle
+   */
+  void on (Object aEvent);
   
   
 }

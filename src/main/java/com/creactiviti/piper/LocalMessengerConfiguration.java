@@ -25,6 +25,10 @@ public class LocalMessengerConfiguration {
     LocalMessenger localMessenger = new LocalMessenger ();
     localMessenger.receive("completions", (m)->coordinator.complete((Task) m));
     localMessenger.receive("errors", (m)->coordinator.error((Task)m));
+    localMessenger.receive("events", (m)->coordinator.on(m));
+    aWorkerProperties.forEach((k,v) -> {
+      System.out.println(k+":"+v);
+    });
     return localMessenger;
   }
   
