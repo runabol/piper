@@ -36,17 +36,27 @@ public class HornetQMessengerConfiguration {
     DefaultMessageListenerContainer container = new DefaultMessageListenerContainer();
     container.setConnectionFactory (connectionFactory);
     container.setDestinationName("tasks");
-    container.setMessageListener (new MessageListener() {
-      @Override
-      public void onMessage(Message aMessage) {
-        try {
-          worker.handle(new SimpleTask(aMessage.getBody(Map.class)));
-        } catch (JMSException e) {
-          throw Throwables.propagate(e);
-        }
-      }
-    });
+    container.setMessageListener (new WorkerMessageListener(worker));
     return container;
   }
 
+  private static class WorkerMessageListener implements MessageListener {
+
+    private final Worker worker;
+    
+    public WorkerMessageListener(Worker aWorker) {
+      worker = aWorker;
+    }
+    
+    @Override
+    public void onMessage(Message aMessage) {
+      try {
+        worker.handle(new SimpleTask(aMessage.getBody(Map.class)));
+      } catch (JMSException e) {
+        throw Throwables.propagate(e);
+      }
+    }
+    
+  }
+  
 }
