@@ -11,7 +11,8 @@ public class HornetQMessenger implements Messenger {
 
   @Override
   public void send (String aRoutingKey, Object aMessage) {
-    jmsTemplate.convertAndSend(aRoutingKey, aMessage);
+    jmsTemplate.convertAndSend("tasks", aMessage);
   }
+  
   
 }

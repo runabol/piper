@@ -2,5 +2,5 @@ name: Hello World
     
 tasks: 
   - name: Print a greeting
-    handler: print
+    handler: log
     text: hello world
