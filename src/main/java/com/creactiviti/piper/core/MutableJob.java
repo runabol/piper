@@ -4,13 +4,13 @@ import java.util.UUID;
 
 import org.springframework.util.Assert;
 
-public class SimpleJob implements Job {
+public class MutableJob implements Job {
 
   private final String id = UUID.randomUUID().toString();
   private final Pipeline pipeline;
   private JobStatus status = JobStatus.CREATED;
   
-  public SimpleJob (Pipeline aPipeline) {
+  public MutableJob (Pipeline aPipeline) {
     Assert.notNull(aPipeline,"pipeline must not be null");
     pipeline = aPipeline;
   }
@@ -30,7 +30,6 @@ public class SimpleJob implements Job {
     return status;
   }
   
-  @Override
   public void setStatus (JobStatus aStatus) {
     if(aStatus == JobStatus.COMPLETED) {
       Assert.isTrue(status==JobStatus.STARTED,String.format("Job %s is %s and so can not be COMPLETED", id,status));

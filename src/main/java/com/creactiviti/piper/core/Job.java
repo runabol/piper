@@ -26,5 +26,4 @@ public interface Job {
    */
   JobStatus getStatus ();
   
-  void setStatus (JobStatus aStatus);
 }
