@@ -19,7 +19,12 @@ public interface Job {
    */
   Pipeline getPipeline ();
 
+  /**
+   * Return the {@link JobStatus}
+   * 
+   * @return The job's status.
+   */
   JobStatus getStatus ();
   
-  void complete ();
+  void setStatus (JobStatus aStatus);
 }

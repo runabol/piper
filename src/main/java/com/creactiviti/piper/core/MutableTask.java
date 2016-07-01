@@ -2,12 +2,20 @@ package com.creactiviti.piper.core;
 
 import java.util.Map;
 
+import org.jgroups.util.UUID;
+
 public class MutableTask extends MapObject implements Task, Mutator {
 
   private TaskStatus taskStatus = TaskStatus.CREATED;
   
   public MutableTask (Map<String, Object> aSource) {
     super(aSource);
+    set("__id", UUID.randomUUID().toString());
+  }
+  
+  @Override
+  public String getId() {
+    return getString("__id");
   }
 
   @Override

@@ -2,6 +2,8 @@ package com.creactiviti.piper.core;
 
 public interface Task extends Accessor {
 
+  String getId ();
+  
   String getJobId ();
   
   String getHandler ();
