@@ -36,9 +36,8 @@ public class DefaultCoordinator implements Coordinator {
   }
   
   private void run (Job aJob) {
-    Pipeline pipeline = aJob.getPipeline();
-    if(pipeline.hasNextTask()) {
-      MutableTask nextTask = new MutableTask(pipeline.nextTask().toMap());
+    if(aJob.hasNextTask()) {
+      MutableTask nextTask = new MutableTask(aJob.nextTask().toMap());
       nextTask.setJobId(aJob.getId());
       messenger.send(nextTask.getNode(), nextTask);
     }
@@ -56,11 +55,6 @@ public class DefaultCoordinator implements Coordinator {
 
   @Override
   public Job resume (String aJobId) {
-    return null;
-  }
-
-  @Override
-  public Job get (String aJobId) {
     return null;
   }
 

@@ -1,5 +1,7 @@
 package com.creactiviti.piper.core;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.util.Assert;
@@ -9,6 +11,7 @@ public class SimpleJob implements Job {
   private final String id = UUID.randomUUID().toString();
   private final Pipeline pipeline;
   private JobStatus status = JobStatus.CREATED;
+  private final List<Task> tasks = new ArrayList<>();
   
   public SimpleJob (Pipeline aPipeline) {
     Assert.notNull(aPipeline,"pipeline must not be null");
@@ -21,10 +24,20 @@ public class SimpleJob implements Job {
   }
 
   @Override
-  public Pipeline getPipeline() {
-    return pipeline;
+  public List<Task> getTasks() {
+    return tasks;
   }
-
+  
+  @Override
+  public boolean hasNextTask() {
+    return pipeline.hasNextTask();
+  }
+  
+  @Override
+  public Task nextTask() {
+    return pipeline.nextTask();
+  }
+  
   @Override
   public JobStatus getStatus() {
     return status;

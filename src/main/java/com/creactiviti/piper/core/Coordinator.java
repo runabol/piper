@@ -54,21 +54,11 @@ public interface Coordinator {
   void error (Task aTask);
   
   /**
-   * Retrieve a Job instance by its ID. 
-   * 
-   * @param aJobId
-   *          The ID of the job
-   * @return The Job instance.
-   */
-  Job get (String aJobId);
-
-  /**
    * Handles application events. 
    * 
    * @param aEvent
    *          The event to handle
    */
   void on (Object aEvent);
-  
   
 }

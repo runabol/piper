@@ -1,5 +1,7 @@
 package com.creactiviti.piper.core;
 
+import java.util.List;
+
 /**
  * Represents an instance of a job.
  * 
@@ -14,17 +16,18 @@ public interface Job {
   String getId ();
   
   /**
-   * Returns the {@link Pipeline} instance 
-   * on which the job is based. 
-   */
-  Pipeline getPipeline ();
-
-  /**
    * Return the {@link JobStatus}
    * 
    * @return The job's status.
    */
   JobStatus getStatus ();
+  
+  /**
+   * Returns the list of tasks of the job.
+   * 
+   * @return {@link List}
+   */
+  List<Task> getTasks ();
 
   /**
    * Update the status of the job.
@@ -34,4 +37,24 @@ public interface Job {
    * @throws IllegalArgumentException if the status is invalid for the job.
    */
   void setStatus (JobStatus aStatus);
+  
+  /**
+   * Determines if more tasks are available to execute
+   * on this job.
+   * 
+   * @return boolean
+   *           <code>true</code> if more tasks remain
+   *           to execute on this pipeline. Otherwise
+   *           <code>false</code>.
+   */
+  boolean hasNextTask ();
+
+  /**
+   * Returns the next task to execute on the job.
+   * 
+   * @return {@link Task} the next task to execute 
+   *         on the pipeline
+   */
+  Task nextTask ();
+  
 }
