@@ -1,5 +1,7 @@
 package com.creactiviti.piper.core;
 
+import java.util.Map;
+
 
 public interface Accessor {
 
@@ -142,5 +144,12 @@ public interface Accessor {
    *         converting as needed.
    */
   Integer getInteger (Object aKey, int aDefaultValue);
+  
+  /**
+   * Return a map of all key-value pairs.
+   * 
+   * @return {@link Map}
+   */
+  Map<String, Object> toMap ();
   
 }

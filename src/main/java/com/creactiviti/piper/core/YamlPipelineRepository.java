@@ -40,7 +40,7 @@ public class YamlPipelineRepository implements PipelineFactory  {
       ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
       Map<String,Object> yamlMap = mapper.readValue(yaml, Map.class);
       List<Map<String,Object>> rawTasks = (List<Map<String, Object>>) yamlMap.get("tasks");
-      List<Task> tasks = rawTasks.stream().map(rt -> new SimpleTask(rt)).collect(Collectors.toList());
+      List<Task> tasks = rawTasks.stream().map(rt -> new MutableTask(rt)).collect(Collectors.toList());
       return new SimplePipeline(id, (String)yamlMap.get("name"), tasks);
     }
     catch (IOException e) {

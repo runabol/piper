@@ -1,6 +1,8 @@
 package com.creactiviti.piper.core;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,7 +17,7 @@ public class MapObject implements Map<String, Object>, Accessor {
   private final Map<String, Object> map;
   
   public MapObject (Map<String, Object> aSource) {
-    map = aSource;
+    map = new HashMap<String, Object>(aSource);
   }
 
   @Override
@@ -136,6 +138,11 @@ public class MapObject implements Map<String, Object>, Accessor {
   @Override
   public Integer getInteger(Object aKey, int aDefaultValue) {
     return get(aKey, Integer.class, aDefaultValue);
+  }
+  
+  @Override
+  public Map<String, Object> toMap() {
+    return Collections.unmodifiableMap(map);
   }
   
   public String toString() {

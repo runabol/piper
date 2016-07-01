@@ -14,7 +14,7 @@ import org.springframework.jms.listener.DefaultMessageListenerContainer;
 
 import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.HornetQMessenger;
-import com.creactiviti.piper.core.SimpleTask;
+import com.creactiviti.piper.core.MutableTask;
 import com.creactiviti.piper.core.Task;
 import com.creactiviti.piper.core.Worker;
 import com.google.common.base.Throwables;
@@ -58,7 +58,7 @@ public class HornetQMessengerConfiguration {
   
   private Task toTask (Message aMessage) {
     try {
-      return new SimpleTask(aMessage.getBody(Map.class));
+      return new MutableTask(aMessage.getBody(Map.class));
     } catch (JMSException e) {
       throw Throwables.propagate(e);
     }

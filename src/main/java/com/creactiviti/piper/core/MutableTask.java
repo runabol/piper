@@ -2,11 +2,11 @@ package com.creactiviti.piper.core;
 
 import java.util.Map;
 
-public class SimpleTask extends MapObject implements Task {
+public class MutableTask extends MapObject implements Task, Mutator {
 
   private TaskStatus taskStatus = TaskStatus.CREATED;
   
-  public SimpleTask (Map<String, Object> aSource) {
+  public MutableTask (Map<String, Object> aSource) {
     super(aSource);
   }
 
@@ -36,7 +36,7 @@ public class SimpleTask extends MapObject implements Task {
   }
   
   public void setJobId(String aJobId) {
-    put("__jobId", aJobId);
+    set("__jobId", aJobId);
   }
   
   @Override
@@ -45,7 +45,12 @@ public class SimpleTask extends MapObject implements Task {
   }
 
   public void setOutput (Object aOutput) {
-    put("__output", aOutput);
+    set("__output", aOutput);
+  }
+
+  @Override
+  public void set (String aKey, Object aValue) {
+    put(aKey, aValue);
   }
   
 }
