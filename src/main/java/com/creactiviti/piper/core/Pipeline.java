@@ -26,8 +26,23 @@ public interface Pipeline {
    */
   List<Task> getTasks ();
 
+  /**
+   * Determines if more tasks are available to execute
+   * on this pipeline.
+   * 
+   * @return boolean
+   *           <code>true</code> if more tasks remain
+   *           to execute on this pipeline. Otherwise
+   *           <code>false</code>.
+   */
   boolean hasNextTask ();
-  
+
+  /**
+   * Returns the next task to execute on the pipeline.
+   * 
+   * @return {@link Task} the next task to execute 
+   *         on the pipeline
+   */
   Task nextTask ();
 
 }
