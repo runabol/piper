@@ -4,13 +4,13 @@ import java.util.UUID;
 
 import org.springframework.util.Assert;
 
-public class MutableJob implements Job {
+public class SimpleJob implements Job {
 
   private final String id = UUID.randomUUID().toString();
   private final Pipeline pipeline;
   private JobStatus status = JobStatus.CREATED;
   
-  public MutableJob (Pipeline aPipeline) {
+  public SimpleJob (Pipeline aPipeline) {
     Assert.notNull(aPipeline,"pipeline must not be null");
     pipeline = aPipeline;
   }

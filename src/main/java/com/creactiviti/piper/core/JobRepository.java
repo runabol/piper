@@ -4,10 +4,10 @@ import java.util.List;
 
 public interface JobRepository {
   
-  List<MutableJob> findAll ();
+  List<Job> findAll ();
   
-  MutableJob find (String aId);
+  Job find (String aId);
   
-  MutableJob save (MutableJob aJob);
+  Job save (Job aJob);
   
 }

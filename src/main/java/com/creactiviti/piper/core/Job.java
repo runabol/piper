@@ -25,5 +25,13 @@ public interface Job {
    * @return The job's status.
    */
   JobStatus getStatus ();
-  
+
+  /**
+   * Update the status of the job.
+   * 
+   * @param aStatus
+   *          The new status.
+   * @throws IllegalArgumentException if the status is invalid for the job.
+   */
+  void setStatus (JobStatus aStatus);
 }
