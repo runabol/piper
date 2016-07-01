@@ -22,7 +22,8 @@ public class DefaultWorker implements Worker {
     TaskHandler<?> taskHandler = taskHandlers.get(aTask.getHandler());
     Assert.notNull(taskHandler,"Unknown task handler: " + aTask.getHandler());
     Object output = taskHandler.handle(aTask);
-    aTask.setOutput(output);
+    //aTask.setOutput(output);
+    //SimpleTask stask = new SimpleTask(aSource)
     messenger.send("completions", aTask);
   }
 

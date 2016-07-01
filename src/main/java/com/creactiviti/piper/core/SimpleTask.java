@@ -6,7 +6,7 @@ public class SimpleTask extends MapObject implements Task {
 
   private TaskStatus taskStatus = TaskStatus.CREATED;
   
-  public SimpleTask(Map<String, Object> aSource) {
+  public SimpleTask (Map<String, Object> aSource) {
     super(aSource);
   }
 
@@ -32,11 +32,11 @@ public class SimpleTask extends MapObject implements Task {
   
   @Override
   public String getJobId() {
-    return getString("jobId");
+    return getString("__jobId");
   }
   
   public void setJobId(String aJobId) {
-    put("jobId", aJobId);
+    put("__jobId", aJobId);
   }
   
   @Override
@@ -44,8 +44,7 @@ public class SimpleTask extends MapObject implements Task {
     return taskStatus;
   }
 
-  @Override
-  public void setOutput(Object aOutput) {
+  public void setOutput (Object aOutput) {
     put("__output", aOutput);
   }
   

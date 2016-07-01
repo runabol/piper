@@ -1,5 +1,6 @@
 package com.creactiviti.piper.core;
 
+
 public interface Accessor {
 
   Object get (Object aKey);

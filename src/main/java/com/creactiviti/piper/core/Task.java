@@ -13,7 +13,5 @@ public interface Task extends Accessor {
   String getReturns ();
   
   TaskStatus getTaskStatus ();
-  
-  void setOutput (Object aOutput);
-  
+
 }
