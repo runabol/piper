@@ -14,4 +14,6 @@ public interface Task extends Accessor {
   
   TaskStatus getTaskStatus ();
   
+  void setOutput (Object aOutput);
+  
 }

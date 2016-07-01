@@ -2,6 +2,8 @@ package com.creactiviti.piper.core;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -14,6 +16,8 @@ public class DefaultCoordinator implements Coordinator {
   @Autowired private PipelineFactory pipelineFactory;
   @Autowired private JobRepository jobRepository;
   @Autowired private ApplicationEventPublisher eventPublisher;
+ 
+  private Logger log = LoggerFactory.getLogger(getClass());
   
   private static final String PIPELINE_ID = "pipelineId";
   
@@ -58,6 +62,7 @@ public class DefaultCoordinator implements Coordinator {
 
   @Override
   public void complete (Task aTask) {
+    log.debug("Completing {}", aTask);
   }
 
   @Override

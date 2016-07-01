@@ -138,4 +138,7 @@ public class MapObject implements Map<String, Object>, Accessor {
     return get(aKey, Integer.class, aDefaultValue);
   }
   
+  public String toString() {
+    return map.toString();
+  }
 }

@@ -43,5 +43,10 @@ public class SimpleTask extends MapObject implements Task {
   public TaskStatus getTaskStatus() {
     return taskStatus;
   }
+
+  @Override
+  public void setOutput(Object aOutput) {
+    put("__output", aOutput);
+  }
   
 }

@@ -12,8 +12,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 
+import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.HornetQMessenger;
 import com.creactiviti.piper.core.SimpleTask;
+import com.creactiviti.piper.core.Task;
 import com.creactiviti.piper.core.Worker;
 import com.google.common.base.Throwables;
 
@@ -25,6 +27,9 @@ public class HornetQMessengerConfiguration {
   
   @Autowired
   private Worker worker;
+  
+  @Autowired
+  private Coordinator coordinator;
 
   @Bean
   HornetQMessenger hornetQMessenger () {
@@ -36,27 +41,27 @@ public class HornetQMessengerConfiguration {
     DefaultMessageListenerContainer container = new DefaultMessageListenerContainer();
     container.setConnectionFactory (connectionFactory);
     container.setDestinationName("tasks");
-    container.setMessageListener (new WorkerMessageListener(worker));
+    MessageListener listener = (m) -> worker.handle(toTask(m));
+    container.setMessageListener(listener);
     return container;
   }
-
-  private static class WorkerMessageListener implements MessageListener {
-
-    private final Worker worker;
-    
-    public WorkerMessageListener(Worker aWorker) {
-      worker = aWorker;
-    }
-    
-    @Override
-    public void onMessage(Message aMessage) {
-      try {
-        worker.handle(new SimpleTask(aMessage.getBody(Map.class)));
-      } catch (JMSException e) {
-        throw Throwables.propagate(e);
-      }
-    }
-    
+  
+  @Bean
+  DefaultMessageListenerContainer completionsMessageListener () throws JMSException {
+    DefaultMessageListenerContainer container = new DefaultMessageListenerContainer();
+    container.setConnectionFactory (connectionFactory);
+    container.setDestinationName("completions");
+    MessageListener listener = (m) -> coordinator.complete(toTask(m));
+    container.setMessageListener(listener);
+    return container;
   }
   
+  private Task toTask (Message aMessage) {
+    try {
+      return new SimpleTask(aMessage.getBody(Map.class));
+    } catch (JMSException e) {
+      throw Throwables.propagate(e);
+    }
+  }
+    
 }
