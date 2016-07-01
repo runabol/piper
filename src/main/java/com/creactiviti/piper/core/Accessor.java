@@ -68,16 +68,79 @@ public interface Accessor {
    */
   String getString (Object aKey, String aDefaultValue);
   
+  /**
+   * Return the {@link Long} value associated with the given
+   * key -- converting as necessary.
+   * 
+   * @param aKey
+   *          The key associated with the desired value.
+   * @return The {@link Long} value associated with the given key --
+   *         converting as needed.
+   */
   Long getLong (Object aKey);
   
+  /**
+   * Return the {@link Long} value associated with the given
+   * key -- converting as necessary.
+   * 
+   * @param aKey
+   *          The key associated with the desired value.
+   * @param aDefaultValue
+   *          The value to return if a value was not found
+   *          for the given key or if the value is null.
+   * @return The {@link Long} value associated with the given key --
+   *         converting as needed.
+   */
   Long getLong (Object aKey, long aDefaultValue);
 
+  /**
+   * Return the {@link Double} value associated with the given
+   * key -- converting as necessary.
+   * 
+   * @param aKey
+   *          The key associated with the desired value.
+   * @return The {@link Double} value associated with the given key --
+   *         converting as needed.
+   */
   Double getDouble (Object aKey);
   
+  /**
+   * Return the {@link Double} value associated with the given
+   * key -- converting as necessary.
+   * 
+   * @param aKey
+   *          The key associated with the desired value.
+   * @param aDefaultValue
+   *          The value to return if a value was not found
+   *          for the given key or if the value is null.
+   * @return The {@link Double} value associated with the given key --
+   *         converting as needed.
+   */
   Double getDouble (Object aKey, double aDefaultValue);
   
+  /**
+   * Return the {@link Integer} value associated with the given
+   * key -- converting as necessary.
+   * 
+   * @param aKey
+   *          The key associated with the desired value.
+   * @return The {@link Integer} value associated with the given key --
+   *         converting as needed.
+   */
   Integer getInteger (Object aKey);
   
+  /**
+   * Return the {@link Integer} value associated with the given
+   * key -- converting as necessary.
+   * 
+   * @param aKey
+   *          The key associated with the desired value.
+   * @param aDefaultValue
+   *          The value to return if a value was not found
+   *          for the given key or if the value is null.
+   * @return The {@link Integer} value associated with the given key --
+   *         converting as needed.
+   */
   Integer getInteger (Object aKey, int aDefaultValue);
   
 }
