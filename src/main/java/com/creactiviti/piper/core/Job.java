@@ -23,7 +23,8 @@ public interface Job {
   JobStatus getStatus ();
   
   /**
-   * Returns the list of tasks of the job.
+   * Returns the list of tasks that were executed as part
+   * of the job instance.
    * 
    * @return {@link List}
    */

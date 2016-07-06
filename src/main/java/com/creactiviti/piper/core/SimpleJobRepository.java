@@ -28,7 +28,7 @@ public class SimpleJobRepository implements JobRepository<SimpleJob> {
   }
   
   @Override
-  public SimpleJob updateJobStatus(SimpleJob aJob, JobStatus aJobStatus) {
+  public SimpleJob updateStatus (SimpleJob aJob, JobStatus aJobStatus) {
     aJob.setStatus(aJobStatus);
     return save(aJob);
   }

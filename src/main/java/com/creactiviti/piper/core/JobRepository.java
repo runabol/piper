@@ -10,6 +10,6 @@ public interface JobRepository<T extends Job> {
   
   T save (T aJob);
   
-  T updateJobStatus (T aJob, JobStatus aJobStatus);
+  T updateStatus (T aJob, JobStatus aJobStatus);
   
 }
