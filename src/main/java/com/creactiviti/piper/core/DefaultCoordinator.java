@@ -36,7 +36,7 @@ public class DefaultCoordinator implements Coordinator {
   }
   
   private void run (Job aJob) {
-    if(aJob.hasNextTask()) {
+    if(aJob.hasMoreTasks()) {
       MutableTask nextTask = new MutableTask(aJob.nextTask().toMap());
       nextTask.setJobId(aJob.getId());
       messenger.send(nextTask.getNode(), nextTask);
@@ -60,7 +60,7 @@ public class DefaultCoordinator implements Coordinator {
 
   @Override
   public void complete (Task aTask) {
-    log.debug("Completing {}", aTask);
+    log.debug("Completing task {}", aTask.getId());
     String jobId = aTask.getJobId();
     Job job = jobRepository.findOne (jobId);
     Assert.notNull(job,String.format("Unknown Job %s ",jobId));

@@ -12,6 +12,7 @@ public class SimpleJob implements Job {
   private final Pipeline pipeline;
   private JobStatus status = JobStatus.CREATED;
   private final List<Task> tasks = new ArrayList<>();
+  private int currentTask = 0 ;
   
   public SimpleJob (Pipeline aPipeline) {
     Assert.notNull(aPipeline,"pipeline must not be null");
@@ -29,13 +30,13 @@ public class SimpleJob implements Job {
   }
   
   @Override
-  public boolean hasNextTask() {
-    return pipeline.hasNextTask();
+  public boolean hasMoreTasks() {
+    return currentTask < tasks.size();
   }
   
   @Override
   public Task nextTask() {
-    return pipeline.nextTask();
+    return pipeline.getTasks().get(currentTask);
   }
   
   @Override

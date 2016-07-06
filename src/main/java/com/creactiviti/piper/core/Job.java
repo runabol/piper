@@ -38,7 +38,7 @@ public interface Job {
    *           to execute on this pipeline. Otherwise
    *           <code>false</code>.
    */
-  boolean hasNextTask ();
+  boolean hasMoreTasks ();
 
   /**
    * Returns the next task to execute on the job.

@@ -30,16 +30,6 @@ public class SimplePipeline implements Pipeline {
   public List<Task> getTasks() {
     return tasks;
   }
-  
-  @Override
-  public Task nextTask() {
-    return tasks.remove(0);
-  }
-  
-  @Override
-  public boolean hasNextTask() {
-    return tasks.size()>0;
-  }
 
   @Override
   public String toString() {
