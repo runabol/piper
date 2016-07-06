@@ -16,19 +16,27 @@ public class DefaultCoordinator implements Coordinator {
   @Autowired private PipelineRepository pipelineRepository;
   @Autowired private JobRepository jobRepository;
   @Autowired private ApplicationEventPublisher eventPublisher;
+  @Autowired private ContextRepository contextRepository;
  
   private Logger log = LoggerFactory.getLogger(getClass());
   
   @Override
   public Job start (String aPipelineId, Map<String, Object> aParameters) {
     Assert.notNull(aPipelineId,"pipelineId must not be null");
+    
     Pipeline pipeline = pipelineRepository.findOne(aPipelineId);
     Assert.notNull(pipeline,String.format("Unkown pipeline: %s", aPipelineId));
+    
     SimpleJob job = new SimpleJob(pipeline);
     job.setStatus(JobStatus.STARTED);
     log.debug("Job {} started",job.getId());
     jobRepository.save(job);
+    
+    Context context = new MutableContext(job.getId(), aParameters);
+    contextRepository.save(context);
+    
     run(job);
+    
     return job;
   }
   
