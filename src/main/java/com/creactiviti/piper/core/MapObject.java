@@ -12,7 +12,7 @@ import org.apache.commons.beanutils.ConvertUtils;
  * @author Arik Cohen
  * @since Jun 12, 2016
  */
-public class MapObject implements Map<String, Object>, Accessor {
+public abstract class MapObject implements Map<String, Object>, Accessor {
 
   private final Map<String, Object> map;
   

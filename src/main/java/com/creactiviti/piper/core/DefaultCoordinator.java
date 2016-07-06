@@ -21,6 +21,7 @@ public class DefaultCoordinator implements Coordinator {
   
   @Override
   public Job start (String aPipelineId, Map<String, Object> aParameters) {
+    Assert.notNull(aPipelineId,"pipelineId must not be null");
     Pipeline pipeline = pipelineRepository.findOne(aPipelineId);
     Assert.notNull(pipeline,String.format("Unkown pipeline: %s", aPipelineId));
     SimpleJob job = new SimpleJob(pipeline);

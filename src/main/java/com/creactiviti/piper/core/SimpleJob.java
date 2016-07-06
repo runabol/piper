@@ -31,7 +31,7 @@ public class SimpleJob implements Job {
   
   @Override
   public boolean hasMoreTasks() {
-    return currentTask < tasks.size();
+    return currentTask < pipeline.getTasks().size();
   }
   
   @Override
