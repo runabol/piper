@@ -8,23 +8,29 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SimpleJobRepository implements JobRepository {
+public class SimpleJobRepository implements JobRepository<SimpleJob> {
 
-  private final Map<String, Job> jobs = new HashMap<>();
+  private final Map<String, SimpleJob> jobs = new HashMap<>();
   
   @Override
-  public List<Job> findAll() {
-    return new ArrayList<Job>(jobs.values());
+  public List<SimpleJob> findAll() {
+    return new ArrayList<SimpleJob>(jobs.values());
   }
 
   @Override
-  public Job find(String aId) {
+  public SimpleJob findOne (String aId) {
     return jobs.get(aId);
   }
 
   @Override
-  public Job save(Job aJob) {
+  public SimpleJob save(SimpleJob aJob) {
     return jobs.put(aJob.getId(), aJob);
+  }
+  
+  @Override
+  public SimpleJob updateJobStatus(SimpleJob aJob, JobStatus aJobStatus) {
+    aJob.setStatus(aJobStatus);
+    return save(aJob);
   }
 
 }

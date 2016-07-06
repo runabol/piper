@@ -28,15 +28,6 @@ public interface Job {
    * @return {@link List}
    */
   List<Task> getTasks ();
-
-  /**
-   * Update the status of the job.
-   * 
-   * @param aStatus
-   *          The new status.
-   * @throws IllegalArgumentException if the status is invalid for the job.
-   */
-  void setStatus (JobStatus aStatus);
   
   /**
    * Determines if more tasks are available to execute

@@ -13,7 +13,7 @@ import org.springframework.util.Assert;
 public class DefaultCoordinator implements Coordinator {
 
   @Autowired private Messenger messenger;
-  @Autowired private PipelineFactory pipelineFactory;
+  @Autowired private PipelineRepository pipelineRepository;
   @Autowired private JobRepository jobRepository;
   @Autowired private ApplicationEventPublisher eventPublisher;
  
@@ -25,7 +25,7 @@ public class DefaultCoordinator implements Coordinator {
   public Job start (Map<String, Object> aInput) {
     String pipelineId = (String) aInput.get(PIPELINE_ID);
     Assert.notNull(pipelineId,String.format("Missing mandatory parameter %s", PIPELINE_ID));
-    Pipeline pipeline = pipelineFactory.createPipeline(pipelineId);
+    Pipeline pipeline = pipelineRepository.findOne(pipelineId);
     Assert.notNull(pipeline,String.format("Unkown pipeline: %s", pipelineId));
     SimpleJob job = new SimpleJob(pipeline);
     job.setStatus(JobStatus.STARTED);
@@ -42,7 +42,7 @@ public class DefaultCoordinator implements Coordinator {
       messenger.send(nextTask.getNode(), nextTask);
     }
     else {
-      aJob.setStatus(JobStatus.COMPLETED);
+      jobRepository.updateJobStatus(aJob, JobStatus.COMPLETED);
       jobRepository.save(aJob);
       log.debug("Job {} completed successfully",aJob.getId());
     }
@@ -62,7 +62,7 @@ public class DefaultCoordinator implements Coordinator {
   public void complete (Task aTask) {
     log.debug("Completing {}", aTask);
     String jobId = aTask.getJobId();
-    Job job = jobRepository.find(jobId);
+    Job job = jobRepository.findOne (jobId);
     Assert.notNull(job,String.format("Unknown Job %s ",jobId));
     run(job);
   }

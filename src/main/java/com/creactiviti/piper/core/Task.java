@@ -15,5 +15,9 @@ public interface Task extends Accessor {
   String getReturns ();
   
   TaskStatus getTaskStatus ();
+  
+  Object getOutput ();
+  
+  <T> T getOutput (Class<T> aType);
 
 }

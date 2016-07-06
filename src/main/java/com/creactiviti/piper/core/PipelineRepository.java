@@ -9,10 +9,10 @@ import java.util.List;
  * @author Arik Cohen
  * @since Jun 18, 2016
  */
-public interface PipelineFactory {
+public interface PipelineRepository {
   
-  Pipeline createPipeline (String aId);
+  Pipeline findOne (String aId);
   
-  List<Pipeline> createPipelines ();
+  List<Pipeline> findAll ();
 
 }

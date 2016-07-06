@@ -2,12 +2,14 @@ package com.creactiviti.piper.core;
 
 import java.util.List;
 
-public interface JobRepository {
+public interface JobRepository<T extends Job> {
   
-  List<Job> findAll ();
+  List<T> findAll ();
   
-  Job find (String aId);
+  T findOne (String aId);
   
-  Job save (Job aJob);
+  T save (T aJob);
+  
+  T updateJobStatus (T aJob, JobStatus aJobStatus);
   
 }

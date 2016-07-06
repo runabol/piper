@@ -51,6 +51,16 @@ public class MutableTask extends MapObject implements Task, Mutator {
   public TaskStatus getTaskStatus() {
     return taskStatus;
   }
+  
+  @Override
+  public Object getOutput() {
+    return get("__output");
+  }
+  
+  @Override
+  public <T> T getOutput(Class<T> aType) {
+    return get("__output", aType);
+  }
 
   public void setOutput (Object aOutput) {
     set("__output", aOutput);
