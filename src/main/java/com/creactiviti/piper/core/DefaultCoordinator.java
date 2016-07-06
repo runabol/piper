@@ -19,14 +19,10 @@ public class DefaultCoordinator implements Coordinator {
  
   private Logger log = LoggerFactory.getLogger(getClass());
   
-  private static final String PIPELINE_ID = "pipelineId";
-  
   @Override
-  public Job start (Map<String, Object> aInput) {
-    String pipelineId = (String) aInput.get(PIPELINE_ID);
-    Assert.notNull(pipelineId,String.format("Missing mandatory parameter %s", PIPELINE_ID));
-    Pipeline pipeline = pipelineRepository.findOne(pipelineId);
-    Assert.notNull(pipeline,String.format("Unkown pipeline: %s", pipelineId));
+  public Job start (String aPipelineId, Map<String, Object> aParameters) {
+    Pipeline pipeline = pipelineRepository.findOne(aPipelineId);
+    Assert.notNull(pipeline,String.format("Unkown pipeline: %s", aPipelineId));
     SimpleJob job = new SimpleJob(pipeline);
     job.setStatus(JobStatus.STARTED);
     log.debug("Job {} started",job.getId());

@@ -3,6 +3,7 @@ package com.creactiviti.piper.core.events.web;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,9 +24,13 @@ public class JobController {
   @Autowired
   private Coordinator coordinator;
   
+  private static final String PIPELINE_ID = "pipelineId";
+  
   @RequestMapping(value="/start",method=RequestMethod.POST)
   public Job start (@RequestBody Map<String, Object> aJobRequest) {
-    return coordinator.start(aJobRequest);
+    String pipelineId = (String) aJobRequest.remove(PIPELINE_ID);
+    Assert.notNull(pipelineId,"Missing required field: " + PIPELINE_ID);
+    return coordinator.start(pipelineId, aJobRequest);
   }
   
   @RequestMapping(value="/{id}",method=RequestMethod.GET)

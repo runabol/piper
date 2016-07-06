@@ -19,7 +19,7 @@ public interface Coordinator {
    * @return Job
    *           The instance of the Job
    */
-  Job start (Map<String, Object> aInput);
+  Job start (String aPipelineId, Map<String, Object> aParameters);
   
   /**
    * Stop a running job.
