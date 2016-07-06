@@ -36,7 +36,10 @@ public class SimpleJob implements Job {
   
   @Override
   public Task nextTask() {
-    return pipeline.getTasks().get(currentTask);
+    Task task = pipeline.getTasks().get(currentTask);
+    MutableTask mt = new MutableTask (task.toMap());
+    mt.setJobId(getId());
+    return task;
   }
   
   @Override

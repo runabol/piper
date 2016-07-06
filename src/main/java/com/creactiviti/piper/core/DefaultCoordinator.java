@@ -37,8 +37,7 @@ public class DefaultCoordinator implements Coordinator {
   
   private void run (Job aJob) {
     if(aJob.hasMoreTasks()) {
-      MutableTask nextTask = new MutableTask(aJob.nextTask().toMap());
-      nextTask.setJobId(aJob.getId());
+      Task nextTask = aJob.nextTask();
       messenger.send(nextTask.getNode(), nextTask);
     }
     else {
