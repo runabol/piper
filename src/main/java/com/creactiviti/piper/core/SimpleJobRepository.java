@@ -38,4 +38,10 @@ public class SimpleJobRepository implements JobRepository<SimpleJob> {
     return aJob.nextTask();
   }
 
+  @Override
+  public SimpleJob updateTask(SimpleJob aJob, Task aTask) {
+    aJob.updateTask(aTask);
+    return aJob;
+  }
+
 }

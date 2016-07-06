@@ -1,7 +1,10 @@
 package com.creactiviti.piper.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.util.Assert;
@@ -11,8 +14,8 @@ public class SimpleJob implements Job {
   private final String id = UUID.randomUUID().toString();
   private final Pipeline pipeline;
   private JobStatus status = JobStatus.CREATED;
-  private final List<Task> tasks = new ArrayList<>();
-  private int currentTask = 0 ;
+  private final Map<String,Task> tasks = new LinkedHashMap<>();
+  private int nextTask = 0;
   
   public SimpleJob (Pipeline aPipeline) {
     Assert.notNull(aPipeline,"pipeline must not be null");
@@ -26,19 +29,26 @@ public class SimpleJob implements Job {
 
   @Override
   public List<Task> getTasks() {
-    return tasks;
+    return Collections.unmodifiableList(new ArrayList<Task>(tasks.values()));
   }
   
   @Override
   public boolean hasMoreTasks() {
-    return currentTask < pipeline.getTasks().size();
+    return nextTask < pipeline.getTasks().size();
   }
   
   public Task nextTask() {
-    Task task = pipeline.getTasks().get(currentTask);
+    Task task = pipeline.getTasks().get(nextTask);
+    nextTask++;
     MutableTask mt = new MutableTask (task.toMap());
     mt.setJobId(getId());
-    return task;
+    tasks.put(mt.getId(),mt);
+    return mt;
+  }
+  
+  public void updateTask (Task aTask) {
+    Assert.isTrue(tasks.containsKey(aTask.getId()),"Unkown task: " + aTask.getId());
+    tasks.put(aTask.getId(), aTask);
   }
   
   @Override

@@ -3,6 +3,9 @@ package com.creactiviti.piper.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class MutableContextRepository implements ContextRepository<MutableContext> {
 
   private Map<String, MutableContext> contexts = new HashMap<String, MutableContext> ();
