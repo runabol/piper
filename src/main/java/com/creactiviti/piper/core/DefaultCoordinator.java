@@ -42,7 +42,7 @@ public class DefaultCoordinator implements Coordinator {
   
   private void run (Job aJob) {
     if(aJob.hasMoreTasks()) {
-      Task nextTask = aJob.nextTask();
+      Task nextTask = jobRepository.nextTask(aJob);
       messenger.send(nextTask.getNode(), nextTask);
     }
     else {

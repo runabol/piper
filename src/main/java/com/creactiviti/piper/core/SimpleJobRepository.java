@@ -32,5 +32,10 @@ public class SimpleJobRepository implements JobRepository<SimpleJob> {
     aJob.setStatus(aJobStatus);
     return save(aJob);
   }
+  
+  @Override
+  public Task nextTask(SimpleJob aJob) {
+    return aJob.nextTask();
+  }
 
 }

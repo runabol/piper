@@ -12,4 +12,6 @@ public interface JobRepository<T extends Job> {
   
   T updateStatus (T aJob, JobStatus aJobStatus);
   
+  Task nextTask (T aJob);
+  
 }

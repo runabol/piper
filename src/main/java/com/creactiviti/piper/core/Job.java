@@ -41,12 +41,4 @@ public interface Job {
    */
   boolean hasMoreTasks ();
 
-  /**
-   * Returns the next task to execute on the job.
-   * 
-   * @return {@link Task} the next task to execute 
-   *         on the pipeline
-   */
-  Task nextTask ();
-  
 }

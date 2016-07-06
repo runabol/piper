@@ -34,7 +34,6 @@ public class SimpleJob implements Job {
     return currentTask < pipeline.getTasks().size();
   }
   
-  @Override
   public Task nextTask() {
     Task task = pipeline.getTasks().get(currentTask);
     MutableTask mt = new MutableTask (task.toMap());
