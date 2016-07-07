@@ -13,10 +13,10 @@ import org.springframework.util.Assert;
 public class DefaultCoordinator implements Coordinator {
 
   @Autowired private Messenger messenger;
-  @Autowired private PipelineRepository pipelineRepository;
-  @Autowired private JobRepository jobRepository;
+  @Autowired private PipelineService pipelineService;
+  @Autowired private JobService jobService;
   @Autowired private ApplicationEventPublisher eventPublisher;
-  @Autowired private ContextRepository contextRepository;
+  @Autowired private ContextService contextService;
  
   private Logger log = LoggerFactory.getLogger(getClass());
   
@@ -24,16 +24,16 @@ public class DefaultCoordinator implements Coordinator {
   public Job start (String aPipelineId, Map<String, Object> aParameters) {
     Assert.notNull(aPipelineId,"pipelineId must not be null");
     
-    Pipeline pipeline = pipelineRepository.findOne(aPipelineId);
+    Pipeline pipeline = pipelineService.findOne(aPipelineId);
     Assert.notNull(pipeline,String.format("Unkown pipeline: %s", aPipelineId));
     
     SimpleJob job = new SimpleJob(pipeline);
     job.setStatus(JobStatus.STARTED);
     log.debug("Job {} started",job.getId());
-    jobRepository.save(job);
+    jobService.save(job);
     
     Context context = new MutableContext(job.getId(), aParameters);
-    contextRepository.save(context);
+    contextService.save(context);
     
     run(job);
     
@@ -42,12 +42,12 @@ public class DefaultCoordinator implements Coordinator {
   
   private void run (Job aJob) {
     if(aJob.hasMoreTasks()) {
-      Task nextTask = jobRepository.nextTask(aJob);
+      Task nextTask = jobService.nextTask(aJob);
       messenger.send(nextTask.getNode(), nextTask);
     }
     else {
-      jobRepository.updateStatus (aJob, JobStatus.COMPLETED);
-      jobRepository.save(aJob);
+      jobService.updateStatus (aJob, JobStatus.COMPLETED);
+      jobService.save(aJob);
       log.debug("Job {} completed successfully",aJob.getId());
     }
   }
@@ -67,8 +67,9 @@ public class DefaultCoordinator implements Coordinator {
     log.debug("Completing task {}", aTask.getId());
     MutableTask task = new MutableTask(aTask);
     task.setStatus(TaskStatus.COMPLETED);
-    Job job = jobRepository.findByTaskId (aTask.getId());
+    Job job = jobService.findByTaskId (aTask.getId());
     Assert.notNull(job,String.format("No job found for task %s ",aTask.getId()));
+    jobService.updateTask(job, task);
     run(job);
   }
 

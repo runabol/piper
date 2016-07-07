@@ -9,7 +9,7 @@ import java.util.List;
  * @author Arik Cohen
  * @since Jun 18, 2016
  */
-public interface PipelineRepository {
+public interface PipelineService {
   
   Pipeline findOne (String aId);
   

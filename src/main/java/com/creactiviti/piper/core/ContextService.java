@@ -1,6 +1,6 @@
 package com.creactiviti.piper.core;
 
-public interface ContextRepository<T extends Context> {
+public interface ContextService<T extends Context> {
 
   T findForJobId (String aJobId);
   

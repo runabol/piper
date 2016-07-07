@@ -2,7 +2,7 @@ package com.creactiviti.piper.core;
 
 import java.util.List;
 
-public interface JobRepository<T extends Job> {
+public interface JobService<T extends Job> {
   
   List<T> findAll ();
   

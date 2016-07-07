@@ -18,7 +18,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Throwables;
 
 @Component
-public class YamlPipelineRepository implements PipelineRepository  {
+public class YamlPipelineRepository implements PipelineService  {
 
   @Override
   public List<Pipeline> findAll () {
