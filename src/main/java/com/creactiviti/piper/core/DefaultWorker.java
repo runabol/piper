@@ -22,7 +22,7 @@ public class DefaultWorker implements Worker {
     TaskHandler<?> taskHandler = taskHandlers.get(aTask.getHandler());
     Assert.notNull(taskHandler,"Unknown task handler: " + aTask.getHandler());
     Object output = taskHandler.handle(aTask);
-    MutableTask completion = new MutableTask(aTask.toMap());
+    MutableTask completion = new MutableTask(aTask);
     completion.setOutput(output);
     messenger.send("completions", completion);
   }

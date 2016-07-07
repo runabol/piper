@@ -1,8 +1,11 @@
-package com.creactiviti.piper.core;
+package com.creactiviti.piper.taskhandler.io;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import com.creactiviti.piper.core.Task;
+import com.creactiviti.piper.core.TaskHandler;
 
 @Component
 public class Log implements TaskHandler<Object> {

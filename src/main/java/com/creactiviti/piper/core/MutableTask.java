@@ -17,7 +17,7 @@ public class MutableTask extends MapObject implements Task, Mutator {
   
   public MutableTask (Map<String, Object> aSource) {
     super(aSource);
-    set("id", UUIDFactory.create());
+    setIfNull("id", UUIDFactory.create());
     status=TaskStatus.CREATED;
   }
   

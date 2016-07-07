@@ -1,12 +1,12 @@
 package com.creactiviti.piper.core;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.lang3.SerializationUtils;
 
 /**
  * @author Arik Cohen
@@ -14,7 +14,7 @@ import org.apache.commons.beanutils.ConvertUtils;
  */
 public abstract class MapObject implements Map<String, Object>, Accessor {
 
-  private final Map<String, Object> map;
+  private final HashMap<String, Object> map;
   
   public MapObject (Map<String, Object> aSource) {
     map = new HashMap<String, Object>(aSource);
@@ -142,7 +142,7 @@ public abstract class MapObject implements Map<String, Object>, Accessor {
   
   @Override
   public Map<String, Object> toMap() {
-    return Collections.unmodifiableMap(map);
+    return SerializationUtils.clone(map);
   }
   
   public String toString() {
