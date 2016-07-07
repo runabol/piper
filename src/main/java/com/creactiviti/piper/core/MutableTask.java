@@ -7,18 +7,15 @@ import com.creactiviti.piper.core.uuid.UUIDFactory;
 
 public class MutableTask extends MapObject implements Task, Mutator {
 
-  private TaskStatus status;
-  
   public MutableTask (Task aSource) {
     super(aSource.toMap());
     set("id", aSource.getId());
-    status=aSource.getStatus();
   }
   
   public MutableTask (Map<String, Object> aSource) {
     super(aSource);
     setIfNull("id", UUIDFactory.create());
-    status=TaskStatus.CREATED;
+    setIfNull("status", TaskStatus.CREATED);
   }
   
   @Override
@@ -47,8 +44,8 @@ public class MutableTask extends MapObject implements Task, Mutator {
   }
   
   @Override
-  public TaskStatus getStatus() {
-    return status;
+  public String getStatus() {
+    return getString("status");
   }
   
   @Override
@@ -65,8 +62,8 @@ public class MutableTask extends MapObject implements Task, Mutator {
     set("__output", aOutput);
   }
   
-  public void setStatus (TaskStatus aStatus) {
-    status=aStatus;
+  public void setStatus (String aStatus) {
+    set("status",aStatus);
   }
 
   @Override

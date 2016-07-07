@@ -25,7 +25,9 @@ public class DefaultWorker implements Worker {
     Assert.notNull(taskHandler,"Unknown task handler: " + aTask.getHandler());
     Object output = taskHandler.handle(aTask);
     MutableTask completion = new MutableTask(aTask);
-    completion.setOutput(output);
+    if(output!=null) {
+      completion.setOutput(output);
+    }
     messenger.send("completions", completion);
   }
 
