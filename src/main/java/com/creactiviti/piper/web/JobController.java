@@ -1,4 +1,4 @@
-package com.creactiviti.piper.core.events.web;
+package com.creactiviti.piper.web;
 
 import java.util.Map;
 
