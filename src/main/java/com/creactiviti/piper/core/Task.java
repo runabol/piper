@@ -16,6 +16,4 @@ public interface Task extends Accessor {
   
   Object getOutput ();
   
-  <T> T getOutput (Class<T> aType);
-
 }
