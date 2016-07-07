@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import com.creactiviti.piper.core.messenger.Messenger;
+
 @Component
 public class DefaultWorker implements Worker {
 

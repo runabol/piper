@@ -13,10 +13,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 
 import com.creactiviti.piper.core.Coordinator;
-import com.creactiviti.piper.core.HornetQMessenger;
 import com.creactiviti.piper.core.MutableTask;
 import com.creactiviti.piper.core.Task;
 import com.creactiviti.piper.core.Worker;
+import com.creactiviti.piper.core.messenger.HornetQMessenger;
 import com.google.common.base.Throwables;
 
 @Configuration

@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.creactiviti.piper.core.pipeline.Pipeline;
+
 public class SimplePipeline implements Pipeline {
 
   private final String id;

@@ -1,6 +1,8 @@
-package com.creactiviti.piper.core;
+package com.creactiviti.piper.core.context;
 
 import java.util.Map;
+
+import com.creactiviti.piper.core.MapObject;
 
 public class MutableContext extends MapObject implements Context {
 

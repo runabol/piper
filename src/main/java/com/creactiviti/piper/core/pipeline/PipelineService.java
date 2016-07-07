@@ -1,4 +1,4 @@
-package com.creactiviti.piper.core;
+package com.creactiviti.piper.core.pipeline;
 
 import java.util.List;
 

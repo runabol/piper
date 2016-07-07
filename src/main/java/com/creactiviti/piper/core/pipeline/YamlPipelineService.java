@@ -1,4 +1,4 @@
-package com.creactiviti.piper.core;
+package com.creactiviti.piper.core.pipeline;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -13,12 +13,15 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
+import com.creactiviti.piper.core.MutableTask;
+import com.creactiviti.piper.core.SimplePipeline;
+import com.creactiviti.piper.core.Task;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Throwables;
 
 @Component
-public class YamlPipelineRepository implements PipelineService  {
+public class YamlPipelineService implements PipelineService  {
 
   @Override
   public List<Pipeline> list () {

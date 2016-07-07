@@ -9,6 +9,13 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import com.creactiviti.piper.core.context.Context;
+import com.creactiviti.piper.core.context.ContextService;
+import com.creactiviti.piper.core.context.MutableContext;
+import com.creactiviti.piper.core.messenger.Messenger;
+import com.creactiviti.piper.core.pipeline.Pipeline;
+import com.creactiviti.piper.core.pipeline.PipelineService;
+
 @Component
 public class DefaultCoordinator implements Coordinator {
 

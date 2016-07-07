@@ -1,4 +1,4 @@
-package com.creactiviti.piper.core;
+package com.creactiviti.piper.core.messenger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;

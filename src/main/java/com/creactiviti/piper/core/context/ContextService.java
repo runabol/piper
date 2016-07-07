@@ -1,4 +1,4 @@
-package com.creactiviti.piper.core;
+package com.creactiviti.piper.core.context;
 
 public interface ContextService<T extends Context> {
 

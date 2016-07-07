@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.springframework.util.Assert;
 
+import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.uuid.UUIDFactory;
 
 public class SimpleJob implements Job {

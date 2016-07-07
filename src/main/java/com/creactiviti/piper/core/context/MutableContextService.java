@@ -1,4 +1,4 @@
-package com.creactiviti.piper.core;
+package com.creactiviti.piper.core.context;
 
 import java.util.HashMap;
 import java.util.Map;
