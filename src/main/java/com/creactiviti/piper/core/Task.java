@@ -4,8 +4,6 @@ public interface Task extends Accessor {
 
   String getId ();
   
-  String getJobId ();
-  
   String getHandler ();
   
   String getName ();
@@ -14,7 +12,7 @@ public interface Task extends Accessor {
   
   String getReturns ();
   
-  TaskStatus getTaskStatus ();
+  TaskStatus getStatus ();
   
   Object getOutput ();
   

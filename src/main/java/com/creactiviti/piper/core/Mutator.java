@@ -12,5 +12,6 @@ public interface Mutator {
    *          The value to associate with the key (can be <code>null</code>).
    */
   void set (String aKey, Object aValue);
-  
+
+  void setIfNull (String aKey, Object aValue);
 }

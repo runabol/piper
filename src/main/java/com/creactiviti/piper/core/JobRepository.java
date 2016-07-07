@@ -15,5 +15,6 @@ public interface JobRepository<T extends Job> {
   Task nextTask (T aJob);
   
   T updateTask (T aJob, Task aTask);
-  
+
+  T findByTaskId (String aTaskId);
 }

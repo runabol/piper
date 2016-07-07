@@ -5,13 +5,14 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.util.Assert;
 
+import com.creactiviti.piper.core.uuid.UUIDFactory;
+
 public class SimpleJob implements Job {
 
-  private final String id = UUID.randomUUID().toString();
+  private final String id = UUIDFactory.create();
   private final Pipeline pipeline;
   private JobStatus status = JobStatus.CREATED;
   private final Map<String,Task> tasks = new LinkedHashMap<>();
@@ -41,7 +42,6 @@ public class SimpleJob implements Job {
     Task task = pipeline.getTasks().get(nextTask);
     nextTask++;
     MutableTask mt = new MutableTask (task.toMap());
-    mt.setJobId(getId());
     tasks.put(mt.getId(),mt);
     return mt;
   }

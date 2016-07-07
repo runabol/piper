@@ -2,20 +2,28 @@ package com.creactiviti.piper.core;
 
 import java.util.Map;
 
-import org.jgroups.util.UUID;
+import com.creactiviti.piper.core.uuid.UUIDFactory;
+
 
 public class MutableTask extends MapObject implements Task, Mutator {
 
-  private TaskStatus taskStatus = TaskStatus.CREATED;
+  private TaskStatus status;
+  
+  public MutableTask (Task aSource) {
+    super(aSource.toMap());
+    set("id", aSource.getId());
+    status=aSource.getStatus();
+  }
   
   public MutableTask (Map<String, Object> aSource) {
     super(aSource);
-    set("__id", UUID.randomUUID().toString());
+    set("id", UUIDFactory.create());
+    status=TaskStatus.CREATED;
   }
   
   @Override
   public String getId() {
-    return getString("__id");
+    return getString("id");
   }
 
   @Override
@@ -39,17 +47,8 @@ public class MutableTask extends MapObject implements Task, Mutator {
   }
   
   @Override
-  public String getJobId() {
-    return getString("__jobId");
-  }
-  
-  public void setJobId(String aJobId) {
-    set("__jobId", aJobId);
-  }
-  
-  @Override
-  public TaskStatus getTaskStatus() {
-    return taskStatus;
+  public TaskStatus getStatus() {
+    return status;
   }
   
   @Override
@@ -65,10 +64,21 @@ public class MutableTask extends MapObject implements Task, Mutator {
   public void setOutput (Object aOutput) {
     set("__output", aOutput);
   }
+  
+  public void setStatus (TaskStatus aStatus) {
+    status=aStatus;
+  }
 
   @Override
   public void set (String aKey, Object aValue) {
     put(aKey, aValue);
+  }
+  
+  @Override
+  public void setIfNull(String aKey, Object aValue) {
+    if(get(aKey)==null) {
+      set(aKey, aValue);
+    }
   }
   
 }

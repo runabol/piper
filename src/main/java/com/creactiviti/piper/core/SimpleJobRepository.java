@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 public class SimpleJobRepository implements JobRepository<SimpleJob> {
 
   private final Map<String, SimpleJob> jobs = new HashMap<>();
+  private final Map<String, SimpleJob> taskToJob = new HashMap<>();
   
   @Override
   public List<SimpleJob> findAll() {
@@ -35,13 +36,20 @@ public class SimpleJobRepository implements JobRepository<SimpleJob> {
   
   @Override
   public Task nextTask(SimpleJob aJob) {
-    return aJob.nextTask();
+    Task nextTask = aJob.nextTask();
+    taskToJob.put(nextTask.getId(), aJob);
+    return nextTask;
   }
 
   @Override
   public SimpleJob updateTask(SimpleJob aJob, Task aTask) {
     aJob.updateTask(aTask);
     return aJob;
+  }
+  
+  @Override
+  public SimpleJob findByTaskId(String aTaskId) {
+    return taskToJob.get(aTaskId);
   }
 
 }

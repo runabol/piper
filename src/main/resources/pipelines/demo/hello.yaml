@@ -4,3 +4,11 @@ tasks:
   - name: Print a greeting
     handler: log
     text: hello world
+    
+  - name: Print a greeting
+    handler: log
+    text: what's up world?
+    
+  - name: Print a greeting
+    handler: log
+    text: goodbye world
