@@ -1,12 +1,9 @@
 package com.creactiviti.piper.core;
 
-import java.util.List;
 
 public interface JobService<T extends Job> {
   
-  List<T> findAll ();
-  
-  T findOne (String aId);
+  T getJobById (String aId);
   
   T save (T aJob);
   
@@ -16,5 +13,6 @@ public interface JobService<T extends Job> {
   
   T updateTask (T aJob, Task aTask);
 
-  T findByTaskId (String aTaskId);
+  T getJobByTaskId (String aTaskId);
+  
 }

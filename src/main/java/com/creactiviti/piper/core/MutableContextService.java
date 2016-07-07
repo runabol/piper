@@ -11,7 +11,7 @@ public class MutableContextService implements ContextService<MutableContext> {
   private Map<String, MutableContext> contexts = new HashMap<String, MutableContext> ();
   
   @Override
-  public MutableContext findForJobId (String aJobId) {
+  public MutableContext getForJobId (String aJobId) {
     return contexts.get(aJobId);
   }
 

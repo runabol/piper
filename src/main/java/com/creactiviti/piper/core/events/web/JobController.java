@@ -35,7 +35,7 @@ public class JobController {
   
   @RequestMapping(value="/{id}",method=RequestMethod.GET)
   public Job start (@PathVariable("id")String aJobId) {
-    return jobRepository.findOne (aJobId);
+    return jobRepository.getJobById (aJobId);
   }
   
 }

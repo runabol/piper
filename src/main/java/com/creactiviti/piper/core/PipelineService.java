@@ -4,15 +4,14 @@ import java.util.List;
 
 
 /**
- * <p>The core interface for creating {@link Pipeline} objects.</p>
  * 
  * @author Arik Cohen
  * @since Jun 18, 2016
  */
 public interface PipelineService {
   
-  Pipeline findOne (String aId);
+  Pipeline create (String aId);
   
-  List<Pipeline> findAll ();
+  List<Pipeline> list ();
 
 }

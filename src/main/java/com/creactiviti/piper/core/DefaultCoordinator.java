@@ -24,7 +24,7 @@ public class DefaultCoordinator implements Coordinator {
   public Job start (String aPipelineId, Map<String, Object> aParameters) {
     Assert.notNull(aPipelineId,"pipelineId must not be null");
     
-    Pipeline pipeline = pipelineService.findOne(aPipelineId);
+    Pipeline pipeline = pipelineService.create(aPipelineId);
     Assert.notNull(pipeline,String.format("Unkown pipeline: %s", aPipelineId));
     
     SimpleJob job = new SimpleJob(pipeline);
@@ -67,7 +67,7 @@ public class DefaultCoordinator implements Coordinator {
     log.debug("Completing task {}", aTask.getId());
     MutableTask task = new MutableTask(aTask);
     task.setStatus(TaskStatus.COMPLETED);
-    Job job = jobService.findByTaskId (aTask.getId());
+    Job job = jobService.getJobByTaskId (aTask.getId());
     Assert.notNull(job,String.format("No job found for task %s ",aTask.getId()));
     jobService.updateTask(job, task);
     run(job);

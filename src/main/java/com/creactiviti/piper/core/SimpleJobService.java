@@ -1,8 +1,6 @@
 package com.creactiviti.piper.core;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
@@ -14,12 +12,7 @@ public class SimpleJobService implements JobService<SimpleJob> {
   private final Map<String, SimpleJob> taskToJob = new HashMap<>();
   
   @Override
-  public List<SimpleJob> findAll() {
-    return new ArrayList<SimpleJob>(jobs.values());
-  }
-
-  @Override
-  public SimpleJob findOne (String aId) {
+  public SimpleJob getJobById (String aId) {
     return jobs.get(aId);
   }
 
@@ -48,7 +41,7 @@ public class SimpleJobService implements JobService<SimpleJob> {
   }
   
   @Override
-  public SimpleJob findByTaskId(String aTaskId) {
+  public SimpleJob getJobByTaskId(String aTaskId) {
     return taskToJob.get(aTaskId);
   }
 
