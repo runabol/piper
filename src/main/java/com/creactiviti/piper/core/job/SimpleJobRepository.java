@@ -1,9 +1,12 @@
-package com.creactiviti.piper.core;
+package com.creactiviti.piper.core.job;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
+
+import com.creactiviti.piper.core.JobStatus;
+import com.creactiviti.piper.core.JobTask;
 
 @Component
 public class SimpleJobRepository implements JobRepository<SimpleJob> {

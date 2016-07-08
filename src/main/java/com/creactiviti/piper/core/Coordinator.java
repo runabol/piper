@@ -2,6 +2,8 @@ package com.creactiviti.piper.core;
 
 import java.util.Map;
 
+import com.creactiviti.piper.core.job.Job;
+
 /**
  * The central interface responsible for coordinating 
  * and executing jobs.

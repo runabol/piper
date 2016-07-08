@@ -14,7 +14,6 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
 import com.creactiviti.piper.core.SimpleTask;
-import com.creactiviti.piper.core.SimplePipeline;
 import com.creactiviti.piper.core.Task;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;

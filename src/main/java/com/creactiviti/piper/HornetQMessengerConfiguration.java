@@ -14,8 +14,8 @@ import org.springframework.jms.listener.DefaultMessageListenerContainer;
 
 import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.JobTask;
-import com.creactiviti.piper.core.SimpleJobTask;
 import com.creactiviti.piper.core.Worker;
+import com.creactiviti.piper.core.job.SimpleJobTask;
 import com.creactiviti.piper.core.messenger.HornetQMessenger;
 import com.google.common.base.Throwables;
 

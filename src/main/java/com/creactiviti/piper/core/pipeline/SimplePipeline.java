@@ -1,10 +1,10 @@
-package com.creactiviti.piper.core;
+package com.creactiviti.piper.core.pipeline;
 
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.creactiviti.piper.core.pipeline.Pipeline;
+import com.creactiviti.piper.core.Task;
 
 public class SimplePipeline implements Pipeline {
 

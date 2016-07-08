@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.creactiviti.piper.core.Coordinator;
-import com.creactiviti.piper.core.Job;
-import com.creactiviti.piper.core.JobRepository;
+import com.creactiviti.piper.core.job.Job;
+import com.creactiviti.piper.core.job.JobRepository;
 
 @RestController
 @RequestMapping("/job")

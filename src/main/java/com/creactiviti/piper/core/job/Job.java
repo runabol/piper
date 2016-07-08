@@ -1,6 +1,9 @@
-package com.creactiviti.piper.core;
+package com.creactiviti.piper.core.job;
 
 import java.util.List;
+
+import com.creactiviti.piper.core.JobStatus;
+import com.creactiviti.piper.core.Task;
 
 /**
  * Represents an instance of a job.

@@ -1,4 +1,8 @@
-package com.creactiviti.piper.core;
+package com.creactiviti.piper.core.job;
+
+import com.creactiviti.piper.core.JobStatus;
+import com.creactiviti.piper.core.JobTask;
+import com.creactiviti.piper.core.Task;
 
 
 public interface JobRepository<T extends Job> {

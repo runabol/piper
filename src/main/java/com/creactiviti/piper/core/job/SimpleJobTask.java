@@ -1,7 +1,11 @@
-package com.creactiviti.piper.core;
+package com.creactiviti.piper.core.job;
 
 import java.util.Map;
 
+import com.creactiviti.piper.core.JobTask;
+import com.creactiviti.piper.core.Mutator;
+import com.creactiviti.piper.core.SimpleTask;
+import com.creactiviti.piper.core.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDFactory;
 
 
