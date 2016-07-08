@@ -67,6 +67,10 @@ public class SimpleJobTask extends SimpleTask implements JobTask, Mutator {
   public Date getCompletionDate() {
     return getDate("_completionDate");
   }
+  
+  public void setCompletionDate(Date aDate) {
+    set("_completionDate", aDate);
+  }
 
   @Override
   public Date getFailedDate() {

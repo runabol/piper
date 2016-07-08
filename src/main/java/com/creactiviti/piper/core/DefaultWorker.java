@@ -1,5 +1,6 @@
 package com.creactiviti.piper.core;
 
+import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class DefaultWorker implements Worker {
     if(output!=null) {
       completion.setOutput(output);
     }
+    completion.setCompletionDate(new Date());
     messenger.send("completions", completion);
   }
 
