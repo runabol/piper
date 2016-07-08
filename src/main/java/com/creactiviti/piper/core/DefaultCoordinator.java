@@ -13,8 +13,9 @@ import com.creactiviti.piper.core.context.Context;
 import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.context.SimpleContext;
 import com.creactiviti.piper.core.job.Job;
-import com.creactiviti.piper.core.job.JobRepository;
+import com.creactiviti.piper.core.job.MutableJobRepository;
 import com.creactiviti.piper.core.job.JobStatus;
+import com.creactiviti.piper.core.job.MutableJob;
 import com.creactiviti.piper.core.job.SimpleJob;
 import com.creactiviti.piper.core.job.SimpleJobTask;
 import com.creactiviti.piper.core.messenger.Messenger;
@@ -28,7 +29,7 @@ public class DefaultCoordinator implements Coordinator {
 
   @Autowired private Messenger messenger;
   @Autowired private PipelineRepository pipelineRepository;
-  @Autowired private JobRepository jobRepository;
+  @Autowired private MutableJobRepository jobRepository;
   @Autowired private ApplicationEventPublisher eventPublisher;
   @Autowired private ContextRepository contextRepository;
  
@@ -54,13 +55,13 @@ public class DefaultCoordinator implements Coordinator {
     return job;
   }
   
-  private void run (Job aJob) {
+  private void run (MutableJob aJob) {
     if(aJob.hasMoreTasks()) {
       Task nextTask = jobRepository.nextTask(aJob);
       messenger.send(nextTask.getNode(), nextTask);
     }
     else {
-      jobRepository.updateStatus (aJob, JobStatus.COMPLETED);
+      aJob.setStatus(JobStatus.COMPLETED);
       jobRepository.save(aJob);
       log.debug("Job {} completed successfully",aJob.getId());
     }
@@ -81,9 +82,9 @@ public class DefaultCoordinator implements Coordinator {
     log.debug("Completing task {}", aTask.getId());
     SimpleJobTask task = new SimpleJobTask(aTask);
     task.setStatus(TaskStatus.COMPLETED);
-    Job job = jobRepository.findJobByTaskId (aTask.getId());
+    MutableJob job = jobRepository.findJobByTaskId (aTask.getId());
     Assert.notNull(job,String.format("No job found for task %s ",aTask.getId()));
-    jobRepository.updateTask(job, task);
+    job.updateTask(task);
     run(job);
   }
 

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import com.creactiviti.piper.core.task.JobTask;
 
 @Component
-public class SimpleJobRepository implements JobRepository<SimpleJob> {
+public class SimpleJobRepository implements MutableJobRepository<SimpleJob> {
 
   private final Map<String, SimpleJob> jobs = new HashMap<>();
   private final Map<String, SimpleJob> taskToJob = new HashMap<>();
@@ -24,24 +24,12 @@ public class SimpleJobRepository implements JobRepository<SimpleJob> {
   }
   
   @Override
-  public SimpleJob updateStatus (SimpleJob aJob, JobStatus aJobStatus) {
-    aJob.setStatus(aJobStatus);
-    return save(aJob);
-  }
-  
-  @Override
   public JobTask nextTask(SimpleJob aJob) {
     JobTask nextTask = aJob.nextTask();
     taskToJob.put(nextTask.getId(), aJob);
     return nextTask;
   }
 
-  @Override
-  public SimpleJob updateTask(SimpleJob aJob, JobTask aTask) {
-    aJob.updateTask(aTask);
-    return aJob;
-  }
-  
   @Override
   public SimpleJob findJobByTaskId(String aTaskId) {
     return taskToJob.get(aTaskId);

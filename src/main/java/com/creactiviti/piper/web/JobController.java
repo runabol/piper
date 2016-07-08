@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.job.Job;
-import com.creactiviti.piper.core.job.JobRepository;
+import com.creactiviti.piper.core.job.MutableJobRepository;
 
 @RestController
 @RequestMapping("/job")
 public class JobController {
 
   @Autowired
-  private JobRepository jobRepository;
+  private MutableJobRepository jobRepository;
   
   @Autowired
   private Coordinator coordinator;

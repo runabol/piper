@@ -13,7 +13,7 @@ import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.uuid.UUIDFactory;
 
-public class SimpleJob implements Job {
+public class SimpleJob implements MutableJob {
 
   private final String id = UUIDFactory.create();
   private final Pipeline pipeline;
@@ -49,6 +49,7 @@ public class SimpleJob implements Job {
     return mt;
   }
   
+  @Override
   public void updateTask (JobTask aTask) {
     Assert.isTrue(tasks.containsKey(aTask.getId()),"Unkown task: " + aTask.getId());
     tasks.put(aTask.getId(), aTask);
@@ -59,6 +60,7 @@ public class SimpleJob implements Job {
     return status;
   }
   
+  @Override
   public void setStatus (JobStatus aStatus) {
     if(aStatus == JobStatus.COMPLETED) {
       Assert.isTrue(status==JobStatus.STARTED,String.format("Job %s is %s and so can not be COMPLETED", id,status));
