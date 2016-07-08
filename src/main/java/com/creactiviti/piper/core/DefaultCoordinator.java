@@ -13,9 +13,9 @@ import com.creactiviti.piper.core.context.Context;
 import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.context.SimpleContext;
 import com.creactiviti.piper.core.job.Job;
-import com.creactiviti.piper.core.job.MutableJobRepository;
 import com.creactiviti.piper.core.job.JobStatus;
 import com.creactiviti.piper.core.job.MutableJob;
+import com.creactiviti.piper.core.job.MutableJobRepository;
 import com.creactiviti.piper.core.job.SimpleJob;
 import com.creactiviti.piper.core.job.SimpleJobTask;
 import com.creactiviti.piper.core.messenger.Messenger;
@@ -57,7 +57,7 @@ public class DefaultCoordinator implements Coordinator {
   
   private void run (MutableJob aJob) {
     if(aJob.hasMoreTasks()) {
-      Task nextTask = jobRepository.nextTask(aJob);
+      Task nextTask = aJob.nextTask();
       messenger.send(nextTask.getNode(), nextTask);
     }
     else {

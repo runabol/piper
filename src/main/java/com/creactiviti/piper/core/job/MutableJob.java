@@ -8,4 +8,6 @@ public interface MutableJob extends Job {
   
   void updateTask (JobTask aTask);
   
+  JobTask nextTask ();
+  
 }

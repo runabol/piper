@@ -1,6 +1,7 @@
 package com.creactiviti.piper.core.job;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
@@ -11,7 +12,6 @@ import com.creactiviti.piper.core.task.JobTask;
 public class SimpleJobRepository implements MutableJobRepository<SimpleJob> {
 
   private final Map<String, SimpleJob> jobs = new HashMap<>();
-  private final Map<String, SimpleJob> taskToJob = new HashMap<>();
   
   @Override
   public SimpleJob findOne (String aId) {
@@ -24,15 +24,18 @@ public class SimpleJobRepository implements MutableJobRepository<SimpleJob> {
   }
   
   @Override
-  public JobTask nextTask(SimpleJob aJob) {
-    JobTask nextTask = aJob.nextTask();
-    taskToJob.put(nextTask.getId(), aJob);
-    return nextTask;
-  }
-
-  @Override
   public SimpleJob findJobByTaskId(String aTaskId) {
-    return taskToJob.get(aTaskId);
+    
+    for(SimpleJob job : jobs.values()) {
+      List<JobTask> tasks = job.getTasks();
+      for(JobTask t : tasks) {
+        if(t.getId().equals(aTaskId)) {
+          return job;
+        }
+      }
+    }
+    
+    return null;
   }
 
 }
