@@ -24,7 +24,7 @@ public class DefaultWorker implements Worker {
     TaskHandler<?> taskHandler = taskHandlers.get(aTask.getHandler());
     Assert.notNull(taskHandler,"Unknown task handler: " + aTask.getHandler());
     Object output = taskHandler.handle(aTask);
-    MutableJobTask completion = new MutableJobTask(aTask);
+    SimpleJobTask completion = new SimpleJobTask(aTask);
     if(output!=null) {
       completion.setOutput(output);
     }

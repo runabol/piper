@@ -4,9 +4,9 @@ import java.util.Map;
 
 import com.creactiviti.piper.core.MapObject;
 
-public class MutableContext extends MapObject implements Context {
+public class SimpleContext extends MapObject implements Context {
 
-  public MutableContext (String aJobId, Map<String, Object> aSource) {
+  public SimpleContext (String aJobId, Map<String, Object> aSource) {
     super(aSource);
     put("__jobId", aJobId);
   }

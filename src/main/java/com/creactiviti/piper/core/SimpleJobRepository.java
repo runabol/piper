@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SimpleJobService implements JobService<SimpleJob> {
+public class SimpleJobRepository implements JobRepository<SimpleJob> {
 
   private final Map<String, SimpleJob> jobs = new HashMap<>();
   private final Map<String, SimpleJob> taskToJob = new HashMap<>();

@@ -10,20 +10,20 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.context.Context;
-import com.creactiviti.piper.core.context.ContextService;
-import com.creactiviti.piper.core.context.MutableContext;
+import com.creactiviti.piper.core.context.ContextRepository;
+import com.creactiviti.piper.core.context.SimpleContext;
 import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.pipeline.Pipeline;
-import com.creactiviti.piper.core.pipeline.PipelineService;
+import com.creactiviti.piper.core.pipeline.PipelineRepository;
 
 @Component
 public class DefaultCoordinator implements Coordinator {
 
   @Autowired private Messenger messenger;
-  @Autowired private PipelineService pipelineService;
-  @Autowired private JobService jobService;
+  @Autowired private PipelineRepository pipelineRepository;
+  @Autowired private JobRepository jobRepository;
   @Autowired private ApplicationEventPublisher eventPublisher;
-  @Autowired private ContextService contextService;
+  @Autowired private ContextRepository contextRepository;
  
   private Logger log = LoggerFactory.getLogger(getClass());
   
@@ -31,16 +31,16 @@ public class DefaultCoordinator implements Coordinator {
   public Job start (String aPipelineId, Map<String, Object> aParameters) {
     Assert.notNull(aPipelineId,"pipelineId must not be null");
     
-    Pipeline pipeline = pipelineService.create(aPipelineId);
+    Pipeline pipeline = pipelineRepository.create(aPipelineId);
     Assert.notNull(pipeline,String.format("Unkown pipeline: %s", aPipelineId));
     
     SimpleJob job = new SimpleJob(pipeline);
     job.setStatus(JobStatus.STARTED);
     log.debug("Job {} started",job.getId());
-    jobService.save(job);
+    jobRepository.save(job);
     
-    Context context = new MutableContext(job.getId(), aParameters);
-    contextService.save(context);
+    Context context = new SimpleContext(job.getId(), aParameters);
+    contextRepository.save(context);
     
     run(job);
     
@@ -49,12 +49,12 @@ public class DefaultCoordinator implements Coordinator {
   
   private void run (Job aJob) {
     if(aJob.hasMoreTasks()) {
-      Task nextTask = jobService.nextTask(aJob);
+      Task nextTask = jobRepository.nextTask(aJob);
       messenger.send(nextTask.getNode(), nextTask);
     }
     else {
-      jobService.updateStatus (aJob, JobStatus.COMPLETED);
-      jobService.save(aJob);
+      jobRepository.updateStatus (aJob, JobStatus.COMPLETED);
+      jobRepository.save(aJob);
       log.debug("Job {} completed successfully",aJob.getId());
     }
   }
@@ -72,11 +72,11 @@ public class DefaultCoordinator implements Coordinator {
   @Override
   public void complete (JobTask aTask) {
     log.debug("Completing task {}", aTask.getId());
-    MutableJobTask task = new MutableJobTask(aTask);
+    SimpleJobTask task = new SimpleJobTask(aTask);
     task.setStatus(TaskStatus.COMPLETED);
-    Job job = jobService.getJobByTaskId (aTask.getId());
+    Job job = jobRepository.getJobByTaskId (aTask.getId());
     Assert.notNull(job,String.format("No job found for task %s ",aTask.getId()));
-    jobService.updateTask(job, task);
+    jobRepository.updateTask(job, task);
     run(job);
   }
 

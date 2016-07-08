@@ -1,7 +1,7 @@
 package com.creactiviti.piper.core;
 
 
-public interface JobService<T extends Job> {
+public interface JobRepository<T extends Job> {
   
   T getJobById (String aId);
   

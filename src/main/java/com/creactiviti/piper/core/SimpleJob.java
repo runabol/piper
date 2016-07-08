@@ -42,7 +42,7 @@ public class SimpleJob implements Job {
   public JobTask nextTask() {
     Task task = pipeline.getTasks().get(nextTask);
     nextTask++;
-    MutableJobTask mt = new MutableJobTask (task.toMap());
+    SimpleJobTask mt = new SimpleJobTask (task.toMap());
     tasks.put(mt.getId(),mt);
     return mt;
   }

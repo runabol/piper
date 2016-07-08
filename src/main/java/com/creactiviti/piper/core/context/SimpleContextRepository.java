@@ -6,17 +6,17 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MutableContextService implements ContextService<MutableContext> {
+public class SimpleContextRepository implements ContextRepository<SimpleContext> {
 
-  private Map<String, MutableContext> contexts = new HashMap<String, MutableContext> ();
+  private Map<String, SimpleContext> contexts = new HashMap<String, SimpleContext> ();
   
   @Override
-  public MutableContext getForJobId (String aJobId) {
+  public SimpleContext getForJobId (String aJobId) {
     return contexts.get(aJobId);
   }
 
   @Override
-  public MutableContext save (MutableContext aContext) {
+  public SimpleContext save (SimpleContext aContext) {
     contexts.put(aContext.getJobId(), aContext);
     return aContext;
   }
