@@ -2,7 +2,6 @@ package com.creactiviti.piper.core.job;
 
 import java.util.List;
 
-import com.creactiviti.piper.core.JobStatus;
 import com.creactiviti.piper.core.Task;
 
 /**

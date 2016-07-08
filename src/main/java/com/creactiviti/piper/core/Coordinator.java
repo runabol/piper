@@ -3,6 +3,7 @@ package com.creactiviti.piper.core;
 import java.util.Map;
 
 import com.creactiviti.piper.core.job.Job;
+import com.creactiviti.piper.core.task.JobTask;
 
 /**
  * The central interface responsible for coordinating 

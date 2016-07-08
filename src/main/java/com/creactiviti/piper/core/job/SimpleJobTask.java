@@ -2,10 +2,10 @@ package com.creactiviti.piper.core.job;
 
 import java.util.Map;
 
-import com.creactiviti.piper.core.JobTask;
 import com.creactiviti.piper.core.Mutator;
-import com.creactiviti.piper.core.SimpleTask;
-import com.creactiviti.piper.core.TaskStatus;
+import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.core.task.SimpleTask;
+import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDFactory;
 
 

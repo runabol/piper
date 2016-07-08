@@ -9,6 +9,7 @@ import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.job.SimpleJobTask;
 import com.creactiviti.piper.core.messenger.Messenger;
+import com.creactiviti.piper.core.task.JobTask;
 
 @Component
 public class DefaultWorker implements Worker {

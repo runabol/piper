@@ -10,8 +10,8 @@ import java.util.List;
  */
 public interface PipelineRepository {
   
-  Pipeline create (String aId);
+  Pipeline findOne (String aId);
   
-  List<Pipeline> list ();
+  List<Pipeline> findAll ();
 
 }

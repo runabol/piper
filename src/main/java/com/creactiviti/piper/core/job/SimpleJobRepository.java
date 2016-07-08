@@ -5,8 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import com.creactiviti.piper.core.JobStatus;
-import com.creactiviti.piper.core.JobTask;
+import com.creactiviti.piper.core.task.JobTask;
 
 @Component
 public class SimpleJobRepository implements JobRepository<SimpleJob> {
@@ -15,7 +14,7 @@ public class SimpleJobRepository implements JobRepository<SimpleJob> {
   private final Map<String, SimpleJob> taskToJob = new HashMap<>();
   
   @Override
-  public SimpleJob getJobById (String aId) {
+  public SimpleJob findOne (String aId) {
     return jobs.get(aId);
   }
 
@@ -44,7 +43,7 @@ public class SimpleJobRepository implements JobRepository<SimpleJob> {
   }
   
   @Override
-  public SimpleJob getJobByTaskId(String aTaskId) {
+  public SimpleJob findJobByTaskId(String aTaskId) {
     return taskToJob.get(aTaskId);
   }
 

@@ -14,11 +14,14 @@ import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.context.SimpleContext;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobRepository;
+import com.creactiviti.piper.core.job.JobStatus;
 import com.creactiviti.piper.core.job.SimpleJob;
 import com.creactiviti.piper.core.job.SimpleJobTask;
 import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
+import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.core.task.TaskStatus;
 
 @Component
 public class DefaultCoordinator implements Coordinator {
@@ -35,7 +38,7 @@ public class DefaultCoordinator implements Coordinator {
   public Job start (String aPipelineId, Map<String, Object> aParameters) {
     Assert.notNull(aPipelineId,"pipelineId must not be null");
     
-    Pipeline pipeline = pipelineRepository.create(aPipelineId);
+    Pipeline pipeline = pipelineRepository.findOne(aPipelineId);
     Assert.notNull(pipeline,String.format("Unkown pipeline: %s", aPipelineId));
     
     SimpleJob job = new SimpleJob(pipeline);
@@ -78,7 +81,7 @@ public class DefaultCoordinator implements Coordinator {
     log.debug("Completing task {}", aTask.getId());
     SimpleJobTask task = new SimpleJobTask(aTask);
     task.setStatus(TaskStatus.COMPLETED);
-    Job job = jobRepository.getJobByTaskId (aTask.getId());
+    Job job = jobRepository.findJobByTaskId (aTask.getId());
     Assert.notNull(job,String.format("No job found for task %s ",aTask.getId()));
     jobRepository.updateTask(job, task);
     run(job);

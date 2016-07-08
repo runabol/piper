@@ -1,6 +1,7 @@
 package com.creactiviti.piper.core;
 
 import com.creactiviti.piper.core.messenger.Messenger;
+import com.creactiviti.piper.core.task.JobTask;
 
 /**
  * <p>The interface to be implemented by object responsible for 

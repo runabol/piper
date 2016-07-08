@@ -1,22 +1,20 @@
 package com.creactiviti.piper.core.job;
 
-import com.creactiviti.piper.core.JobStatus;
-import com.creactiviti.piper.core.JobTask;
-import com.creactiviti.piper.core.Task;
+import com.creactiviti.piper.core.task.JobTask;
 
 
 public interface JobRepository<T extends Job> {
   
-  T getJobById (String aId);
+  T findOne (String aId);
   
   T save (T aJob);
   
   T updateStatus (T aJob, JobStatus aJobStatus);
   
-  Task nextTask (T aJob);
+  JobTask nextTask (T aJob);
   
   T updateTask (T aJob, JobTask aTask);
 
-  T getJobByTaskId (String aTaskId);
+  T findJobByTaskId (String aTaskId);
   
 }

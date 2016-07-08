@@ -13,8 +13,8 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
-import com.creactiviti.piper.core.SimpleTask;
 import com.creactiviti.piper.core.Task;
+import com.creactiviti.piper.core.task.SimpleTask;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Throwables;
@@ -23,7 +23,7 @@ import com.google.common.base.Throwables;
 public class YamlPipelineRepository implements PipelineRepository  {
 
   @Override
-  public List<Pipeline> list () {
+  public List<Pipeline> findAll () {
     try {
       ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
       Resource[] resources = resolver.getResources("classpath:pipelines/**/*.yaml");
@@ -51,8 +51,8 @@ public class YamlPipelineRepository implements PipelineRepository  {
   }
 
   @Override
-  public Pipeline create (String aId) {
-    List<Pipeline> pipelines = list ();
+  public Pipeline findOne (String aId) {
+    List<Pipeline> pipelines = findAll ();
     Optional<Pipeline> findFirst = pipelines.stream().filter(p->p.getId().equals(aId)).findFirst();
     return findFirst.isPresent()?findFirst.get():null;
   }

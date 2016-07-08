@@ -1,4 +1,6 @@
-package com.creactiviti.piper.core;
+package com.creactiviti.piper.core.task;
+
+import com.creactiviti.piper.core.Task;
 
 public interface JobTask extends Task {
 

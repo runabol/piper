@@ -1,6 +1,9 @@
-package com.creactiviti.piper.core;
+package com.creactiviti.piper.core.task;
 
 import java.util.Map;
+
+import com.creactiviti.piper.core.MapObject;
+import com.creactiviti.piper.core.Task;
 
 
 public class SimpleTask extends MapObject implements Task {
