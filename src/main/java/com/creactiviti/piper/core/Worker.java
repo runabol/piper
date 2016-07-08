@@ -26,7 +26,7 @@ public interface Worker {
    * @param aTask
    *          The task to execute.
    */
-  void handle (Task aTask);
+  void handle (JobTask aTask);
   
   /**
    * Cancel the execution of a running task.

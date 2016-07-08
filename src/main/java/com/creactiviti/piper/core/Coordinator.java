@@ -43,7 +43,7 @@ public interface Coordinator {
    * @param aTask
    *          The task to complete.
    */
-  void complete (Task aTask);
+  void complete (JobTask aTask);
   
   /**
    * Handle and erroring task.

@@ -20,11 +20,11 @@ public class DefaultWorker implements Worker {
   private Messenger messenger;
   
   @Override
-  public void handle (Task aTask) {
+  public void handle (JobTask aTask) {
     TaskHandler<?> taskHandler = taskHandlers.get(aTask.getHandler());
     Assert.notNull(taskHandler,"Unknown task handler: " + aTask.getHandler());
     Object output = taskHandler.handle(aTask);
-    MutableTask completion = new MutableTask(aTask);
+    MutableJobTask completion = new MutableJobTask(aTask);
     if(output!=null) {
       completion.setOutput(output);
     }

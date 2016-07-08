@@ -70,9 +70,9 @@ public class DefaultCoordinator implements Coordinator {
   }
 
   @Override
-  public void complete (Task aTask) {
+  public void complete (JobTask aTask) {
     log.debug("Completing task {}", aTask.getId());
-    MutableTask task = new MutableTask(aTask);
+    MutableJobTask task = new MutableJobTask(aTask);
     task.setStatus(TaskStatus.COMPLETED);
     Job job = jobService.getJobByTaskId (aTask.getId());
     Assert.notNull(job,String.format("No job found for task %s ",aTask.getId()));

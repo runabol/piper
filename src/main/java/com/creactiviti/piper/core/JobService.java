@@ -11,7 +11,7 @@ public interface JobService<T extends Job> {
   
   Task nextTask (T aJob);
   
-  T updateTask (T aJob, Task aTask);
+  T updateTask (T aJob, JobTask aTask);
 
   T getJobByTaskId (String aTaskId);
   

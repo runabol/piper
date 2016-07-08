@@ -5,14 +5,14 @@ import java.util.Map;
 import com.creactiviti.piper.core.uuid.UUIDFactory;
 
 
-public class MutableTask extends MapObject implements Task, Mutator {
+public class MutableJobTask extends MapObject implements JobTask, Mutator {
 
-  public MutableTask (Task aSource) {
+  public MutableJobTask (JobTask aSource) {
     super(aSource.toMap());
     set("id", aSource.getId());
   }
   
-  public MutableTask (Map<String, Object> aSource) {
+  public MutableJobTask (Map<String, Object> aSource) {
     super(aSource);
     setIfNull("id", UUIDFactory.create());
     setIfNull("status", TaskStatus.CREATED);

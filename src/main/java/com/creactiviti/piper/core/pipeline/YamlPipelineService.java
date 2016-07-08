@@ -13,7 +13,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
-import com.creactiviti.piper.core.MutableTask;
+import com.creactiviti.piper.core.MutableJobTask;
 import com.creactiviti.piper.core.SimplePipeline;
 import com.creactiviti.piper.core.Task;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,7 +43,7 @@ public class YamlPipelineService implements PipelineService  {
       ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
       Map<String,Object> yamlMap = mapper.readValue(yaml, Map.class);
       List<Map<String,Object>> rawTasks = (List<Map<String, Object>>) yamlMap.get("tasks");
-      List<Task> tasks = rawTasks.stream().map(rt -> new MutableTask(rt)).collect(Collectors.toList());
+      List<Task> tasks = rawTasks.stream().map(rt -> new MutableJobTask(rt)).collect(Collectors.toList());
       return new SimplePipeline(id, (String)yamlMap.get("name"), tasks);
     }
     catch (IOException e) {

@@ -39,15 +39,15 @@ public class SimpleJob implements Job {
     return nextTask < pipeline.getTasks().size();
   }
   
-  public Task nextTask() {
+  public JobTask nextTask() {
     Task task = pipeline.getTasks().get(nextTask);
     nextTask++;
-    MutableTask mt = new MutableTask (task.toMap());
+    MutableJobTask mt = new MutableJobTask (task.toMap());
     tasks.put(mt.getId(),mt);
     return mt;
   }
   
-  public void updateTask (Task aTask) {
+  public void updateTask (JobTask aTask) {
     Assert.isTrue(tasks.containsKey(aTask.getId()),"Unkown task: " + aTask.getId());
     tasks.put(aTask.getId(), aTask);
   }

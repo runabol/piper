@@ -28,14 +28,14 @@ public class SimpleJobService implements JobService<SimpleJob> {
   }
   
   @Override
-  public Task nextTask(SimpleJob aJob) {
-    Task nextTask = aJob.nextTask();
+  public JobTask nextTask(SimpleJob aJob) {
+    JobTask nextTask = aJob.nextTask();
     taskToJob.put(nextTask.getId(), aJob);
     return nextTask;
   }
 
   @Override
-  public SimpleJob updateTask(SimpleJob aJob, Task aTask) {
+  public SimpleJob updateTask(SimpleJob aJob, JobTask aTask) {
     aJob.updateTask(aTask);
     return aJob;
   }

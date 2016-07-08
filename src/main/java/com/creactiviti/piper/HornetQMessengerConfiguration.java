@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 
 import com.creactiviti.piper.core.Coordinator;
-import com.creactiviti.piper.core.MutableTask;
-import com.creactiviti.piper.core.Task;
+import com.creactiviti.piper.core.JobTask;
+import com.creactiviti.piper.core.MutableJobTask;
 import com.creactiviti.piper.core.Worker;
 import com.creactiviti.piper.core.messenger.HornetQMessenger;
 import com.google.common.base.Throwables;
@@ -56,9 +56,9 @@ public class HornetQMessengerConfiguration {
     return container;
   }
   
-  private Task toTask (Message aMessage) {
+  private JobTask toTask (Message aMessage) {
     try {
-      return new MutableTask(aMessage.getBody(Map.class));
+      return new MutableJobTask(aMessage.getBody(Map.class));
     } catch (JMSException e) {
       throw Throwables.propagate(e);
     }
