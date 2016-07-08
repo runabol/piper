@@ -1,6 +1,7 @@
 package com.creactiviti.piper.core;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -138,6 +139,11 @@ public abstract class MapObject implements Map<String, Object>, Accessor {
   @Override
   public Integer getInteger(Object aKey, int aDefaultValue) {
     return get(aKey, Integer.class, aDefaultValue);
+  }
+  
+  @Override
+  public Date getDate(Object aKey) {
+    return get(aKey, Date.class);
   }
   
   @Override

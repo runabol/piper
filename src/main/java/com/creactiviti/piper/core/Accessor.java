@@ -1,5 +1,6 @@
 package com.creactiviti.piper.core;
 
+import java.util.Date;
 import java.util.Map;
 
 
@@ -144,6 +145,17 @@ public interface Accessor {
    *         converting as needed.
    */
   Integer getInteger (Object aKey, int aDefaultValue);
+  
+  /**
+   * Return the {@link Date} value associated with the given
+   * key -- converting as necessary.
+   * 
+   * @param aKey
+   *          The key associated with the desired value.
+   * @return The {@link Date} value associated with the given key --
+   *         converting as needed.
+   */
+  Date getDate (Object aKey);
   
   /**
    * Return a map of all key-value pairs.

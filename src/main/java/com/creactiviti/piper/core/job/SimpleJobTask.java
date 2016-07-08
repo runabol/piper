@@ -1,5 +1,6 @@
 package com.creactiviti.piper.core.job;
 
+import java.util.Date;
 import java.util.Map;
 
 import com.creactiviti.piper.core.Mutator;
@@ -13,18 +14,18 @@ public class SimpleJobTask extends SimpleTask implements JobTask, Mutator {
 
   public SimpleJobTask (JobTask aSource) {
     super(aSource.toMap());
-    set("id", aSource.getId());
   }
   
   public SimpleJobTask (Map<String, Object> aSource) {
     super(aSource);
-    setIfNull("id", UUIDFactory.create());
+    setIfNull("_id", UUIDFactory.create());
     setIfNull("status", TaskStatus.CREATED);
+    setIfNull("_creationDate", new Date());
   }
   
   @Override
   public String getId() {
-    return getString("id");
+    return getString("_id");
   }
 
   @Override
@@ -34,17 +35,17 @@ public class SimpleJobTask extends SimpleTask implements JobTask, Mutator {
   
   @Override
   public Object getOutput() {
-    return get("__output");
+    return get("_output");
   }
   
   public void setOutput (Object aOutput) {
-    set("__output", aOutput);
+    set("_output", aOutput);
   }
   
   public void setStatus (String aStatus) {
     set("status",aStatus);
   }
-
+  
   @Override
   public void set (String aKey, Object aValue) {
     put(aKey, aValue);
@@ -55,6 +56,21 @@ public class SimpleJobTask extends SimpleTask implements JobTask, Mutator {
     if(get(aKey)==null) {
       set(aKey, aValue);
     }
+  }
+
+  @Override
+  public Date getCreationDate() {
+    return getDate("_creationDate");
+  }
+
+  @Override
+  public Date getCompletionDate() {
+    return getDate("_completionDate");
+  }
+
+  @Override
+  public Date getFailedDate() {
+    return getDate("_failedDate");
   }
   
 }

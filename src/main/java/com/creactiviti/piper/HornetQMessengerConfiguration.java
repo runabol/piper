@@ -10,6 +10,7 @@ import javax.jms.MessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 
 import com.creactiviti.piper.core.Coordinator;
@@ -17,6 +18,7 @@ import com.creactiviti.piper.core.Worker;
 import com.creactiviti.piper.core.job.SimpleJobTask;
 import com.creactiviti.piper.core.messenger.HornetQMessenger;
 import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.jms.JmsMessageConverter;
 import com.google.common.base.Throwables;
 
 @Configuration
@@ -35,7 +37,19 @@ public class HornetQMessengerConfiguration {
   HornetQMessenger hornetQMessenger () {
     return new HornetQMessenger();
   }
+  
+  @Bean
+  JmsMessageConverter jmsMessageConverter () {
+    return new JmsMessageConverter();
+  }
 
+  @Bean
+  JmsTemplate jmsTemplate () {
+    JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory);
+    jmsTemplate.setMessageConverter(new JmsMessageConverter());
+    return jmsTemplate;
+  }
+  
   @Bean
   DefaultMessageListenerContainer workerMessageListener () {
     DefaultMessageListenerContainer container = new DefaultMessageListenerContainer();
