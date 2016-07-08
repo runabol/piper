@@ -2,8 +2,14 @@ package com.creactiviti.piper.core;
 
 import com.creactiviti.piper.core.task.JobTask;
 
-public interface TaskHandler<T> {
+/**
+ * A startegy interface used for executing a {@link JobTask}.
+ * 
+ * @author Arik Cohen
+ * @since Jun 12, 2016
+ */
+public interface TaskHandler<O> {
 
-  T handle (JobTask aTask);
+  O handle (JobTask aTask);
   
 }
