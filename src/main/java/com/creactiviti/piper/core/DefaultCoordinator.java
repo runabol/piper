@@ -15,7 +15,7 @@ import com.creactiviti.piper.core.context.SimpleContext;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobStatus;
 import com.creactiviti.piper.core.job.MutableJob;
-import com.creactiviti.piper.core.job.MutableJobRepository;
+import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.SimpleJob;
 import com.creactiviti.piper.core.job.SimpleJobTask;
 import com.creactiviti.piper.core.messenger.Messenger;
@@ -29,7 +29,7 @@ public class DefaultCoordinator implements Coordinator {
 
   @Autowired private Messenger messenger;
   @Autowired private PipelineRepository pipelineRepository;
-  @Autowired private MutableJobRepository jobRepository;
+  @Autowired private JobRepository jobRepository;
   @Autowired private ApplicationEventPublisher eventPublisher;
   @Autowired private ContextRepository contextRepository;
  

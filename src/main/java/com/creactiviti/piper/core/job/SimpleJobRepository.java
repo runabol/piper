@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import com.creactiviti.piper.core.task.JobTask;
 
 @Component
-public class SimpleJobRepository implements MutableJobRepository<SimpleJob> {
+public class SimpleJobRepository implements JobRepository<SimpleJob> {
 
   private final Map<String, SimpleJob> jobs = new HashMap<>();
   

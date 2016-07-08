@@ -2,7 +2,7 @@ package com.creactiviti.piper.core.job;
 
 
 
-public interface MutableJobRepository<T extends MutableJob> {
+public interface JobRepository<T extends MutableJob> {
   
   T findOne (String aId);
   
