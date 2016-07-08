@@ -54,7 +54,7 @@ public interface Coordinator {
    * @param aTask
    *          The task to handle.
    */
-  void error (Task aTask);
+  void error (JobTask aTask);
   
   /**
    * Handles application events. 

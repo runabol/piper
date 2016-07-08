@@ -21,7 +21,7 @@ import com.creactiviti.piper.core.task.JobTask;
 public interface Worker {
 
   /**
-   * Handle the execution of a {@link Task}. Implementors
+   * Handle the execution of a {@link JobTask}. Implementors
    * are expected to execute the task asynchronously. 
    * 
    * @param aTask
