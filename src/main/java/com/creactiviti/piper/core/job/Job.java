@@ -2,7 +2,7 @@ package com.creactiviti.piper.core.job;
 
 import java.util.List;
 
-import com.creactiviti.piper.core.Task;
+import com.creactiviti.piper.core.task.JobTask;
 
 /**
  * Represents an instance of a job.
@@ -30,7 +30,7 @@ public interface Job {
    * 
    * @return {@link List}
    */
-  List<Task> getTasks ();
+  List<JobTask> getTasks ();
   
   /**
    * Determines if more tasks are available to execute

@@ -18,7 +18,7 @@ public class SimpleJob implements Job {
   private final String id = UUIDFactory.create();
   private final Pipeline pipeline;
   private JobStatus status = JobStatus.CREATED;
-  private final Map<String,Task> tasks = new LinkedHashMap<>();
+  private final Map<String,JobTask> tasks = new LinkedHashMap<>();
   private int nextTask = 0;
   
   public SimpleJob (Pipeline aPipeline) {
@@ -32,8 +32,8 @@ public class SimpleJob implements Job {
   }
 
   @Override
-  public List<Task> getTasks() {
-    return Collections.unmodifiableList(new ArrayList<Task>(tasks.values()));
+  public List<JobTask> getTasks() {
+    return Collections.unmodifiableList(new ArrayList<JobTask>(tasks.values()));
   }
   
   @Override
