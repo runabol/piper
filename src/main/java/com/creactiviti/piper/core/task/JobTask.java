@@ -8,7 +8,7 @@ public interface JobTask extends Task {
 
   String getId ();
   
-  String getStatus ();
+  TaskStatus getStatus ();
   
   Object getOutput ();
   

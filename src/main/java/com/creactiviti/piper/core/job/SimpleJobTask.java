@@ -19,7 +19,7 @@ public class SimpleJobTask extends SimpleTask implements JobTask, Mutator {
   public SimpleJobTask (Map<String, Object> aSource) {
     super(aSource);
     setIfNull("_id", UUIDFactory.create());
-    setIfNull("status", TaskStatus.CREATED);
+    setIfNull("_status", TaskStatus.CREATED);
     setIfNull("_creationDate", new Date());
   }
   
@@ -29,8 +29,10 @@ public class SimpleJobTask extends SimpleTask implements JobTask, Mutator {
   }
 
   @Override
-  public String getStatus() {
-    return getString("status");
+  public TaskStatus getStatus() {
+    String status = getString("_status");
+    if(status == null) return null;
+    return TaskStatus.valueOf(status);
   }
   
   @Override
@@ -42,8 +44,8 @@ public class SimpleJobTask extends SimpleTask implements JobTask, Mutator {
     set("_output", aOutput);
   }
   
-  public void setStatus (String aStatus) {
-    set("status",aStatus);
+  public void setStatus (TaskStatus aStatus) {
+    set("_status",aStatus);
   }
   
   @Override

@@ -22,7 +22,10 @@ public class JmsMessageConverter extends SimpleMessageConverter {
         throw new MessageConversionException("Cannot convert non-String key of type [" +
             ObjectUtils.nullSafeClassName(entry.getKey()) + "] to JMS MapMessage entry");
       }
-      if(entry.getValue() instanceof Date) {
+      if(entry.getValue()!=null&&entry.getValue().getClass().isEnum()) {
+        message.setObject((String) entry.getKey(),entry.getValue().toString());
+      }
+      else if(entry.getValue() instanceof Date) {
         message.setObject((String) entry.getKey(),DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format(entry.getValue()));
       }
       else {
