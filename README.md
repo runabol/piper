@@ -12,9 +12,9 @@ Piper works by executing a set of tasks defined as a YAML document.
 
 Example:
 
-```
-hello.yaml
+`pipelines/demo/hello.yaml`
 
+```
 name: Hello World
     
 tasks: 
@@ -67,5 +67,22 @@ public class Log implements TaskHandler<Object> {
 }
 ``` 
 
+# Pipelines
 
+Pipeline definitions are located under the `pipelines/` directory on the root of the project.
+
+# Starting Piper for the first time
+
+`mvn clean spring-boot:run` 
+
+This will start piper on your local box, running fully in-memory and without relying on any external dependencies like database or a messaging middleware. 
+
+# Jobs 
+
+Jobs can be started from the REST API: 
+
+```
+curl -s -X POST -H "Content-Type:application/json" -d '{"pipelineId":"demo/hello"}' http://localhost:8080/job/start
+``` 
  
+
