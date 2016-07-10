@@ -76,7 +76,17 @@ Jobs can be started from the REST API:
 
 ```
 curl -s -X POST -H "Content-Type:application/json" -d '{"pipelineId":"demo/hello"}' http://localhost:8080/job/start
-``` 
+```
+
+# Architecture
+
+Piper is comprised of two central components: 
+
+The Coordinator, responsible for the coordinator of job execution, job status, stopping jobs and handling any errors that occur on job executions. 
+
+The Worker, responsible for executing a single task outside of the context of a Job. i.e. Worker instances are meant to be "dumb", stateless processes who simply receive a task from the coordinator, execute it and reply to the Coordinator with the results or errors if any.
+
+Since `Coordinator` and `Worker` do not talk to each other directly but only through a `Messenger`, they can easily run on seperate machines and talk to each other through some sort of middleware.  
  
 # Licensing
 
