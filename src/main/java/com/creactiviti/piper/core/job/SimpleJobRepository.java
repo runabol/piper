@@ -4,11 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import com.creactiviti.piper.core.task.JobTask;
 
 @Component
+@ConditionalOnProperty(name="piper.persistence.provider",havingValue="simple")
 public class SimpleJobRepository implements JobRepository {
 
   private final Map<String, MutableJob> jobs = new HashMap<>();

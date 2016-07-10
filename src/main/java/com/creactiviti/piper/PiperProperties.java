@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class PiperProperties {
 
   private SerializationProperties serialization;
+  private PersistenceProperties persistence;
 
   public SerializationProperties getSerialization() {
     return serialization;
@@ -13,6 +14,14 @@ public class PiperProperties {
   
   public void setSerialization(SerializationProperties aSerialization) {
     serialization = aSerialization;
+  }
+  
+  public PersistenceProperties getPersistence() {
+    return persistence;
+  }
+  
+  public void setPersistence(PersistenceProperties aPersistence) {
+    persistence = aPersistence;
   }
   
 }
