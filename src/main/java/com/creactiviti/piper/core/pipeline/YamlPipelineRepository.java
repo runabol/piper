@@ -26,7 +26,8 @@ public class YamlPipelineRepository implements PipelineRepository  {
   public List<Pipeline> findAll () {
     try {
       ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-      Resource[] resources = resolver.getResources("classpath:pipelines/**/*.yaml");
+      
+      Resource[] resources = resolver.getResources("file:pipelines/**/*.yaml");
       return Arrays.asList(resources).stream().map(r -> read(r)).collect(Collectors.toList());
     }
     catch(IOException e) {
