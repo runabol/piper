@@ -87,4 +87,7 @@ Jobs can be started from the REST API:
 curl -s -X POST -H "Content-Type:application/json" -d '{"pipelineId":"demo/hello"}' http://localhost:8080/job/start
 ``` 
  
+# Licensing
+
+Piper is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/creactiviti/piper/blob/master/LICENSE) for the full license text.
 
