@@ -62,7 +62,7 @@ public class Log implements TaskHandler<Object> {
 
 Pipeline definitions are located under the `pipelines/` directory on the root of the project.
 
-# First time start
+# First time use
 
 Prerequisites: JDK 8 and Maven 3
 
