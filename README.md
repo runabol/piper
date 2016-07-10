@@ -1,4 +1,4 @@
-# PIPER
+# What is this?
 
 Piper is a miniature workflow engine written in Java/Spring.
 
@@ -31,7 +31,7 @@ tasks:
     text: goodbye world
 ```
 
-The central interface that is used to execute a task is the `TaskHandler`:
+The central interface that is used to execute tasks is the `TaskHandler`:
 
 ```
 public interface TaskHandler<O> {
@@ -53,15 +53,15 @@ import org.springframework.stereotype.Component;
 import com.creactiviti.piper.core.TaskHandler;
 import com.creactiviti.piper.core.task.JobTask;
 
-@Component
+@Component // register the implementation with the application
 public class Log implements TaskHandler<Object> {
 
   private Logger log = LoggerFactory.getLogger(getClass());
 
   @Override
-  public Object handle (JobTask aTask) {
-    log.info(aTask.getString("text"));
-    return null;
+  public Object handle (JobTask aTask) { // receive the task instance to execute
+    log.info(aTask.getString("text")); // get the text property from the task and output it
+    return null; // don't return anything
   }
 
 }
