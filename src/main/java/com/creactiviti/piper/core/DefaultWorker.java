@@ -1,6 +1,7 @@
 package com.creactiviti.piper.core;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +16,7 @@ import com.creactiviti.piper.core.task.JobTask;
 @Component
 public class DefaultWorker implements Worker {
 
-  @Autowired
-  private Map<String, TaskHandler<?>> taskHandlers;
-  
-  @Lazy
-  @Autowired
+  private Map<String, TaskHandler<?>> taskHandlers = new HashMap<String, TaskHandler<?>>();
   private Messenger messenger;
   
   @Override
@@ -34,9 +31,19 @@ public class DefaultWorker implements Worker {
     completion.setCompletionDate(new Date());
     messenger.send("completions", completion);
   }
-
+  
   @Override
-  public void cancel (String aTaskId) {
+  public void cancel (String aTaskId) {}
+
+  @Autowired(required=false)
+  public void setTaskHandlers(Map<String, TaskHandler<?>> aTaskHandlers) {
+    taskHandlers = aTaskHandlers;
+  }
+  
+  @Lazy
+  @Autowired  
+  public void setMessenger(Messenger aMessenger) {
+    messenger = aMessenger;
   }
 
 }

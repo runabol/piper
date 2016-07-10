@@ -27,13 +27,15 @@ import com.creactiviti.piper.core.task.TaskStatus;
 @Component
 public class DefaultCoordinator implements Coordinator {
 
-  @Autowired private Messenger messenger;
-  @Autowired private PipelineRepository pipelineRepository;
-  @Autowired private JobRepository jobRepository;
-  @Autowired private ApplicationEventPublisher eventPublisher;
-  @Autowired private ContextRepository contextRepository;
+  private Messenger messenger;
+  private PipelineRepository pipelineRepository;
+  private JobRepository jobRepository;
+  private ApplicationEventPublisher eventPublisher;
+  private ContextRepository contextRepository;
+  
+  private static final String DEFAULT_TASK_QUEUE = "tasks";
  
-  private Logger log = LoggerFactory.getLogger(getClass());
+  private final Logger log = LoggerFactory.getLogger(getClass());
   
   @Override
   public Job start (String aPipelineId, Map<String, Object> aParameters) {
@@ -58,7 +60,8 @@ public class DefaultCoordinator implements Coordinator {
   private void run (MutableJob aJob) {
     if(aJob.hasMoreTasks()) {
       JobTask nextTask = aJob.nextTask();
-      messenger.send(nextTask.getNode(), nextTask);
+      String node = nextTask.getNode();
+      messenger.send(node!=null?node:DEFAULT_TASK_QUEUE, nextTask);
     }
     else {
       aJob.setStatus(JobStatus.COMPLETED);
@@ -95,6 +98,31 @@ public class DefaultCoordinator implements Coordinator {
   @Override
   public void on (Object aEvent) {
     eventPublisher.publishEvent (aEvent);    
+  }
+  
+  @Autowired
+  public void setContextRepository(ContextRepository aContextRepository) {
+    contextRepository = aContextRepository;
+  }
+  
+  @Autowired
+  public void setEventPublisher(ApplicationEventPublisher aEventPublisher) {
+    eventPublisher = aEventPublisher;
+  }
+  
+  @Autowired
+  public void setJobRepository(JobRepository aJobRepository) {
+    jobRepository = aJobRepository;
+  }
+  
+  @Autowired
+  public void setMessenger(Messenger aMessenger) {
+    messenger = aMessenger;
+  }
+  
+  @Autowired
+  public void setPipelineRepository(PipelineRepository aPipelineRepository) {
+    pipelineRepository = aPipelineRepository;
   }
 
 }

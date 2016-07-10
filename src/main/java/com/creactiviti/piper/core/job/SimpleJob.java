@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.Task;
@@ -94,6 +95,11 @@ public class SimpleJob implements MutableJob {
   @Override
   public Date getDateCompleted() {
     return dateCompleted;
+  }
+  
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this);
   }
   
 }
