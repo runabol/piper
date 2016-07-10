@@ -137,9 +137,11 @@ curl -s http://localhost:8080/job/881e6a78a23a42f5985bcc9e6d2bf444 | jq .
 
 Piper is comprised of two central components: 
 
-The Coordinator, responsible for the job execution, for doling out tasks to workers and for handling any errors that occur on job executions. 
+The `Coordinator`, responsible for the job execution, for doling out tasks to workers and for handling any errors that occur on job executions. 
 
-The Worker, responsible for executing a single task outside of the context of a Job. i.e. Worker instances are meant to be "dumb", stateless processes who simply receive a task from the coordinator, execute it and reply to the Coordinator with the results or errors if any.
+and, 
+
+The `Worker`, responsible for executing a single task outside of the context of a Job. i.e. `Worker` instances are meant to be "dumb", stateless processes who simply receive a task from the coordinator, execute it and reply to the Coordinator with the results or errors if any.
 
 Since `Coordinator` and `Worker` do not talk to each other directly but only through a `Messenger`, they can easily run on seperate machines and talk to each other through some sort of middleware.  
  
