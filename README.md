@@ -4,8 +4,8 @@ Piper is a miniature workflow engine written in Java/Spring.
 
 # For god's sake, why another workflow engine? 
 
-Many of the workflow engines that i've looked at, claim to be "light" and "simple" but expect you to master BPMN and their 500+ pages documentation just to get going. In this project I'm striving to deliver on these promises and allow developer to cut to the chase.    
-
+Many of the workflow engines that i've looked at, claim to be "light" and "simple" but expect you to master BPMN and their 500+ pages documentation just to get going. In this project I'm striving to deliver on these promises and allow developer to cut to the chase.
+    
 # How it works? 
 
 Piper works by executing a set of tasks defined as a YAML document. 
@@ -70,13 +70,67 @@ Prerequisites: JDK 8 and Maven 3
 
 This will start piper on your local box, running fully in-memory and without relying on any external dependencies like database or a messaging middleware. 
 
-# Jobs 
+# API
+
+## Start a Job 
 
 Jobs can be started from the REST API: 
 
 ```
 curl -s -X POST -H "Content-Type:application/json" -d '{"pipelineId":"demo/hello"}' http://localhost:8080/job/start
 ```
+
+Which will give you back something like: 
+
+```
+{
+  "id": "881e6a78a23a42f5985bcc9e6d2bf444",
+  "status": "STARTED",
+  "tasks": [
+    {
+      "handler": "log",
+      "_completionDate": "2016-07-10T14:11:49-0700",
+      "name": "Print a greeting",
+      "text": "hello world",
+      "_id": "6fe42b1bf2a142e9a3487a4e903f5a28",
+      "_creationDate": "2016-07-10T14:11:49-0700",
+      "_status": "COMPLETED"
+    },
+    {
+      "name": "Print a greeting",
+      "handler": "log",
+      "text": "what's up world?",
+      "_id": "1afcbb9ed4694e689f56bdf1836e76dd",
+      "_status": "CREATED",
+      "_creationDate": "2016-07-10T14:11:49-0700"
+    }
+  ],
+  "dateCreated": "2016-07-10T14:11:49-0700",
+  "dateCompleted": null,
+  "dateStarted": "2016-07-10T14:11:49-0700"
+}
+```
+
+## Check Job Status
+
+Use the Job ID, to check for it's status:
+
+```
+curl -s http://localhost:8080/job/881e6a78a23a42f5985bcc9e6d2bf444 | jq . 
+```
+
+```
+{
+  "id": "7aa46bd0bd41495889e9fc392c78aff9",
+  "status": "COMPLETED",
+  "tasks": [
+    ... 
+  ],
+  "dateCreated": "2016-07-10T14:35:26-0700",
+  "dateCompleted": "2016-07-10T14:35:26-0700",
+  "dateStarted": "2016-07-10T14:35:26-0700"
+}```
+
 
 # Architecture
 
