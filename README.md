@@ -44,15 +44,6 @@ public interface TaskHandler<O> {
 `TaskHandler`s are resolved according to the `handler` property of each task. Here is the `log` `TaskHandler` implementations seen on the pipeline above: 
 
 ```
-package com.creactiviti.piper.taskhandler.io;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
-import com.creactiviti.piper.core.TaskHandler;
-import com.creactiviti.piper.core.task.JobTask;
-
 @Component // register the implementation with the application
 public class Log implements TaskHandler<Object> {
 
