@@ -8,6 +8,7 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.core.JmsTemplate;
@@ -22,6 +23,7 @@ import com.creactiviti.piper.jms.JmsMessageConverter;
 import com.google.common.base.Throwables;
 
 @Configuration
+@EnableConfigurationProperties(PiperProperties.class)
 public class HornetQMessengerConfiguration {
 
   @Autowired
@@ -32,6 +34,9 @@ public class HornetQMessengerConfiguration {
   
   @Autowired
   private Coordinator coordinator;
+  
+  @Autowired
+  private PiperProperties piperProperties;
 
   @Bean
   HornetQMessenger hornetQMessenger () {
@@ -40,13 +45,13 @@ public class HornetQMessengerConfiguration {
   
   @Bean
   JmsMessageConverter jmsMessageConverter () {
-    return new JmsMessageConverter();
+    return new JmsMessageConverter(piperProperties.getSerialization().getDateFormat());
   }
 
   @Bean
   JmsTemplate jmsTemplate () {
     JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory);
-    jmsTemplate.setMessageConverter(new JmsMessageConverter());
+    jmsTemplate.setMessageConverter(jmsMessageConverter());
     return jmsTemplate;
   }
   

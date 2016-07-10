@@ -1,5 +1,7 @@
 package com.creactiviti.piper.web;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,11 @@ public class JobController {
   @RequestMapping(value="/{id}",method=RequestMethod.GET)
   public Job start (@PathVariable("id")String aJobId) {
     return jobRepository.findOne (aJobId);
+  }
+  
+  public static void main (String[] args) {
+    SimpleDateFormat x = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZ");
+    System.out.println(x.format(new Date()));
   }
   
 }

@@ -2,6 +2,7 @@ package com.creactiviti.piper.core.job;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,9 @@ public class SimpleJob implements MutableJob {
   private JobStatus status = JobStatus.CREATED;
   private final Map<String,JobTask> tasks = new LinkedHashMap<>();
   private int nextTask = 0;
+  private final Date dateCreated = new Date();
+  private Date dateCompleted;
+  private Date dateStarted;
   
   public SimpleJob (Pipeline aPipeline) {
     Assert.notNull(aPipeline,"pipeline must not be null");
@@ -65,14 +69,31 @@ public class SimpleJob implements MutableJob {
     if(aStatus == JobStatus.COMPLETED) {
       Assert.isTrue(status==JobStatus.STARTED,String.format("Job %s is %s and so can not be COMPLETED", id,status));
       status = JobStatus.COMPLETED;
+      dateCompleted = new Date();
     }
     else if (aStatus == JobStatus.STARTED) {
       Assert.isTrue(status==JobStatus.CREATED||status==JobStatus.FAILED||status==JobStatus.STOPPED,String.format("Job %s is %s and so can not be STARTED", id,status));
       status = JobStatus.STARTED;
+      dateStarted = new Date();
     }
     else {
       throw new IllegalArgumentException("Can't handle status: " + aStatus);
     }
+  }
+
+  @Override
+  public Date getDateCreated() {
+    return dateCreated;
+  }
+
+  @Override
+  public Date getDateStarted() {
+    return dateStarted;
+  }
+  
+  @Override
+  public Date getDateCompleted() {
+    return dateCompleted;
   }
   
 }

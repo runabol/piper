@@ -1,5 +1,6 @@
 package com.creactiviti.piper.core.job;
 
+import java.util.Date;
 import java.util.List;
 
 import com.creactiviti.piper.core.task.JobTask;
@@ -31,6 +32,30 @@ public interface Job {
    * @return {@link List}
    */
   List<JobTask> getTasks ();
+
+  /**
+   * Return the date of when the job was originally 
+   * created.
+   * 
+   * @return {@link Date}
+   */
+  Date getDateCreated();
+  
+  /**
+   * Return the date of when the job began 
+   * execution.
+   * 
+   * @return {@link Date}
+   */
+  Date getDateStarted();  
+  
+  /**
+   * Return the date of when the job finished
+   * successfully.
+   * 
+   * @return {@link Date}
+   */
+  Date getDateCompleted();  
   
   /**
    * Determines if more tasks are available to execute
