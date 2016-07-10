@@ -71,7 +71,9 @@ public class Log implements TaskHandler<Object> {
 
 Pipeline definitions are located under the `pipelines/` directory on the root of the project.
 
-# Starting Piper for the first time
+# First time start
+
+Prerequisites: JDK 8 and Maven 3
 
 `mvn clean spring-boot:run` 
 
