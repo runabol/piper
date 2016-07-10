@@ -22,9 +22,9 @@ public class SimpleJob implements MutableJob {
   private JobStatus status = JobStatus.CREATED;
   private final Map<String,JobTask> tasks = new LinkedHashMap<>();
   private int nextTask = 0;
-  private final Date dateCreated = new Date();
-  private Date dateCompleted;
-  private Date dateStarted;
+  private final Date creationDate = new Date();
+  private Date completionDate;
+  private Date startDate;
   
   public SimpleJob (Pipeline aPipeline) {
     Assert.notNull(aPipeline,"pipeline must not be null");
@@ -70,12 +70,12 @@ public class SimpleJob implements MutableJob {
     if(aStatus == JobStatus.COMPLETED) {
       Assert.isTrue(status==JobStatus.STARTED,String.format("Job %s is %s and so can not be COMPLETED", id,status));
       status = JobStatus.COMPLETED;
-      dateCompleted = new Date();
+      completionDate = new Date();
     }
     else if (aStatus == JobStatus.STARTED) {
       Assert.isTrue(status==JobStatus.CREATED||status==JobStatus.FAILED||status==JobStatus.STOPPED,String.format("Job %s is %s and so can not be STARTED", id,status));
       status = JobStatus.STARTED;
-      dateStarted = new Date();
+      startDate = new Date();
     }
     else {
       throw new IllegalArgumentException("Can't handle status: " + aStatus);
@@ -83,18 +83,18 @@ public class SimpleJob implements MutableJob {
   }
 
   @Override
-  public Date getDateCreated() {
-    return dateCreated;
-  }
-
-  @Override
-  public Date getDateStarted() {
-    return dateStarted;
+  public Date getCreationDate() {
+    return creationDate;
   }
   
   @Override
-  public Date getDateCompleted() {
-    return dateCompleted;
+  public Date getStartDate() {
+    return startDate;
+  }
+  
+  @Override
+  public Date getCompletionDate() {
+    return completionDate;
   }
   
   @Override

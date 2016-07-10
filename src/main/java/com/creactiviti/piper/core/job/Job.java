@@ -39,15 +39,15 @@ public interface Job {
    * 
    * @return {@link Date}
    */
-  Date getDateCreated();
-  
+  Date getCreationDate ();
+    
   /**
    * Return the date of when the job began 
    * execution.
    * 
    * @return {@link Date}
    */
-  Date getDateStarted();  
+  Date getStartDate();  
   
   /**
    * Return the date of when the job finished
@@ -55,7 +55,7 @@ public interface Job {
    * 
    * @return {@link Date}
    */
-  Date getDateCompleted();  
+  Date getCompletionDate ();
   
   /**
    * Determines if more tasks are available to execute

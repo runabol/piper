@@ -105,9 +105,9 @@ Which will give you back something like:
       "_creationDate": "2016-07-10T14:11:49-0700"
     }
   ],
-  "dateCreated": "2016-07-10T14:11:49-0700",
-  "dateCompleted": null,
-  "dateStarted": "2016-07-10T14:11:49-0700"
+  "creationDate": "2016-07-10T14:11:49-0700",
+  "completionDate": null,
+  "startDate": "2016-07-10T14:11:49-0700"
 }
 ```
 
@@ -126,9 +126,9 @@ curl -s http://localhost:8080/job/881e6a78a23a42f5985bcc9e6d2bf444 | jq .
   "tasks": [
     ... 
   ],
-  "dateCreated": "2016-07-10T14:35:26-0700",
-  "dateCompleted": "2016-07-10T14:35:26-0700",
-  "dateStarted": "2016-07-10T14:35:26-0700"
+  "creationDate": "2016-07-10T14:35:26-0700",
+  "completionDate": "2016-07-10T14:35:26-0700",
+  "startDate": "2016-07-10T14:35:26-0700"
 }
 ```
 
