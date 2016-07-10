@@ -129,7 +129,8 @@ curl -s http://localhost:8080/job/881e6a78a23a42f5985bcc9e6d2bf444 | jq .
   "dateCreated": "2016-07-10T14:35:26-0700",
   "dateCompleted": "2016-07-10T14:35:26-0700",
   "dateStarted": "2016-07-10T14:35:26-0700"
-}```
+}
+```
 
 
 # Architecture
