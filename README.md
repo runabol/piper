@@ -1,6 +1,10 @@
 # PIPER
 
-Piper is a miniature workflow engine.  
+Piper is a miniature workflow engine written in Java/Spring.
+
+# For god's sake, why another workflow engine? 
+
+Many of the workflow engines that i've looked at claim to be "light" and "simple" but expect you to master BPMN and their 500+ pages documentation just to get going. In this project I'm striving to deliver on these promises and allow you to get going quickly.   
 
 # How it works? 
 
@@ -40,6 +44,15 @@ public interface TaskHandler<O> {
 `TaskHandler`s are resolved according to the `handler` property of each task. Here is the `log` `TaskHandler` implementations seen on the pipeline above: 
 
 ```
+package com.creactiviti.piper.taskhandler.io;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import com.creactiviti.piper.core.TaskHandler;
+import com.creactiviti.piper.core.task.JobTask;
+
 @Component
 public class Log implements TaskHandler<Object> {
 
@@ -53,5 +66,6 @@ public class Log implements TaskHandler<Object> {
 
 }
 ``` 
+
 
  
