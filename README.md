@@ -82,7 +82,7 @@ curl -s -X POST -H "Content-Type:application/json" -d '{"pipelineId":"demo/hello
 
 Piper is comprised of two central components: 
 
-The Coordinator, responsible for the coordinator of job execution, job status, stopping jobs and handling any errors that occur on job executions. 
+The Coordinator, responsible for the job execution, for doling out tasks to workers and for handling any errors that occur on job executions. 
 
 The Worker, responsible for executing a single task outside of the context of a Job. i.e. Worker instances are meant to be "dumb", stateless processes who simply receive a task from the coordinator, execute it and reply to the Coordinator with the results or errors if any.
 
