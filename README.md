@@ -4,7 +4,7 @@ Piper is a miniature workflow engine written in Java/Spring.
 
 # For god's sake, why another workflow engine? 
 
-Many of the workflow engines that i've looked at claim to be "light" and "simple" but expect you to master BPMN and their 500+ pages documentation just to get going. In this project I'm striving to deliver on these promises and allow you to get going quickly.   
+Many of the workflow engines that i've looked at, claim to be "light" and "simple" but expect you to master BPMN and their 500+ pages documentation just to get going. In this project I'm striving to deliver on these promises and allow developer to cut to the chase.    
 
 # How it works? 
 
