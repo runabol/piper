@@ -6,9 +6,11 @@ A miniature workflow engine.
 
 Piper works by executing a set of tasks defined as a YAML document. 
 
-An hello world example might look like this: 
+Example:
 
 ```
+hello.yaml
+
 name: Hello World
     
 tasks: 
