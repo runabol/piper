@@ -144,6 +144,29 @@ and,
 The `Worker`, responsible for executing a single task outside of the context of a Job. i.e. `Worker` instances are meant to be "dumb", stateless processes who simply receive a task from the coordinator, execute it and reply to the Coordinator with the results or errors if any.
 
 Since `Coordinator` and `Worker` do not talk to each other directly but only through a `Messenger`, they can easily run on seperate machines and talk to each other through some sort of middleware.  
+
+# Roadmap
+
+In no particular order:
+
+* Persistence support
+* Reserved words
+* AMQP support
+* Storing output
+* TaskHandlerResolver
+* Using variables
+* TaskEvaluator
+* Scripting support
+* Conditional
+* Loop
+* Map/Reduce
+* Parallel
+* Nesting
+* Stop
+* Resume
+* Error handling
+* Events
+* Plugins	
  
 # Licensing
 
