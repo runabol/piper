@@ -49,7 +49,6 @@ public class SimpleJobRepository implements JobRepository {
 
   @Override
   public Job updateStatus(Job aJob, JobStatus aStatus) {
-    // TODO Auto-generated method stub
     return null;
   }
 

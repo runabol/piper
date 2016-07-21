@@ -17,25 +17,29 @@ import com.creactiviti.piper.core.uuid.UUIDFactory;
 
 public class SimpleJob implements Job {
 
-  private final String id = UUIDFactory.create();
+  private final String id;
   private final Pipeline pipeline;
+  private final Date creationDate;
+  
   private JobStatus status = JobStatus.CREATED;
-  private final Map<String,JobTask> tasks = new LinkedHashMap<>();
+  private Map<String,JobTask> tasks = new LinkedHashMap<>();
   private int nextTask = 0;
-  private final Date creationDate = new Date();
+  
   private Date completionDate;
   private Date startDate;
   
   public SimpleJob (Pipeline aPipeline) {
     Assert.notNull(aPipeline,"pipeline must not be null");
     pipeline = aPipeline;
+    creationDate = new Date();
+    id = UUIDFactory.create();
   }
   
   @Override
   public String getId() {
     return id;
   }
-
+  
   @Override
   public List<JobTask> getTasks() {
     return Collections.unmodifiableList(new ArrayList<JobTask>(tasks.values()));
