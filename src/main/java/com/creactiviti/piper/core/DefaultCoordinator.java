@@ -15,7 +15,6 @@ import com.creactiviti.piper.core.context.SimpleContext;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.JobStatus;
-import com.creactiviti.piper.core.job.MutableJob;
 import com.creactiviti.piper.core.job.SimpleJob;
 import com.creactiviti.piper.core.job.SimpleJobTask;
 import com.creactiviti.piper.core.messenger.Messenger;
@@ -57,15 +56,14 @@ public class DefaultCoordinator implements Coordinator {
     return job;
   }
   
-  private void run (MutableJob aJob) {
+  private void run (Job aJob) {
     if(aJob.hasMoreTasks()) {
-      JobTask nextTask = aJob.nextTask();
+      JobTask nextTask = jobRepository.nextTask(aJob);
       String node = nextTask.getNode();
       messenger.send(node!=null?node:DEFAULT_TASK_QUEUE, nextTask);
     }
     else {
-      aJob.setStatus(JobStatus.COMPLETED);
-      jobRepository.save(aJob);
+      jobRepository.updateStatus(aJob, JobStatus.COMPLETED);
       log.debug("Job {} completed successfully",aJob.getId());
     }
   }
@@ -85,9 +83,9 @@ public class DefaultCoordinator implements Coordinator {
     log.debug("Completing task {}", aTask.getId());
     SimpleJobTask task = new SimpleJobTask(aTask);
     task.setStatus(TaskStatus.COMPLETED);
-    MutableJob job = jobRepository.findJobByTaskId (aTask.getId());
+    Job job = jobRepository.findJobByTaskId (aTask.getId());
     Assert.notNull(job,String.format("No job found for task %s ",aTask.getId()));
-    job.updateTask(task);
+    jobRepository.updateTask(task, job);
     run(job);
   }
 

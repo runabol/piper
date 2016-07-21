@@ -8,22 +8,22 @@ import com.creactiviti.piper.core.task.JobTask;
 
 public class SimpleJobRepository implements JobRepository {
 
-  private final Map<String, MutableJob> jobs = new HashMap<>();
+  private final Map<String,Job> jobs = new HashMap<>();
   
   @Override
-  public MutableJob findOne (String aId) {
+  public Job findOne (String aId) {
     return jobs.get(aId);
   }
 
   @Override
-  public MutableJob save(MutableJob aJob) {
+  public Job save(Job aJob) {
     return jobs.put(aJob.getId(), aJob);
   }
   
   @Override
-  public MutableJob findJobByTaskId(String aTaskId) {
+  public Job findJobByTaskId(String aTaskId) {
     
-    for(MutableJob job : jobs.values()) {
+    for(Job job : jobs.values()) {
       List<JobTask> tasks = job.getTasks();
       for(JobTask t : tasks) {
         if(t.getId().equals(aTaskId)) {
@@ -32,6 +32,24 @@ public class SimpleJobRepository implements JobRepository {
       }
     }
     
+    return null;
+  }
+
+  @Override
+  public JobTask nextTask(Job aJob) {
+    return null;
+  }
+
+  @Override
+  public Job updateTask(JobTask aJobTask, Job aJob) {
+//    Assert.isTrue(tasks.containsKey(aTask.getId()),"Unkown task: " + aTask.getId());
+//    tasks.put(aTask.getId(), aTask);
+    return aJob;
+  }
+
+  @Override
+  public Job updateStatus(Job aJob, JobStatus aStatus) {
+    // TODO Auto-generated method stub
     return null;
   }
 

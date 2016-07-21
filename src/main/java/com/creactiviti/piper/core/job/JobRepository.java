@@ -1,13 +1,21 @@
 package com.creactiviti.piper.core.job;
 
+import com.creactiviti.piper.core.task.JobTask;
+
 
 
 public interface JobRepository {
   
-  MutableJob findOne (String aId);
+  Job findOne (String aJobId);
   
-  MutableJob save (MutableJob aJob);
+  Job save (Job aJob);
   
-  MutableJob findJobByTaskId (String aTaskId);
+  Job findJobByTaskId (String aTaskId);
+
+  JobTask nextTask (Job aJob);
+  
+  Job updateTask (JobTask aJobTask, Job aJob);
+  
+  Job updateStatus (Job aJob, JobStatus aStatus);
   
 }
