@@ -36,8 +36,9 @@ public class SimpleJobRepository implements JobRepository {
   }
 
   @Override
-  public JobTask nextTask(Job aJob) {
-    return null;
+  public JobTask nextTask (Job aJob) {
+    SimpleJob job = new SimpleJob(aJob);
+    return job.nextTask();
   }
 
   @Override
@@ -47,9 +48,5 @@ public class SimpleJobRepository implements JobRepository {
     return aJob;
   }
 
-  @Override
-  public Job updateStatus(Job aJob, JobStatus aStatus) {
-    return null;
-  }
 
 }

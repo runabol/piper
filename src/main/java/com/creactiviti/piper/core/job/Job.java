@@ -3,6 +3,7 @@ package com.creactiviti.piper.core.job;
 import java.util.Date;
 import java.util.List;
 
+import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.task.JobTask;
 
 /**
@@ -32,6 +33,13 @@ public interface Job {
    * @return {@link List}
    */
   List<JobTask> getTasks ();
+
+  /**
+   * Return the job's pipeline.
+   * 
+   * @return {@link Pipeline} 
+   */
+  Pipeline getPipeline ();
 
   /**
    * Return the date of when the job was originally 

@@ -63,7 +63,9 @@ public class DefaultCoordinator implements Coordinator {
       messenger.send(node!=null?node:DEFAULT_TASK_QUEUE, nextTask);
     }
     else {
-      jobRepository.updateStatus(aJob, JobStatus.COMPLETED);
+      SimpleJob job = new SimpleJob(aJob);
+      job.setStatus(JobStatus.COMPLETED);
+      jobRepository.save(job);
       log.debug("Job {} completed successfully",aJob.getId());
     }
   }

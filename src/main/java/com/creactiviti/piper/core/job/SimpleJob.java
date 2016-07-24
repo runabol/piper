@@ -23,10 +23,19 @@ public class SimpleJob implements Job {
   
   private JobStatus status = JobStatus.CREATED;
   private Map<String,JobTask> tasks = new LinkedHashMap<>();
-  private int nextTask = 0;
   
   private Date completionDate;
   private Date startDate;
+  
+  public SimpleJob (Job aJob) {
+    id = aJob.getId();
+    pipeline = aJob.getPipeline();
+    creationDate = aJob.getCreationDate();
+    status = aJob.getStatus();
+    aJob.getTasks().forEach(t->tasks.put(t.getId(), t));
+    completionDate = aJob.getCompletionDate();
+    startDate = aJob.getStartDate();
+  }
   
   public SimpleJob (Pipeline aPipeline) {
     Assert.notNull(aPipeline,"pipeline must not be null");
@@ -47,12 +56,11 @@ public class SimpleJob implements Job {
   
   @Override
   public boolean hasMoreTasks() {
-    return nextTask < pipeline.getTasks().size();
+    return tasks.size() < pipeline.getTasks().size();
   }
   
   public JobTask nextTask() {
-    Task task = pipeline.getTasks().get(nextTask);
-    nextTask++;
+    Task task = pipeline.getTasks().get(tasks.size());
     SimpleJobTask mt = new SimpleJobTask (task.toMap());
     tasks.put(mt.getId(),mt);
     return mt;
@@ -82,6 +90,11 @@ public class SimpleJob implements Job {
   @Override
   public Date getCreationDate() {
     return creationDate;
+  }
+  
+  @Override
+  public Pipeline getPipeline() {
+    return pipeline;
   }
   
   @Override

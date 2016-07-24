@@ -16,6 +16,4 @@ public interface JobRepository {
   
   Job updateTask (JobTask aJobTask, Job aJob);
   
-  Job updateStatus (Job aJob, JobStatus aStatus);
-  
 }

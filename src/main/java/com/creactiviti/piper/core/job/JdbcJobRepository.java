@@ -55,9 +55,4 @@ public class JdbcJobRepository implements JobRepository {
     return null;
   }
 
-  @Override
-  public Job updateStatus(Job aJob, JobStatus aStatus) {
-    return null;
-  }
-
 }
