@@ -9,6 +9,14 @@ tasks:
     handler: log
     text: what's up world?
     
+  - name: Sleep a little
+    handler: sleep
+    milliseconds: 1000
+    
+  - name: Sleep some more
+    handler: sleep
+    milliseconds: 5000
+    
   - name: Print a greeting
     handler: log
     text: goodbye world

@@ -27,6 +27,12 @@ public class SimpleJob implements Job {
   private Date completionDate;
   private Date startDate;
   
+  /**
+   * Constructs a mutable version of a {@link Job}
+   * instance.
+   * 
+   * @param aJob
+   */
   public SimpleJob (Job aJob) {
     id = aJob.getId();
     pipeline = aJob.getPipeline();
@@ -37,6 +43,11 @@ public class SimpleJob implements Job {
     startDate = aJob.getStartDate();
   }
   
+  /**
+   * Constructs a new {@link Job} instance.
+   * 
+   * @param aJob
+   */
   public SimpleJob (Pipeline aPipeline) {
     Assert.notNull(aPipeline,"pipeline must not be null");
     pipeline = aPipeline;
@@ -87,6 +98,11 @@ public class SimpleJob implements Job {
     }
   }
 
+  public void updateTask (JobTask aJobTask) {
+    Assert.isTrue(tasks.containsKey(aJobTask.getId()),"Unkown task: " + aJobTask.getId());
+    tasks.put(aJobTask.getId(), aJobTask);
+  }
+  
   @Override
   public Date getCreationDate() {
     return creationDate;

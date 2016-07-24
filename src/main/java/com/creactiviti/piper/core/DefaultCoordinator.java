@@ -85,9 +85,10 @@ public class DefaultCoordinator implements Coordinator {
     log.debug("Completing task {}", aTask.getId());
     SimpleJobTask task = new SimpleJobTask(aTask);
     task.setStatus(TaskStatus.COMPLETED);
-    Job job = jobRepository.findJobByTaskId (aTask.getId());
+    SimpleJob job = new SimpleJob (jobRepository.findJobByTaskId (aTask.getId()));
     Assert.notNull(job,String.format("No job found for task %s ",aTask.getId()));
-    jobRepository.updateTask(task, job);
+    job.updateTask(task);
+    jobRepository.save(job);
     run(job);
   }
 

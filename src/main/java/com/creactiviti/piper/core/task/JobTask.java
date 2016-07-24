@@ -12,6 +12,8 @@ public interface JobTask extends Task {
   
   Object getOutput ();
   
+  Exception getException ();
+  
   Date getCreationDate ();
   
   Date getCompletionDate ();

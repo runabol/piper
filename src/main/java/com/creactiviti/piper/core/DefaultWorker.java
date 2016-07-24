@@ -18,20 +18,27 @@ public class DefaultWorker implements Worker {
 
   private Map<String, TaskHandler<?>> taskHandlers = new HashMap<String, TaskHandler<?>>();
   private Messenger messenger;
-  
+
   @Override
   public void handle (JobTask aTask) {
     TaskHandler<?> taskHandler = taskHandlers.get(aTask.getHandler());
     Assert.notNull(taskHandler,"Unknown task handler: " + aTask.getHandler());
-    Object output = taskHandler.handle(aTask);
-    SimpleJobTask completion = new SimpleJobTask(aTask);
-    if(output!=null) {
-      completion.setOutput(output);
+    try {
+      Object output = taskHandler.handle(aTask);
+      SimpleJobTask completion = new SimpleJobTask(aTask);
+      if(output!=null) {
+        completion.setOutput(output);
+      }
+      completion.setCompletionDate(new Date());
+      messenger.send("completions", completion);
     }
-    completion.setCompletionDate(new Date());
-    messenger.send("completions", completion);
+    catch (Exception e) {
+      SimpleJobTask jobTask = new SimpleJobTask(aTask);
+      jobTask.setException(e);
+      messenger.send("errors", jobTask);
+    }
   }
-  
+
   @Override
   public void cancel (String aTaskId) {}
 
@@ -39,7 +46,7 @@ public class DefaultWorker implements Worker {
   public void setTaskHandlers(Map<String, TaskHandler<?>> aTaskHandlers) {
     taskHandlers = aTaskHandlers;
   }
-  
+
   @Lazy
   @Autowired  
   public void setMessenger(Messenger aMessenger) {

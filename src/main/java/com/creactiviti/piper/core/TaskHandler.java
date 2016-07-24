@@ -10,6 +10,6 @@ import com.creactiviti.piper.core.task.JobTask;
  */
 public interface TaskHandler<O> {
 
-  O handle (JobTask aTask);
+  O handle (JobTask aTask) throws Exception;
   
 }

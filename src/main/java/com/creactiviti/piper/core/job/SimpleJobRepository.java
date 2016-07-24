@@ -38,15 +38,11 @@ public class SimpleJobRepository implements JobRepository {
   @Override
   public JobTask nextTask (Job aJob) {
     SimpleJob job = new SimpleJob(aJob);
+    jobs.put(job.getId(), job);
     return job.nextTask();
   }
 
-  @Override
-  public Job updateTask(JobTask aJobTask, Job aJob) {
-//    Assert.isTrue(tasks.containsKey(aTask.getId()),"Unkown task: " + aTask.getId());
-//    tasks.put(aTask.getId(), aTask);
-    return aJob;
-  }
+
 
 
 }

@@ -18,34 +18,43 @@ public class SimpleJobTask extends SimpleTask implements JobTask, Mutator {
   
   public SimpleJobTask (Map<String, Object> aSource) {
     super(aSource);
-    setIfNull("_id", UUIDFactory.create());
-    setIfNull("_status", TaskStatus.CREATED);
-    setIfNull("_creationDate", new Date());
+    setIfNull("id", UUIDFactory.create());
+    setIfNull("status", TaskStatus.CREATED);
+    setIfNull("creationDate", new Date());
   }
   
   @Override
   public String getId() {
-    return getString("_id");
+    return getString("id");
   }
 
   @Override
   public TaskStatus getStatus() {
-    String status = getString("_status");
+    String status = getString("status");
     if(status == null) return null;
     return TaskStatus.valueOf(status);
   }
   
   @Override
   public Object getOutput() {
-    return get("_output");
+    return get("output");
   }
   
   public void setOutput (Object aOutput) {
-    set("_output", aOutput);
+    set("output", aOutput);
+  }
+  
+  @Override
+  public Exception getException() {
+    return (Exception) get("exception");
+  }
+  
+  public void setException (Exception aException) {
+    set("exception", aException);
   }
   
   public void setStatus (TaskStatus aStatus) {
-    set("_status",aStatus);
+    set("status",aStatus);
   }
   
   @Override
@@ -62,21 +71,21 @@ public class SimpleJobTask extends SimpleTask implements JobTask, Mutator {
 
   @Override
   public Date getCreationDate() {
-    return getDate("_creationDate");
+    return getDate("creationDate");
   }
 
   @Override
   public Date getCompletionDate() {
-    return getDate("_completionDate");
+    return getDate("completionDate");
   }
   
   public void setCompletionDate(Date aDate) {
-    set("_completionDate", aDate);
+    set("completionDate", aDate);
   }
 
   @Override
   public Date getFailedDate() {
-    return getDate("_failedDate");
+    return getDate("failedDate");
   }
   
 }
