@@ -1,6 +1,6 @@
 # What is this?
 
-Piper is a miniature workflow engine written in Java/Spring.
+Piper is a miniature workflow engine written in Java and built on Spring Boot.
 
 # For god's sake, why another workflow engine? 
 
@@ -36,7 +36,7 @@ The central interface that is used to execute tasks is the `TaskHandler`:
 ```
 public interface TaskHandler<O> {
 
-  O handle (JobTask aTask);
+  O handle (JobTask aTask) throws Exception;
   
 }
 ```
