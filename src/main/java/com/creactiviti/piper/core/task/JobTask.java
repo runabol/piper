@@ -20,4 +20,6 @@ public interface JobTask extends Task {
   
   Date getFailedDate ();
   
+  long getExecutionTime ();
+  
 }

@@ -87,5 +87,10 @@ public class SimpleJobTask extends SimpleTask implements JobTask, Mutator {
   public Date getFailedDate() {
     return getDate("failedDate");
   }
+
+  @Override
+  public long getExecutionTime() {
+    return 0;
+  }
   
 }
