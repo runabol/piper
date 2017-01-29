@@ -1,13 +1,10 @@
 package com.creactiviti.piper.core;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.job.SimpleJobTask;
 import com.creactiviti.piper.core.messenger.Messenger;
@@ -16,13 +13,12 @@ import com.creactiviti.piper.core.task.JobTask;
 @Component
 public class DefaultWorker implements Worker {
 
-  private Map<String, TaskHandler<?>> taskHandlers = new HashMap<String, TaskHandler<?>>();
+  private TaskHandlerResolver taskHandlerResolver;
   private Messenger messenger;
 
   @Override
   public void handle (JobTask aTask) {
-    TaskHandler<?> taskHandler = taskHandlers.get(aTask.getHandler());
-    Assert.notNull(taskHandler,"Unknown task handler: " + aTask.getHandler());
+    TaskHandler<?> taskHandler = taskHandlerResolver.resolve(aTask);
     try {
       Object output = taskHandler.handle(aTask);
       SimpleJobTask completion = new SimpleJobTask(aTask);
@@ -42,9 +38,9 @@ public class DefaultWorker implements Worker {
   @Override
   public void cancel (String aTaskId) {}
 
-  @Autowired(required=false)
-  public void setTaskHandlers(Map<String, TaskHandler<?>> aTaskHandlers) {
-    taskHandlers = aTaskHandlers;
+  @Autowired
+  public void setTaskHandlerResolver(TaskHandlerResolver aTaskHandlerResolver) {
+    taskHandlerResolver = aTaskHandlerResolver;
   }
 
   @Lazy

@@ -18,12 +18,6 @@ public class SimpleMessenger implements Messenger {
 
   private Map<String, List<Receiver>> listeners = new HashMap<> ();
 
-  public SimpleMessenger () {}
-  
-  public SimpleMessenger (String aRoutingKey, Receiver aReceiver) {
-    receive(aRoutingKey, aReceiver);
-  }
-  
   @Override
   public void send (String aRoutingKey, Object aMessage) {
     List<Receiver> list = listeners.get(aRoutingKey);

@@ -35,23 +35,20 @@ public class HornetQMessengerConfiguration {
   @Autowired
   private Coordinator coordinator;
   
-  @Autowired
-  private PiperProperties piperProperties;
-
   @Bean
   HornetQMessenger hornetQMessenger () {
     return new HornetQMessenger();
   }
   
   @Bean
-  JmsMessageConverter jmsMessageConverter () {
+  JmsMessageConverter jmsMessageConverter (PiperProperties piperProperties) {
     return new JmsMessageConverter(piperProperties.getSerialization().getDateFormat());
   }
 
   @Bean
-  JmsTemplate jmsTemplate () {
+  JmsTemplate jmsTemplate (PiperProperties piperProperties) {
     JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory);
-    jmsTemplate.setMessageConverter(jmsMessageConverter());
+    jmsTemplate.setMessageConverter(jmsMessageConverter(piperProperties));
     return jmsTemplate;
   }
   

@@ -38,7 +38,7 @@ public class SimpleJob implements Job {
     pipeline = aJob.getPipeline();
     creationDate = aJob.getCreationDate();
     status = aJob.getStatus();
-    aJob.getTasks().forEach(t->tasks.put(t.getId(), t));
+    aJob.getJobTasks().forEach(t->tasks.put(t.getId(), t));
     completionDate = aJob.getCompletionDate();
     startDate = aJob.getStartDate();
   }
@@ -61,7 +61,7 @@ public class SimpleJob implements Job {
   }
   
   @Override
-  public List<JobTask> getTasks() {
+  public List<JobTask> getJobTasks() {
     return Collections.unmodifiableList(new ArrayList<JobTask>(tasks.values()));
   }
   

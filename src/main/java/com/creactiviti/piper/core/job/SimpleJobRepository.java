@@ -24,7 +24,7 @@ public class SimpleJobRepository implements JobRepository {
   public Job findJobByTaskId(String aTaskId) {
     
     for(Job job : jobs.values()) {
-      List<JobTask> tasks = job.getTasks();
+      List<JobTask> tasks = job.getJobTasks();
       for(JobTask t : tasks) {
         if(t.getId().equals(aTaskId)) {
           return job;

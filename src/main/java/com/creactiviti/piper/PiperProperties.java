@@ -1,7 +1,9 @@
 package com.creactiviti.piper;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
+@Component
 @ConfigurationProperties(prefix = "piper")
 public class PiperProperties {
 

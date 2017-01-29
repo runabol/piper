@@ -1,13 +1,15 @@
 package com.creactiviti.piper;
 
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.creactiviti.piper.core.DefaultCoordinator;
+import com.creactiviti.piper.core.DefaultTaskHandlerResolver;
 import com.creactiviti.piper.core.DefaultWorker;
+import com.creactiviti.piper.core.TaskHandler;
 import com.creactiviti.piper.core.context.SimpleContextRepository;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobStatus;
@@ -16,6 +18,7 @@ import com.creactiviti.piper.core.messenger.SimpleMessenger;
 import com.creactiviti.piper.core.pipeline.YamlPipelineRepository;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.taskhandler.io.Log;
+import com.creactiviti.piper.taskhandler.time.Sleep;
 
 public class DefaultCoordinatorTests {
 
@@ -24,18 +27,34 @@ public class DefaultCoordinatorTests {
     
     DefaultWorker worker = new DefaultWorker();
     DefaultCoordinator coordinator = new DefaultCoordinator ();
+   
+    SimpleMessenger workerMessenger = new SimpleMessenger();
+    workerMessenger.receive("completions", (o)->coordinator.complete((JobTask)o));
+    worker.setMessenger(workerMessenger);
+    DefaultTaskHandlerResolver taskHandlerResolver = new DefaultTaskHandlerResolver();
     
-    worker.setMessenger(new SimpleMessenger("completions", (o)->coordinator.complete((JobTask)o)));
-    worker.setTaskHandlers(Collections.singletonMap("log", new Log()));
+    Map<String,TaskHandler<?>> handlers = new HashMap<>();
+    handlers.put("log", new Log());
+    handlers.put("sleep", new Sleep());
+    
+    taskHandlerResolver.setTaskHandlers(handlers);
+    
+    worker.setTaskHandlerResolver(taskHandlerResolver);
     
     coordinator.setContextRepository(new SimpleContextRepository());
-    coordinator.setJobRepository(new SimpleJobRepository());
+    SimpleJobRepository jobRepository = new SimpleJobRepository();
+    coordinator.setJobRepository(jobRepository);
     coordinator.setPipelineRepository(new YamlPipelineRepository());
-    coordinator.setMessenger(new SimpleMessenger("tasks", (o)->worker.handle((JobTask)o)));
+    
+    SimpleMessenger coordinatorMessenger = new SimpleMessenger();
+    coordinatorMessenger.receive("tasks", (o)->worker.handle((JobTask)o));
+    coordinator.setMessenger(coordinatorMessenger);
         
     Job job = coordinator.start("demo/hello", new HashMap<String, Object> ());
     
-    Assert.assertEquals(JobStatus.COMPLETED, job.getStatus());
+    Job completedJob = jobRepository.findOne(job.getId());
+    
+    Assert.assertEquals(JobStatus.COMPLETED, completedJob.getStatus());
   }
   
 }

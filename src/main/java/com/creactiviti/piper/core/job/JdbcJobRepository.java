@@ -28,7 +28,7 @@ public class JdbcJobRepository implements JobRepository {
   public Job save(Job aJob) {
     SqlParameterSource jobParameterSource = new BeanPropertySqlParameterSource(aJob);
     jdbc.update("insert into job (job_id,status,creation_date) values (:id,:status,:creationDate)", jobParameterSource);
-    List<JobTask> tasks = aJob.getTasks();
+    List<JobTask> tasks = aJob.getJobTasks();
     for(JobTask t : tasks) {
       Map<String, Object> taskParams = new HashMap<String, Object> ();
       taskParams.put("id", t.getId());

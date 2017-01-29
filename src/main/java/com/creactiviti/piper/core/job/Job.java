@@ -32,7 +32,7 @@ public interface Job {
    * 
    * @return {@link List}
    */
-  List<JobTask> getTasks ();
+  List<JobTask> getJobTasks ();
 
   /**
    * Return the job's pipeline.
