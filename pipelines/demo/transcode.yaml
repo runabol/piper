@@ -1,0 +1,10 @@
+name: Hello World
+    
+tasks: 
+  - name: Print a greeting
+    type: ffmpeg
+    options: 
+      - "-y"
+      - "-i"
+      - "/home/arik/Downloads/trailer_1080p.mov"
+      - "/home/arik/Downloads/trailer_1080p.mp4"

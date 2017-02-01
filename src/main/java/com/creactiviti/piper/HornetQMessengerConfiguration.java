@@ -1,6 +1,10 @@
 package com.creactiviti.piper;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
@@ -20,6 +24,7 @@ import com.creactiviti.piper.core.job.SimpleJobTask;
 import com.creactiviti.piper.core.messenger.HornetQMessenger;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.jms.JmsMessageConverter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Throwables;
 
 @Configuration
@@ -34,6 +39,8 @@ public class HornetQMessengerConfiguration {
   
   @Autowired
   private Coordinator coordinator;
+  
+  private final ObjectMapper json = new ObjectMapper ();
   
   @Bean
   HornetQMessenger hornetQMessenger () {
@@ -74,7 +81,21 @@ public class HornetQMessengerConfiguration {
   
   private JobTask toTask (Message aMessage) {
     try {
-      return new SimpleJobTask(aMessage.getBody(Map.class));
+      Map<String,Object> raw = aMessage.getBody(Map.class);
+      Map<String, Object> task = new HashMap<>();
+      for(Entry<String,Object> entry : raw.entrySet()) {
+        if(entry.getValue().toString().startsWith("list:")) {
+          try {
+            task.put(entry.getKey(), json.readValue((String)entry.getValue().toString().substring(5),ArrayList.class));
+          } catch (IOException e) {
+            throw Throwables.propagate(e);
+          }
+        }
+        else {
+          task.put(entry.getKey(), entry.getValue());
+        }
+      }
+      return new SimpleJobTask(task);
     } catch (JMSException e) {
       throw Throwables.propagate(e);
     }

@@ -16,8 +16,8 @@ public class DefaultTaskHandlerResolver implements TaskHandlerResolver {
   
   @Override
   public TaskHandler<?> resolve(JobTask aJobTask) {
-    TaskHandler<?> taskHandler = taskHandlers.get(aJobTask.getHandler());
-    Assert.notNull(taskHandler,"Unknown task handler: " + aJobTask.getHandler());
+    TaskHandler<?> taskHandler = taskHandlers.get(aJobTask.getType());
+    Assert.notNull(taskHandler,"Unknown task handler: " + aJobTask.getType());
     return taskHandler;
   }
 

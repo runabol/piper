@@ -17,8 +17,8 @@ public class SimpleTask extends MapObject implements Task {
   }
   
   @Override
-  public String getHandler() {
-    return getString("handler");
+  public String getType() {
+    return getString("type");
   }
 
   @Override

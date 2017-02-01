@@ -3,11 +3,15 @@ package com.creactiviti.piper.core;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang3.SerializationUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Throwables;
 
 /**
  * @author Arik Cohen
@@ -16,6 +20,8 @@ import org.apache.commons.lang3.SerializationUtils;
 public abstract class MapObject implements Map<String, Object>, Accessor {
 
   private final HashMap<String, Object> map;
+  
+  private final ObjectMapper json = new ObjectMapper(); 
   
   public MapObject (Map<String, Object> aSource) {
     map = new HashMap<String, Object>(aSource);
@@ -44,6 +50,19 @@ public abstract class MapObject implements Map<String, Object>, Accessor {
   @Override
   public Object get(Object aKey) {
     return map.get(aKey);
+  }
+  
+  @Override
+  public <T> List<T> getList(Object aKey, Class<T> aElementType) {
+    try {
+      String value = getString(aKey);
+      if(value == null) {
+        return null;
+      }
+      return json.readValue(value, List.class);
+    } catch (Exception e) {
+      throw Throwables.propagate(e);
+    }
   }
   
   @Override

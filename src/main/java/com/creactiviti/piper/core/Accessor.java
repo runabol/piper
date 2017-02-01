@@ -1,6 +1,7 @@
 package com.creactiviti.piper.core;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 
@@ -70,6 +71,18 @@ public interface Accessor {
    *         converting to {@link String} as needed.
    */
   String getString (Object aKey, String aDefaultValue);
+  
+  /**
+   * Return the {@link List} of items associated with the given
+   * key.
+   * 
+   * @param aKey
+   *          The key associated with the desired value.
+   * @param aElementType
+   *          The type of the list elements.
+   * @return The list of items
+   */
+  <T> List<T> getList (Object aKey, Class<T> aElementType);
   
   /**
    * Return the {@link Long} value associated with the given

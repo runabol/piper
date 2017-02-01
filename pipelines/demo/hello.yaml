@@ -2,21 +2,21 @@ name: Hello World
     
 tasks: 
   - name: Print a greeting
-    handler: log
+    type: log
     text: hello world
     
   - name: Print a greeting
-    handler: log
+    type: log
     text: what's up world?
     
   - name: Sleep a little
-    handler: sleep
+    type: sleep
     milliseconds: 1000
     
   - name: Sleep some more
-    handler: sleep
+    type: sleep
     milliseconds: 5000
     
   - name: Print a greeting
-    handler: log
+    type: log
     text: goodbye world
