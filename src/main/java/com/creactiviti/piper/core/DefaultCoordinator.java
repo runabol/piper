@@ -51,12 +51,12 @@ public class DefaultCoordinator implements Coordinator {
     Context context = new SimpleContext(job.getId(), aInput!=null?aInput:Collections.emptyMap());
     contextRepository.save(context);
     
-    run(job);
+    execute (job);
     
     return job;
   }
   
-  private void run (Job aJob) {
+  private void execute (Job aJob) {
     if(aJob.hasMoreTasks()) {
       JobTask nextTask = jobRepository.nextTask(aJob); // FIXME: not sure about that.
       taskExecutor.execute(nextTask);
@@ -88,7 +88,7 @@ public class DefaultCoordinator implements Coordinator {
     Assert.notNull(job,String.format("No job found for task %s ",aTask.getId()));
     job.updateTask(task);
     jobRepository.save(job);
-    run(job);
+    execute (job);
   }
 
   @Override

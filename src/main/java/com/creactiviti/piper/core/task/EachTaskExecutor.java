@@ -15,7 +15,7 @@ public class EachTaskExecutor implements TaskExecutor, TaskExecutorResolver {
 
   @Override
   public TaskExecutor resolve (JobTask aTask) {
-    if(aTask.contains("each")) {
+    if(aTask.getType().equals("each")) {
       return this;
     }
     return null;

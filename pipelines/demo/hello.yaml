@@ -17,3 +17,4 @@ tasks:
   - name: Print a farewell
     type: log
     text: goodbye ${name}
+    
