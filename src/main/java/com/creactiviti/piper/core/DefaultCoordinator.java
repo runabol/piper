@@ -59,7 +59,7 @@ public class DefaultCoordinator implements Coordinator {
   
   private void run (Job aJob) {
     if(aJob.hasMoreTasks()) {
-      JobTask nextTask = jobRepository.nextTask(aJob);
+      JobTask nextTask = jobRepository.nextTask(aJob); // FIXME: not sure about that.
       String node = nextTask.getNode();
       messenger.send(node!=null?node:DEFAULT_TASK_QUEUE, nextTask);
     }

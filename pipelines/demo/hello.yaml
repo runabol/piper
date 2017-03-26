@@ -11,11 +11,11 @@ tasks:
     
   - name: Sleep a little
     type: sleep
-    milliseconds: 1000
+    millis: 1000
     
   - name: Sleep some more
     type: sleep
-    milliseconds: 5000
+    millis: 5000
     
   - name: Print a greeting
     type: log

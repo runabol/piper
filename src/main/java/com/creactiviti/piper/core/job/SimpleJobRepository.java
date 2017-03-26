@@ -1,14 +1,14 @@
 package com.creactiviti.piper.core.job;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.creactiviti.piper.core.task.JobTask;
 
 public class SimpleJobRepository implements JobRepository {
 
-  private final Map<String,Job> jobs = new HashMap<>();
+  private final Map<String,Job> jobs = new ConcurrentHashMap<>();
   
   @Override
   public Job findOne (String aId) {

@@ -71,7 +71,7 @@ public interface Job {
    * 
    * @return boolean
    *           <code>true</code> if more tasks remain
-   *           to execute on this pipeline. Otherwise
+   *           to execute on this job. Otherwise
    *           <code>false</code>.
    */
   boolean hasMoreTasks ();

@@ -10,7 +10,7 @@ public class Sleep implements TaskHandler<Object> {
 
   @Override
   public Object handle (JobTask aTask) throws InterruptedException {
-    Thread.sleep(aTask.getLong("milliseconds", 1000));
+    Thread.sleep(aTask.getLong("millis", 1000));
     return null;
   }
 
