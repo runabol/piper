@@ -4,10 +4,11 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.creactiviti.piper.core.Coordinator;
@@ -26,15 +27,15 @@ public class JobController {
   
   private static final String PIPELINE_ID = "pipelineId";
   
-  @RequestMapping(value="/start",method=RequestMethod.POST)
+  @PostMapping(value="/start")
   public Job start (@RequestBody Map<String, Object> aJobRequest) {
     String pipelineId = (String) aJobRequest.remove(PIPELINE_ID);
     Assert.notNull(pipelineId,"Missing required field: " + PIPELINE_ID);
     return coordinator.start(pipelineId, aJobRequest);
   }
   
-  @RequestMapping(value="/{id}",method=RequestMethod.GET)
-  public Job start (@PathVariable("id")String aJobId) {
+  @GetMapping(value="/{id}")
+  public Job get (@PathVariable("id")String aJobId) {
     return jobRepository.findOne (aJobId);
   }
   
