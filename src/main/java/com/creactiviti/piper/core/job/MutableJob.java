@@ -31,16 +31,16 @@ public class MutableJob implements Job {
    * Constructs a mutable version of a {@link Job}
    * instance.
    * 
-   * @param aJob
+   * @param aSource
    */
-  public MutableJob (Job aJob) {
-    id = aJob.getId();
-    pipeline = aJob.getPipeline();
-    creationDate = aJob.getCreationDate();
-    status = aJob.getStatus();
-    aJob.getExecution().forEach(t->execution.put(t.getId(), t));
-    completionDate = aJob.getCompletionDate();
-    startDate = aJob.getStartDate();
+  public MutableJob (Job aSource) {
+    id = aSource.getId();
+    pipeline = aSource.getPipeline();
+    creationDate = aSource.getCreationDate();
+    status = aSource.getStatus();
+    aSource.getExecution().forEach(t->execution.put(t.getId(), t));
+    completionDate = aSource.getCompletionDate();
+    startDate = aSource.getStartDate();
   }
   
   /**
