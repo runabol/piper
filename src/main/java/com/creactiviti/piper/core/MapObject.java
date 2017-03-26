@@ -53,6 +53,11 @@ public abstract class MapObject implements Map<String, Object>, Accessor {
   }
   
   @Override
+  public boolean contains(Object aKey) {
+    return map.containsKey(aKey);
+  }
+  
+  @Override
   public <T> List<T> getList(Object aKey, Class<T> aElementType) {
     try {
       String value = getString(aKey);

@@ -18,23 +18,22 @@ import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.JobStatus;
 import com.creactiviti.piper.core.job.SimpleJob;
 import com.creactiviti.piper.core.job.SimpleJobTask;
-import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.core.task.TaskExecutor;
 import com.creactiviti.piper.core.task.TaskStatus;
 
 @Component
 public class DefaultCoordinator implements Coordinator {
 
-  private Messenger messenger;
+  
   private PipelineRepository pipelineRepository;
   private JobRepository jobRepository;
   private ApplicationEventPublisher eventPublisher;
   private ContextRepository contextRepository;
+  private TaskExecutor taskExecutor;
   
-  private static final String DEFAULT_TASK_QUEUE = "tasks";
- 
   private final Logger log = LoggerFactory.getLogger(getClass());
   
   @Override
@@ -60,8 +59,7 @@ public class DefaultCoordinator implements Coordinator {
   private void run (Job aJob) {
     if(aJob.hasMoreTasks()) {
       JobTask nextTask = jobRepository.nextTask(aJob); // FIXME: not sure about that.
-      String node = nextTask.getNode();
-      messenger.send(node!=null?node:DEFAULT_TASK_QUEUE, nextTask);
+      taskExecutor.execute(nextTask);
     }
     else {
       SimpleJob job = new SimpleJob(aJob);
@@ -116,10 +114,10 @@ public class DefaultCoordinator implements Coordinator {
   public void setJobRepository(JobRepository aJobRepository) {
     jobRepository = aJobRepository;
   }
-  
+
   @Autowired
-  public void setMessenger(Messenger aMessenger) {
-    messenger = aMessenger;
+  public void setTaskExecutor(TaskExecutor aTaskExecutor) {
+    taskExecutor = aTaskExecutor;
   }
   
   @Autowired

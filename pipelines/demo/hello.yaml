@@ -1,9 +1,14 @@
 name: Hello World
+
+input:
+  - id: name
+    label: Your Name
+    type: string
     
 tasks: 
   - name: Print a greeting
     type: log
-    text: hello world
+    text: hello ${name}
    
   - name: Sleep a little
     type: sleep
@@ -11,4 +16,4 @@ tasks:
     
   - name: Print a farewell
     type: log
-    text: goodbye world
+    text: goodbye ${name}

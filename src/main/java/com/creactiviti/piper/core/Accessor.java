@@ -16,6 +16,15 @@ public interface Accessor {
    *         is associated with the given key.
    */
   <T> T get (Object aKey);
+
+  /**
+   * Determined if the given task contains the given key.
+   * 
+   * @param aKey
+   *         The key to check for existance.
+   * @return <code>true</code> if the key exists.<code>false</code> otherwise.
+   */
+  boolean contains (Object aKey);
   
   /**
    * Return the value associated with the given key -- 
