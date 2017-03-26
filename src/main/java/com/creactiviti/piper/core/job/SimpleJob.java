@@ -22,7 +22,7 @@ public class SimpleJob implements Job {
   private final Date creationDate;
   
   private JobStatus status = JobStatus.CREATED;
-  private Map<String,JobTask> tasks = new LinkedHashMap<>();
+  private Map<String,JobTask> execution = new LinkedHashMap<>();
   
   private Date completionDate;
   private Date startDate;
@@ -38,7 +38,7 @@ public class SimpleJob implements Job {
     pipeline = aJob.getPipeline();
     creationDate = aJob.getCreationDate();
     status = aJob.getStatus();
-    aJob.getExecution().forEach(t->tasks.put(t.getId(), t));
+    aJob.getExecution().forEach(t->execution.put(t.getId(), t));
     completionDate = aJob.getCompletionDate();
     startDate = aJob.getStartDate();
   }
@@ -62,18 +62,18 @@ public class SimpleJob implements Job {
   
   @Override
   public List<JobTask> getExecution() {
-    return Collections.unmodifiableList(new ArrayList<JobTask>(tasks.values()));
+    return Collections.unmodifiableList(new ArrayList<JobTask>(execution.values()));
   }
   
   @Override
   public boolean hasMoreTasks() {
-    return tasks.size() < pipeline.getTasks().size();
+    return execution.size() < pipeline.getTasks().size();
   }
   
   public JobTask nextTask() {
-    Task task = pipeline.getTasks().get(tasks.size());
+    Task task = pipeline.getTasks().get(execution.size());
     SimpleJobTask mt = new SimpleJobTask (task.toMap());
-    tasks.put(mt.getId(),mt);
+    execution.put(mt.getId(),mt);
     return mt;
   }
   
@@ -99,8 +99,8 @@ public class SimpleJob implements Job {
   }
 
   public void updateTask (JobTask aJobTask) {
-    Assert.isTrue(tasks.containsKey(aJobTask.getId()),"Unkown task: " + aJobTask.getId());
-    tasks.put(aJobTask.getId(), aJobTask);
+    Assert.isTrue(execution.containsKey(aJobTask.getId()),"Unkown task: " + aJobTask.getId());
+    execution.put(aJobTask.getId(), aJobTask);
   }
   
   @Override
