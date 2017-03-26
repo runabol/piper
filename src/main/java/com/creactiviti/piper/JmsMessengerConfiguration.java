@@ -20,7 +20,7 @@ import org.springframework.jms.listener.DefaultMessageListenerContainer;
 
 import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.Worker;
-import com.creactiviti.piper.core.job.SimpleJobTask;
+import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.messenger.JmsMessenger;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.jms.JmsMessageConverter;
@@ -95,7 +95,7 @@ public class JmsMessengerConfiguration {
           task.put(entry.getKey(), entry.getValue());
         }
       }
-      return new SimpleJobTask(task);
+      return new MutableJobTask(task);
     } catch (JMSException e) {
       throw Throwables.propagate(e);
     }

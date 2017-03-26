@@ -6,13 +6,13 @@ import com.creactiviti.piper.core.MapObject;
 import com.creactiviti.piper.core.Task;
 
 
-public class SimpleTask extends MapObject implements Task {
+public class MutableTask extends MapObject implements Task {
 
-  public SimpleTask (Task aSource) {
+  public MutableTask (Task aSource) {
     super(aSource.toMap());
   }
   
-  public SimpleTask (Map<String, Object> aSource) {
+  public MutableTask (Map<String, Object> aSource) {
     super(aSource);
   }
   

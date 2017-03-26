@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.creactiviti.piper.core.job.SimpleJobTask;
+import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.task.JobTask;
 
@@ -21,7 +21,7 @@ public class DefaultWorker implements Worker {
     TaskHandler<?> taskHandler = taskHandlerResolver.resolve(aTask);
     try {
       Object output = taskHandler.handle(aTask);
-      SimpleJobTask completion = new SimpleJobTask(aTask);
+      MutableJobTask completion = new MutableJobTask(aTask);
       if(output!=null) {
         completion.setOutput(output);
       }
@@ -29,7 +29,7 @@ public class DefaultWorker implements Worker {
       messenger.send("completions", completion);
     }
     catch (Exception e) {
-      SimpleJobTask jobTask = new SimpleJobTask(aTask);
+      MutableJobTask jobTask = new MutableJobTask(aTask);
       jobTask.setException(e);
       messenger.send("errors", jobTask);
     }

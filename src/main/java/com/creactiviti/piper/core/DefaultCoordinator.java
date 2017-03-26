@@ -16,8 +16,8 @@ import com.creactiviti.piper.core.context.SimpleContext;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.JobStatus;
-import com.creactiviti.piper.core.job.SimpleJob;
-import com.creactiviti.piper.core.job.SimpleJobTask;
+import com.creactiviti.piper.core.job.MutableJob;
+import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.JobTask;
@@ -26,7 +26,6 @@ import com.creactiviti.piper.core.task.TaskStatus;
 
 @Component
 public class DefaultCoordinator implements Coordinator {
-
   
   private PipelineRepository pipelineRepository;
   private JobRepository jobRepository;
@@ -39,11 +38,10 @@ public class DefaultCoordinator implements Coordinator {
   @Override
   public Job start (String aPipelineId, Map<String, Object> aInput) {
     Assert.notNull(aPipelineId,"pipelineId must not be null");
-    
     Pipeline pipeline = pipelineRepository.findOne(aPipelineId);
     Assert.notNull(pipeline,String.format("Unkown pipeline: %s", aPipelineId));
-    
-    SimpleJob job = new SimpleJob(pipeline);
+
+    MutableJob job = new MutableJob(pipeline);
     job.setStatus(JobStatus.STARTED);
     log.debug("Job {} started",job.getId());
     jobRepository.save(job);
@@ -62,7 +60,7 @@ public class DefaultCoordinator implements Coordinator {
       taskExecutor.execute(nextTask);
     }
     else {
-      SimpleJob job = new SimpleJob(aJob);
+      MutableJob job = new MutableJob(aJob);
       job.setStatus(JobStatus.COMPLETED);
       jobRepository.save(job);
       log.debug("Job {} completed successfully",aJob.getId());
@@ -82,9 +80,9 @@ public class DefaultCoordinator implements Coordinator {
   @Override
   public void complete (JobTask aTask) {
     log.debug("Completing task {}", aTask.getId());
-    SimpleJobTask task = new SimpleJobTask(aTask);
+    MutableJobTask task = new MutableJobTask(aTask);
     task.setStatus(TaskStatus.COMPLETED);
-    SimpleJob job = new SimpleJob (jobRepository.findJobByTaskId (aTask.getId()));
+    MutableJob job = new MutableJob (jobRepository.findJobByTaskId (aTask.getId()));
     Assert.notNull(job,String.format("No job found for task %s ",aTask.getId()));
     job.updateTask(task);
     jobRepository.save(job);

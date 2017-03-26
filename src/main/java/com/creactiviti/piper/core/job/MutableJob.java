@@ -15,7 +15,7 @@ import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.uuid.UUIDFactory;
 
-public class SimpleJob implements Job {
+public class MutableJob implements Job {
 
   private final String id;
   private final Pipeline pipeline;
@@ -33,7 +33,7 @@ public class SimpleJob implements Job {
    * 
    * @param aJob
    */
-  public SimpleJob (Job aJob) {
+  public MutableJob (Job aJob) {
     id = aJob.getId();
     pipeline = aJob.getPipeline();
     creationDate = aJob.getCreationDate();
@@ -48,7 +48,7 @@ public class SimpleJob implements Job {
    * 
    * @param aJob
    */
-  public SimpleJob (Pipeline aPipeline) {
+  public MutableJob (Pipeline aPipeline) {
     Assert.notNull(aPipeline,"pipeline must not be null");
     pipeline = aPipeline;
     creationDate = new Date();
@@ -72,7 +72,7 @@ public class SimpleJob implements Job {
   
   public JobTask nextTask() {
     Task task = pipeline.getTasks().get(execution.size());
-    SimpleJobTask mt = new SimpleJobTask (task.toMap());
+    MutableJobTask mt = new MutableJobTask (task.toMap());
     execution.put(mt.getId(),mt);
     return mt;
   }

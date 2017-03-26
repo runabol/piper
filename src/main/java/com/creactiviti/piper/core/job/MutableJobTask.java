@@ -5,18 +5,18 @@ import java.util.Map;
 
 import com.creactiviti.piper.core.Mutator;
 import com.creactiviti.piper.core.task.JobTask;
-import com.creactiviti.piper.core.task.SimpleTask;
+import com.creactiviti.piper.core.task.MutableTask;
 import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDFactory;
 
 
-public class SimpleJobTask extends SimpleTask implements JobTask, Mutator {
+public class MutableJobTask extends MutableTask implements JobTask, Mutator {
 
-  public SimpleJobTask (JobTask aSource) {
+  public MutableJobTask (JobTask aSource) {
     super(aSource.toMap());
   }
   
-  public SimpleJobTask (Map<String, Object> aSource) {
+  public MutableJobTask (Map<String, Object> aSource) {
     super(aSource);
     setIfNull("id", UUIDFactory.create());
     setIfNull("status", TaskStatus.CREATED);
