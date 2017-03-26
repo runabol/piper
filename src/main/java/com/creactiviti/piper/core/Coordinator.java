@@ -32,7 +32,7 @@ import com.creactiviti.piper.core.task.TaskStatus;
  * @since Jun 12, 2016
  */
 @Component
-public class DefaultCoordinator implements Coordinator {
+public class Coordinator {
   
   private PipelineRepository pipelineRepository;
   private JobRepository jobRepository;
@@ -52,7 +52,6 @@ public class DefaultCoordinator implements Coordinator {
    * @return Job
    *           The instance of the Job
    */
-  @Override
   public Job start (String aPipelineId, Map<String, Object> aInput) {
     Assert.notNull(aPipelineId,"pipelineId must not be null");
     Pipeline pipeline = pipelineRepository.findOne(aPipelineId);
@@ -93,7 +92,6 @@ public class DefaultCoordinator implements Coordinator {
    *          
    * @return The stopped {@link Job}
    */
-  @Override
   public Job stop (String aJobId) {
     throw new UnsupportedOperationException();
   }
@@ -105,7 +103,6 @@ public class DefaultCoordinator implements Coordinator {
    *          The id of the job to resume.
    * @return The resumed job
    */
-  @Override
   public Job resume (String aJobId) {
     throw new UnsupportedOperationException();
   }
@@ -116,7 +113,6 @@ public class DefaultCoordinator implements Coordinator {
    * @param aTask
    *          The task to complete.
    */
-  @Override
   public void complete (JobTask aTask) {
     log.debug("Completing task {}", aTask.getId());
     MutableJobTask task = new MutableJobTask(aTask);
@@ -134,7 +130,6 @@ public class DefaultCoordinator implements Coordinator {
    * @param aTask
    *          The task to handle.
    */
-  @Override
   public void error (JobTask aTask) {
     throw new UnsupportedOperationException();
   }
@@ -145,7 +140,6 @@ public class DefaultCoordinator implements Coordinator {
    * @param aEvent
    *          The event to handle
    */
-  @Override
   public void on (Object aEvent) {
     eventPublisher.publishEvent (aEvent);    
   }

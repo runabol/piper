@@ -6,7 +6,7 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.creactiviti.piper.core.DefaultCoordinator;
+import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.DefaultTaskHandlerResolver;
 import com.creactiviti.piper.core.DefaultWorker;
 import com.creactiviti.piper.core.TaskHandler;
@@ -27,7 +27,7 @@ public class DefaultCoordinatorTests {
   public void testStartJob () {
     
     DefaultWorker worker = new DefaultWorker();
-    DefaultCoordinator coordinator = new DefaultCoordinator ();
+    Coordinator coordinator = new Coordinator ();
    
     SimpleMessenger workerMessenger = new SimpleMessenger();
     workerMessenger.receive("completions", (o)->coordinator.complete((JobTask)o));
