@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 
 
-public class HornetQMessenger implements Messenger {
+public class JmsMessenger implements Messenger {
 
   @Autowired
   private JmsTemplate jmsTemplate;

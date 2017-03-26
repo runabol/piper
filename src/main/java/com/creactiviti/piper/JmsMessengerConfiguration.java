@@ -21,7 +21,7 @@ import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.Worker;
 import com.creactiviti.piper.core.job.SimpleJobTask;
-import com.creactiviti.piper.core.messenger.HornetQMessenger;
+import com.creactiviti.piper.core.messenger.JmsMessenger;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.jms.JmsMessageConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,7 +29,7 @@ import com.google.common.base.Throwables;
 
 @Configuration
 @EnableConfigurationProperties(PiperProperties.class)
-public class HornetQMessengerConfiguration {
+public class JmsMessengerConfiguration {
 
   @Autowired
   private ConnectionFactory connectionFactory;
@@ -43,8 +43,8 @@ public class HornetQMessengerConfiguration {
   private final ObjectMapper json = new ObjectMapper ();
   
   @Bean
-  HornetQMessenger hornetQMessenger () {
-    return new HornetQMessenger();
+  JmsMessenger jmsMessenger () {
+    return new JmsMessenger();
   }
   
   @Bean
