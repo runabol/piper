@@ -12,19 +12,20 @@ Example:
 
 ```
 name: Hello World
-    
+
 tasks: 
   - name: Print a greeting
-    handler: log
+    type: print
     text: hello world
+   
+  - name: Sleep a little
+    type: sleep
+    millis: 1000
     
-  - name: Print a greeting
-    handler: log
-    text: what's up world?
-    
-  - name: Print a greeting
-    handler: log
+  - name: Print a farewell
+    type: print
     text: goodbye world
+    
 ```
 
 The central interface that is used to execute tasks is the `TaskHandler`:
