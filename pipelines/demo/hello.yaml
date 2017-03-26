@@ -7,7 +7,7 @@ input:
     
 tasks: 
   - name: Print a greeting
-    type: log
+    type: print
     text: hello world
    
   - name: Sleep a little
@@ -15,6 +15,6 @@ tasks:
     millis: 1000
     
   - name: Print a farewell
-    type: log
+    type: print
     text: goodbye world
     

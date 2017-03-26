@@ -8,13 +8,13 @@ import com.creactiviti.piper.core.TaskHandler;
 import com.creactiviti.piper.core.task.JobTask;
 
 @Component
-public class Log implements TaskHandler<Object> {
+public class Print implements TaskHandler<Object> {
 
   private Logger log = LoggerFactory.getLogger(getClass());
 
   @Override
   public Object handle (JobTask aTask) {
-    log.info(aTask.getString("text"));
+    log.info(aTask.getRequiredString("text"));
     return null;
   }
 

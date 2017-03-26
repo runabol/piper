@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang3.SerializationUtils;
+import org.springframework.util.Assert;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Throwables;
@@ -74,6 +75,13 @@ public abstract class MapObject implements Map<String, Object>, Accessor {
   public String getString (Object aKey) {
     Object value = get(aKey);
     return ConvertUtils.convert(value);
+  }
+  
+  @Override
+  public String getRequiredString(Object aKey) {
+    String value = getString(aKey);
+    Assert.notNull(value,"Unknown key: " + aKey);
+    return value;
   }
   
   @Override

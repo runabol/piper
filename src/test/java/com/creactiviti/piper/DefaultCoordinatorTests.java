@@ -18,7 +18,7 @@ import com.creactiviti.piper.core.messenger.SimpleMessenger;
 import com.creactiviti.piper.core.pipeline.YamlPipelineRepository;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.RemoteTaskExecutor;
-import com.creactiviti.piper.taskhandler.io.Log;
+import com.creactiviti.piper.taskhandler.io.Print;
 import com.creactiviti.piper.taskhandler.time.Sleep;
 
 public class DefaultCoordinatorTests {
@@ -35,7 +35,7 @@ public class DefaultCoordinatorTests {
     DefaultTaskHandlerResolver taskHandlerResolver = new DefaultTaskHandlerResolver();
     
     Map<String,TaskHandler<?>> handlers = new HashMap<>();
-    handlers.put("log", new Log());
+    handlers.put("log", new Print());
     handlers.put("sleep", new Sleep());
     
     taskHandlerResolver.setTaskHandlers(handlers);

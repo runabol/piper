@@ -66,6 +66,18 @@ public interface Accessor {
    *         converting to {@link String} as needed.
    */
   String getString (Object aKey);
+
+  /**
+   * Return the {@link String} value associated with the given
+   * key -- converting as necessary.
+   * 
+   * @param aKey
+   *          The key associated with the desired value.
+   * @return The string value associated with the given key --
+   *         converting to {@link String} as needed.
+   * @throws IllegalArgumentException if no value is associated with the given key.
+   */
+  String getRequiredString (Object aKey);
   
   /**
    * Return the {@link String} value associated with the given
