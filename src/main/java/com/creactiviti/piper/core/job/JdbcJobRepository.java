@@ -46,8 +46,7 @@ public class JdbcJobRepository implements JobRepository {
   }
 
   @Override
-  public JobTask nextTask(Job aJob) {
+  public JobTask save(Job aJob, JobTask aJobTask) {
     return null;
   }
-
 }

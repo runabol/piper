@@ -10,8 +10,8 @@ public interface JobRepository {
   
   Job save (Job aJob);
   
+  JobTask save (Job aJob, JobTask aJobTask);
+  
   Job findJobByTaskId (String aTaskId);
-
-  JobTask nextTask (Job aJob);
   
 }
