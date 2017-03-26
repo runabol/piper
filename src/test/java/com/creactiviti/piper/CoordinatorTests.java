@@ -8,8 +8,8 @@ import org.junit.Test;
 
 import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.DefaultTaskHandlerResolver;
-import com.creactiviti.piper.core.DefaultWorker;
 import com.creactiviti.piper.core.TaskHandler;
+import com.creactiviti.piper.core.Worker;
 import com.creactiviti.piper.core.context.SimpleContextRepository;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobStatus;
@@ -21,12 +21,12 @@ import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.taskhandler.io.Print;
 import com.creactiviti.piper.taskhandler.time.Sleep;
 
-public class DefaultCoordinatorTests {
+public class CoordinatorTests {
 
   @Test
   public void testStartJob () {
     
-    DefaultWorker worker = new DefaultWorker();
+    Worker worker = new Worker();
     Coordinator coordinator = new Coordinator ();
    
     SimpleMessenger workerMessenger = new SimpleMessenger();

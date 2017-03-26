@@ -25,7 +25,7 @@ import com.creactiviti.piper.core.task.JobTask;
  *
  */
 @Component
-public class DefaultWorker {
+public class Worker {
 
   private TaskHandlerResolver taskHandlerResolver;
   private Messenger messenger;
