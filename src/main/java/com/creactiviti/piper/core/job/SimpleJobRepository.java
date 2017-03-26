@@ -35,11 +35,4 @@ public class SimpleJobRepository implements JobRepository {
     return null;
   }
 
-  @Override
-  public JobTask save(Job aJob, JobTask aJobTask) {
-    MutableJob job = new MutableJob(aJob);
-    jobs.put(job.getId(), job);
-    return aJobTask;
-  }
-
 }

@@ -57,7 +57,7 @@ public class DefaultCoordinator implements Coordinator {
   private void execute (MutableJob aJob) {
     if(aJob.hasMoreTasks()) {
       JobTask nextTask = aJob.nextTask(); 
-      jobRepository.save(aJob, nextTask);
+      jobRepository.save(aJob);
       taskExecutor.execute(nextTask);
     }
     else {
