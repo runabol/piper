@@ -201,29 +201,6 @@ The `Worker`, responsible for executing a single task outside of the context of 
 
 Since `Coordinator` and `Worker` do not talk to each other directly but only through a `Messenger`, they can easily run on seperate machines and talk to each other through some sort of middleware.  
 
-# Roadmap
-
-In no particular order:
-
-* Persistence support
-* Reserved words
-* AMQP support
-* Storing output
-* TaskHandlerResolver
-* Using variables
-* TaskEvaluator
-* Scripting support
-* Conditional
-* Loop
-* Map/Reduce
-* Parallel
-* Nesting
-* Stop
-* Resume
-* Error handling
-* Events
-* Plugins	
- 
 # Licensing
 
 Piper is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/creactiviti/piper/blob/master/LICENSE) for the full license text.
