@@ -9,7 +9,7 @@ import com.creactiviti.piper.core.messenger.Messenger;
 
 @Component
 @Order(Ordered.LOWEST_PRECEDENCE)
-public class RemoteTaskExecutor implements TaskExecutor, TaskExecutorResolver {
+public class DefaultTaskExecutor implements TaskExecutor, TaskExecutorResolver {
 
   private Messenger messenger;
   

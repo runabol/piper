@@ -17,7 +17,7 @@ import com.creactiviti.piper.core.job.SimpleJobRepository;
 import com.creactiviti.piper.core.messenger.SimpleMessenger;
 import com.creactiviti.piper.core.pipeline.YamlPipelineRepository;
 import com.creactiviti.piper.core.task.JobTask;
-import com.creactiviti.piper.core.task.RemoteTaskExecutor;
+import com.creactiviti.piper.core.task.DefaultTaskExecutor;
 import com.creactiviti.piper.taskhandler.io.Print;
 import com.creactiviti.piper.taskhandler.time.Sleep;
 
@@ -49,7 +49,7 @@ public class DefaultCoordinatorTests {
     
     SimpleMessenger coordinatorMessenger = new SimpleMessenger();
     coordinatorMessenger.receive("tasks", (o)->worker.handle((JobTask)o));
-    RemoteTaskExecutor taskExecutor = new RemoteTaskExecutor();
+    DefaultTaskExecutor taskExecutor = new DefaultTaskExecutor();
     taskExecutor.setMessenger(coordinatorMessenger);
     coordinator.setTaskExecutor(taskExecutor);
         
