@@ -8,7 +8,7 @@ input:
 tasks: 
   - name: Print a greeting
     type: log
-    text: hello ${name}
+    text: hello world
    
   - name: Sleep a little
     type: sleep
@@ -16,5 +16,5 @@ tasks:
     
   - name: Print a farewell
     type: log
-    text: goodbye ${name}
+    text: goodbye world
     

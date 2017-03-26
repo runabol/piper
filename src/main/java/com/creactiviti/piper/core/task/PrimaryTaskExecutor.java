@@ -20,7 +20,7 @@ public class PrimaryTaskExecutor implements TaskExecutor {
       TaskExecutor executor = resolver.resolve(aTask);
       if(executor != null) {
         executor.execute(aTask);
-        break;
+        return;
       }
     }
     throw new IllegalArgumentException("Unable to execute task: " + aTask);

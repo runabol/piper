@@ -2,10 +2,6 @@
 
 Piper is a miniature workflow engine written in Java and built on Spring Boot.
 
-# For god's sake, why another workflow engine? 
-
-Many of the workflow engines that i've looked at, claim to be "light" and "simple" but expect you to master BPMN and their 500+ pages documentation just to get going. In this project I'm striving to deliver on these promises and allow developer to cut to the chase.
-    
 # How it works? 
 
 Piper works by executing a set of tasks defined as a YAML document. 
@@ -77,37 +73,40 @@ This will start piper on your local box, running fully in-memory and without rel
 Jobs can be started from the REST API: 
 
 ```
-curl -s -X POST -H "Content-Type:application/json" -d '{"pipelineId":"demo/hello"}' http://localhost:8080/job/start
+curl -s -X POST -H "Content-Type:application/json" -d '{"pipeline":"demo/hello"}' http://localhost:8080/job/start
 ```
 
 Which will give you back something like: 
 
 ```
 {
-  "id": "881e6a78a23a42f5985bcc9e6d2bf444",
+  "id": "312a7b9fe60240ab8610e25a42dde65f",
+  "pipeline": {
+    "id": "demo/hello",
+    "name": "Hello World",
+    "tasks": [
+      {
+        "name": "Print a greeting",
+        "text": "hello world",
+        "type": "log"
+      },
+      {
+        "name": "Sleep a little",
+        "type": "sleep",
+        "millis": 1000
+      },
+      {
+        "name": "Print a farewell",
+        "text": "goodbye world",
+        "type": "log"
+      }
+    ]
+  },
+  "creationDate": "2017-03-26T14:06:41-0700",
   "status": "STARTED",
-  "tasks": [
-    {
-      "handler": "log",
-      "_completionDate": "2016-07-10T14:11:49-0700",
-      "name": "Print a greeting",
-      "text": "hello world",
-      "_id": "6fe42b1bf2a142e9a3487a4e903f5a28",
-      "_creationDate": "2016-07-10T14:11:49-0700",
-      "_status": "COMPLETED"
-    },
-    {
-      "name": "Print a greeting",
-      "handler": "log",
-      "text": "what's up world?",
-      "_id": "1afcbb9ed4694e689f56bdf1836e76dd",
-      "_status": "CREATED",
-      "_creationDate": "2016-07-10T14:11:49-0700"
-    }
-  ],
-  "creationDate": "2016-07-10T14:11:49-0700",
+  "execution": [],
   "completionDate": null,
-  "startDate": "2016-07-10T14:11:49-0700"
+  "startDate": "2017-03-26T14:06:41-0700"
 }
 ```
 
@@ -116,19 +115,66 @@ Which will give you back something like:
 Use the Job ID, to check for it's status:
 
 ```
-curl -s http://localhost:8080/job/881e6a78a23a42f5985bcc9e6d2bf444 | jq . 
+curl -s http://localhost:8080/job/312a7b9fe60240ab8610e25a42dde65f 
 ```
 
 ```
 {
-  "id": "7aa46bd0bd41495889e9fc392c78aff9",
+  "id": "312a7b9fe60240ab8610e25a42dde65f",
+  "pipeline": {
+    "id": "demo/hello",
+    "name": "Hello World",
+    "tasks": [
+      {
+        "name": "Print a greeting",
+        "text": "hello world",
+        "type": "log"
+      },
+      {
+        "name": "Sleep a little",
+        "type": "sleep",
+        "millis": 1000
+      },
+      {
+        "name": "Print a farewell",
+        "text": "goodbye world",
+        "type": "log"
+      }
+    ]
+  },
+  "creationDate": "2017-03-26T14:06:41-0700",
   "status": "COMPLETED",
-  "tasks": [
-    ... 
+  "execution": [
+    {
+      "name": "Print a greeting",
+      "completionDate": "2017-03-26T14:06:41-0700",
+      "text": "hello world",
+      "id": "a4469b0d02d043f5abf431703a232fee",
+      "creationDate": "2017-03-26T14:06:41-0700",
+      "type": "log",
+      "status": "COMPLETED"
+    },
+    {
+      "name": "Sleep a little",
+      "completionDate": "2017-03-26T14:06:42-0700",
+      "id": "66ea448906064cc7a44c43f132df7859",
+      "millis": 1000,
+      "creationDate": "2017-03-26T14:06:41-0700",
+      "type": "sleep",
+      "status": "COMPLETED"
+    },
+    {
+      "name": "Print a farewell",
+      "completionDate": "2017-03-26T14:06:42-0700",
+      "text": "goodbye world",
+      "id": "f2cfa40e816d43fd9fd84732a752f9c0",
+      "creationDate": "2017-03-26T14:06:42-0700",
+      "type": "log",
+      "status": "COMPLETED"
+    }
   ],
-  "creationDate": "2016-07-10T14:35:26-0700",
-  "completionDate": "2016-07-10T14:35:26-0700",
-  "startDate": "2016-07-10T14:35:26-0700"
+  "completionDate": "2017-03-26T14:06:42-0700",
+  "startDate": "2017-03-26T14:06:41-0700"
 }
 ```
 
