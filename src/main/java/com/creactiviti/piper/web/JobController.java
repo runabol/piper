@@ -25,13 +25,15 @@ public class JobController {
   @Autowired
   private Coordinator coordinator;
   
-  private static final String PIPELINE_ID = "pipelineId";
+  private static final String PIPELINE = "pipeline";
+  private static final String INPUT = "input";
   
   @PostMapping(value="/start")
   public Job start (@RequestBody Map<String, Object> aJobRequest) {
-    String pipelineId = (String) aJobRequest.remove(PIPELINE_ID);
-    Assert.notNull(pipelineId,"Missing required field: " + PIPELINE_ID);
-    return coordinator.start(pipelineId, aJobRequest);
+    String pipelineId = (String) aJobRequest.get(PIPELINE);
+    Assert.notNull(pipelineId,"Missing required field: " + PIPELINE);
+    Map<String, Object> input = (Map<String, Object>) aJobRequest.get(INPUT);
+    return coordinator.start(pipelineId, input);
   }
   
   @GetMapping(value="/{id}")

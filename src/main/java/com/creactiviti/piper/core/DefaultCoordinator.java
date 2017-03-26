@@ -1,5 +1,6 @@
 package com.creactiviti.piper.core;
 
+import java.util.Collections;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -37,7 +38,7 @@ public class DefaultCoordinator implements Coordinator {
   private final Logger log = LoggerFactory.getLogger(getClass());
   
   @Override
-  public Job start (String aPipelineId, Map<String, Object> aParameters) {
+  public Job start (String aPipelineId, Map<String, Object> aInput) {
     Assert.notNull(aPipelineId,"pipelineId must not be null");
     
     Pipeline pipeline = pipelineRepository.findOne(aPipelineId);
@@ -48,7 +49,7 @@ public class DefaultCoordinator implements Coordinator {
     log.debug("Job {} started",job.getId());
     jobRepository.save(job);
     
-    Context context = new SimpleContext(job.getId(), aParameters);
+    Context context = new SimpleContext(job.getId(), aInput!=null?aInput:Collections.emptyMap());
     contextRepository.save(context);
     
     run(job);

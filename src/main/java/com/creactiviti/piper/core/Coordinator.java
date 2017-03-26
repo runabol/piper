@@ -19,10 +19,12 @@ public interface Coordinator {
    * 
    * @param aPipelineId
    *          The ID of the pipeline that will execute the job.
+   * @param aInput
+   *          A Key-Value map representing the Job's input.
    * @return Job
    *           The instance of the Job
    */
-  Job start (String aPipelineId, Map<String, Object> aParameters);
+  Job start (String aPipelineId, Map<String, Object> aInput);
   
   /**
    * Stop a running job.
