@@ -10,13 +10,33 @@ import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.task.JobTask;
 
+/**
+ * <p>The class responsible for executing tasks spawned by the {@link Coordinator}.</p>
+ * 
+ * <p>Worker threads typically execute on a different
+ * process than the {@link Coordinator} process and most likely
+ * on a seperate node altogether.</p>
+ * 
+ * <p>Communication between the two is decoupled through the 
+ * {@link Messenger} interface.</p>
+ * 
+ * @author Arik Cohen
+ * @since Jun 12, 2016
+ *
+ */
 @Component
-public class DefaultWorker implements Worker {
+public class DefaultWorker {
 
   private TaskHandlerResolver taskHandlerResolver;
   private Messenger messenger;
 
-  @Override
+  /**
+   * Handle the execution of a {@link JobTask}. Implementors
+   * are expected to execute the task asynchronously. 
+   * 
+   * @param aTask
+   *          The task to execute.
+   */
   public void handle (JobTask aTask) {
     TaskHandler<?> taskHandler = taskHandlerResolver.resolve(aTask);
     try {
@@ -35,8 +55,15 @@ public class DefaultWorker implements Worker {
     }
   }
 
-  @Override
-  public void cancel (String aTaskId) {}
+  /**
+   * Cancel the execution of a running task.
+   * 
+   * @param aTaskId
+   *          The ID of the task to cancel.
+   */
+  public void cancel (String aTaskId) {
+    throw new UnsupportedOperationException();
+  }
 
   @Autowired
   public void setTaskHandlerResolver(TaskHandlerResolver aTaskHandlerResolver) {
