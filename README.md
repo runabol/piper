@@ -189,6 +189,12 @@ curl -s http://localhost:8080/job/240bda633eb6405f8d21e1651285dd2b
 }
 ```
 
+# Roadmap
+
+- Job Input
+- Task Evaluator
+- For-Each support
+- JdbcJobRepository
 
 # Architecture
 
