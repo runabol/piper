@@ -80,7 +80,7 @@ Which will give you back something like:
 
 ```
 {
-  "id": "312a7b9fe60240ab8610e25a42dde65f",
+  "id": "8043ed19a7cf4a7d9956aa6e0cf7633f",
   "pipeline": {
     "id": "demo/hello",
     "name": "Hello World",
@@ -88,7 +88,7 @@ Which will give you back something like:
       {
         "name": "Print a greeting",
         "text": "hello world",
-        "type": "log"
+        "type": "print"
       },
       {
         "name": "Sleep a little",
@@ -98,16 +98,26 @@ Which will give you back something like:
       {
         "name": "Print a farewell",
         "text": "goodbye world",
-        "type": "log"
+        "type": "print"
       }
     ]
   },
-  "creationDate": "2017-03-26T14:06:41-0700",
+  "creationDate": "2017-03-26T15:28:38-0700",
   "status": "STARTED",
-  "execution": [],
+  "execution": [
+    {
+      "name": "Print a greeting",
+      "text": "hello world",
+      "id": "dc9fd2c8fd854673818dd7bfa62a46eb",
+      "type": "print",
+      "creationDate": "2017-03-26T15:28:38-0700",
+      "status": "CREATED"
+    }
+  ],
   "completionDate": null,
-  "startDate": "2017-03-26T14:06:41-0700"
+  "startDate": "2017-03-26T15:28:38-0700"
 }
+
 ```
 
 ## Check Job Status
@@ -115,12 +125,12 @@ Which will give you back something like:
 Use the Job ID, to check for it's status:
 
 ```
-curl -s http://localhost:8080/job/312a7b9fe60240ab8610e25a42dde65f 
+curl -s http://localhost:8080/job/240bda633eb6405f8d21e1651285dd2b 
 ```
 
 ```
 {
-  "id": "312a7b9fe60240ab8610e25a42dde65f",
+  "id": "240bda633eb6405f8d21e1651285dd2b",
   "pipeline": {
     "id": "demo/hello",
     "name": "Hello World",
@@ -128,7 +138,7 @@ curl -s http://localhost:8080/job/312a7b9fe60240ab8610e25a42dde65f
       {
         "name": "Print a greeting",
         "text": "hello world",
-        "type": "log"
+        "type": "print"
       },
       {
         "name": "Sleep a little",
@@ -138,43 +148,43 @@ curl -s http://localhost:8080/job/312a7b9fe60240ab8610e25a42dde65f
       {
         "name": "Print a farewell",
         "text": "goodbye world",
-        "type": "log"
+        "type": "print"
       }
     ]
   },
-  "creationDate": "2017-03-26T14:06:41-0700",
+  "creationDate": "2017-03-26T15:29:06-0700",
   "status": "COMPLETED",
   "execution": [
     {
       "name": "Print a greeting",
-      "completionDate": "2017-03-26T14:06:41-0700",
+      "completionDate": "2017-03-26T15:29:06-0700",
       "text": "hello world",
-      "id": "a4469b0d02d043f5abf431703a232fee",
-      "creationDate": "2017-03-26T14:06:41-0700",
-      "type": "log",
+      "id": "753ea17539af4a7f9a99ea625a57190d",
+      "creationDate": "2017-03-26T15:29:06-0700",
+      "type": "print",
       "status": "COMPLETED"
     },
     {
       "name": "Sleep a little",
-      "completionDate": "2017-03-26T14:06:42-0700",
-      "id": "66ea448906064cc7a44c43f132df7859",
+      "completionDate": "2017-03-26T15:29:07-0700",
+      "id": "96e4a4c32ee34f39aca9d6a372d437a2",
       "millis": 1000,
-      "creationDate": "2017-03-26T14:06:41-0700",
+      "creationDate": "2017-03-26T15:29:06-0700",
       "type": "sleep",
       "status": "COMPLETED"
     },
     {
       "name": "Print a farewell",
-      "completionDate": "2017-03-26T14:06:42-0700",
+      "completionDate": "2017-03-26T15:29:07-0700",
       "text": "goodbye world",
-      "id": "f2cfa40e816d43fd9fd84732a752f9c0",
-      "creationDate": "2017-03-26T14:06:42-0700",
-      "type": "log",
+      "id": "5349f65aba9940a2b6044544865a5431",
+      "creationDate": "2017-03-26T15:29:07-0700",
+      "type": "print",
       "status": "COMPLETED"
     }
   ],
-  "completionDate": "2017-03-26T14:06:42-0700",
-  "startDate": "2017-03-26T14:06:41-0700"
+  "completionDate": "2017-03-26T15:29:07-0700",
+  "startDate": "2017-03-26T15:29:06-0700"
 }
 ```
 
