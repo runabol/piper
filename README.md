@@ -38,18 +38,18 @@ public interface TaskHandler<O> {
 }
 ```
 
-`TaskHandler`s are resolved according to the `handler` property of each task. Here is the `log` `TaskHandler` implementations seen on the pipeline above: 
+`TaskHandler`s are resolved according to the `type` property of each task. Here is the `print` `TaskHandler` implementations seen on the pipeline above: 
 
 ```
-@Component // register the implementation with the application
-public class Log implements TaskHandler<Object> {
+@Component
+public class Print implements TaskHandler<Object> {
 
   private Logger log = LoggerFactory.getLogger(getClass());
 
   @Override
-  public Object handle (JobTask aTask) { // receive the task instance to execute
-    log.info(aTask.getString("text")); // get the text property from the task and output it
-    return null; // don't return anything
+  public Object handle (JobTask aTask) {
+    log.info(aTask.getRequiredString("text"));
+    return null; 
   }
 
 }
