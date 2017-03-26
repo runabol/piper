@@ -4,19 +4,11 @@ tasks:
   - name: Print a greeting
     type: log
     text: hello world
-    
-  - name: Print a greeting
-    type: log
-    text: what's up world?
-    
+   
   - name: Sleep a little
     type: sleep
     millis: 1000
     
-  - name: Sleep some more
-    type: sleep
-    millis: 5000
-    
-  - name: Print a greeting
+  - name: Print a farewell
     type: log
     text: goodbye world
