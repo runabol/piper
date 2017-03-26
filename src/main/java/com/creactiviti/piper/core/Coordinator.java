@@ -31,6 +31,8 @@ public interface Coordinator {
    * 
    * @param aJobId
    *          The id of the job to stop
+   *          
+   * @return The stopped {@link Job}
    */
   Job stop (String aJobId);
 
@@ -39,6 +41,7 @@ public interface Coordinator {
    * 
    * @param aJobId
    *          The id of the job to resume.
+   * @return The resumed job
    */
   Job resume (String aJobId);
 
