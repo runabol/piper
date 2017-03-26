@@ -24,6 +24,13 @@ import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.TaskExecutor;
 import com.creactiviti.piper.core.task.TaskStatus;
 
+/**
+ * The central class responsible for coordinating 
+ * and executing jobs.
+ * 
+ * @author Arik Cohen
+ * @since Jun 12, 2016
+ */
 @Component
 public class DefaultCoordinator implements Coordinator {
   
@@ -35,6 +42,16 @@ public class DefaultCoordinator implements Coordinator {
   
   private final Logger log = LoggerFactory.getLogger(getClass());
   
+  /**
+   * Starts a job instance.
+   * 
+   * @param aPipelineId
+   *          The ID of the pipeline that will execute the job.
+   * @param aInput
+   *          A Key-Value map representing the Job's input.
+   * @return Job
+   *           The instance of the Job
+   */
   @Override
   public Job start (String aPipelineId, Map<String, Object> aInput) {
     Assert.notNull(aPipelineId,"pipelineId must not be null");
@@ -68,16 +85,37 @@ public class DefaultCoordinator implements Coordinator {
     }
   }
 
+  /**
+   * Stop a running job.
+   * 
+   * @param aJobId
+   *          The id of the job to stop
+   *          
+   * @return The stopped {@link Job}
+   */
   @Override
   public Job stop (String aJobId) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
+  /**
+   * Resume a stopped or failed job.
+   * 
+   * @param aJobId
+   *          The id of the job to resume.
+   * @return The resumed job
+   */
   @Override
   public Job resume (String aJobId) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
+  /**
+   * Complete a task of a given job.
+   * 
+   * @param aTask
+   *          The task to complete.
+   */
   @Override
   public void complete (JobTask aTask) {
     log.debug("Completing task {}", aTask.getId());
@@ -90,10 +128,23 @@ public class DefaultCoordinator implements Coordinator {
     execute (job);
   }
 
+  /**
+   * Handle an erroring task.
+   * 
+   * @param aTask
+   *          The task to handle.
+   */
   @Override
   public void error (JobTask aTask) {
+    throw new UnsupportedOperationException();
   }
 
+  /**
+   * Handles application events. 
+   * 
+   * @param aEvent
+   *          The event to handle
+   */
   @Override
   public void on (Object aEvent) {
     eventPublisher.publishEvent (aEvent);    
