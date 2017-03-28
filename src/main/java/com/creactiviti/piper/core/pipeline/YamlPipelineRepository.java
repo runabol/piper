@@ -8,11 +8,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
-import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.Task;
 import com.creactiviti.piper.core.task.MutableTask;
@@ -20,19 +19,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Throwables;
 
-@Component
 public class YamlPipelineRepository implements PipelineRepository  {
 
-  private final static String DEFAULT_PATH = "file:pipelines/**/*.yaml";
-  private final ResourcePatternResolver resolver;
-  
-  private String path = DEFAULT_PATH;
-  
-  public YamlPipelineRepository () {
-    DefaultResourceLoader loader = new DefaultResourceLoader();
-    loader.addProtocolResolver(new GitProtocolResolver());
-    resolver = new PathMatchingResourcePatternResolver(loader);    
-  }
+  private final ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(new CustomResourceLoader());
+  private String path;
   
   @Override
   public List<Pipeline> findAll () {
@@ -47,14 +37,16 @@ public class YamlPipelineRepository implements PipelineRepository  {
 
   private Pipeline read (Resource aResource) {
     try {
-      String uri = aResource.getURI().toString();
-      String id = uri.substring(uri.lastIndexOf("pipelines/")+10,uri.lastIndexOf('.'));
       String yaml = IOUtils.toString(aResource.getInputStream());
       ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
       Map<String,Object> yamlMap = mapper.readValue(yaml, Map.class);
       List<Map<String,Object>> rawTasks = (List<Map<String, Object>>) yamlMap.get("tasks");
       List<Task> tasks = rawTasks.stream().map(rt -> new MutableTask(rt)).collect(Collectors.toList());
-      return new SimplePipeline(id, (String)yamlMap.get("name"), tasks);
+      String id = (String)yamlMap.get("id");
+      String name = (String)yamlMap.get("name");
+      Assert.notNull(id,"id not defined in pipline");
+      Assert.notNull(id,"name not defined in pipline");
+      return new SimplePipeline(id, name, tasks);
     }
     catch (IOException e) {
       throw Throwables.propagate(e);

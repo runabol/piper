@@ -17,11 +17,4 @@ public class YamlPipelineRepositoryTests {
     findAll.forEach(p->System.out.println(p.getId()));
   }
   
-  @Test
-  public void test2 () {
-    YamlPipelineRepository r = new YamlPipelineRepository();
-    List<Pipeline> findAll = r.findAll();
-    findAll.forEach(p->System.out.println(p.getId()));
-  }
-  
 }
