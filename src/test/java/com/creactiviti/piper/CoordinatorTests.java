@@ -15,7 +15,7 @@ import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobStatus;
 import com.creactiviti.piper.core.job.SimpleJobRepository;
 import com.creactiviti.piper.core.messenger.SimpleMessenger;
-import com.creactiviti.piper.core.pipeline.YamlPipelineRepository;
+import com.creactiviti.piper.core.pipeline.GitPipelineRepository;
 import com.creactiviti.piper.core.task.DefaultTaskExecutor;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.taskhandler.io.Print;
@@ -45,7 +45,7 @@ public class CoordinatorTests {
     coordinator.setContextRepository(new SimpleContextRepository());
     SimpleJobRepository jobRepository = new SimpleJobRepository();
     coordinator.setJobRepository(jobRepository);
-    coordinator.setPipelineRepository(new YamlPipelineRepository());
+    coordinator.setPipelineRepository(new GitPipelineRepository());
     
     SimpleMessenger coordinatorMessenger = new SimpleMessenger();
     coordinatorMessenger.receive("tasks", (o)->worker.handle((JobTask)o));

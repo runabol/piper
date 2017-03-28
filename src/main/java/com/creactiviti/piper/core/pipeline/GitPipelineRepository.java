@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
@@ -19,17 +18,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Throwables;
 
-public class YamlPipelineRepository implements PipelineRepository  {
+public class GitPipelineRepository implements PipelineRepository  {
 
-  private final static String DEFAULT_PATH = "file:pipelines/**/*.yaml";
   private final ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(new CustomResourceLoader());
-  private String path = DEFAULT_PATH;
+  private String url;
+  private String searchPath;
   
   @Override
   public List<Pipeline> findAll () {
     try {
-      Resource[] resources = resolver.getResources(path);
-      return Arrays.asList(resources).stream().map(r -> read(r)).collect(Collectors.toList());
+      Resource[] resources = resolver.getResources(url+"/"+searchPath+"/**");
+      return Arrays.asList(resources)
+                   .stream()
+                   .map(r -> read(r))
+                   .collect(Collectors.toList());
     }
     catch(IOException e) {
       throw Throwables.propagate(e);
@@ -56,13 +58,16 @@ public class YamlPipelineRepository implements PipelineRepository  {
 
   @Override
   public Pipeline findOne (String aId) {
-    List<Pipeline> pipelines = findAll ();
-    Optional<Pipeline> findFirst = pipelines.stream().filter(p->p.getId().equals(aId)).findFirst();
-    return findFirst.isPresent()?findFirst.get():null;
+    Resource resource = resolver.getResource(aId);
+    return read(resource);
+  }
+
+  public void setUrl(String aUrl) {
+    url = aUrl;
   }
   
-  public void setPath(String aPath) {
-    path = aPath;
+  public void setSearchPath(String aSearchPath) {
+    searchPath = aSearchPath;
   }
 
 }

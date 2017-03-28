@@ -2,14 +2,14 @@ package com.creactiviti.piper;
 
 public class PipelineRepository {
 
-  private String path;
+  private Git git;
   
-  public String getPath() {
-    return path;
+  public Git getGit() {
+    return git;
   }
   
-  public void setPath(String aPath) {
-    path = aPath;
+  public void setGit(Git aGit) {
+    git = aGit;
   }
   
 }
