@@ -16,8 +16,11 @@ public class GitProtocolResolver implements ProtocolResolver {
 
   @Override
   public Resource resolve(String aLocation, ResourceLoader aResourceLoader) {
-    Resource resolveInternal = resolveInternal(aLocation, aResourceLoader);
-    return resolveInternal;
+    if(aLocation.startsWith("git")) {
+      Resource resolveInternal = resolveInternal(aLocation, aResourceLoader);
+      return resolveInternal;
+    }
+    return null;
   }
 
   private Resource resolveInternal (String aLocation, ResourceLoader aResourceLoader) {
