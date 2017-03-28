@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -22,12 +23,21 @@ import com.google.common.base.Throwables;
 @Component
 public class YamlPipelineRepository implements PipelineRepository  {
 
+  private final static String DEFAULT_PATH = "file:pipelines/**/*.yaml";
+  private final ResourcePatternResolver resolver;
+  
+  private String path = DEFAULT_PATH;
+  
+  public YamlPipelineRepository () {
+    DefaultResourceLoader loader = new DefaultResourceLoader();
+    loader.addProtocolResolver(new GitProtocolResolver());
+    resolver = new PathMatchingResourcePatternResolver(loader);    
+  }
+  
   @Override
   public List<Pipeline> findAll () {
     try {
-      ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-      
-      Resource[] resources = resolver.getResources("file:pipelines/**/*.yaml");
+      Resource[] resources = resolver.getResources(path);
       return Arrays.asList(resources).stream().map(r -> read(r)).collect(Collectors.toList());
     }
     catch(IOException e) {
@@ -56,6 +66,10 @@ public class YamlPipelineRepository implements PipelineRepository  {
     List<Pipeline> pipelines = findAll ();
     Optional<Pipeline> findFirst = pipelines.stream().filter(p->p.getId().equals(aId)).findFirst();
     return findFirst.isPresent()?findFirst.get():null;
+  }
+  
+  public void setPath(String aPath) {
+    path = aPath;
   }
 
 }

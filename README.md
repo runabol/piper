@@ -13,7 +13,7 @@ Example:
 
 ```
 name: Hello World
-
+	
 tasks: 
   - name: Print a greeting
     type: print
@@ -197,6 +197,7 @@ curl -s http://localhost:8080/job/240bda633eb6405f8d21e1651285dd2b
 - JdbcJobRepository
 - Stop/Resume Jobs
 - For-Each support
+- `TaskHandler` implemenations should be able to report back warnings and other metadata on their operation. not just the payload.
 
 # Architecture
 
