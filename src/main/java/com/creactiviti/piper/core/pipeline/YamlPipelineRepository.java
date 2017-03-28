@@ -21,8 +21,9 @@ import com.google.common.base.Throwables;
 
 public class YamlPipelineRepository implements PipelineRepository  {
 
+  private final static String DEFAULT_PATH = "file:pipelines/**/*.yaml";
   private final ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(new CustomResourceLoader());
-  private String path;
+  private String path = DEFAULT_PATH;
   
   @Override
   public List<Pipeline> findAll () {

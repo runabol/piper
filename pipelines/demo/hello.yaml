@@ -1,0 +1,19 @@
+id: demo/hello
+name: Hello World v3
+input:
+  - id: name
+    label: Your Name
+    type: string
+tasks: 
+  - name: Print a greeting
+    type: print
+    text: hello world
+   
+  - name: Sleep a little
+    type: sleep
+    millis: 1000
+    
+  - name: Print a farewell
+    type: print
+    text: goodbye world
+    
