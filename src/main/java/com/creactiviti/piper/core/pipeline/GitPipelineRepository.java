@@ -1,15 +1,16 @@
 package com.creactiviti.piper.core.pipeline;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.jgit.api.Git;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.Task;
@@ -17,21 +18,26 @@ import com.creactiviti.piper.core.task.MutableTask;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Throwables;
+import com.google.common.io.Files;
 
 public class GitPipelineRepository implements PipelineRepository  {
 
-  private final ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(new CustomResourceLoader());
   private String url;
   private String searchPath;
   
   @Override
   public List<Pipeline> findAll () {
     try {
-      Resource[] resources = resolver.getResources(url+"/"+searchPath+"/**");
-      return Arrays.asList(resources)
-                   .stream()
-                   .map(r -> read(r))
-                   .collect(Collectors.toList());
+      Resource rootResource = resolve(url+"/"+searchPath+"/**");
+      File rootDir = rootResource.getFile();
+      File[] listFiles = rootDir.listFiles();
+      List<Resource> resources = new ArrayList<>();
+      for(File f : listFiles) {
+        resources.add(new FileSystemResource(f));
+      }
+      return resources.stream()
+                      .map(r -> read(r))
+                      .collect(Collectors.toList());
     }
     catch(IOException e) {
       throw Throwables.propagate(e);
@@ -56,9 +62,24 @@ public class GitPipelineRepository implements PipelineRepository  {
     }
   }
 
+  private Resource resolve (String aLocation) {
+    try {
+      File tempDir = Files.createTempDir();
+      String baseUri = aLocation.substring(0, aLocation.indexOf(".git")+4);
+      Git.cloneRepository()
+         .setURI(baseUri)
+         .setDirectory(tempDir)
+         .call();     
+      return ( new FileSystemResource( new File(tempDir,searchPath) ) );
+    }
+    catch (Exception e) {
+      throw Throwables.propagate(e);
+    }
+  }
+
   @Override
   public Pipeline findOne (String aId) {
-    Resource resource = resolver.getResource(aId);
+    Resource resource = resolve(url+"/"+aId);
     return read(resource);
   }
 
