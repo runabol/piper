@@ -22,7 +22,6 @@ import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.messenger.JmsMessenger;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.jms.JmsMessageConverter;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Throwables;
 
 @Configuration
@@ -37,8 +36,6 @@ public class JmsMessengerConfiguration {
   
   @Autowired
   private Coordinator coordinator;
-  
-  private final ObjectMapper json = new ObjectMapper ();
   
   @Bean
   JmsMessenger jmsMessenger () {
