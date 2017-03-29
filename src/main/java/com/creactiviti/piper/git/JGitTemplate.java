@@ -2,6 +2,7 @@ package com.creactiviti.piper.git;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jgit.api.Git;
@@ -27,8 +28,9 @@ public class JGitTemplate implements GitOperations {
   private Logger logger = LoggerFactory.getLogger(getClass());
 
   @Override
-  public List<GitResource> getHeadFiles (String aUrl, String aSearchPath) {
+  public List<GitResource> getHeadFiles (String aUrl, String... aSearchPaths) {
     Repository repo = getRepository(aUrl);
+    List<String> searchPaths = Arrays.asList(aSearchPaths);
     List<GitResource> resources = new ArrayList<>();
     try (ObjectReader reader = repo.newObjectReader(); RevWalk walk = new RevWalk(reader); TreeWalk treeWalk = new TreeWalk(repo,reader);) {
       final ObjectId id = repo.resolve(Constants.HEAD);
@@ -37,13 +39,13 @@ public class JGitTemplate implements GitOperations {
       treeWalk.addTree(tree);
       treeWalk.setRecursive(true);
       while (treeWalk.next()) {
-        String pathString = treeWalk.getPathString();
-        if(pathString.startsWith(getSearchPath(aSearchPath))) {
+        String path = treeWalk.getPathString();        
+        if(searchPaths.stream().anyMatch((sp)->path.startsWith(getSearchPath(sp)))) {
           ObjectId objectId = treeWalk.getObjectId(0);
-          logger.debug("Loading {} [{}]",pathString,objectId.name());
+          logger.debug("Loading {} [{}]",path,objectId.name());
           byte[] file = readBlob(repo, objectId.name());
           AbbreviatedObjectId abbreviated = reader.abbreviate(objectId);
-          String rid = pathString.substring(0, pathString.indexOf('.'))+"/"+abbreviated.name();
+          String rid = path.substring(0, path.indexOf('.'))+"/"+abbreviated.name();
           resources.add(new GitResource(rid, file));
         }
       }
