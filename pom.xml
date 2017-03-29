@@ -107,7 +107,11 @@
 		    <artifactId>org.eclipse.jgit</artifactId>
 		    <version>4.6.1.201703071140-r</version>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

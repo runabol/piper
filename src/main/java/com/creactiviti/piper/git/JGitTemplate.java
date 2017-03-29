@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.AbbreviatedObjectId;
 import org.eclipse.jgit.lib.Constants;
@@ -27,44 +28,48 @@ public class JGitTemplate implements GitOperations {
 
   private Logger logger = LoggerFactory.getLogger(getClass());
 
+  private static final String LATEST = "latest";
+
+  private File repositoryDir = null;
+
   @Override
   public List<GitResource> getHeadFiles (String aUrl, String... aSearchPaths) {
     Repository repo = getRepository(aUrl);
+    return getHeadFiles(repo, aSearchPaths);
+  }
+
+  private List<GitResource> getHeadFiles (Repository aRepository, String... aSearchPaths) {
     List<String> searchPaths = Arrays.asList(aSearchPaths);
     List<GitResource> resources = new ArrayList<>();
-    try (ObjectReader reader = repo.newObjectReader(); RevWalk walk = new RevWalk(reader); TreeWalk treeWalk = new TreeWalk(repo,reader);) {
-      final ObjectId id = repo.resolve(Constants.HEAD);
+    try (ObjectReader reader = aRepository.newObjectReader(); RevWalk walk = new RevWalk(reader); TreeWalk treeWalk = new TreeWalk(aRepository,reader);) {
+      final ObjectId id = aRepository.resolve(Constants.HEAD);
       RevCommit commit = walk.parseCommit(id);
       RevTree tree = commit.getTree();
       treeWalk.addTree(tree);
       treeWalk.setRecursive(true);
       while (treeWalk.next()) {
         String path = treeWalk.getPathString();        
-        if(searchPaths.stream().anyMatch((sp)->path.startsWith(getSearchPath(sp)))) {
+        if(searchPaths.stream().anyMatch((sp)->path.startsWith(sp))) {
           ObjectId objectId = treeWalk.getObjectId(0);
           logger.debug("Loading {} [{}]",path,objectId.name());
-          resources.add(readBlob(repo, path.substring(0, path.indexOf('.')), objectId.name()));
+          resources.add(readBlob(aRepository, path.substring(0, path.indexOf('.')), objectId.name()));
         }
       }
       return resources;
     }
     catch (Exception e) {
       throw Throwables.propagate(e);
-    }
+    } 
   }
 
-  private String getSearchPath (String aSearchPath) {
-    Assert.notNull(aSearchPath,"search path can't be null");
-    return aSearchPath.endsWith("/")?aSearchPath:aSearchPath+"/";
-  }
-
-  private Repository getRepository(String url) {
+  private synchronized Repository getRepository(String aUrl) {
     try {
-      File tempDir = Files.createTempDir();
+      clear();
+      logger.info("Cloning {}", aUrl);
       Git git = Git.cloneRepository()
-          .setURI(url)
-          .setDirectory(tempDir)
-          .call();
+                   .setURI(aUrl)
+                   .setDirectory(repositoryDir)
+                   .call();
       return (git.getRepository());
     }
     catch (Exception e) {
@@ -87,11 +92,24 @@ public class JGitTemplate implements GitOperations {
 
   private GitResource readBlob (Repository aRepo, String aPath, String aBlobId) throws Exception {
     try (ObjectReader reader = aRepo.newObjectReader()) {
+      if(aBlobId.equals(LATEST)) {
+        List<GitResource> headFiles = getHeadFiles(aRepo, aPath);
+        Assert.notEmpty(headFiles,"could not find: " + aPath + "/" + aBlobId);
+        return headFiles.get(0);
+      }
       ObjectId objectId = aRepo.resolve(aBlobId);
+      Assert.notNull(objectId,"could not find: " + aPath + "/" + aBlobId);
       byte[] data = reader.open(objectId).getBytes();
       AbbreviatedObjectId abbreviated = reader.abbreviate(objectId);
       return new GitResource(aPath+"/"+abbreviated.name(), data);
     }
+  }
+
+  private void clear() {
+    if(repositoryDir!=null) {
+      FileUtils.deleteQuietly(repositoryDir);
+    }
+    repositoryDir = Files.createTempDir();
   }
 
 }
