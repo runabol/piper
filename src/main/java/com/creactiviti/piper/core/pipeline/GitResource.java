@@ -1,15 +1,13 @@
 package com.creactiviti.piper.core.pipeline;
 
-import java.io.File;
+import org.springframework.core.io.ByteArrayResource;
 
-import org.springframework.core.io.FileSystemResource;
-
-public class GitResource extends FileSystemResource {
+public class GitResource extends ByteArrayResource {
 
   private final String id;
   
-  public GitResource(String aId, File aFile) {
-    super(aFile);
+  public GitResource(String aId, byte[] aData) {
+    super(aData);
     id = aId;
   }
 

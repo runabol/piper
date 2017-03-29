@@ -11,11 +11,11 @@ import com.creactiviti.piper.core.pipeline.GitPipelineRepository;
 public class PipelineRepositoryConfiguration {
 
   @Bean
-  GitPipelineRepository yamlPipelineRepository (PiperProperties piperProperties) {
-    GitPipelineRepository yamlPipelineRepository = new GitPipelineRepository();
-    yamlPipelineRepository.setUrl(piperProperties.getPipelineRepository().getGit().getUrl());
-    yamlPipelineRepository.setSearchPath(piperProperties.getPipelineRepository().getGit().getSearchPath());
-    return yamlPipelineRepository;
+  GitPipelineRepository gitPipelineRepository (PiperProperties piperProperties) {
+    GitPipelineRepository gitPipelineRepository = new GitPipelineRepository();
+    gitPipelineRepository.setUrl(piperProperties.getPipelineRepository().getGit().getUrl());
+    gitPipelineRepository.setSearchPath(piperProperties.getPipelineRepository().getGit().getSearchPath());
+    return gitPipelineRepository;
   }
   
 }
