@@ -10,7 +10,7 @@ import com.creactiviti.piper.core.context.SimpleContextRepository;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobStatus;
 import com.creactiviti.piper.core.job.SimpleJobRepository;
-import com.creactiviti.piper.core.messenger.SimpleMessenger;
+import com.creactiviti.piper.core.messenger.SynchMessenger;
 import com.creactiviti.piper.core.pipeline.FileSystemPipelineRepository;
 import com.creactiviti.piper.core.task.DefaultTaskExecutor;
 import com.creactiviti.piper.core.task.JobTask;
@@ -25,7 +25,7 @@ public class CoordinatorTests {
     Worker worker = new Worker();
     Coordinator coordinator = new Coordinator ();
    
-    SimpleMessenger workerMessenger = new SimpleMessenger();
+    SynchMessenger workerMessenger = new SynchMessenger();
     workerMessenger.receive("completions", (o)->coordinator.complete((JobTask)o));
     worker.setMessenger(workerMessenger);
     DefaultTaskHandlerResolver taskHandlerResolver = new DefaultTaskHandlerResolver();
@@ -43,7 +43,7 @@ public class CoordinatorTests {
     coordinator.setJobRepository(jobRepository);
     coordinator.setPipelineRepository(new FileSystemPipelineRepository());
     
-    SimpleMessenger coordinatorMessenger = new SimpleMessenger();
+    SynchMessenger coordinatorMessenger = new SynchMessenger();
     coordinatorMessenger.receive("tasks", (o)->worker.handle((JobTask)o));
     DefaultTaskExecutor taskExecutor = new DefaultTaskExecutor();
     taskExecutor.setMessenger(coordinatorMessenger);

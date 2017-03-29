@@ -14,7 +14,7 @@ import org.springframework.util.Assert;
  * @author Arik Cohen
  * @since Jul 10, 2016
  */
-public class SimpleMessenger implements Messenger {
+public class SynchMessenger implements Messenger {
 
   private Map<String, List<Receiver>> listeners = new HashMap<> ();
 
