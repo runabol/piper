@@ -18,9 +18,10 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.util.Assert;
 
-import com.creactiviti.piper.core.pipeline.GitResource;
+import com.creactiviti.piper.core.pipeline.IdentifiableResource;
 import com.google.common.base.Throwables;
 import com.google.common.io.Files;
 
@@ -33,14 +34,14 @@ public class JGitTemplate implements GitOperations {
   private File repositoryDir = null;
 
   @Override
-  public List<GitResource> getHeadFiles (String aUrl, String... aSearchPaths) {
+  public List<IdentifiableResource> getHeadFiles (String aUrl, String... aSearchPaths) {
     Repository repo = getRepository(aUrl);
     return getHeadFiles(repo, aSearchPaths);
   }
 
-  private List<GitResource> getHeadFiles (Repository aRepository, String... aSearchPaths) {
+  private List<IdentifiableResource> getHeadFiles (Repository aRepository, String... aSearchPaths) {
     List<String> searchPaths = Arrays.asList(aSearchPaths);
-    List<GitResource> resources = new ArrayList<>();
+    List<IdentifiableResource> resources = new ArrayList<>();
     try (ObjectReader reader = aRepository.newObjectReader(); RevWalk walk = new RevWalk(reader); TreeWalk treeWalk = new TreeWalk(aRepository,reader);) {
       final ObjectId id = aRepository.resolve(Constants.HEAD);
       RevCommit commit = walk.parseCommit(id);
@@ -78,7 +79,7 @@ public class JGitTemplate implements GitOperations {
   }
 
   @Override
-  public GitResource getFile(String aUrl, String aFileId) {
+  public IdentifiableResource getFile(String aUrl, String aFileId) {
     try {
       Repository repository = getRepository(aUrl);
       int blobIdDelim = aFileId.lastIndexOf(':');
@@ -96,10 +97,10 @@ public class JGitTemplate implements GitOperations {
     }
   }
 
-  private GitResource readBlob (Repository aRepo, String aPath, String aBlobId) throws Exception {
+  private IdentifiableResource readBlob (Repository aRepo, String aPath, String aBlobId) throws Exception {
     try (ObjectReader reader = aRepo.newObjectReader()) {
       if(aBlobId.equals(LATEST)) {
-        List<GitResource> headFiles = getHeadFiles(aRepo, aPath);
+        List<IdentifiableResource> headFiles = getHeadFiles(aRepo, aPath);
         Assert.notEmpty(headFiles,"could not find: " + aPath + ":" + aBlobId);
         return headFiles.get(0);
       }
@@ -107,7 +108,7 @@ public class JGitTemplate implements GitOperations {
       Assert.notNull(objectId,"could not find: " + aPath + ":" + aBlobId);
       byte[] data = reader.open(objectId).getBytes();
       AbbreviatedObjectId abbreviated = reader.abbreviate(objectId);
-      return new GitResource(aPath+":"+abbreviated.name(), data);
+      return new IdentifiableResource(aPath+":"+abbreviated.name(), new ByteArrayResource(data));
     }
   }
 

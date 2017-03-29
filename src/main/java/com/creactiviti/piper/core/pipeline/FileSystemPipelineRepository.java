@@ -3,7 +3,6 @@ package com.creactiviti.piper.core.pipeline;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -11,7 +10,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
-import com.creactiviti.piper.core.Task;
 import com.google.common.base.Throwables;
 
 public class FileSystemPipelineRepository extends YamlPipelineRepository {
@@ -32,8 +30,7 @@ public class FileSystemPipelineRepository extends YamlPipelineRepository {
     try {
       String uri = aResource.getURI().toString();
       String id = uri.substring(uri.lastIndexOf("pipelines/")+10,uri.lastIndexOf('.'));
-      Map<String,Object> yamlMap = parseYaml(aResource);
-      return new SimplePipeline(id, (String)yamlMap.get("name"), (List<Task>) yamlMap.get("tasks"));
+      return super.parsePipeline(new IdentifiableResource(id, aResource));
     }
     catch (IOException e) {
       throw Throwables.propagate(e);

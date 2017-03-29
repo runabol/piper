@@ -2,7 +2,7 @@ package com.creactiviti.piper.git;
 
 import java.util.List;
 
-import com.creactiviti.piper.core.pipeline.GitResource;
+import com.creactiviti.piper.core.pipeline.IdentifiableResource;
 
 public interface GitOperations {
   
@@ -13,14 +13,14 @@ public interface GitOperations {
    *          The Git Repository URL
    * @param aSearchPath
    *          The path to limit the search to.
-   * @return the list of {@link GitResource}s within the given 
+   * @return the list of {@link IdentifiableResource}s within the given 
    * search path of the repository
    */
-  List<GitResource> getHeadFiles (String aUrl, String... aSearchPath);
+  List<IdentifiableResource> getHeadFiles (String aUrl, String... aSearchPath);
   
   /**
    * 
    */
-  GitResource getFile (String aUrl, String aFileId);
+  IdentifiableResource getFile (String aUrl, String aFileId);
 
 }

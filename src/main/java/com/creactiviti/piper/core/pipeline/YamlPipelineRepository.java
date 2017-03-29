@@ -19,7 +19,15 @@ public abstract class YamlPipelineRepository implements PipelineRepository  {
 
   protected ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
   
-  protected Map<String,Object> parseYaml (Resource aResource) {
+  protected Pipeline parsePipeline (IdentifiableResource aResource) {
+    Map<String,Object> yamlMap = parse (aResource);
+    String id = aResource.getId();
+    String name = (String)yamlMap.get("name");
+    List<Task> tasks = (List<Task>) yamlMap.get("tasks");
+    return new SimplePipeline(id, name, tasks);
+  }
+  
+  private Map<String,Object> parse (Resource aResource) {
     try (InputStream in = aResource.getInputStream()){
       String yaml = IOUtils.toString(in);
       Map<String,Object> yamlMap = mapper.readValue(yaml, Map.class);

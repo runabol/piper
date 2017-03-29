@@ -1,7 +1,6 @@
 package com.creactiviti.piper.core.pipeline;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.cache.Cache;
@@ -9,7 +8,6 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.guava.GuavaCacheManager;
 
 import com.creactiviti.piper.cache.Clearable;
-import com.creactiviti.piper.core.Task;
 import com.creactiviti.piper.git.GitOperations;
 import com.creactiviti.piper.git.JGitTemplate;
 
@@ -30,9 +28,9 @@ public class GitPipelineRepository extends YamlPipelineRepository implements Cle
       if(cache.get(CACHE_ALL) != null) {
         return (List<Pipeline>) cache.get(CACHE_ALL).get();
       }
-      List<GitResource> resources = git.getHeadFiles(url, searchPaths);
+      List<IdentifiableResource> resources = git.getHeadFiles(url, searchPaths);
       List<Pipeline> pipelines = resources.stream()
-                                          .map(r -> readPipeline(r))
+                                          .map(r -> parsePipeline(r))
                                           .collect(Collectors.toList());
       cache.put(CACHE_ALL, pipelines);
       return pipelines;
@@ -55,19 +53,11 @@ public class GitPipelineRepository extends YamlPipelineRepository implements Cle
           }
         }
       }
-      GitResource resource = git.getFile(url, aId);
-      Pipeline pipeline = readPipeline(resource);
+      IdentifiableResource resource = git.getFile(url, aId);
+      Pipeline pipeline = parsePipeline(resource);
       oneCache.put(aId, pipeline);
       return pipeline;
     }
-  }
-  
-  private Pipeline readPipeline (GitResource aResource) {
-    Map<String,Object> yamlMap = parseYaml(aResource);
-    String id = aResource.getId();
-    String name = (String)yamlMap.get("name");
-    List<Task> tasks = (List<Task>) yamlMap.get("tasks");
-    return new SimplePipeline(id, name, tasks);
   }
 
   public void setUrl(String aUrl) {
