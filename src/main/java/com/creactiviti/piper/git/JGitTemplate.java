@@ -81,9 +81,15 @@ public class JGitTemplate implements GitOperations {
   public GitResource getFile(String aUrl, String aFileId) {
     try {
       Repository repository = getRepository(aUrl);
-      String path = aFileId.substring(0,aFileId.lastIndexOf('/'));
-      String blobId = aFileId.substring(aFileId.lastIndexOf('/')+1);
-      return readBlob(repository,path,blobId);
+      int blobIdDelim = aFileId.lastIndexOf(':');
+      if(blobIdDelim > -1) {
+        String path = aFileId.substring(0,blobIdDelim);
+        String blobId = aFileId.substring(blobIdDelim+1);
+        return readBlob(repository,path,blobId);
+      }
+      else {
+        return readBlob(repository,aFileId,LATEST);  
+      }
     }
     catch (Exception e) {
       throw Throwables.propagate(e);
@@ -94,14 +100,14 @@ public class JGitTemplate implements GitOperations {
     try (ObjectReader reader = aRepo.newObjectReader()) {
       if(aBlobId.equals(LATEST)) {
         List<GitResource> headFiles = getHeadFiles(aRepo, aPath);
-        Assert.notEmpty(headFiles,"could not find: " + aPath + "/" + aBlobId);
+        Assert.notEmpty(headFiles,"could not find: " + aPath + ":" + aBlobId);
         return headFiles.get(0);
       }
       ObjectId objectId = aRepo.resolve(aBlobId);
-      Assert.notNull(objectId,"could not find: " + aPath + "/" + aBlobId);
+      Assert.notNull(objectId,"could not find: " + aPath + ":" + aBlobId);
       byte[] data = reader.open(objectId).getBytes();
       AbbreviatedObjectId abbreviated = reader.abbreviate(objectId);
-      return new GitResource(aPath+"/"+abbreviated.name(), data);
+      return new GitResource(aPath+":"+abbreviated.name(), data);
     }
   }
 

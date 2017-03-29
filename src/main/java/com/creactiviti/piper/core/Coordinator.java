@@ -77,7 +77,8 @@ public class Coordinator {
       taskExecutor.execute(nextTask);
     }
     else {
-      MutableJob job = new MutableJob(aJob);
+      Pipeline pipeline = pipelineRepository.findOne(aJob.getPipeline());
+      MutableJob job = new MutableJob(aJob,pipeline);
       job.setStatus(JobStatus.COMPLETED);
       jobRepository.save(job);
       log.debug("Job {} completed successfully",aJob.getId());
@@ -117,11 +118,13 @@ public class Coordinator {
     log.debug("Completing task {}", aTask.getId());
     MutableJobTask task = new MutableJobTask(aTask);
     task.setStatus(TaskStatus.COMPLETED);
-    MutableJob job = new MutableJob (jobRepository.findJobByTaskId (aTask.getId()));
-    Assert.notNull(job,String.format("No job found for task %s ",aTask.getId()));
-    job.updateTask(task);
-    jobRepository.save(job);
-    execute (job);
+    Job job = jobRepository.findJobByTaskId (aTask.getId());
+    Pipeline pipeline = pipelineRepository.findOne(job.getPipeline());
+    MutableJob mjob = new MutableJob (job,pipeline);
+    Assert.notNull(mjob,String.format("No job found for task %s ",aTask.getId()));
+    mjob.updateTask(task);
+    jobRepository.save(mjob);
+    execute (mjob);
   }
 
   /**

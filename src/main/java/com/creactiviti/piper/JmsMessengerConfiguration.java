@@ -1,7 +1,5 @@
 package com.creactiviti.piper;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -84,16 +82,7 @@ public class JmsMessengerConfiguration {
       Map<String,Object> raw = aMessage.getBody(Map.class);
       Map<String, Object> task = new HashMap<>();
       for(Entry<String,Object> entry : raw.entrySet()) {
-        if(entry.getValue().toString().startsWith("list:")) {
-          try {
-            task.put(entry.getKey(), json.readValue((String)entry.getValue().toString().substring(5),ArrayList.class));
-          } catch (IOException e) {
-            throw Throwables.propagate(e);
-          }
-        }
-        else {
-          task.put(entry.getKey(), entry.getValue());
-        }
+        task.put(entry.getKey(), entry.getValue());
       }
       return new MutableJobTask(task);
     } catch (JMSException e) {

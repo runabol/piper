@@ -33,9 +33,10 @@ public class MutableJob implements Job {
    * 
    * @param aSource
    */
-  public MutableJob (Job aSource) {
+  public MutableJob (Job aSource, Pipeline aPipeline) {
+    Assert.isTrue(aSource.getPipeline().equals(aPipeline.getId()),"Pipeline object does not match job's pipeline id");
     id = aSource.getId();
-    pipeline = aSource.getPipeline();
+    pipeline = aPipeline;
     creationDate = aSource.getCreationDate();
     status = aSource.getStatus();
     aSource.getExecution().forEach(t->execution.put(t.getId(), t));
@@ -109,8 +110,8 @@ public class MutableJob implements Job {
   }
   
   @Override
-  public Pipeline getPipeline() {
-    return pipeline;
+  public String getPipeline() {
+    return pipeline.getId();
   }
   
   @Override

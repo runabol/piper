@@ -39,7 +39,7 @@ public interface Job {
    * 
    * @return {@link Pipeline} 
    */
-  Pipeline getPipeline ();
+  String getPipeline ();
 
   /**
    * Return the date of when the job was originally 
