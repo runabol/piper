@@ -1,4 +1,4 @@
-package com.creactiviti.piper;
+package com.creactiviti.piper.core.pipeline;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import org.junit.Test;
 import com.creactiviti.piper.core.pipeline.GitPipelineRepository;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 
-public class YamlPipelineRepositoryTests {
+public class GitPipelineRepositoryTests {
 
   @Test
   public void test1 () {
