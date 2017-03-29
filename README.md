@@ -198,6 +198,7 @@ curl -s http://localhost:8080/job/240bda633eb6405f8d21e1651285dd2b
 - Stop/Resume Jobs
 - For-Each support
 - `TaskHandler` implemenations should be able to report back warnings and other metadata on their operation. not just the payload.
+- Error handling
 
 # Architecture
 
