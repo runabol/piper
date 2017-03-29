@@ -17,5 +17,10 @@ public interface GitOperations {
    * search path of the repository
    */
   List<GitResource> getHeadFiles (String aUrl, String... aSearchPath);
+  
+  /**
+   * 
+   */
+  GitResource getFile (String aUrl, String aFileId);
 
 }

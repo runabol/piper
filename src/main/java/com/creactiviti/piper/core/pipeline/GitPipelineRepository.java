@@ -52,7 +52,8 @@ public class GitPipelineRepository implements PipelineRepository  {
 
   @Override
   public Pipeline findOne (String aId) {
-    return null;
+    GitResource resource = git.getFile(url, aId);
+    return read(resource);
   }
 
   public void setUrl(String aUrl) {

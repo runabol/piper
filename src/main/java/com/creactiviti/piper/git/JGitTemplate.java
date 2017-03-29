@@ -43,10 +43,7 @@ public class JGitTemplate implements GitOperations {
         if(searchPaths.stream().anyMatch((sp)->path.startsWith(getSearchPath(sp)))) {
           ObjectId objectId = treeWalk.getObjectId(0);
           logger.debug("Loading {} [{}]",path,objectId.name());
-          byte[] file = readBlob(repo, objectId.name());
-          AbbreviatedObjectId abbreviated = reader.abbreviate(objectId);
-          String rid = path.substring(0, path.indexOf('.'))+"/"+abbreviated.name();
-          resources.add(new GitResource(rid, file));
+          resources.add(readBlob(repo, path.substring(0, path.indexOf('.')), objectId.name()));
         }
       }
       return resources;
@@ -65,9 +62,9 @@ public class JGitTemplate implements GitOperations {
     try {
       File tempDir = Files.createTempDir();
       Git git = Git.cloneRepository()
-                   .setURI(url)
-                   .setDirectory(tempDir)
-                   .call();
+          .setURI(url)
+          .setDirectory(tempDir)
+          .call();
       return (git.getRepository());
     }
     catch (Exception e) {
@@ -75,10 +72,25 @@ public class JGitTemplate implements GitOperations {
     }
   }
 
-  private byte[] readBlob (Repository aRepo, String aBlobId) throws Exception {
+  @Override
+  public GitResource getFile(String aUrl, String aFileId) {
+    try {
+      Repository repository = getRepository(aUrl);
+      String path = aFileId.substring(0,aFileId.lastIndexOf('/'));
+      String blobId = aFileId.substring(aFileId.lastIndexOf('/')+1);
+      return readBlob(repository,path,blobId);
+    }
+    catch (Exception e) {
+      throw Throwables.propagate(e);
+    }
+  }
+
+  private GitResource readBlob (Repository aRepo, String aPath, String aBlobId) throws Exception {
     try (ObjectReader reader = aRepo.newObjectReader()) {
-      byte[] data = reader.open(aRepo.resolve(aBlobId)).getBytes();
-      return data;
+      ObjectId objectId = aRepo.resolve(aBlobId);
+      byte[] data = reader.open(objectId).getBytes();
+      AbbreviatedObjectId abbreviated = reader.abbreviate(objectId);
+      return new GitResource(aPath+"/"+abbreviated.name(), data);
     }
   }
 
