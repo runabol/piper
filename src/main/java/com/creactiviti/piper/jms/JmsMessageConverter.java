@@ -50,6 +50,13 @@ public class JmsMessageConverter extends SimpleMessageConverter {
           throw Throwables.propagate(e);
         }
       }
+      else if(entry.getValue() instanceof Exception) {
+        try {
+          message.setObject((String) entry.getKey(), json.writeValueAsString(entry.getValue()));
+        } catch (JsonProcessingException e) {
+          throw Throwables.propagate(e);
+        }        
+      }
       else {
         message.setObject((String) entry.getKey(), entry.getValue());
       }

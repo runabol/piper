@@ -123,8 +123,8 @@ public class Coordinator {
     MutableJob mjob = new MutableJob (job,pipeline);
     Assert.notNull(mjob,String.format("No job found for task %s ",aTask.getId()));
     mjob.updateTask(task);
+    mjob.setStatus(JobStatus.FAILED);
     jobRepository.save(mjob);
-    execute (mjob);
   }
 
   /**
@@ -134,7 +134,16 @@ public class Coordinator {
    *          The task to handle.
    */
   public void error (JobTask aTask) {
-    throw new UnsupportedOperationException();
+    log.debug("Completing task {}", aTask.getId());
+    MutableJobTask task = new MutableJobTask(aTask);
+    task.setStatus(TaskStatus.FAILED);
+    Job job = jobRepository.findJobByTaskId (aTask.getId());
+    Pipeline pipeline = pipelineRepository.findOne(job.getPipeline());
+    MutableJob mjob = new MutableJob (job,pipeline);
+    Assert.notNull(mjob,String.format("No job found for task %s ",aTask.getId()));
+    mjob.updateTask(task);
+    jobRepository.save(mjob);
+    execute (mjob);
   }
 
   /**

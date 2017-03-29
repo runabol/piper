@@ -74,6 +74,16 @@ public class JmsMessengerConfiguration {
     return container;
   }
   
+  @Bean
+  DefaultMessageListenerContainer errorsMessageListener () throws JMSException {
+    DefaultMessageListenerContainer container = new DefaultMessageListenerContainer();
+    container.setConnectionFactory (connectionFactory);
+    container.setDestinationName("errors");
+    MessageListener listener = (m) -> coordinator.error(toTask(m));
+    container.setMessageListener(listener);
+    return container;
+  }
+  
   private JobTask toTask (Message aMessage) {
     try {
       Map<String,Object> raw = aMessage.getBody(Map.class);
