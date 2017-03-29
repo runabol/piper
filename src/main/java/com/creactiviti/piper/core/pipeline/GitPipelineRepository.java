@@ -19,12 +19,12 @@ import com.google.common.base.Throwables;
 public class GitPipelineRepository implements PipelineRepository  {
 
   private String url;
-  private String searchPath;
+  private String[] searchPaths;
   private GitOperations git = new JGitTemplate();
   
   @Override
   public List<Pipeline> findAll () {
-    List<GitResource> resources = getResources(searchPath);
+    List<GitResource> resources = getResources();
     return resources.stream()
                     .map(r -> read(r))
                     .collect(Collectors.toList());
@@ -46,8 +46,8 @@ public class GitPipelineRepository implements PipelineRepository  {
     }
   }
 
-  private List<GitResource> getResources (String aLocation) {
-   return git.getHeadFiles(url, searchPath);
+  private List<GitResource> getResources () {
+   return git.getHeadFiles(url, searchPaths);
   }
 
   @Override
@@ -58,9 +58,9 @@ public class GitPipelineRepository implements PipelineRepository  {
   public void setUrl(String aUrl) {
     url = aUrl;
   }
-  
-  public void setSearchPath(String aSearchPath) {
-    searchPath = aSearchPath;
+
+  public void setSearchPaths(String[] aSearchPaths) {
+    searchPaths = aSearchPaths;
   }
   
   public void setGitOperations(GitOperations aGit) {

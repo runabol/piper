@@ -3,7 +3,7 @@ package com.creactiviti.piper;
 public class Git {
 
   private String url;
-  private String searchPath;
+  private String[] searchPaths;
   
   public String getUrl() {
     return url;
@@ -12,13 +12,13 @@ public class Git {
   public void setUrl(String aUrl) {
     url = aUrl;
   }
-  
-  public String getSearchPath() {
-    return searchPath;
+
+  public String[] getSearchPaths() {
+    return searchPaths;
   }
   
-  public void setSearchPath(String aSearchPath) {
-    searchPath = aSearchPath;
+  public void setSearchPaths(String[] aSearchPaths) {
+    searchPaths = aSearchPaths;
   }
   
 }

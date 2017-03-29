@@ -14,7 +14,7 @@ public class PipelineRepositoryConfiguration {
   GitPipelineRepository gitPipelineRepository (PiperProperties piperProperties) {
     GitPipelineRepository gitPipelineRepository = new GitPipelineRepository();
     gitPipelineRepository.setUrl(piperProperties.getPipelineRepository().getGit().getUrl());
-    gitPipelineRepository.setSearchPath(piperProperties.getPipelineRepository().getGit().getSearchPath());
+    gitPipelineRepository.setSearchPaths(piperProperties.getPipelineRepository().getGit().getSearchPaths());
     return gitPipelineRepository;
   }
   

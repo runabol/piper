@@ -14,7 +14,7 @@ public class YamlPipelineRepositoryTests {
   public void test1 () {
     GitPipelineRepository r = new GitPipelineRepository();
     r.setUrl("git@github.com:creactiviti/piper-pipelines.git");
-    r.setSearchPath("demo");
+    r.setSearchPaths(new String[]{"demo"});
     List<Pipeline> findAll = r.findAll();
     Assert.assertTrue(findAll.iterator().next().getId().startsWith("demo/hello"));
   }
