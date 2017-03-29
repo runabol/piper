@@ -6,16 +6,12 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.creactiviti.piper.core.Coordinator;
-import com.creactiviti.piper.core.DefaultTaskHandlerResolver;
-import com.creactiviti.piper.core.TaskHandler;
-import com.creactiviti.piper.core.Worker;
 import com.creactiviti.piper.core.context.SimpleContextRepository;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobStatus;
 import com.creactiviti.piper.core.job.SimpleJobRepository;
 import com.creactiviti.piper.core.messenger.SimpleMessenger;
-import com.creactiviti.piper.core.pipeline.GitPipelineRepository;
+import com.creactiviti.piper.core.pipeline.FileSystemPipelineRepository;
 import com.creactiviti.piper.core.task.DefaultTaskExecutor;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.taskhandler.io.Print;
@@ -45,7 +41,7 @@ public class CoordinatorTests {
     coordinator.setContextRepository(new SimpleContextRepository());
     SimpleJobRepository jobRepository = new SimpleJobRepository();
     coordinator.setJobRepository(jobRepository);
-    coordinator.setPipelineRepository(new GitPipelineRepository());
+    coordinator.setPipelineRepository(new FileSystemPipelineRepository());
     
     SimpleMessenger coordinatorMessenger = new SimpleMessenger();
     coordinatorMessenger.receive("tasks", (o)->worker.handle((JobTask)o));
