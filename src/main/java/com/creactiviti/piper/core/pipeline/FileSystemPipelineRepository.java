@@ -19,7 +19,10 @@ public class FileSystemPipelineRepository extends YamlPipelineRepository {
     try {
       ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
       Resource[] resources = resolver.getResources("file:pipelines/**/*.yaml");
-      return Arrays.asList(resources).stream().map(r -> read(r)).collect(Collectors.toList());
+      return Arrays.asList(resources)
+                   .stream()
+                   .map(r -> read(r))
+                   .collect(Collectors.toList());
     }
     catch(IOException e) {
       throw Throwables.propagate(e);
@@ -30,7 +33,7 @@ public class FileSystemPipelineRepository extends YamlPipelineRepository {
     try {
       String uri = aResource.getURI().toString();
       String id = uri.substring(uri.lastIndexOf("pipelines/")+10,uri.lastIndexOf('.'));
-      return super.parsePipeline(new IdentifiableResource(id, aResource));
+      return parsePipeline(new IdentifiableResource(id, aResource));
     }
     catch (IOException e) {
       throw Throwables.propagate(e);
