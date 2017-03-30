@@ -1,6 +1,8 @@
 package com.creactiviti.piper.core;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -55,6 +57,19 @@ public class MapObjectTests {
   public void test8 () {
     MapObject mo = new MapObject(Collections.singletonMap("hello", "world")) {};
     Assert.assertEquals("world", mo.get("hello"));
+  }
+  
+  @Test(expected=ClassCastException.class)
+  public void test9 () {
+    MapObject mo = new MapObject(Collections.singletonMap("hello", "world")) {};
+    Assert.assertEquals(Arrays.asList("world"), mo.getList("hello",String.class));
+  }
+  
+  @Test
+  public void test10 () {
+    MapObject mo = new MapObject(Collections.singletonMap("hello", Arrays.asList("world"))) {};
+    List<String> list = mo.getList("hello",String.class);
+    Assert.assertEquals(Arrays.asList("world"), list);
   }
   
 }
