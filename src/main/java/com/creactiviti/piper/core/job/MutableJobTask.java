@@ -49,7 +49,7 @@ public class MutableJobTask extends MutableTask implements JobTask, Mutator {
     return (Exception) get("exception");
   }
   
-  public void setException (Exception aException) {
+  public void setException (Throwable aException) {
     set("exception", aException);
   }
   

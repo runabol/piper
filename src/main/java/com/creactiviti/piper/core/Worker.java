@@ -50,7 +50,7 @@ public class Worker {
     }
     catch (Exception e) {
       MutableJobTask jobTask = new MutableJobTask(aTask);
-      jobTask.setException(e);
+      jobTask.setException(e.getCause());
       messenger.send("errors", jobTask);
     }
   }

@@ -1,8 +1,6 @@
 package com.creactiviti.piper;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
@@ -21,7 +19,10 @@ import com.creactiviti.piper.core.Worker;
 import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.messenger.JmsMessenger;
 import com.creactiviti.piper.core.task.JobTask;
-import com.creactiviti.piper.jms.JmsMessageConverter;
+import com.creactiviti.piper.json.ExceptionSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.google.common.annotations.Beta;
 import com.google.common.base.Throwables;
 
 @Configuration
@@ -38,19 +39,25 @@ public class JmsMessengerConfiguration {
   private Coordinator coordinator;
   
   @Bean
-  JmsMessenger jmsMessenger () {
-    return new JmsMessenger();
+  JmsMessenger jmsMessenger (JmsTemplate aJmsTemplate) {
+    JmsMessenger jmsMessenger = new JmsMessenger();
+    jmsMessenger.setJmsTemplate(aJmsTemplate);
+    jmsMessenger.setObjectMapper(objectMapper());
+    return jmsMessenger;
+  }
+  
+  @Beta
+  ObjectMapper objectMapper () {
+    ObjectMapper objectMapper = new ObjectMapper();
+    SimpleModule module = new SimpleModule();
+    module.addSerializer(Throwable.class, new ExceptionSerializer());
+    objectMapper.registerModule(module);
+    return objectMapper;
   }
   
   @Bean
-  JmsMessageConverter jmsMessageConverter (PiperProperties piperProperties) {
-    return new JmsMessageConverter(piperProperties.getSerialization().getDateFormat());
-  }
-
-  @Bean
   JmsTemplate jmsTemplate (PiperProperties piperProperties) {
     JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory);
-    jmsTemplate.setMessageConverter(jmsMessageConverter(piperProperties));
     return jmsTemplate;
   }
   
@@ -86,13 +93,10 @@ public class JmsMessengerConfiguration {
   
   private JobTask toTask (Message aMessage) {
     try {
-      Map<String,Object> raw = aMessage.getBody(Map.class);
-      Map<String, Object> task = new HashMap<>();
-      for(Entry<String,Object> entry : raw.entrySet()) {
-        task.put(entry.getKey(), entry.getValue());
-      }
+      String raw = aMessage.getBody(String.class);
+      Map<String, Object> task = objectMapper().readValue(raw,Map.class);
       return new MutableJobTask(task);
-    } catch (JMSException e) {
+    } catch (Exception e) {
       throw Throwables.propagate(e);
     }
   }
