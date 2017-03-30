@@ -10,6 +10,14 @@ package com.creactiviti.piper.core.messenger;
  */
 public interface Messenger {
 
+  /**
+   * 
+   * @param aRoutingKey
+   *          a string representaiton used for routing the message 
+   *          to the appropriate destination.
+   * @param aMessage
+   *          The message to send.
+   */
   void send (String aRoutingKey, Object aMessage);
   
 }
