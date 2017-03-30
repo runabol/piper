@@ -11,9 +11,6 @@ import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.util.Assert;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Throwables;
-
 /**
  * @author Arik Cohen
  * @since Jun 12, 2016
@@ -22,7 +19,6 @@ public abstract class MapObject implements Map<String, Object>, Accessor {
 
   private final HashMap<String, Object> map;
   
-  private final ObjectMapper json = new ObjectMapper(); 
   
   public MapObject (Map<String, Object> aSource) {
     map = new HashMap<String, Object>(aSource);
@@ -60,15 +56,7 @@ public abstract class MapObject implements Map<String, Object>, Accessor {
   
   @Override
   public <T> List<T> getList(Object aKey, Class<T> aElementType) {
-    try {
-      String value = getString(aKey);
-      if(value == null) {
-        return null;
-      }
-      return json.readValue(value, List.class);
-    } catch (Exception e) {
-      throw Throwables.propagate(e);
-    }
+    return get(aKey, List.class);
   }
   
   @Override

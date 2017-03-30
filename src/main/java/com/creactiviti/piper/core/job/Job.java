@@ -66,6 +66,13 @@ public interface Job {
   Date getCompletionDate ();
   
   /**
+   * Return the date of when the job failed.
+   * 
+   * @return {@link Date}
+   */
+  Date getFailedDate ();
+  
+  /**
    * Determines if more tasks are available to execute
    * on this job.
    * 

@@ -26,6 +26,7 @@ public class MutableJob implements Job {
   
   private Date completionDate;
   private Date startDate;
+  private Date failedDate;
   
   /**
    * Constructs a mutable version of a {@link Job}
@@ -94,6 +95,10 @@ public class MutableJob implements Job {
       status = JobStatus.STARTED;
       startDate = new Date();
     }
+    else if (aStatus == JobStatus.FAILED) {
+      status = JobStatus.FAILED;
+      failedDate = new Date();
+    }
     else {
       throw new IllegalArgumentException("Can't handle status: " + aStatus);
     }
@@ -117,6 +122,11 @@ public class MutableJob implements Job {
   @Override
   public Date getStartDate() {
     return startDate;
+  }
+  
+  @Override
+  public Date getFailedDate() {
+    return failedDate;
   }
   
   @Override
