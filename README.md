@@ -68,8 +68,6 @@ Prerequisites: JDK 8 and Maven 3
 
 This will start piper on your local box, running fully in-memory and without relying on any external dependencies like database or a messaging middleware. 
 
-# API
-
 ## Start a Job 
 
 Jobs can be started from the REST API: 
