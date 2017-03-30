@@ -72,4 +72,28 @@ public class MapObjectTests {
     Assert.assertEquals(Arrays.asList("world"), list);
   }
   
+  @Test
+  public void test11 () {
+    MapObject mo = new MapObject(Collections.singletonMap("key", 1)) {};
+    Assert.assertEquals("1",mo.getString("key"));
+  }
+  
+  @Test
+  public void test12 () {
+    MapObject mo = new MapObject(Collections.singletonMap("key", "value")) {};
+    Assert.assertEquals("value",mo.getRequiredString("key"));
+  }
+  
+  @Test(expected=IllegalArgumentException.class)
+  public void test13 () {
+    MapObject mo = new MapObject(Collections.singletonMap("key", "value")) {};
+    Assert.assertEquals("value",mo.getRequiredString("anotherKey"));
+  }
+  
+  @Test
+  public void test14 () {
+    MapObject mo = new MapObject(Collections.singletonMap("key", "value")) {};
+    Assert.assertEquals("anotherValue",mo.getString("anotherKey","anotherValue"));
+  }
+  
 }
