@@ -1,4 +1,4 @@
-package com.creactiviti.piper;
+package com.creactiviti.piper.config;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

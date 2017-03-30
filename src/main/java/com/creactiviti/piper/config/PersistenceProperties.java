@@ -1,4 +1,4 @@
-package com.creactiviti.piper;
+package com.creactiviti.piper.config;
 
 public class PersistenceProperties {
 
