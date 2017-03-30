@@ -24,7 +24,7 @@ public interface Accessor {
    *         The key to check for existance.
    * @return <code>true</code> if the key exists.<code>false</code> otherwise.
    */
-  boolean contains (Object aKey);
+  boolean containsKey (Object aKey);
   
   /**
    * Return the value associated with the given key -- 
