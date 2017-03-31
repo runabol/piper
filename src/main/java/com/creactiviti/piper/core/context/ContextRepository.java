@@ -8,8 +8,11 @@ package com.creactiviti.piper.core.context;
 
 public interface ContextRepository<T extends Context> {
 
-  T getForJobId (String aJobId);
+  void push (String aJobId, T aContext);
   
-  T save (T aContext);
+  T pop (String aJobId);
+  
+  T peek (String aJobId);
+  
   
 }

@@ -70,8 +70,8 @@ public class Coordinator {
     log.debug("Job {} started",job.getId());
     jobRepository.save(job);
     
-    Context context = new SimpleContext(job.getId(), aParameters);
-    contextRepository.save(context);
+    Context context = new SimpleContext(aParameters);
+    contextRepository.push(job.getId(),context);
     
     execute (job);
     
@@ -80,18 +80,27 @@ public class Coordinator {
   
   private void execute (MutableJob aJob) {
     if(aJob.hasMoreTasks()) {
-      JobTask nextTask = aJob.nextTask(); 
-      jobRepository.save(aJob);
-      JobTask evaluatedTask = taskEvaluator.evaluate(nextTask,null);
-      taskExecutor.execute(evaluatedTask);
+      executeNextTask (aJob);
     }
     else {
-      Pipeline pipeline = pipelineRepository.findOne(aJob.getPipeline());
-      MutableJob job = new MutableJob(aJob,pipeline);
-      job.setStatus(JobStatus.COMPLETED);
-      jobRepository.save(job);
-      log.debug("Job {} completed successfully",aJob.getId());
+      complete(aJob);
     }
+  }
+
+  private void executeNextTask (MutableJob aJob) {
+    JobTask nextTask = aJob.nextTask(); 
+    jobRepository.save(aJob);
+    Context context = contextRepository.peek(aJob.getId());
+    JobTask evaluatedTask = taskEvaluator.evaluate(nextTask,context);
+    taskExecutor.execute(evaluatedTask);
+  }
+  
+  private void complete (MutableJob aJob) {
+    Pipeline pipeline = pipelineRepository.findOne(aJob.getPipeline());
+    MutableJob job = new MutableJob(aJob,pipeline);
+    job.setStatus(JobStatus.COMPLETED);
+    jobRepository.save(job);
+    log.debug("Job {} completed successfully",aJob.getId());
   }
 
   /**

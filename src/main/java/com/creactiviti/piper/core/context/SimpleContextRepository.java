@@ -6,22 +6,38 @@
  */
 package com.creactiviti.piper.core.context;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class SimpleContextRepository implements ContextRepository<SimpleContext> {
+import org.springframework.util.Assert;
 
-  private Map<String, SimpleContext> contexts = new HashMap<String, SimpleContext> ();
-  
+public class SimpleContextRepository implements ContextRepository<Context> {
+
+  private Map<String, Stack<Context>> contexts =  new ConcurrentHashMap<>();
+
   @Override
-  public SimpleContext getForJobId (String aJobId) {
-    return contexts.get(aJobId);
+  public synchronized void push(String aJobId, Context aContext) {
+    Stack<Context> stack = contexts.get(aJobId);
+    if(stack == null) {
+      stack = new Stack<Context>();
+      contexts.put(aJobId, stack);
+    }
+    stack.push(aContext);
   }
 
   @Override
-  public SimpleContext save (SimpleContext aContext) {
-    contexts.put(aContext.getJobId(), aContext);
-    return aContext;
+  public synchronized Context pop (String aJobId) {
+    Stack<Context> stack = contexts.get(aJobId);
+    Assert.isTrue(stack!=null&&!stack.empty(),"No context found for job id: " + aJobId);
+    return stack.pop();
+  }
+  
+  @Override
+  public Context peek(String aJobId) {
+    Stack<Context> stack = contexts.get(aJobId);
+    Assert.isTrue(stack!=null&&!stack.empty(),"No context found for job id: " + aJobId);
+    return stack.peek();
   }
 
 }
