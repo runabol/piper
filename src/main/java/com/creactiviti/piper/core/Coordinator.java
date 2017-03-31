@@ -24,7 +24,7 @@ import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.JobTask;
-import com.creactiviti.piper.core.task.NoOpEvaluator;
+import com.creactiviti.piper.core.task.NoOpTaskEvaluator;
 import com.creactiviti.piper.core.task.TaskEvaluator;
 import com.creactiviti.piper.core.task.TaskExecutor;
 import com.creactiviti.piper.core.task.TaskStatus;
@@ -44,7 +44,7 @@ public class Coordinator {
   private ApplicationEventPublisher eventPublisher;
   private ContextRepository contextRepository;
   private TaskExecutor taskExecutor;
-  private TaskEvaluator taskEvaluator = new NoOpEvaluator();
+  private TaskEvaluator taskEvaluator = new NoOpTaskEvaluator();
   
   private static final String PIPELINE = "pipeline";
   
