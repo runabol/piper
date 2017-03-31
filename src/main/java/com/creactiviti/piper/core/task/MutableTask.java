@@ -9,7 +9,6 @@ package com.creactiviti.piper.core.task;
 import java.util.Map;
 
 import com.creactiviti.piper.core.MapObject;
-import com.creactiviti.piper.core.Task;
 
 
 public class MutableTask extends MapObject implements Task {

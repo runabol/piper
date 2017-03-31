@@ -8,7 +8,7 @@ package com.creactiviti.piper.core.pipeline;
 
 import java.util.List;
 
-import com.creactiviti.piper.core.Task;
+import com.creactiviti.piper.core.task.Task;
 
 /**
  * Pipelines are the the blueprints that describe

@@ -9,8 +9,8 @@ package com.creactiviti.piper.taskhandler.random;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Component;
 
-import com.creactiviti.piper.core.TaskHandler;
 import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.core.task.TaskHandler;
 
 
 /**

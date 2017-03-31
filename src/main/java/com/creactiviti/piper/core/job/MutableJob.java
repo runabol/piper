@@ -16,9 +16,9 @@ import java.util.Map;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.util.Assert;
 
-import com.creactiviti.piper.core.Task;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.core.task.Task;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
 
 public class MutableJob implements Job {

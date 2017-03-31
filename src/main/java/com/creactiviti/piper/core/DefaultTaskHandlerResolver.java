@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.core.task.TaskHandler;
+import com.creactiviti.piper.core.task.TaskHandlerResolver;
 
 @Component
 public class DefaultTaskHandlerResolver implements TaskHandlerResolver {

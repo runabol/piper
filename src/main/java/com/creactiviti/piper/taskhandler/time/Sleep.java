@@ -8,8 +8,8 @@ package com.creactiviti.piper.taskhandler.time;
 
 import org.springframework.stereotype.Component;
 
-import com.creactiviti.piper.core.TaskHandler;
 import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.core.task.TaskHandler;
 
 @Component
 public class Sleep implements TaskHandler<Object> {

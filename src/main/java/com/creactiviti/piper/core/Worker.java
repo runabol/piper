@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.core.task.TaskHandler;
+import com.creactiviti.piper.core.task.TaskHandlerResolver;
 
 /**
  * <p>The class responsible for executing tasks spawned by the {@link Coordinator}.</p>

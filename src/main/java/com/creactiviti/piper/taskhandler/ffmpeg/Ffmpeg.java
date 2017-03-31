@@ -19,8 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.creactiviti.piper.core.TaskHandler;
 import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.core.task.TaskHandler;
 
 /**
  * a {@link TaskHandler} implementation which is used

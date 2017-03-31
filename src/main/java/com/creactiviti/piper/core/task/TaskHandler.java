@@ -4,9 +4,7 @@
  * Proprietary and confidential
  * Written by Arik Cohen <arik@creactiviti.com>, Mar 2017
  */
-package com.creactiviti.piper.core;
-
-import com.creactiviti.piper.core.task.JobTask;
+package com.creactiviti.piper.core.task;
 
 /**
  * A startegy interface used for executing a {@link JobTask}.

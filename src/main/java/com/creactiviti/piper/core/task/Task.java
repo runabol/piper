@@ -4,7 +4,9 @@
  * Proprietary and confidential
  * Written by Arik Cohen <arik@creactiviti.com>, Mar 2017
  */
-package com.creactiviti.piper.core;
+package com.creactiviti.piper.core.task;
+
+import com.creactiviti.piper.core.Accessor;
 
 public interface Task extends Accessor {
 

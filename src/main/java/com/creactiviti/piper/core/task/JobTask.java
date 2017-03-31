@@ -8,8 +8,6 @@ package com.creactiviti.piper.core.task;
 
 import java.util.Date;
 
-import com.creactiviti.piper.core.Task;
-
 public interface JobTask extends Task {
 
   String getId ();

@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.creactiviti.piper.core.Task;
+import com.creactiviti.piper.core.task.Task;
 
 public class SimplePipeline implements Pipeline {
 

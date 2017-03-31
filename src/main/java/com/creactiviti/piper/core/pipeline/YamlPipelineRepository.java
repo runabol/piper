@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.Resource;
 
-import com.creactiviti.piper.core.Task;
 import com.creactiviti.piper.core.task.MutableTask;
+import com.creactiviti.piper.core.task.Task;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Throwables;
