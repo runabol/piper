@@ -30,7 +30,7 @@ public class Ffmpeg implements TaskHandler<Object> {
 
   @Override
   public Object handle(JobTask aTask) throws Exception {
-    List<String> options = aTask.getInput().getList("options", String.class);
+    List<String> options = aTask.getList("options", String.class);
     CommandLine cmd = new CommandLine ("ffmpeg");
     options.forEach(o->cmd.addArgument(o));
     log.debug("{}",cmd);
