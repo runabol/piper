@@ -6,9 +6,6 @@
  */
 package com.creactiviti.piper.core;
 
-import java.util.Collections;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,29 +43,31 @@ public class Coordinator {
   private ContextRepository contextRepository;
   private TaskExecutor taskExecutor;
   
+  private static final String PIPELINE = "pipeline";
+  
   private final Logger log = LoggerFactory.getLogger(getClass());
   
   /**
    * Starts a job instance.
    * 
-   * @param aPipelineId
-   *          The ID of the pipeline that will execute the job.
-   * @param aInput
-   *          A Key-Value map representing the Job's input.
+   * @param aParameters
+   *          The Key-Value map representing the job
+   *          parameters
    * @return Job
    *           The instance of the Job
    */
-  public Job start (String aPipelineId, Map<String, Object> aInput) {
-    Assert.notNull(aPipelineId,"pipelineId must not be null");
-    Pipeline pipeline = pipelineRepository.findOne(aPipelineId);
-    Assert.notNull(pipeline,String.format("Unkown pipeline: %s", aPipelineId));
+  public Job start (MapObject aParameters) {
+    Assert.notNull(aParameters,"parameters can't be null");
+    String pipelineId = aParameters.getRequiredString(PIPELINE);
+    Pipeline pipeline = pipelineRepository.findOne(pipelineId);
+    Assert.notNull(pipeline,String.format("Unkown pipeline: %s", pipelineId));
 
     MutableJob job = new MutableJob(pipeline);
     job.setStatus(JobStatus.STARTED);
     log.debug("Job {} started",job.getId());
     jobRepository.save(job);
     
-    Context context = new SimpleContext(job.getId(), aInput!=null?aInput:Collections.emptyMap());
+    Context context = new SimpleContext(job.getId(), aParameters);
     contextRepository.save(context);
     
     execute (job);

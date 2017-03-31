@@ -9,7 +9,6 @@ package com.creactiviti.piper.web;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.creactiviti.piper.core.Coordinator;
+import com.creactiviti.piper.core.MapObject;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobRepository;
 
@@ -29,15 +29,9 @@ public class JobController {
   @Autowired
   private Coordinator coordinator;
   
-  private static final String PIPELINE = "pipeline";
-  private static final String INPUT = "input";
-  
   @PostMapping("/jobs")
   public Job create (@RequestBody Map<String, Object> aJobRequest) {
-    String pipelineId = (String) aJobRequest.get(PIPELINE);
-    Assert.notNull(pipelineId,"Missing required field: " + PIPELINE);
-    Map<String, Object> input = (Map<String, Object>) aJobRequest.get(INPUT);
-    return coordinator.start(pipelineId, input);
+    return coordinator.start(new MapObject(aJobRequest));
   }
   
   @GetMapping(value="/jobs/{id}")

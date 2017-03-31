@@ -191,4 +191,8 @@ public class MapObject implements Map<String, Object>, Accessor {
   public static MapObject empty () {
     return new MapObject(Collections.EMPTY_MAP);
   }
+  
+  public static MapObject create (Map<String,Object> aMap) {
+    return new MapObject(aMap);
+  }
 }

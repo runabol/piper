@@ -6,6 +6,7 @@
  */
 package com.creactiviti.piper.core;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,7 +56,7 @@ public class CoordinatorTests {
     taskExecutor.setMessenger(coordinatorMessenger);
     coordinator.setTaskExecutor(taskExecutor);
         
-    Job job = coordinator.start("demo/hello", new HashMap<String, Object> ());
+    Job job = coordinator.start(MapObject.create(Collections.singletonMap("pipeline","demo/hello")));
     
     Job completedJob = jobRepository.findOne(job.getId());
     
