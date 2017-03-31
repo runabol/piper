@@ -1,3 +1,9 @@
+/* 
+ * Copyright (C) Creactiviti LLC - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Arik Cohen <arik@creactiviti.com>, Mar 2017
+ */
 package com.creactiviti.piper.core.task;
 
 import java.util.Collections;
@@ -32,6 +38,17 @@ public class SpelTaskEvaluatorTests {
     JobTask jt = new MutableJobTask(Collections.singletonMap("hello", "${name}"));
     JobTask evaluated = evaluator.evaluate(jt, new MapContext(Collections.singletonMap("name", "arik")));
     Assert.assertEquals("arik",evaluated.getString("hello"));
+  }
+  
+  @Test
+  public void test4 () {
+    SpelTaskEvaluator evaluator = new SpelTaskEvaluator();
+    JobTask jt = new MutableJobTask(Collections.singletonMap("hello", "${firstName} ${lastName}"));
+    MapContext ctx = new MapContext();
+    ctx.put("firstName", "Arik");
+    ctx.put("lastName", "Cohen");
+    JobTask evaluated = evaluator.evaluate(jt, ctx);
+    Assert.assertEquals("Arik Cohen",evaluated.getString("hello"));
   }
   
 }
