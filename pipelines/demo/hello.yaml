@@ -1,9 +1,11 @@
 id: demo/hello
 name: Hello World v2
 input:
-  - id: name
+  - name: name
     label: Your Name
     type: string
+    required: true
+    
 tasks: 
   - name: Print a greeting
     type: print

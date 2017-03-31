@@ -14,9 +14,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.creactiviti.piper.core.context.InMemoryContextRepository;
+import com.creactiviti.piper.core.job.InMemoryJobRepository;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobStatus;
-import com.creactiviti.piper.core.job.InMemoryJobRepository;
 import com.creactiviti.piper.core.messenger.SynchMessenger;
 import com.creactiviti.piper.core.pipeline.FileSystemPipelineRepository;
 import com.creactiviti.piper.core.task.DefaultTaskExecutor;
@@ -24,6 +24,7 @@ import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.TaskHandler;
 import com.creactiviti.piper.taskhandler.io.Print;
 import com.creactiviti.piper.taskhandler.time.Sleep;
+import com.google.common.collect.ImmutableMap;
 
 public class CoordinatorTests {
 
@@ -57,11 +58,18 @@ public class CoordinatorTests {
     taskExecutor.setMessenger(coordinatorMessenger);
     coordinator.setTaskExecutor(taskExecutor);
         
-    Job job = coordinator.start(MapObject.create(Collections.singletonMap("pipeline","demo/hello")));
+    Job job = coordinator.start(MapObject.create(ImmutableMap.of("pipeline","demo/hello","name","me")));
     
     Job completedJob = jobRepository.findOne(job.getId());
     
     Assert.assertEquals(JobStatus.COMPLETED, completedJob.getStatus());
+  }
+  
+  @Test(expected=IllegalArgumentException.class)
+  public void testRequiredParams () {
+    Coordinator coordinator = new Coordinator ();
+    coordinator.setPipelineRepository(new FileSystemPipelineRepository());
+    coordinator.start(MapObject.create(Collections.singletonMap("pipeline","demo/hello")));
   }
   
 }
