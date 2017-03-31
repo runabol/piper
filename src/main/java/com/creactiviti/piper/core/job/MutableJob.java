@@ -1,3 +1,9 @@
+/* 
+ * Copyright (C) Creactiviti LLC - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Arik Cohen <arik@creactiviti.com>, Mar 2017
+ */
 package com.creactiviti.piper.core.job;
 
 import java.util.ArrayList;
@@ -13,7 +19,7 @@ import org.springframework.util.Assert;
 import com.creactiviti.piper.core.Task;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.task.JobTask;
-import com.creactiviti.piper.core.uuid.UUIDFactory;
+import com.creactiviti.piper.core.uuid.UUIDGenerator;
 
 public class MutableJob implements Job {
 
@@ -54,7 +60,7 @@ public class MutableJob implements Job {
     Assert.notNull(aPipeline,"pipeline must not be null");
     pipeline = aPipeline;
     creationDate = new Date();
-    id = UUIDFactory.create();
+    id = UUIDGenerator.generate();
   }
   
   @Override

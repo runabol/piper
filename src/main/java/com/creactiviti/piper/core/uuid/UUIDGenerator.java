@@ -4,12 +4,16 @@
  * Proprietary and confidential
  * Written by Arik Cohen <arik@creactiviti.com>, Mar 2017
  */
-package com.creactiviti.piper.core.context;
+package com.creactiviti.piper.core.uuid;
 
-public interface ContextRepository<T extends Context> {
+import java.util.UUID;
 
-  T getForJobId (String aJobId);
+public final class UUIDGenerator {
+
+  private UUIDGenerator () {}
   
-  T save (T aContext);
+  public static String generate () {
+    return UUID.randomUUID().toString().replaceAll("-", "");
+  }
   
 }
