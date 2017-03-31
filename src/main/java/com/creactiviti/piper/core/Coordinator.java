@@ -24,6 +24,8 @@ import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.core.task.NoOpEvaluator;
+import com.creactiviti.piper.core.task.TaskEvaluator;
 import com.creactiviti.piper.core.task.TaskExecutor;
 import com.creactiviti.piper.core.task.TaskStatus;
 
@@ -42,6 +44,7 @@ public class Coordinator {
   private ApplicationEventPublisher eventPublisher;
   private ContextRepository contextRepository;
   private TaskExecutor taskExecutor;
+  private TaskEvaluator taskEvaluator = new NoOpEvaluator();
   
   private static final String PIPELINE = "pipeline";
   
@@ -79,7 +82,8 @@ public class Coordinator {
     if(aJob.hasMoreTasks()) {
       JobTask nextTask = aJob.nextTask(); 
       jobRepository.save(aJob);
-      taskExecutor.execute(nextTask);
+      JobTask evaluatedTask = taskEvaluator.evaluate(nextTask);
+      taskExecutor.execute(evaluatedTask);
     }
     else {
       Pipeline pipeline = pipelineRepository.findOne(aJob.getPipeline());
@@ -185,5 +189,11 @@ public class Coordinator {
   public void setPipelineRepository(PipelineRepository aPipelineRepository) {
     pipelineRepository = aPipelineRepository;
   }
+  
+  @Autowired(required=false)
+  public void setTaskEvaluator(TaskEvaluator aTaskEvaluator) {
+    taskEvaluator = aTaskEvaluator;
+  }
+  
 
 }
