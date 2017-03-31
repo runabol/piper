@@ -82,7 +82,7 @@ public class Coordinator {
     if(aJob.hasMoreTasks()) {
       JobTask nextTask = aJob.nextTask(); 
       jobRepository.save(aJob);
-      JobTask evaluatedTask = taskEvaluator.evaluate(nextTask);
+      JobTask evaluatedTask = taskEvaluator.evaluate(nextTask,null);
       taskExecutor.execute(evaluatedTask);
     }
     else {
