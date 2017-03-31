@@ -8,13 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.creactiviti.piper.cache.Clearable;
 
 @RestController
-@RequestMapping("/caches")
 public class CacheController {
 
   @Autowired(required=false)
@@ -22,7 +20,7 @@ public class CacheController {
   
   private Logger logger = LoggerFactory.getLogger(getClass());
 
-  @PostMapping("/clear")
+  @PostMapping("/caches/clear")
   public Map<String, String> clear () {
     for(Clearable c : clearables) {
       logger.info("Clearing: {}",c.getClass().getName());
