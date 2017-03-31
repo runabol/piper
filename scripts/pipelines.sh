@@ -1,3 +1,3 @@
 #!/bin/bash
 
-curl -s http://localhost:8080/pipeline | jq .
+curl -s http://localhost:8080/pipelines | jq .
