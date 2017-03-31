@@ -24,7 +24,7 @@ import com.creactiviti.piper.core.task.JobTask;
 
 /**
  * a {@link TaskHandler} implementation which is used
- * for executing ffmpeg-type tasks.
+ * for executing ffmpeg-based commands.
  * 
  * @author Arik Cohen
  * @since Jan 30, 2017
