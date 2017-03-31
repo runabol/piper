@@ -10,7 +10,6 @@ import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.messenger.Messenger;
@@ -75,12 +74,10 @@ public class Worker {
     throw new UnsupportedOperationException();
   }
 
-  @Autowired
   public void setTaskHandlerResolver(TaskHandlerResolver aTaskHandlerResolver) {
     taskHandlerResolver = aTaskHandlerResolver;
   }
 
-  @Autowired  
   public void setMessenger(Messenger aMessenger) {
     messenger = aMessenger;
   }
