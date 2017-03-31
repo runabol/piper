@@ -51,4 +51,14 @@ public class SpelTaskEvaluatorTests {
     Assert.assertEquals("Arik Cohen",evaluated.getString("hello"));
   }
   
+  @Test
+  public void test5 () {
+    SpelTaskEvaluator evaluator = new SpelTaskEvaluator();
+    JobTask jt = new MutableJobTask(Collections.singletonMap("hello", "${T(java.lang.Integer).valueOf(number)}"));
+    MapContext ctx = new MapContext();
+    ctx.put("number", "5");
+    JobTask evaluated = evaluator.evaluate(jt, ctx);
+    Assert.assertEquals(Integer.valueOf(5),((Integer)evaluated.get("hello")));
+  }
+  
 }
