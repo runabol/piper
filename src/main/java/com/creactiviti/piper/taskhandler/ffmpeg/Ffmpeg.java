@@ -42,8 +42,8 @@ public class Ffmpeg implements TaskHandler<Object> {
     log.debug("{}",cmd);
     DefaultExecutor exec = new DefaultExecutor();
     File tempFile = File.createTempFile("log", null);
-    exec.setStreamHandler(new PumpStreamHandler(new PrintStream(tempFile)));
-    try {
+    try (PrintStream stream = new PrintStream(tempFile);) {
+      exec.setStreamHandler(new PumpStreamHandler(stream));
       int exitValue = exec.execute(cmd);
       return exitValue!=0?FileUtils.readFileToString(tempFile):cmd.toString();
     }
