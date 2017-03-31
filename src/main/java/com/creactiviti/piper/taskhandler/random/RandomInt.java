@@ -20,8 +20,7 @@ public class RandomInt implements TaskHandler<Object> {
   @Override
   public Object handle(JobTask aTask) throws Exception {
     Integer startInclusive = aTask.getInteger("startInclusive", 0);
-    int nextInt = RandomUtils.nextInt(startInclusive, aTask.getInteger("endInclusive", 100));
-    return nextInt;
+    return RandomUtils.nextInt(startInclusive, aTask.getInteger("endInclusive", 100));
   }
 
 }
