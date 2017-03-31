@@ -14,8 +14,8 @@ import com.creactiviti.piper.core.context.InMemoryContextRepository;
 import com.creactiviti.piper.core.job.InMemoryJobRepository;
 
 @Configuration
-@ConditionalOnProperty(name="piper.persistence.provider",havingValue="simple")
-public class SimplePersistenceConfiguration {
+@ConditionalOnProperty(name="piper.persistence.provider",havingValue="inmemory")
+public class InMemoryPersistenceConfiguration {
 
   @Bean
   InMemoryJobRepository simpleJobRepository () {

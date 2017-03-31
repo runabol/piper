@@ -8,9 +8,7 @@ package com.creactiviti.piper.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.context.Context;
@@ -36,7 +34,6 @@ import com.creactiviti.piper.core.task.TaskStatus;
  * @author Arik Cohen
  * @since Jun 12, 2016
  */
-@Component
 public class Coordinator {
   
   private PipelineRepository pipelineRepository;
@@ -173,33 +170,27 @@ public class Coordinator {
   public void on (Object aEvent) {
     eventPublisher.publishEvent (aEvent);    
   }
-  
-  @Autowired
+ 
   public void setContextRepository(ContextRepository aContextRepository) {
     contextRepository = aContextRepository;
   }
-  
-  @Autowired
+
   public void setEventPublisher(ApplicationEventPublisher aEventPublisher) {
     eventPublisher = aEventPublisher;
   }
   
-  @Autowired
   public void setJobRepository(JobRepository aJobRepository) {
     jobRepository = aJobRepository;
   }
 
-  @Autowired
   public void setTaskExecutor(TaskExecutor aTaskExecutor) {
     taskExecutor = aTaskExecutor;
   }
   
-  @Autowired
   public void setPipelineRepository(PipelineRepository aPipelineRepository) {
     pipelineRepository = aPipelineRepository;
   }
   
-  @Autowired(required=false)
   public void setTaskEvaluator(TaskEvaluator aTaskEvaluator) {
     taskEvaluator = aTaskEvaluator;
   }
