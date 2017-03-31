@@ -25,12 +25,12 @@ public class MutableTask extends MapObject implements Task {
   public String getName() {
     return getString("name");
   }
-
-  @Override
-  public String getReturns() {
-    return getString("returns");
-  }
   
+  @Override
+  public String getLabel() {
+    return getString("label");
+  }
+
   @Override
   public String getNode() {
     return getString("node");

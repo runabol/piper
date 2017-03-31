@@ -6,8 +6,8 @@ public interface Task extends Accessor {
   
   String getName ();
   
-  String getNode ();
+  String getLabel ();
   
-  String getReturns ();
+  String getNode ();
   
 }

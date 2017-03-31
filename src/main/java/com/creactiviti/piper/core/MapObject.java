@@ -152,7 +152,7 @@ public abstract class MapObject implements Map<String, Object>, Accessor {
   }
 
   @Override
-  public Integer getInteger(Object aKey, int aDefaultValue) {
+  public int getInteger(Object aKey, int aDefaultValue) {
     return get(aKey, Integer.class, aDefaultValue);
   }
   

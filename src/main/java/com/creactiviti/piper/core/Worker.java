@@ -37,8 +37,8 @@ public class Worker {
    *          The task to execute.
    */
   public void handle (JobTask aTask) {
-    TaskHandler<?> taskHandler = taskHandlerResolver.resolve(aTask);
     try {
+      TaskHandler<?> taskHandler = taskHandlerResolver.resolve(aTask);
       Object output = taskHandler.handle(aTask);
       MutableJobTask completion = new MutableJobTask(aTask);
       if(output!=null) {

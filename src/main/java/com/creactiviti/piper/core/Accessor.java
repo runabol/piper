@@ -178,7 +178,7 @@ public interface Accessor {
    * @return The {@link Integer} value associated with the given key --
    *         converting as needed.
    */
-  Integer getInteger (Object aKey, int aDefaultValue);
+  int getInteger (Object aKey, int aDefaultValue);
   
   /**
    * Return the {@link Date} value associated with the given
