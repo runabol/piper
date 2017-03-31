@@ -8,6 +8,7 @@ package com.creactiviti.piper.core.pipeline;
 
 import java.util.List;
 
+import com.creactiviti.piper.core.Accessor;
 import com.creactiviti.piper.core.task.Task;
 
 /**
@@ -34,4 +35,8 @@ public interface Pipeline {
    */
   List<Task> getTasks ();
 
+  /**
+   * Returns the pipeline's expected input
+   */
+  List<Accessor> getInput ();
 }

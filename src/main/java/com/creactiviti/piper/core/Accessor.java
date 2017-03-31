@@ -197,6 +197,30 @@ public interface Accessor {
   int getInteger (Object aKey, int aDefaultValue);
   
   /**
+   * Return the {@link Boolean} value associated with the given
+   * key -- converting as necessary.
+   * 
+   * @param aKey
+   *          The key associated with the desired value.
+   * @return The {@link Integer} value associated with the given key --
+   *         converting as needed.
+   */
+  Boolean getBoolean (Object aKey);
+  
+  /**
+   * Return the {@link Boolean} value associated with the given
+   * key -- converting as necessary.
+   * 
+   * @param aKey
+   *          The key associated with the desired value.
+   * @param aDefaultValue
+   *          The default value if no value is associated with the key
+   * @return The {@link Integer} value associated with the given key --
+   *         converting as needed.
+   */
+  boolean getBoolean (Object aKey, boolean aDefaultValue);
+  
+  /**
    * Return the {@link Date} value associated with the given
    * key -- converting as necessary.
    * 

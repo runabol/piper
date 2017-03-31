@@ -7,40 +7,42 @@
 package com.creactiviti.piper.core.pipeline;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.creactiviti.piper.core.Accessor;
+import com.creactiviti.piper.core.MapObject;
 import com.creactiviti.piper.core.task.Task;
 
-public class SimplePipeline implements Pipeline {
+public class SimplePipeline extends MapObject implements Pipeline {
 
-  private final String id;
-  private final String name;
-  private final List<Task> tasks;
-  
-  public SimplePipeline(String aId, String aName, List<Task> aTasks) {
-    id = aId;
-    name = aName;
-    tasks = aTasks;
+  public SimplePipeline(Map<String, Object> aSource) {
+    super(aSource);
   }
-  
+
   @Override
   public String getId() {
-    return id;
+    return getString("id");
   }
 
   @Override
   public String getName() {
-    return name;
+    return getString("name");
   }
 
   @Override
   public List<Task> getTasks() {
-    return tasks;
+    return getList("tasks", Task.class);
   }
 
   @Override
   public String toString() {
     return ToStringBuilder.reflectionToString(this);
+  }
+
+  @Override
+  public List<Accessor> getInput() {
+    return getList("input",Accessor.class);
   }
 }

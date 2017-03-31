@@ -6,6 +6,8 @@
  */
 package com.creactiviti.piper.core;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -59,8 +61,10 @@ public class Coordinator {
   public Job start (MapObject aParameters) {
     Assert.notNull(aParameters,"parameters can't be null");
     String pipelineId = aParameters.getRequiredString(PIPELINE);
-    Pipeline pipeline = pipelineRepository.findOne(pipelineId);
+    Pipeline pipeline = pipelineRepository.findOne(pipelineId);    
     Assert.notNull(pipeline,String.format("Unkown pipeline: %s", pipelineId));
+    
+    validate(aParameters, pipeline);
 
     MutableJob job = new MutableJob(pipeline);
     job.setStatus(JobStatus.STARTED);
@@ -73,6 +77,15 @@ public class Coordinator {
     execute (job);
     
     return job;
+  }
+  
+  private void validate (MapObject aParameters, Pipeline aPipeline) {
+    List<Accessor> input = aPipeline.getInput();
+    for(Accessor in : input) {
+      if(in.getBoolean("required", false)) {
+        Assert.isTrue(aParameters.containsKey(in.get("name")), "Missing required param: " + in.get("name"));
+      }
+    }
   }
   
   private void execute (MutableJob aJob) {

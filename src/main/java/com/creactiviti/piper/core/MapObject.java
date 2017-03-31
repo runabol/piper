@@ -6,6 +6,7 @@
  */
 package com.creactiviti.piper.core;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -57,7 +58,17 @@ public class MapObject implements Map<String, Object>, Accessor {
   
   @Override
   public <T> List<T> getList(Object aKey, Class<T> aElementType) {
-    return get(aKey, List.class);
+    List list = get(aKey, List.class);
+    List<T> typedList = new ArrayList<>();
+    for(Object item : list) {
+      if(aElementType.equals(Accessor.class)) {
+        typedList.add((T)new MapObject((Map<String, Object>) item));
+      }
+      else {
+        typedList.add((T)ConvertUtils.convert(item,aElementType));
+      }
+    }
+    return typedList;
   }
   
   @Override
@@ -165,6 +176,17 @@ public class MapObject implements Map<String, Object>, Accessor {
   @Override
   public Date getDate(Object aKey) {
     return get(aKey, Date.class);
+  }
+  
+  @Override
+  public Boolean getBoolean(Object aKey) {
+    return get(aKey, Boolean.class);
+  }
+  
+  @Override
+  public boolean getBoolean(Object aKey, boolean aDefaultValue) {
+    Boolean value = getBoolean(aKey);
+    return value!=null?value:aDefaultValue;
   }
   
   @Override

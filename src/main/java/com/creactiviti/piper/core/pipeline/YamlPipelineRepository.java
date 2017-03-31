@@ -28,9 +28,8 @@ public abstract class YamlPipelineRepository implements PipelineRepository  {
   protected Pipeline parsePipeline (IdentifiableResource aResource) {
     Map<String,Object> yamlMap = parse (aResource);
     String id = aResource.getId();
-    String name = (String)yamlMap.get("name");
-    List<Task> tasks = (List<Task>) yamlMap.get("tasks");
-    return new SimplePipeline(id, name, tasks);
+    yamlMap.put("id", id);
+    return new SimplePipeline(yamlMap);
   }
   
   private Map<String,Object> parse (Resource aResource) {
