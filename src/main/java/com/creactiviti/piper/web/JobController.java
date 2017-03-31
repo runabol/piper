@@ -17,7 +17,7 @@ import com.creactiviti.piper.core.job.JobRepository;
 
 @RestController
 @RequestMapping("/jobs")
-public class JobsController {
+public class JobController {
 
   @Autowired
   private JobRepository jobRepository;

@@ -15,7 +15,7 @@ import com.creactiviti.piper.cache.Clearable;
 
 @RestController
 @RequestMapping("/caches")
-public class CachesController {
+public class CacheController {
 
   @Autowired(required=false)
   private List<Clearable> clearables = Collections.emptyList();

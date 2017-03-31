@@ -12,7 +12,7 @@ import com.creactiviti.piper.core.pipeline.PipelineRepository;
 
 @RestController
 @RequestMapping("/pipelines")
-public class PipelinesController {
+public class PipelineController {
 
   @Autowired
   private PipelineRepository pipelineRepository;
