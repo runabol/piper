@@ -14,7 +14,7 @@ import com.creactiviti.piper.core.MapObject;
 public class MutableTask extends MapObject implements Task {
 
   public MutableTask (Task aSource) {
-    super(aSource.toMap());
+    super(aSource.asMap());
   }
   
   public MutableTask (Map<String, Object> aSource) {

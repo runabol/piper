@@ -212,6 +212,6 @@ public interface Accessor {
    * 
    * @return {@link Map}
    */
-  Map<String, Object> toMap ();
+  Map<String, Object> asMap ();
   
 }

@@ -180,7 +180,7 @@ public class MapObject implements Map<String, Object>, Accessor {
   }
   
   @Override
-  public Map<String, Object> toMap() {
+  public Map<String, Object> asMap() {
     return SerializationUtils.clone(map);
   }
   

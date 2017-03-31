@@ -80,7 +80,7 @@ public class MutableJob implements Job {
   
   public JobTask nextTask() {
     Task task = pipeline.getTasks().get(execution.size());
-    MutableJobTask mt = new MutableJobTask (task.toMap());
+    MutableJobTask mt = new MutableJobTask (task.asMap());
     execution.put(mt.getId(),mt);
     return mt;
   }

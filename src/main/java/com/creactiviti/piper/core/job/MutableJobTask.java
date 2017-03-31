@@ -19,7 +19,7 @@ import com.creactiviti.piper.core.uuid.UUIDGenerator;
 public class MutableJobTask extends MutableTask implements JobTask, Mutator {
 
   public MutableJobTask (JobTask aSource) {
-    super(aSource.toMap());
+    super(aSource.asMap());
   }
   
   public MutableJobTask (Map<String, Object> aSource) {

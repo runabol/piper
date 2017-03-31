@@ -25,21 +25,15 @@ public class CoordinatorConfiguration {
   @Autowired
   private JobRepository jobRepository;
   
-  @Autowired
-  private TaskExecutor taskExecutor;
-  
-  @Autowired
-  private PipelineRepository pipelineRepository;
-
   @Bean
-  Coordinator coordinator () {
+  Coordinator coordinator (PipelineRepository aPipelineRepository, TaskExecutor aTaskExecutor) {
     Coordinator coordinator = new Coordinator();
     coordinator.setContextRepository(contextRepository);
     coordinator.setEventPublisher(eventPublisher);
     coordinator.setJobRepository(jobRepository);
-    coordinator.setPipelineRepository(pipelineRepository);
+    coordinator.setPipelineRepository(aPipelineRepository);
     coordinator.setTaskEvaluator(new SpelTaskEvaluator());
-    coordinator.setTaskExecutor(taskExecutor);
+    coordinator.setTaskExecutor(aTaskExecutor);
     return coordinator;
   }
   
