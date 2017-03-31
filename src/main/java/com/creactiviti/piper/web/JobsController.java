@@ -16,8 +16,8 @@ import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobRepository;
 
 @RestController
-@RequestMapping("/job")
-public class JobController {
+@RequestMapping("/jobs")
+public class JobsController {
 
   @Autowired
   private JobRepository jobRepository;
@@ -28,7 +28,7 @@ public class JobController {
   private static final String PIPELINE = "pipeline";
   private static final String INPUT = "input";
   
-  @PostMapping(value="/start")
+  @PostMapping
   public Job start (@RequestBody Map<String, Object> aJobRequest) {
     String pipelineId = (String) aJobRequest.get(PIPELINE);
     Assert.notNull(pipelineId,"Missing required field: " + PIPELINE);

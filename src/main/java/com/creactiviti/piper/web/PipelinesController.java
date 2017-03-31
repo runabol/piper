@@ -11,8 +11,8 @@ import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
 
 @RestController
-@RequestMapping("/pipeline")
-public class PipelineController {
+@RequestMapping("/pipelines")
+public class PipelinesController {
 
   @Autowired
   private PipelineRepository pipelineRepository;
