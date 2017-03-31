@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.util.Assert;
 
-public class SimpleContextRepository implements ContextRepository<Context> {
+public class InMemoryContextRepository implements ContextRepository<Context> {
 
   private Map<String, Stack<Context>> contexts =  new ConcurrentHashMap<>();
 

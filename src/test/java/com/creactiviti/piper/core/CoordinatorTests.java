@@ -13,10 +13,10 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.creactiviti.piper.core.context.SimpleContextRepository;
+import com.creactiviti.piper.core.context.InMemoryContextRepository;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobStatus;
-import com.creactiviti.piper.core.job.SimpleJobRepository;
+import com.creactiviti.piper.core.job.InMemoryJobRepository;
 import com.creactiviti.piper.core.messenger.SynchMessenger;
 import com.creactiviti.piper.core.pipeline.FileSystemPipelineRepository;
 import com.creactiviti.piper.core.task.DefaultTaskExecutor;
@@ -46,8 +46,8 @@ public class CoordinatorTests {
     
     worker.setTaskHandlerResolver(taskHandlerResolver);
     
-    coordinator.setContextRepository(new SimpleContextRepository());
-    SimpleJobRepository jobRepository = new SimpleJobRepository();
+    coordinator.setContextRepository(new InMemoryContextRepository());
+    InMemoryJobRepository jobRepository = new InMemoryJobRepository();
     coordinator.setJobRepository(jobRepository);
     coordinator.setPipelineRepository(new FileSystemPipelineRepository());
     

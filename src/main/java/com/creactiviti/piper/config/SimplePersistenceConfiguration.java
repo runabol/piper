@@ -10,21 +10,21 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.creactiviti.piper.core.context.SimpleContextRepository;
-import com.creactiviti.piper.core.job.SimpleJobRepository;
+import com.creactiviti.piper.core.context.InMemoryContextRepository;
+import com.creactiviti.piper.core.job.InMemoryJobRepository;
 
 @Configuration
 @ConditionalOnProperty(name="piper.persistence.provider",havingValue="simple")
 public class SimplePersistenceConfiguration {
 
   @Bean
-  SimpleJobRepository simpleJobRepository () {
-    return new SimpleJobRepository();
+  InMemoryJobRepository simpleJobRepository () {
+    return new InMemoryJobRepository();
   }
   
   @Bean
-  SimpleContextRepository simpleContextRepository () {
-    return new SimpleContextRepository();
+  InMemoryContextRepository simpleContextRepository () {
+    return new InMemoryContextRepository();
   }
   
 }

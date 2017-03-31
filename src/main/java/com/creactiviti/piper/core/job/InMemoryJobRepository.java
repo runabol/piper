@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.creactiviti.piper.core.task.JobTask;
 
-public class SimpleJobRepository implements JobRepository {
+public class InMemoryJobRepository implements JobRepository {
 
   private final Map<String,Job> jobs = new ConcurrentHashMap<>();
   

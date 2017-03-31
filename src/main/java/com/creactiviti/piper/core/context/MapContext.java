@@ -10,9 +10,9 @@ import java.util.Map;
 
 import com.creactiviti.piper.core.MapObject;
 
-public class SimpleContext extends MapObject implements Context {
+public class MapContext extends MapObject implements Context {
 
-  public SimpleContext (Map<String, Object> aSource) {
+  public MapContext (Map<String, Object> aSource) {
     super(aSource);
   }
   
