@@ -1,6 +1,7 @@
 package com.creactiviti.piper.core;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,10 +16,9 @@ import org.springframework.util.Assert;
  * @author Arik Cohen
  * @since Jun 12, 2016
  */
-public abstract class MapObject implements Map<String, Object>, Accessor {
+public class MapObject implements Map<String, Object>, Accessor {
 
   private final HashMap<String, Object> map;
-  
   
   public MapObject (Map<String, Object> aSource) {
     map = new HashMap<String, Object>(aSource);
@@ -132,7 +132,7 @@ public abstract class MapObject implements Map<String, Object>, Accessor {
   }
 
   @Override
-  public Long getLong(Object aKey, long aDefaultValue) {
+  public long getLong(Object aKey, long aDefaultValue) {
     return get(aKey,Long.class,aDefaultValue);
   }
 
@@ -162,11 +162,27 @@ public abstract class MapObject implements Map<String, Object>, Accessor {
   }
   
   @Override
+  public MapObject getMapObject (Object aKey) {
+    Map<String,Object> value = (Map<String, Object>) get(aKey);
+    if(value == null) {
+      return null;
+    }
+    else if(value instanceof MapObject) {
+      return (MapObject) value;
+    }
+    return new MapObject(value);
+  }
+  
+  @Override
   public Map<String, Object> toMap() {
     return SerializationUtils.clone(map);
   }
   
   public String toString() {
     return map.toString();
+  }
+  
+  public static MapObject empty () {
+    return new MapObject(Collections.EMPTY_MAP);
   }
 }

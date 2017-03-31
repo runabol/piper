@@ -68,6 +68,16 @@ public interface Accessor {
   String getString (Object aKey);
 
   /**
+   * Return the {@link MapObject} value associated with the given
+   * key.
+   * 
+   * @param aKey
+   *          The key associated with the desired value.
+   * @return The {@link MapObject} value associated with the given key.
+   */
+  MapObject getMapObject (Object aKey);
+
+  /**
    * Return the {@link String} value associated with the given
    * key -- converting as necessary.
    * 
@@ -128,7 +138,7 @@ public interface Accessor {
    * @return The {@link Long} value associated with the given key --
    *         converting as needed.
    */
-  Long getLong (Object aKey, long aDefaultValue);
+  long getLong (Object aKey, long aDefaultValue);
 
   /**
    * Return the {@link Double} value associated with the given

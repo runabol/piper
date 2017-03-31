@@ -2,6 +2,8 @@ package com.creactiviti.piper.core;
 
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +30,8 @@ public class Worker {
 
   private TaskHandlerResolver taskHandlerResolver;
   private Messenger messenger;
+  
+  private Logger logger = LoggerFactory.getLogger(getClass());
 
   /**
    * Handle the execution of a {@link JobTask}. Implementors
@@ -48,6 +52,7 @@ public class Worker {
       messenger.send("completions", completion);
     }
     catch (Exception e) {
+      logger.error(e.getMessage(),e);
       MutableJobTask jobTask = new MutableJobTask(aTask);
       jobTask.setException(e);
       messenger.send("errors", jobTask);

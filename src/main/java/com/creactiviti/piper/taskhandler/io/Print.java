@@ -14,7 +14,7 @@ public class Print implements TaskHandler<Object> {
 
   @Override
   public Object handle (JobTask aTask) {
-    log.info(aTask.getRequiredString("text"));
+    log.info(aTask.getInput().getRequiredString("text"));
     return null;
   }
 

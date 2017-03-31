@@ -10,4 +10,6 @@ public interface Task extends Accessor {
   
   String getNode ();
   
+  Accessor getInput ();
+  
 }
