@@ -84,7 +84,7 @@ public class JmsMessengerConfiguration {
     DefaultMessageListenerContainer container = new DefaultMessageListenerContainer();
     container.setConnectionFactory (connectionFactory);
     container.setDestinationName("completions");
-    MessageListener listener = (m) -> coordinator.complete(toTask(m));
+    MessageListener listener = (m) -> coordinator.completeTask(toTask(m));
     container.setMessageListener(listener);
     return container;
   }

@@ -93,7 +93,7 @@ public class Coordinator {
       executeNextTask (aJob);
     }
     else {
-      complete(aJob);
+      completeJob(aJob);
     }
   }
 
@@ -105,7 +105,7 @@ public class Coordinator {
     taskExecutor.execute(evaluatedTask);
   }
   
-  private void complete (MutableJob aJob) {
+  private void completeJob (MutableJob aJob) {
     Pipeline pipeline = pipelineRepository.findOne(aJob.getPipeline());
     MutableJob job = new MutableJob(aJob,pipeline);
     job.setStatus(JobStatus.COMPLETED);
@@ -142,7 +142,7 @@ public class Coordinator {
    * @param aTask
    *          The task to complete.
    */
-  public void complete (JobTask aTask) {
+  public void completeTask (JobTask aTask) {
     log.debug("Completing task {}", aTask.getId());
     MutableJobTask task = new MutableJobTask(aTask);
     task.setStatus(TaskStatus.COMPLETED);
@@ -152,6 +152,14 @@ public class Coordinator {
     Assert.notNull(mjob,String.format("No job found for task %s ",aTask.getId()));
     mjob.updateTask(task);
     jobRepository.save(mjob);
+    
+    if(task.getOutput() != null) {
+      Context context = contextRepository.pop(job.getId());
+      MapContext newContext = new MapContext(context.asMap());
+      newContext.put(task.getName(), task.getOutput());
+      contextRepository.push(job.getId(), newContext);
+    }
+    
     execute(mjob);
   }
 

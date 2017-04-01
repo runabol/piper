@@ -35,7 +35,7 @@ public class CoordinatorTests {
     Coordinator coordinator = new Coordinator ();
    
     SynchMessenger workerMessenger = new SynchMessenger();
-    workerMessenger.receive("completions", (o)->coordinator.complete((JobTask)o));
+    workerMessenger.receive("completions", (o)->coordinator.completeTask((JobTask)o));
     worker.setMessenger(workerMessenger);
     DefaultTaskHandlerResolver taskHandlerResolver = new DefaultTaskHandlerResolver();
     
