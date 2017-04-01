@@ -84,7 +84,7 @@ This will start piper on your local box, running fully in-memory and without rel
 Jobs can be started from the REST API: 
 
 ```
-curl -s -X POST -H "Content-Type:application/json" -d '{"pipeline":"demo/hello"}' http://localhost:8080/job/start
+curl -s -X POST -H "Content-Type:application/json" -d '{"pipeline":"demo/hello","name":"Arik"}' http://localhost:8080/jobs/start
 ```
 
 Which will give you back something like: 
@@ -119,7 +119,7 @@ Which will give you back something like:
 Use the Job ID, to check for it's status:
 
 ```
-curl -s http://localhost:8080/job/3b019138d4474948bc3de23cdfb4f67c 
+curl -s http://localhost:8080/jobs/3b019138d4474948bc3de23cdfb4f67c 
 ```
 
 ```
@@ -144,7 +144,7 @@ curl -s http://localhost:8080/job/3b019138d4474948bc3de23cdfb4f67c
     {
       "completionDate": 1491006487551,
       "label": "Print a greeting",
-      "text": "Hello arik",
+      "text": "Hello Arik",
       "id": "843fda642f93401b8b8f763e26c50e3c",
       "type": "print",
       "creationDate": 1491006487547,
@@ -162,7 +162,7 @@ curl -s http://localhost:8080/job/3b019138d4474948bc3de23cdfb4f67c
     {
       "completionDate": 1491006488078,
       "label": "Print a farewell",
-      "text": "Goodbye arik",
+      "text": "Goodbye Arik",
       "id": "1d055d8eb1454f97b2f7e5be166bea1a",
       "type": "print",
       "creationDate": 1491006488074,
