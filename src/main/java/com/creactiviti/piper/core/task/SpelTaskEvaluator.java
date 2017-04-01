@@ -6,7 +6,9 @@
  */
 package com.creactiviti.piper.core.task;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -38,19 +40,37 @@ public class SpelTaskEvaluator implements TaskEvaluator {
   }
 
   private Map<String, Object> evaluateInternal(Map<String, Object> aMap, Context aContext) {
-    StandardEvaluationContext context = new StandardEvaluationContext(aContext);
-    context.addPropertyAccessor(new MapPropertyAccessor());
     Map<String,Object> newMap = new HashMap<String, Object>();
     for(Entry<String,Object> entry : aMap.entrySet()) {
-      if(entry.getValue() instanceof String) {
-        Expression expression = parser.parseExpression((String)entry.getValue(),new TemplateParserContext("${","}"));
-        newMap.put(entry.getKey(), expression.getValue(context));
-      }
-      else {
-        newMap.put(entry.getKey(), entry.getValue());
-      }
+      newMap.put(entry.getKey(), evaluate(entry.getValue(),aContext));
     }
     return newMap;
+  }
+  
+  private Object evaluate (Object aValue, Context aContext) {
+    StandardEvaluationContext context = createEvaluationContext(aContext);
+    if(aValue instanceof String) {
+      Expression expression = parser.parseExpression((String)aValue,new TemplateParserContext("${","}"));
+      return(expression.getValue(context));
+    }
+    else if (aValue instanceof List) {
+      List<Object> evaluatedlist = new ArrayList<>();
+      List<Object> list = (List<Object>) aValue;
+      for(Object item : list) {
+        evaluatedlist.add(evaluate(item, aContext));
+      }
+      return evaluatedlist;
+    }
+    else if (aValue instanceof Map) {
+      return evaluateInternal((Map<String, Object>) aValue, aContext);
+    }
+    return aValue;
+  }
+
+  private StandardEvaluationContext createEvaluationContext(Context aContext) {
+    StandardEvaluationContext context = new StandardEvaluationContext(aContext);
+    context.addPropertyAccessor(new MapPropertyAccessor());
+    return context;
   }
   
   public static void main (String[] args) {

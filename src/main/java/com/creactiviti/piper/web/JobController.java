@@ -31,7 +31,7 @@ public class JobController {
   
   @PostMapping("/jobs")
   public Job create (@RequestBody Map<String, Object> aJobRequest) {
-    return coordinator.start(MapObject.create(aJobRequest));
+    return coordinator.start(MapObject.of(aJobRequest));
   }
   
   @GetMapping(value="/jobs/{id}")

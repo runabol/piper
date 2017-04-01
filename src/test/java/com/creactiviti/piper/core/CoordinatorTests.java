@@ -58,7 +58,7 @@ public class CoordinatorTests {
     taskExecutor.setMessenger(coordinatorMessenger);
     coordinator.setTaskExecutor(taskExecutor);
         
-    Job job = coordinator.start(MapObject.create(ImmutableMap.of("pipeline","demo/hello","name","me")));
+    Job job = coordinator.start(MapObject.of(ImmutableMap.of("pipeline","demo/hello","name","me")));
     
     Job completedJob = jobRepository.findOne(job.getId());
     
@@ -69,7 +69,7 @@ public class CoordinatorTests {
   public void testRequiredParams () {
     Coordinator coordinator = new Coordinator ();
     coordinator.setPipelineRepository(new FileSystemPipelineRepository());
-    coordinator.start(MapObject.create(Collections.singletonMap("pipeline","demo/hello")));
+    coordinator.start(MapObject.of(Collections.singletonMap("pipeline","demo/hello")));
   }
   
 }

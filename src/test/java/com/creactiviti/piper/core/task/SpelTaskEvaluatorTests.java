@@ -6,11 +6,13 @@
  */
 package com.creactiviti.piper.core.task;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.creactiviti.piper.core.MapObject;
 import com.creactiviti.piper.core.context.MapContext;
 import com.creactiviti.piper.core.job.MutableJobTask;
 
@@ -59,6 +61,27 @@ public class SpelTaskEvaluatorTests {
     ctx.put("number", "5");
     JobTask evaluated = evaluator.evaluate(jt, ctx);
     Assert.assertEquals(Integer.valueOf(5),((Integer)evaluated.get("hello")));
+  }
+  
+  @Test
+  public void test6 () {
+    SpelTaskEvaluator evaluator = new SpelTaskEvaluator();
+    JobTask jt = new MutableJobTask(Collections.singletonMap("list", Arrays.asList("${firstName}","${lastName}")));
+    MapContext ctx = new MapContext();
+    ctx.put("firstName", "Arik");
+    ctx.put("lastName", "Cohen");
+    JobTask evaluated = evaluator.evaluate(jt, ctx);
+    Assert.assertEquals(Arrays.asList("Arik","Cohen"),evaluated.getList("list", String.class));
+  }
+  
+  @Test
+  public void test7 () {
+    SpelTaskEvaluator evaluator = new SpelTaskEvaluator();
+    JobTask jt = new MutableJobTask(Collections.singletonMap("map", Collections.singletonMap("hello", "${firstName}")));
+    MapContext ctx = new MapContext();
+    ctx.put("firstName", "Arik");
+    JobTask evaluated = evaluator.evaluate(jt, ctx);
+    Assert.assertEquals(MapObject.of(Collections.singletonMap("hello", "Arik")),evaluated.getMapObject("map"));
   }
   
 }

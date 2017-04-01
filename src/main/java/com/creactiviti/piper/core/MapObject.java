@@ -214,7 +214,13 @@ public class MapObject implements Map<String, Object>, Accessor {
     return new MapObject(Collections.EMPTY_MAP);
   }
   
-  public static MapObject create (Map<String,Object> aMap) {
+  public static MapObject of (Map<String,Object> aMap) {
     return new MapObject(aMap);
   }
+  
+  @Override
+  public boolean equals(Object aObj) {
+    return map.equals(aObj);
+  }
+  
 }
