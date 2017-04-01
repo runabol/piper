@@ -84,4 +84,15 @@ public class SpelTaskEvaluatorTests {
     Assert.assertEquals(MapObject.of(Collections.singletonMap("hello", "Arik")),evaluated.getMapObject("map"));
   }
   
+  @Test
+  public void test8 () {
+    SpelTaskEvaluator evaluator = new SpelTaskEvaluator();
+    JobTask jt = new MutableJobTask(Collections.singletonMap("mult","${n1*n2}"));
+    MapContext ctx = new MapContext();
+    ctx.put("n1", 5);
+    ctx.put("n2", 3);
+    JobTask evaluated = evaluator.evaluate(jt, ctx);
+    Assert.assertEquals(Integer.valueOf(15),evaluated.getInteger("mult"));
+  }
+  
 }
