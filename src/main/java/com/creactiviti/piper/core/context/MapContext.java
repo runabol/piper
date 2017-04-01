@@ -6,7 +6,6 @@
  */
 package com.creactiviti.piper.core.context;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +18,7 @@ public class MapContext extends MapObject implements Context {
   }
   
   public MapContext (Map<String, Object> aSource) {
-    super(Collections.unmodifiableMap(aSource));
+    super(aSource);
   }
   
 }
