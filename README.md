@@ -40,37 +40,6 @@ tasks:
     text: Goodbye ${name}
 ```
 
-The central interface that is used to execute tasks is the `TaskHandler`:
-
-```
-public interface TaskHandler<O> {
-
-  O handle (JobTask aTask) throws Exception;
-  
-}
-```
-
-`TaskHandler`s are resolved according to the `type` property of each task. Here is the `print` `TaskHandler` implementations seen on the pipeline above: 
-
-```
-@Component
-public class Print implements TaskHandler<Object> {
-
-  private Logger log = LoggerFactory.getLogger(getClass());
-
-  @Override
-  public Object handle (JobTask aTask) {
-    log.info(aTask.getRequiredString("text"));
-    return null; 
-  }
-
-}
-``` 
-
-# Pipelines
-
-Pipeline definitions are located under the `pipelines/` directory on the root of the project.
-
 # First time use
 
 Prerequisites: JDK 8 and Maven 3
@@ -177,16 +146,6 @@ curl -s http://localhost:8080/jobs/3b019138d4474948bc3de23cdfb4f67c
 
 ```
 
-# Roadmap
-
-- Job Input
-- Expression Language
-- JdbcJobRepository
-- Stop/Resume Jobs
-- For-Each support
-- `TaskHandler` implemenations should be able to report back warnings and other metadata on their operation. not just the payload.
-- Error handling
-
 # Architecture
 
 Piper is comprised of two central components: 
@@ -199,7 +158,10 @@ The `Worker`, responsible for executing a single task outside of the context of 
 
 Since `Coordinator` and `Worker` do not talk to each other directly but only through a `Messenger`, they can easily run on seperate machines and talk to each other through some sort of middleware.  
 
-# Licensing
+# Roadmap
 
-Piper is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/creactiviti/piper/blob/master/LICENSE) for the full license text.
-
+- JdbcJobRepository
+- Stop/Resume Jobs
+- For-Each support
+- `TaskHandler` implemenations should be able to report back warnings and other metadata on their operation. not just the payload.
+- Error handling
