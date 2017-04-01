@@ -9,8 +9,6 @@ Piper works by executing a set of tasks defined as a YAML document.
 
 Example:
 
-`pipelines/demo/hello.yaml`
-
 ```
 name: Hello World
 
