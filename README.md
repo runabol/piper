@@ -13,20 +13,31 @@ Example:
 
 ```
 name: Hello World
-	
-tasks: 
-  - name: Print a greeting
+
+input:
+  - name: name
+    label: Your Name
+    type: string
+    required: true
+    
+tasks:
+  - name: randomNumber
+    label: Generate a random number
+    type: randomInt
+    startInclusive: 0
+    endInclusive: 1000
+      
+  - label: Print a greeting
     type: print
-    text: hello world
+    text: Hello ${name}
    
-  - name: Sleep a little
+  - label: Sleep a little
     type: sleep
-    millis: 1000
+    millis: ${randomNumber}
     
-  - name: Print a farewell
+  - label: Print a farewell
     type: print
-    text: goodbye world
-    
+    text: Goodbye ${name}
 ```
 
 The central interface that is used to execute tasks is the `TaskHandler`:
@@ -80,22 +91,24 @@ Which will give you back something like:
 
 ```
 {
-  "id": "8b896158ab6943db9b8e149e3311f3ed",
-  "pipeline": "demo/hello:3517698",
-  "creationDate": "2017-03-30T14:56:47-0700",
+  "id": "3b019138d4474948bc3de23cdfb4f67c",
+  "pipeline": "demo/hello:0e732fb",
+  "creationDate": "2017-03-31T17:28:06-0700",
   "status": "STARTED",
   "execution": [
     {
-      "name": "Print a greeting",
-      "text": "hello world",
-      "id": "c6866164ff39448aacb56e846b6736c5",
-      "type": "print",
-      "creationDate": "2017-03-30T14:56:47-0700",
+      "startInclusive": 0,
+      "name": "randomNumber",
+      "endInclusive": 1000,
+      "label": "Generate a random number",
+      "id": "834d026a4a6d48e98774fcd3b2e5cf5f",
+      "type": "randomInt",
+      "creationDate": "2017-03-31T17:28:06-0700",
       "status": "CREATED"
     }
   ],
   "completionDate": null,
-  "startDate": "2017-03-30T14:56:47-0700",
+  "startDate": "2017-03-31T17:28:06-0700",
   "failedDate": null
 }
 
@@ -106,48 +119,61 @@ Which will give you back something like:
 Use the Job ID, to check for it's status:
 
 ```
-curl -s http://localhost:8080/job/8b896158ab6943db9b8e149e3311f3ed 
+curl -s http://localhost:8080/job/3b019138d4474948bc3de23cdfb4f67c 
 ```
 
 ```
 {
-  "id": "8b896158ab6943db9b8e149e3311f3ed",
-  "pipeline": "demo/hello:3517698",
-  "creationDate": "2017-03-30T14:56:47-0700",
+  "id": "3b019138d4474948bc3de23cdfb4f67c",
+  "pipeline": "demo/hello:0e732fb",
+  "creationDate": "2017-03-31T17:28:06-0700",
   "status": "COMPLETED",
   "execution": [
     {
-      "name": "Print a greeting",
-      "completionDate": 1490911007950,
-      "text": "hello world",
-      "id": "c6866164ff39448aacb56e846b6736c5",
-      "type": "print",
-      "creationDate": 1490911007933,
+      "output": 507,
+      "startInclusive": 0,
+      "name": "randomNumber",
+      "endInclusive": 1000,
+      "completionDate": 1491006486618,
+      "label": "Generate a random number",
+      "id": "834d026a4a6d48e98774fcd3b2e5cf5f",
+      "type": "randomInt",
+      "creationDate": 1491006486610,
       "status": "COMPLETED"
     },
     {
-      "name": "Sleep a little",
-      "completionDate": 1490911008961,
-      "id": "1918a7f46c214cb2a04f13c0aa23d96f",
+      "completionDate": 1491006487551,
+      "label": "Print a greeting",
+      "text": "Hello arik",
+      "id": "843fda642f93401b8b8f763e26c50e3c",
+      "type": "print",
+      "creationDate": 1491006487547,
+      "status": "COMPLETED"
+    },
+    {
+      "completionDate": 1491006488066,
+      "label": "Sleep a little",
+      "id": "cc9ece2871e8488293f39d74512dd133",
       "type": "sleep",
-      "millis": 1000,
-      "creationDate": 1490911007956,
+      "millis": 507,
+      "creationDate": 1491006487554,
       "status": "COMPLETED"
     },
     {
-      "name": "Print a farewell",
-      "completionDate": 1490911008968,
-      "text": "goodbye world",
-      "id": "16c1ba49bd5f4851b81150884da79e3e",
+      "completionDate": 1491006488078,
+      "label": "Print a farewell",
+      "text": "Goodbye arik",
+      "id": "1d055d8eb1454f97b2f7e5be166bea1a",
       "type": "print",
-      "creationDate": 1490911008965,
+      "creationDate": 1491006488074,
       "status": "COMPLETED"
     }
   ],
-  "completionDate": "2017-03-30T14:56:48-0700",
-  "startDate": "2017-03-30T14:56:47-0700",
+  "completionDate": "2017-03-31T17:28:08-0700",
+  "startDate": "2017-03-31T17:28:06-0700",
   "failedDate": null
 }
+
 
 ```
 
