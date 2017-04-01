@@ -162,3 +162,4 @@ Since `Coordinator` and `Worker` do not talk to each other directly but only thr
 - Stop/Resume Jobs
 - For-Each support
 - AMQP Support
+- Job tags
