@@ -163,3 +163,4 @@ Since `Coordinator` and `Worker` do not talk to each other directly but only thr
 - For-Each support
 - AMQP Support
 - Job tags
+- Define job output
