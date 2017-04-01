@@ -161,5 +161,4 @@ Since `Coordinator` and `Worker` do not talk to each other directly but only thr
 - JdbcJobRepository
 - Stop/Resume Jobs
 - For-Each support
-- `TaskHandler` implemenations should be able to report back warnings and other metadata on their operation. not just the payload.
-- Error handling
+- AMQP Support
