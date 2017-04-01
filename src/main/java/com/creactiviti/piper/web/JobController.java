@@ -6,6 +6,7 @@
  */
 package com.creactiviti.piper.web;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,16 @@ public class JobController {
   @Autowired
   private Coordinator coordinator;
   
+  /**
+   * List all jobs
+   * 
+   * @return
+   */
+  @GetMapping(value="/jobs")
+  public List<Job> list () {
+    return jobRepository.findAll();
+  }
+  
   @PostMapping("/jobs")
   public Job create (@RequestBody Map<String, Object> aJobRequest) {
     return coordinator.start(MapObject.of(aJobRequest));
@@ -38,5 +49,5 @@ public class JobController {
   public Job get (@PathVariable("id")String aJobId) {
     return jobRepository.findOne (aJobId);
   }
-  
+    
 }

@@ -48,7 +48,12 @@ public class JdbcJobRepository implements JobRepository {
 
   @Override
   public Job findJobByTaskId(String aTaskId) {
-    return null;
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public List<Job> findAll() {
+    throw new UnsupportedOperationException();
   }
 
 }

@@ -1,5 +1,6 @@
 CREATE TABLE job (
   job_id varchar(256) not null primary key,
+  pipeline_id varchar(256) not null,
   status varchar(256) not null,
   creation_date timestamp not null,
   start_date timestamp null,

@@ -24,6 +24,7 @@ import com.creactiviti.piper.core.uuid.UUIDGenerator;
 public class MutableJob implements Job {
 
   private final String id;
+  private String name;
   private final Pipeline pipeline;
   private final Date creationDate;
   
@@ -41,7 +42,7 @@ public class MutableJob implements Job {
    * @param aSource
    */
   public MutableJob (Job aSource, Pipeline aPipeline) {
-    Assert.isTrue(aSource.getPipeline().equals(aPipeline.getId()),"Pipeline object does not match job's pipeline id");
+    Assert.isTrue(aSource.getPipelineId().equals(aPipeline.getId()),"Pipeline object does not match job's pipeline id");
     id = aSource.getId();
     pipeline = aPipeline;
     creationDate = aSource.getCreationDate();
@@ -49,6 +50,7 @@ public class MutableJob implements Job {
     aSource.getExecution().forEach(t->execution.put(t.getId(), t));
     completionDate = aSource.getCompletionDate();
     startDate = aSource.getStartDate();
+    name = aSource.getName();
   }
   
   /**
@@ -66,6 +68,15 @@ public class MutableJob implements Job {
   @Override
   public String getId() {
     return id;
+  }
+  
+  @Override
+  public String getName() {
+    return name!=null?name:getPipelineId();
+  }
+  
+  public void setName(String aName) {
+    name = aName;
   }
   
   @Override
@@ -121,7 +132,7 @@ public class MutableJob implements Job {
   }
   
   @Override
-  public String getPipeline() {
+  public String getPipelineId() {
     return pipeline.getId();
   }
   

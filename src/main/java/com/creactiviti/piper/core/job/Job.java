@@ -41,11 +41,18 @@ public interface Job {
   List<JobTask> getExecution ();
 
   /**
-   * Return the job's pipeline.
+   * Return the job's pipeline id.
    * 
    * @return {@link Pipeline} 
    */
-  String getPipeline ();
+  String getPipelineId ();
+  
+  /**
+   * Return the job's human-readable name.
+   * 
+   * @return {@link Pipeline} 
+   */
+  String getName ();
 
   /**
    * Return the date of when the job was originally 

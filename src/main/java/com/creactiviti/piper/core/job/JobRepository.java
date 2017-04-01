@@ -6,7 +6,11 @@
  */
 package com.creactiviti.piper.core.job;
 
+import java.util.List;
+
 public interface JobRepository {
+  
+  List<Job> findAll ();
   
   Job findOne (String aJobId);
   

@@ -6,15 +6,17 @@
  */
 package com.creactiviti.piper.core.job;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import com.creactiviti.piper.core.task.JobTask;
 
 public class InMemoryJobRepository implements JobRepository {
 
-  private final Map<String,Job> jobs = new ConcurrentHashMap<>();
+  private final Map<String,Job> jobs = Collections.synchronizedMap(new LinkedHashMap<>());
   
   @Override
   public Job findOne (String aId) {
@@ -39,6 +41,13 @@ public class InMemoryJobRepository implements JobRepository {
     }
     
     return null;
+  }
+
+  @Override
+  public List<Job> findAll() {
+    ArrayList<Job> list = new ArrayList<>(jobs.values());
+    Collections.reverse(list);
+    return list;
   }
 
 }
