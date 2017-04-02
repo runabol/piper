@@ -6,15 +6,15 @@
  */
 package com.creactiviti.piper.core.context;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.util.Assert;
 
 public class InMemoryContextRepository implements ContextRepository<Context> {
 
-  private Map<String, Stack<Context>> contexts =  new ConcurrentHashMap<>();
+  private Map<String, Stack<Context>> contexts =  new HashMap<>();
 
   @Override
   public synchronized void push(String aJobId, Context aContext) {
@@ -34,7 +34,7 @@ public class InMemoryContextRepository implements ContextRepository<Context> {
   }
   
   @Override
-  public Context peek(String aJobId) {
+  public synchronized Context peek(String aJobId) {
     Stack<Context> stack = contexts.get(aJobId);
     Assert.isTrue(stack!=null&&!stack.empty(),"No context found for job id: " + aJobId);
     return stack.peek();
