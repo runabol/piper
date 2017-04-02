@@ -90,25 +90,20 @@ public class MutableJob implements Job {
   }
   
   public void setStatus (JobStatus aStatus) {
-    if(aStatus == JobStatus.COMPLETED) {
-      Assert.isTrue(status==JobStatus.STARTED,String.format("Job %s is %s and so can not be COMPLETED", id,status));
-      status = JobStatus.COMPLETED;
-      completionDate = new Date();
-    }
-    else if (aStatus == JobStatus.STARTED) {
-      Assert.isTrue(status==JobStatus.CREATED||status==JobStatus.FAILED||status==JobStatus.STOPPED,String.format("Job %s is %s and so can not be STARTED", id,status));
-      status = JobStatus.STARTED;
-      startDate = new Date();
-    }
-    else if (aStatus == JobStatus.FAILED) {
-      status = JobStatus.FAILED;
-      failedDate = new Date();
-    }
-    else {
-      throw new IllegalArgumentException("Can't handle status: " + aStatus);
-    }
+    status = aStatus;
   }
-
+  
+  public void setCompletionDate(Date aCompletionDate) {
+    completionDate = aCompletionDate;
+  }
+  
+  public void setStartDate(Date aStartDate) {
+    startDate = aStartDate;
+  }
+  
+  public void setFailedDate(Date aFailedDate) {
+    failedDate = aFailedDate;
+  }
   public void updateTask (JobTask aJobTask) {
     Assert.isTrue(execution.containsKey(aJobTask.getId()),"Unkown task: " + aJobTask.getId());
     execution.put(aJobTask.getId(), aJobTask);

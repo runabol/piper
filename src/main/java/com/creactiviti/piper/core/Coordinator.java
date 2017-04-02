@@ -6,6 +6,7 @@
  */
 package com.creactiviti.piper.core;
 
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -69,6 +70,7 @@ public class Coordinator {
 
     MutableJob job = new MutableJob(pipelineId);
     job.setStatus(JobStatus.STARTED);
+    job.setStartDate(new Date());
     log.debug("Job {} started",job.getId());
     jobRepository.save(job);
     
@@ -120,6 +122,7 @@ public class Coordinator {
   private void completeJob (MutableJob aJob) {
     MutableJob job = new MutableJob(aJob);
     job.setStatus(JobStatus.COMPLETED);
+    job.setCompletionDate(new Date ());
     jobRepository.save(job);
     log.debug("Job {} completed successfully",aJob.getId());
   }
@@ -185,10 +188,10 @@ public class Coordinator {
     MutableJobTask task = new MutableJobTask(aTask);
     task.setStatus(TaskStatus.FAILED);
     Job job = jobRepository.findJobByTaskId (aTask.getId());
-    Pipeline pipeline = pipelineRepository.findOne(job.getPipelineId());
     MutableJob mjob = new MutableJob (job);
     Assert.notNull(mjob,String.format("No job found for task %s ",aTask.getId()));
     mjob.setStatus(JobStatus.FAILED);
+    mjob.setFailedDate(new Date ());
     mjob.updateTask(task);
     jobRepository.save(mjob);
   }
