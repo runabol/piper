@@ -104,8 +104,9 @@ public class MutableJob implements Job {
   public void setFailedDate(Date aFailedDate) {
     failedDate = aFailedDate;
   }
+  
   public void updateTask (JobTask aJobTask) {
-    Assert.isTrue(execution.containsKey(aJobTask.getId()),"Unkown task: " + aJobTask.getId());
+    Assert.isTrue(execution.containsKey(aJobTask.getId()),"Unknown task: " + aJobTask.getId());
     execution.put(aJobTask.getId(), aJobTask);
   }
   
