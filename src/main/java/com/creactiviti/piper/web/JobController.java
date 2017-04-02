@@ -37,7 +37,8 @@ public class JobController {
    */
   @GetMapping(value="/jobs")
   public Map<String,Object> list () {
-    return Collections.singletonMap("content",jobRepository.findAll());
+    Map<String, Object> page = Collections.singletonMap("content",jobRepository.findAll());
+    return page;
   }
   
   @PostMapping("/jobs")
