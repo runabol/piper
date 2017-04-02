@@ -6,7 +6,7 @@
  */
 package com.creactiviti.piper.web;
 
-import java.util.List;
+import java.util.Collections;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +36,8 @@ public class JobController {
    * @return
    */
   @GetMapping(value="/jobs")
-  public List<Job> list () {
-    return jobRepository.findAll();
+  public Map<String,Object> list () {
+    return Collections.singletonMap("content",jobRepository.findAll());
   }
   
   @PostMapping("/jobs")
