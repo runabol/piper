@@ -16,16 +16,14 @@ import java.util.Map;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.util.Assert;
 
-import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.task.JobTask;
-import com.creactiviti.piper.core.task.Task;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
 
 public class MutableJob implements Job {
 
   private final String id;
+  private final String pipelineId;
   private String name;
-  private final Pipeline pipeline;
   private final Date creationDate;
   
   private JobStatus status = JobStatus.CREATED;
@@ -36,15 +34,25 @@ public class MutableJob implements Job {
   private Date failedDate;
   
   /**
+   * Constructs a new {@link Job} instance.
+   * 
+   * @param aJob
+   */
+  public MutableJob (String aPipelineId) {
+    creationDate = new Date();
+    id = UUIDGenerator.generate();
+    pipelineId = aPipelineId;
+  }
+  
+  /**
    * Constructs a mutable version of a {@link Job}
    * instance.
    * 
    * @param aSource
    */
-  public MutableJob (Job aSource, Pipeline aPipeline) {
-    Assert.isTrue(aSource.getPipelineId().equals(aPipeline.getId()),"Pipeline object does not match job's pipeline id");
+  public MutableJob (Job aSource) {
     id = aSource.getId();
-    pipeline = aPipeline;
+    pipelineId = aSource.getPipelineId();
     creationDate = aSource.getCreationDate();
     status = aSource.getStatus();
     aSource.getExecution().forEach(t->execution.put(t.getId(), t));
@@ -52,19 +60,7 @@ public class MutableJob implements Job {
     startDate = aSource.getStartDate();
     name = aSource.getName();
   }
-  
-  /**
-   * Constructs a new {@link Job} instance.
-   * 
-   * @param aJob
-   */
-  public MutableJob (Pipeline aPipeline) {
-    Assert.notNull(aPipeline,"pipeline must not be null");
-    pipeline = aPipeline;
-    creationDate = new Date();
-    id = UUIDGenerator.generate();
-  }
-  
+    
   @Override
   public String getId() {
     return id;
@@ -84,18 +80,10 @@ public class MutableJob implements Job {
     return Collections.unmodifiableList(new ArrayList<JobTask>(execution.values()));
   }
   
-  @Override
-  public boolean hasMoreTasks() {
-    return execution.size() < pipeline.getTasks().size();
+  public void addTask (JobTask aTask) {
+    execution.put(aTask.getId(), aTask);
   }
-  
-  public JobTask nextTask() {
-    Task task = pipeline.getTasks().get(execution.size());
-    MutableJobTask mt = new MutableJobTask (task.asMap());
-    execution.put(mt.getId(),mt);
-    return mt;
-  }
-  
+    
   @Override
   public JobStatus getStatus() {
     return status;
@@ -133,7 +121,7 @@ public class MutableJob implements Job {
   
   @Override
   public String getPipelineId() {
-    return pipeline.getId();
+    return pipelineId;
   }
   
   @Override

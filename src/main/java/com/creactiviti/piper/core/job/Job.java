@@ -85,15 +85,4 @@ public interface Job {
    */
   Date getFailedDate ();
   
-  /**
-   * Determines if more tasks are available to execute
-   * on this job.
-   * 
-   * @return boolean
-   *           <code>true</code> if more tasks remain
-   *           to execute on this job. Otherwise
-   *           <code>false</code>.
-   */
-  boolean hasMoreTasks ();
-
 }

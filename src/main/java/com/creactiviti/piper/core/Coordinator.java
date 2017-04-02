@@ -25,6 +25,7 @@ import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.NoOpTaskEvaluator;
+import com.creactiviti.piper.core.task.Task;
 import com.creactiviti.piper.core.task.TaskEvaluator;
 import com.creactiviti.piper.core.task.TaskExecutor;
 import com.creactiviti.piper.core.task.TaskStatus;
@@ -66,7 +67,7 @@ public class Coordinator {
     
     validate(aParameters, pipeline);
 
-    MutableJob job = new MutableJob(pipeline);
+    MutableJob job = new MutableJob(pipelineId);
     job.setStatus(JobStatus.STARTED);
     log.debug("Job {} started",job.getId());
     jobRepository.save(job);
@@ -74,7 +75,7 @@ public class Coordinator {
     Context context = new MapContext(aParameters);
     contextRepository.push(job.getId(),context);
     
-    execute (job);
+    execute (job, pipeline);
     
     return job;
   }
@@ -88,17 +89,28 @@ public class Coordinator {
     }
   }
   
-  private void execute (MutableJob aJob) {
-    if(aJob.hasMoreTasks()) {
-      executeNextTask (aJob);
+  private void execute (MutableJob aJob, Pipeline aPipeline) {
+    if(hasMoreTasks(aJob, aPipeline)) {
+      executeNextTask (aJob, aPipeline);
     }
     else {
       completeJob(aJob);
     }
   }
+  
+  private boolean hasMoreTasks (Job aJob, Pipeline aPipeline) {
+    return aJob.getExecution().size() < aPipeline.getTasks().size();
+  }
+  
+  private JobTask nextTask(MutableJob aJob, Pipeline aPipeline) {
+    Task task = aPipeline.getTasks().get(aJob.getExecution().size());
+    MutableJobTask mt = new MutableJobTask (task.asMap());
+    aJob.addTask(mt);
+    return mt;
+  }
 
-  private void executeNextTask (MutableJob aJob) {
-    JobTask nextTask = aJob.nextTask(); 
+  private void executeNextTask (MutableJob aJob, Pipeline aPipeline) {
+    JobTask nextTask = nextTask(aJob, aPipeline); 
     jobRepository.save(aJob);
     Context context = contextRepository.peek(aJob.getId());
     JobTask evaluatedTask = taskEvaluator.evaluate(nextTask,context);
@@ -106,8 +118,7 @@ public class Coordinator {
   }
   
   private void completeJob (MutableJob aJob) {
-    Pipeline pipeline = pipelineRepository.findOne(aJob.getPipelineId());
-    MutableJob job = new MutableJob(aJob,pipeline);
+    MutableJob job = new MutableJob(aJob);
     job.setStatus(JobStatus.COMPLETED);
     jobRepository.save(job);
     log.debug("Job {} completed successfully",aJob.getId());
@@ -148,7 +159,7 @@ public class Coordinator {
     task.setStatus(TaskStatus.COMPLETED);
     Job job = jobRepository.findJobByTaskId (aTask.getId());
     Pipeline pipeline = pipelineRepository.findOne(job.getPipelineId());
-    MutableJob mjob = new MutableJob (job,pipeline);
+    MutableJob mjob = new MutableJob (job);
     Assert.notNull(mjob,String.format("No job found for task %s ",aTask.getId()));
     mjob.updateTask(task);
     jobRepository.save(mjob);
@@ -160,7 +171,7 @@ public class Coordinator {
       contextRepository.push(job.getId(), newContext);
     }
     
-    execute(mjob);
+    execute(mjob,pipeline);
   }
 
   /**
@@ -175,7 +186,7 @@ public class Coordinator {
     task.setStatus(TaskStatus.FAILED);
     Job job = jobRepository.findJobByTaskId (aTask.getId());
     Pipeline pipeline = pipelineRepository.findOne(job.getPipelineId());
-    MutableJob mjob = new MutableJob (job,pipeline);
+    MutableJob mjob = new MutableJob (job);
     Assert.notNull(mjob,String.format("No job found for task %s ",aTask.getId()));
     mjob.setStatus(JobStatus.FAILED);
     mjob.updateTask(task);
