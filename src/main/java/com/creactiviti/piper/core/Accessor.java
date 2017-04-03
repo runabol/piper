@@ -81,7 +81,7 @@ public interface Accessor {
    *          The key associated with the desired value.
    * @return The {@link MapObject} value associated with the given key.
    */
-  MapObject getMapObject (Object aKey);
+  Map<String,Object> getMap (Object aKey);
 
   /**
    * Return the {@link String} value associated with the given

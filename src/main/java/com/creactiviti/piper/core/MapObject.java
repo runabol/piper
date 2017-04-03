@@ -76,7 +76,7 @@ public class MapObject implements Map<String, Object>, Accessor, Mutator {
         typedList.add((T)ConvertUtils.convert(item,aElementType));
       }
     }
-    return typedList;
+    return Collections.unmodifiableList(typedList);
   }
   
   @Override
@@ -206,15 +206,12 @@ public class MapObject implements Map<String, Object>, Accessor, Mutator {
   }
   
   @Override
-  public MapObject getMapObject (Object aKey) {
+  public Map<String,Object> getMap (Object aKey) {
     Map<String,Object> value = (Map<String, Object>) get(aKey);
     if(value == null) {
       return null;
     }
-    else if(value instanceof MapObject) {
-      return (MapObject) value;
-    }
-    return new MapObject(value);
+    return Collections.unmodifiableMap(value);
   }
   
   @Override

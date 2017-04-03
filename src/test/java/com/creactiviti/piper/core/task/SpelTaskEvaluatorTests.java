@@ -81,7 +81,7 @@ public class SpelTaskEvaluatorTests {
     MapContext ctx = new MapContext();
     ctx.put("firstName", "Arik");
     JobTask evaluated = evaluator.evaluate(jt, ctx);
-    Assert.assertEquals(MapObject.of(Collections.singletonMap("hello", "Arik")),evaluated.getMapObject("map"));
+    Assert.assertEquals(MapObject.of(Collections.singletonMap("hello", "Arik")),evaluated.getMap("map"));
   }
   
   @Test

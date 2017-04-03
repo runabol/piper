@@ -6,7 +6,6 @@
  */
 package com.creactiviti.piper.web;
 
-import java.util.Collections;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +14,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.MapObject;
+import com.creactiviti.piper.core.Page;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.MutableJob;
@@ -38,9 +39,8 @@ public class JobController {
    * @return
    */
   @GetMapping(value="/jobs")
-  public Map<String,Object> list () {
-    Map<String, Object> page = Collections.singletonMap("content",jobRepository.findAll());
-    return page;
+  public Page<Job> list (@RequestParam(value="p",defaultValue="0") Integer aPageNumber) {
+    return jobRepository.findAll(aPageNumber);
   }
   
   @PostMapping("/jobs")

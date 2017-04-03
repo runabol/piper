@@ -8,11 +8,12 @@ package com.creactiviti.piper.core.job;
 
 import java.util.List;
 
+import com.creactiviti.piper.core.Page;
 import com.creactiviti.piper.core.task.JobTask;
 
 public interface JobRepository {
   
-  List<Job> findAll ();
+  Page<Job> findAll (int aPageNumber);
   
   Job findOne (String aJobId);
   

@@ -15,6 +15,8 @@ import java.util.Map;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 
+import com.creactiviti.piper.core.Page;
+import com.creactiviti.piper.core.ResultPage;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.json.JsonHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,6 +25,8 @@ public class JdbcJobRepository implements JobRepository {
 
   private NamedParameterJdbcOperations jdbc;
   private ObjectMapper json = new ObjectMapper();
+  
+  public static final int DEFAULT_PAGE_SIZE = 50;
   
   @Override
   public Job findOne(String aId) {
@@ -40,8 +44,17 @@ public class JdbcJobRepository implements JobRepository {
   }
 
   @Override
-  public List<Job> findAll() {
-    return jdbc.query("select * from job order by creation_date desc",this::jobRowMappper);
+  public Page<Job> findAll(int aPageNumber) {
+    Integer totalElements = jdbc.getJdbcOperations().queryForObject("select count(*) from job",Integer.class);
+    int offset = aPageNumber * DEFAULT_PAGE_SIZE;
+    int limit = offset + DEFAULT_PAGE_SIZE;
+    List<Job> query = jdbc.query(String.format("select * from job order by creation_date desc offset %s limit %s",offset,limit),this::jobRowMappper);
+    ResultPage<Job> resultPage = new ResultPage<>(Job.class);
+    resultPage.setContent(query);
+    resultPage.setNumber(aPageNumber);
+    resultPage.setTotalElements(totalElements);
+    resultPage.setTotalPages(totalElements/DEFAULT_PAGE_SIZE+1);
+    return resultPage;
   }
   
   @Override
