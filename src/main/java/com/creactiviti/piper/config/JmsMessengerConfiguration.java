@@ -26,10 +26,7 @@ import com.creactiviti.piper.core.Worker;
 import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.messenger.JmsMessenger;
 import com.creactiviti.piper.core.task.JobTask;
-import com.creactiviti.piper.json.ExceptionSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.google.common.annotations.Beta;
 import com.google.common.base.Throwables;
 
 @Configuration
@@ -47,21 +44,21 @@ public class JmsMessengerConfiguration {
   private Coordinator coordinator;
   
   @Bean
-  JmsMessenger jmsMessenger (JmsTemplate aJmsTemplate) {
+  JmsMessenger jmsMessenger (JmsTemplate aJmsTemplate, ObjectMapper aObjectMapper) {
     JmsMessenger jmsMessenger = new JmsMessenger();
     jmsMessenger.setJmsTemplate(aJmsTemplate);
-    jmsMessenger.setObjectMapper(objectMapper());
+    jmsMessenger.setObjectMapper(aObjectMapper);
     return jmsMessenger;
   }
   
-  @Beta
-  ObjectMapper objectMapper () {
-    ObjectMapper objectMapper = new ObjectMapper();
-    SimpleModule module = new SimpleModule();
-    module.addSerializer(Throwable.class, new ExceptionSerializer());
-    objectMapper.registerModule(module);
-    return objectMapper;
-  }
+//  @Beta
+//  ObjectMapper objectMapper () {
+//    ObjectMapper objectMapper = new ObjectMapper();
+//    SimpleModule module = new SimpleModule();
+//    module.addSerializer(Throwable.class, new ExceptionSerializer());
+//    objectMapper.registerModule(module);
+//    return objectMapper;
+//  }
   
   @Bean
   JmsTemplate jmsTemplate (PiperProperties piperProperties) {
@@ -70,39 +67,39 @@ public class JmsMessengerConfiguration {
   }
   
   @Bean
-  DefaultMessageListenerContainer workerMessageListener () {
+  DefaultMessageListenerContainer workerMessageListener (ObjectMapper aObjectMapper) {
     DefaultMessageListenerContainer container = new DefaultMessageListenerContainer();
     container.setConnectionFactory (connectionFactory);
     container.setDestinationName("tasks");
-    MessageListener listener = (m) -> worker.handle(toTask(m));
+    MessageListener listener = (m) -> worker.handle(toTask(m, aObjectMapper));
     container.setMessageListener(listener);
     return container;
   }
   
   @Bean
-  DefaultMessageListenerContainer completionsMessageListener () throws JMSException {
+  DefaultMessageListenerContainer completionsMessageListener (ObjectMapper aObjectMapper) throws JMSException {
     DefaultMessageListenerContainer container = new DefaultMessageListenerContainer();
     container.setConnectionFactory (connectionFactory);
     container.setDestinationName("completions");
-    MessageListener listener = (m) -> coordinator.completeTask(toTask(m));
+    MessageListener listener = (m) -> coordinator.completeTask(toTask(m, aObjectMapper));
     container.setMessageListener(listener);
     return container;
   }
   
   @Bean
-  DefaultMessageListenerContainer errorsMessageListener () throws JMSException {
+  DefaultMessageListenerContainer errorsMessageListener (ObjectMapper aObjectMapper) throws JMSException {
     DefaultMessageListenerContainer container = new DefaultMessageListenerContainer();
     container.setConnectionFactory (connectionFactory);
     container.setDestinationName("errors");
-    MessageListener listener = (m) -> coordinator.error(toTask(m));
+    MessageListener listener = (m) -> coordinator.error(toTask(m, aObjectMapper));
     container.setMessageListener(listener);
     return container;
   }
   
-  private JobTask toTask (Message aMessage) {
+  private JobTask toTask (Message aMessage, ObjectMapper aObjectMapper) {
     try {
       String raw = aMessage.getBody(String.class);
-      Map<String, Object> task = objectMapper().readValue(raw,Map.class);
+      Map<String, Object> task = aObjectMapper.readValue(raw,Map.class);
       return new MutableJobTask(task);
     } catch (Exception e) {
       throw Throwables.propagate(e);

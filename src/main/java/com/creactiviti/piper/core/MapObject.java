@@ -6,6 +6,7 @@
  */
 package com.creactiviti.piper.core;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -17,7 +18,10 @@ import java.util.Set;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang3.SerializationUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.util.Assert;
+
+import com.google.common.base.Throwables;
 
 /**
  * @author Arik Cohen
@@ -26,6 +30,8 @@ import org.springframework.util.Assert;
 public class MapObject implements Map<String, Object>, Accessor, Mutator {
 
   private final HashMap<String, Object> map;
+  
+  private static final String TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZZ";
   
   public MapObject (Map<String, Object> aSource) {
     map = new HashMap<String, Object>(aSource);
@@ -175,7 +181,15 @@ public class MapObject implements Map<String, Object>, Accessor, Mutator {
   
   @Override
   public Date getDate(Object aKey) {
-    return get(aKey, Date.class);
+    Object value = get(aKey);
+    if(value instanceof String) {
+      try {
+        return DateUtils.parseDate((String)value, TIMESTAMP_FORMAT);
+      } catch (ParseException e) {
+        throw Throwables.propagate(e);
+      }
+    }
+    return (Date)value;
   }
   
   @Override

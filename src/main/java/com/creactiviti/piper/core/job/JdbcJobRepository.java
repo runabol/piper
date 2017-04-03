@@ -63,6 +63,10 @@ public class JdbcJobRepository implements JobRepository {
     jdbc = aJdbcOperations;
   }
   
+  public void setJson(ObjectMapper aJson) {
+    json = aJson;
+  }
+  
   private void updateJob(Job aJob) {
     BeanPropertySqlParameterSource jobParameterSource = new BeanPropertySqlParameterSource(aJob);
     jobParameterSource.registerSqlType("status", Types.VARCHAR);
@@ -150,5 +154,6 @@ public class JdbcJobRepository implements JobRepository {
       throw Throwables.propagate(e);
     }
   }
+  
 
 }
