@@ -6,15 +6,15 @@
  */
 package com.creactiviti.piper.config;
 
-public class PipelineRepository {
+public class PipelineRepositoryProperties {
 
-  private Git git;
+  private GitProperties git;
   
-  public Git getGit() {
+  public GitProperties getGit() {
     return git;
   }
   
-  public void setGit(Git aGit) {
+  public void setGit(GitProperties aGit) {
     git = aGit;
   }
   

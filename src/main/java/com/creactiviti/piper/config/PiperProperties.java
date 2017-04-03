@@ -15,7 +15,7 @@ public class PiperProperties {
 
   private SerializationProperties serialization;
   private PersistenceProperties persistence;
-  private PipelineRepository pipelineRepository;
+  private PipelineRepositoryProperties pipelineRepository;
 
   public SerializationProperties getSerialization() {
     return serialization;
@@ -33,11 +33,11 @@ public class PiperProperties {
     persistence = aPersistence;
   }
   
-  public PipelineRepository getPipelineRepository() {
+  public PipelineRepositoryProperties getPipelineRepository() {
     return pipelineRepository;
   }
   
-  public void setPipelineRepository(PipelineRepository aPipelineRepository) {
+  public void setPipelineRepository(PipelineRepositoryProperties aPipelineRepository) {
     pipelineRepository = aPipelineRepository;
   }
   

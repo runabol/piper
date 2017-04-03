@@ -6,7 +6,7 @@
  */
 package com.creactiviti.piper.config;
 
-public class Git {
+public class GitProperties {
 
   private String url;
   private String[] searchPaths;
