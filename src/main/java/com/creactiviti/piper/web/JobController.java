@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,6 +51,7 @@ public class JobController {
   @GetMapping(value="/jobs/{id}")
   public Job get (@PathVariable("id")String aJobId) {
     Job job = jobRepository.findOne (aJobId);
+    Assert.notNull(job,"Unknown job: " + aJobId);
     MutableJob mjob = new MutableJob(job);
     mjob.setExecution(jobRepository.getExecution(job.getId()));
     return mjob;

@@ -26,12 +26,6 @@ public class MutableJob extends MapObject implements Job {
     super(aSource);
   }
   
-  /**
-   * Constructs a mutable version of a {@link Job}
-   * instance.
-   * 
-   * @param aSource
-   */
   public MutableJob (Job aSource) {
     super(aSource.asMap());
   }

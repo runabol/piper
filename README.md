@@ -10,10 +10,10 @@ Piper works by executing a set of tasks defined as a YAML document.
 Example:
 
 ```
-name: Hello World
+name: Hello Demo
 
 input:
-  - name: name
+  - name: yourName
     label: Your Name
     type: string
     required: true
@@ -23,11 +23,11 @@ tasks:
     label: Generate a random number
     type: randomInt
     startInclusive: 0
-    endInclusive: 1000
+    endInclusive: 10000
       
   - label: Print a greeting
     type: print
-    text: Hello ${name}
+    text: Hello ${yourName}
    
   - label: Sleep a little
     type: sleep
@@ -35,7 +35,8 @@ tasks:
     
   - label: Print a farewell
     type: print
-    text: Goodbye ${name}
+    text: Goodbye ${yourName}
+    
 ```
 
 # First time use
@@ -51,34 +52,21 @@ This will start piper on your local box, running fully in-memory and without rel
 Jobs can be started from the REST API: 
 
 ```
-curl -s -X POST -H "Content-Type:application/json" -d '{"pipeline":"demo/hello","name":"Arik"}' http://localhost:8080/jobs/start
+curl -s -X POST -H "Content-Type:application/json" -d '{"pipeline":"demo/hello","yourName":"Arik"}' http://localhost:8080/jobs/start
 ```
 
 Which will give you back something like: 
 
 ```
 {
-  "id": "3b019138d4474948bc3de23cdfb4f67c",
-  "pipeline": "demo/hello:0e732fb",
-  "creationDate": "2017-03-31T17:28:06-0700",
-  "status": "STARTED",
-  "execution": [
-    {
-      "startInclusive": 0,
-      "name": "randomNumber",
-      "endInclusive": 1000,
-      "label": "Generate a random number",
-      "id": "834d026a4a6d48e98774fcd3b2e5cf5f",
-      "type": "randomInt",
-      "creationDate": "2017-03-31T17:28:06-0700",
-      "status": "CREATED"
-    }
-  ],
-  "completionDate": null,
-  "startDate": "2017-03-31T17:28:06-0700",
-  "failedDate": null
+  "name": "Hello Demo",
+  "id": "bf248e568990435e8e62876b8dc47d81",
+  "creationDate": "2017-04-03T05:40:18+0000",
+  "startDate": "2017-04-03T05:40:18+0000",
+  "pipelineId": "demo/hello",
+  "currentStep": 0,
+  "status": "STARTED"
 }
-
 ```
 
 ## Check Job Status
@@ -86,59 +74,64 @@ Which will give you back something like:
 Use the Job ID, to check for it's status:
 
 ```
-curl -s http://localhost:8080/jobs/3b019138d4474948bc3de23cdfb4f67c 
+curl -s http://localhost:8080/jobs/bf248e568990435e8e62876b8dc47d81 
 ```
 
 ```
 {
-  "id": "3b019138d4474948bc3de23cdfb4f67c",
-  "pipeline": "demo/hello:0e732fb",
-  "creationDate": "2017-03-31T17:28:06-0700",
+  "id": "bf248e568990435e8e62876b8dc47d81",
+  "name": "Hello Demo",
+  "pipelineId": "demo/hello",
+  "currentStep": 3,
   "status": "COMPLETED",
+  "completionDate": "2017-04-03T05:40:25+0000",
+  "creationDate": "2017-04-03T05:40:18+0000",
+  "startDate": "2017-04-03T05:40:18+0000",
   "execution": [
     {
-      "output": 507,
+      "output": 6802,
+      "jobId": "bf248e568990435e8e62876b8dc47d81",
       "startInclusive": 0,
       "name": "randomNumber",
-      "endInclusive": 1000,
-      "completionDate": 1491006486618,
+      "endInclusive": 10000,
+      "completionDate": "2017-04-03T05:40:18+0000",
       "label": "Generate a random number",
-      "id": "834d026a4a6d48e98774fcd3b2e5cf5f",
+      "id": "22bbd37330e3401ba9b31d22828e7cfb",
       "type": "randomInt",
-      "creationDate": 1491006486610,
+      "creationDate": "2017-04-03T05:40:18+0000",
       "status": "COMPLETED"
     },
     {
-      "completionDate": 1491006487551,
+      "jobId": "bf248e568990435e8e62876b8dc47d81",
+      "completionDate": "2017-04-03T05:40:18+0000",
       "label": "Print a greeting",
       "text": "Hello Arik",
-      "id": "843fda642f93401b8b8f763e26c50e3c",
+      "id": "f7c9b92dd3e349928b1a5fde8e4a3628",
       "type": "print",
-      "creationDate": 1491006487547,
+      "creationDate": "2017-04-03T05:40:18+0000",
       "status": "COMPLETED"
     },
     {
-      "completionDate": 1491006488066,
+      "jobId": "bf248e568990435e8e62876b8dc47d81",
+      "completionDate": "2017-04-03T05:40:25+0000",
       "label": "Sleep a little",
-      "id": "cc9ece2871e8488293f39d74512dd133",
+      "id": "3400e0de67d34ae6b9eab3081b1fdd8a",
       "type": "sleep",
-      "millis": 507,
-      "creationDate": 1491006487554,
+      "millis": 6802,
+      "creationDate": "2017-04-03T05:40:18+0000",
       "status": "COMPLETED"
     },
     {
-      "completionDate": 1491006488078,
+      "jobId": "bf248e568990435e8e62876b8dc47d81",
+      "completionDate": "2017-04-03T05:40:25+0000",
       "label": "Print a farewell",
       "text": "Goodbye Arik",
-      "id": "1d055d8eb1454f97b2f7e5be166bea1a",
+      "id": "1f504b0bb286428a933a0f0d8b0f8f27",
       "type": "print",
-      "creationDate": 1491006488074,
+      "creationDate": "2017-04-03T05:40:25+0000",
       "status": "COMPLETED"
     }
-  ],
-  "completionDate": "2017-03-31T17:28:08-0700",
-  "startDate": "2017-03-31T17:28:06-0700",
-  "failedDate": null
+  ]
 }
 
 
