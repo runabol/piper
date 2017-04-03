@@ -156,6 +156,8 @@ Since `Coordinator` and `Worker` do not talk to each other directly but only thr
 
 - Job Restarts
 - Search
+- Job Priority
+- Specialized workers
 - Postgres Support
 - Standalone worker
 - Standalone Coordinator
