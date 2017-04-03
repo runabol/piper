@@ -35,18 +35,6 @@ public class JdbcJobRepository implements JobRepository {
   }
   
   @Override
-  public Job save(Job aJob) {
-    Job existingJob = findOne(aJob.getId());
-    if(existingJob == null) {
-      createJob(aJob);
-    }
-    else {
-      updateJob(aJob);      
-    }
-    return aJob;
-  }
-
-  @Override
   public Job findJobByTaskId(String aTaskId) {
     Map<String, String> params = Collections.singletonMap("id", aTaskId);
     return jdbc.queryForObject("select * from job j where j.id = (select job_id from job_task jt where jt.id=:id)", params, this::jobRowMappper);
@@ -61,7 +49,41 @@ public class JdbcJobRepository implements JobRepository {
   public List<JobTask> getExecution(String aJobId) {
     return jdbc.query("select * From job_task where job_id = :jobId ", Collections.singletonMap("jobId", aJobId),this::jobTaskRowMappper);
   }
+    
+  @Override
+  public void update (Job aJob) {
+    MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
+    sqlParameterSource.addValue("id", aJob.getId());
+    sqlParameterSource.addValue("data", writeValueAsJsonString(aJob));
+    jdbc.update("update job set data=:data where id = :id ", sqlParameterSource);
+  }
+
+  @Override
+  public void create (Job aJob) {
+    MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
+    sqlParameterSource.addValue("id", aJob.getId());
+    sqlParameterSource.addValue("data", writeValueAsJsonString(aJob));
+    jdbc.update("insert into job (id,data) values (:id,:data)", sqlParameterSource);
+  }
   
+  @Override
+  public void create(JobTask aJobTask) {
+    MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
+    sqlParameterSource.addValue("id", aJobTask.getId());
+    sqlParameterSource.addValue("jobId", aJobTask.getJobId());
+    sqlParameterSource.addValue("data", writeValueAsJsonString(aJobTask));
+    jdbc.update("insert into job_task (id,job_id,data) values (:id,:jobId,:data)", sqlParameterSource);
+  }
+  
+  @Override
+  public void update(JobTask aJobTask) {
+    MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
+    sqlParameterSource.addValue("id", aJobTask.getId());
+    sqlParameterSource.addValue("jobId", aJobTask.getJobId());
+    sqlParameterSource.addValue("data", writeValueAsJsonString(aJobTask));
+    jdbc.update("update job_task set data=:data where id = :id ", sqlParameterSource);
+  }
+    
   public void setJdbcOperations (NamedParameterJdbcOperations aJdbcOperations) {
     jdbc = aJdbcOperations;
   }
@@ -70,40 +92,6 @@ public class JdbcJobRepository implements JobRepository {
     json = aJson;
   }
   
-  private void updateJob(Job aJob) {
-    MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
-    sqlParameterSource.addValue("id", aJob.getId());
-    sqlParameterSource.addValue("data", writeValueAsJsonString(aJob));
-    jdbc.update("update job set data=:data where id = :id ", sqlParameterSource);
-  }
-
-  private void createJob(Job aJob) {
-    MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
-    sqlParameterSource.addValue("id", aJob.getId());
-    sqlParameterSource.addValue("data", writeValueAsJsonString(aJob));
-    jdbc.update("insert into job (id,data) values (:id,:data)", sqlParameterSource);
-  }
-  
-  @Override
-  public JobTask create(JobTask aJobTask) {
-    MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
-    sqlParameterSource.addValue("id", aJobTask.getId());
-    sqlParameterSource.addValue("jobId", aJobTask.getJobId());
-    sqlParameterSource.addValue("data", writeValueAsJsonString(aJobTask));
-    jdbc.update("insert into job_task (id,job_id,data) values (:id,:jobId,:data)", sqlParameterSource);
-    return aJobTask;
-  }
-  
-  @Override
-  public JobTask update(JobTask aJobTask) {
-    MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
-    sqlParameterSource.addValue("id", aJobTask.getId());
-    sqlParameterSource.addValue("jobId", aJobTask.getJobId());
-    sqlParameterSource.addValue("data", writeValueAsJsonString(aJobTask));
-    jdbc.update("update job_task set data=:data where id = :id ", sqlParameterSource);
-    return aJobTask;
-  }
-    
   private JobTask jobTaskRowMappper (ResultSet aRs, int aIndex) throws SQLException {
     MutableJobTask t = new MutableJobTask(readValueFromString(aRs.getString("data")));
     return t;

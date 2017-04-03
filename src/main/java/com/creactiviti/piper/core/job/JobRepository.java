@@ -16,11 +16,13 @@ public interface JobRepository {
   
   Job findOne (String aJobId);
   
-  Job save (Job aJob);
+  void create (Job aJob);
   
-  JobTask create (JobTask aJobTask);
+  void update (Job aJob);
   
-  JobTask update (JobTask aJobTask);
+  void create (JobTask aJobTask);
+  
+  void update (JobTask aJobTask);
   
   Job findJobByTaskId (String aTaskId);
   

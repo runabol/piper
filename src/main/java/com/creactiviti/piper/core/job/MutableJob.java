@@ -46,6 +46,15 @@ public class MutableJob extends MapObject implements Job {
   }
   
   @Override
+  public int getCurrentStep() {
+    return getInteger("currentStep", -1);
+  }
+  
+  public void setCurrentStep (int aCurrentStep) {
+    set("currentStep", aCurrentStep);
+  }
+  
+  @Override
   public String getName() {
     return getString("name");
   }

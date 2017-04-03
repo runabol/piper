@@ -34,6 +34,16 @@ public interface Job extends Accessor {
   JobStatus getStatus ();
   
   /**
+   * Returns the index of the step on the job's 
+   * pipeline on which the job is working on right 
+   * now.
+   * 
+   * @return int
+   *           The step ordinal number
+   */
+  int getCurrentStep ();
+  
+  /**
    * Returns the list of tasks that were executed as part
    * of the job instance.
    * 

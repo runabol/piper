@@ -77,7 +77,7 @@ public class Coordinator {
     job.setStartDate(new Date());
     job.setCreationDate(new Date());
     log.debug("Job {} started",job.getId());
-    jobRepository.save(job);
+    jobRepository.create(job);
     
     Context context = new MapContext(aParameters);
     contextRepository.push(job.getId(),context);
@@ -106,21 +106,22 @@ public class Coordinator {
   }
   
   private boolean hasMoreTasks (Job aJob, Pipeline aPipeline) {
-    List<JobTask> execution = jobRepository.getExecution(aJob.getId());
-    return execution.size() < aPipeline.getTasks().size();
+    return aJob.getCurrentStep()+1 < aPipeline.getTasks().size();
   }
   
   private JobTask nextTask(MutableJob aJob, Pipeline aPipeline) {
-    List<JobTask> execution = jobRepository.getExecution(aJob.getId());
-    Task task = aPipeline.getTasks().get(execution.size());
+    aJob.setCurrentStep(aJob.getCurrentStep()+1);
+    jobRepository.update(aJob);
+    Task task = aPipeline.getTasks().get(aJob.getCurrentStep());
     MutableJobTask mt = new MutableJobTask (task);
     mt.setJobId(aJob.getId());
-    return jobRepository.create(mt);
+    jobRepository.create(mt);
+    return mt;
   }
 
   private void executeNextTask (MutableJob aJob, Pipeline aPipeline) {
     JobTask nextTask = nextTask(aJob, aPipeline); 
-    jobRepository.save(aJob);
+    jobRepository.update(aJob);
     Context context = contextRepository.peek(aJob.getId());
     JobTask evaluatedTask = taskEvaluator.evaluate(nextTask,context);
     taskExecutor.execute(evaluatedTask);
@@ -130,7 +131,7 @@ public class Coordinator {
     MutableJob job = new MutableJob((Job)aJob);
     job.setStatus(JobStatus.COMPLETED);
     job.setCompletionDate(new Date ());
-    jobRepository.save(job);
+    jobRepository.update(job);
     log.debug("Job {} completed successfully",aJob.getId());
   }
 
@@ -172,7 +173,7 @@ public class Coordinator {
     MutableJob mjob = new MutableJob (job);
     Assert.notNull(mjob,String.format("No job found for task %s ",aTask.getId()));
     jobRepository.update(task);
-    jobRepository.save(mjob);
+    jobRepository.update(mjob);
     
     if(task.getOutput() != null) {
       Context context = contextRepository.pop(job.getId());
@@ -200,7 +201,7 @@ public class Coordinator {
     mjob.setStatus(JobStatus.FAILED);
     mjob.setFailedDate(new Date ());
     jobRepository.update(task);
-    jobRepository.save(mjob);
+    jobRepository.update(mjob);
   }
 
   /**
