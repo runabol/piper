@@ -6,10 +6,10 @@
  */
 package com.creactiviti.piper.core.job;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
-import com.creactiviti.piper.core.Mutator;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.MutableTask;
 import com.creactiviti.piper.core.task.Task;
@@ -17,8 +17,12 @@ import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
 
 
-public class MutableJobTask extends MutableTask implements JobTask, Mutator {
+public class MutableJobTask extends MutableTask implements JobTask {
 
+  public MutableJobTask () {
+    this(Collections.EMPTY_MAP);
+  }
+  
   public MutableJobTask (JobTask aSource) {
     this(aSource.asMap());
   }
@@ -37,6 +41,10 @@ public class MutableJobTask extends MutableTask implements JobTask, Mutator {
   @Override
   public String getId() {
     return getString("id");
+  }
+  
+  public void setId (String aId) {
+    set("id", aId);
   }
   
   @Override
@@ -83,15 +91,12 @@ public class MutableJobTask extends MutableTask implements JobTask, Mutator {
   }
   
   @Override
-  public void setIfNull(String aKey, Object aValue) {
-    if(get(aKey)==null) {
-      set(aKey, aValue);
-    }
-  }
-
-  @Override
   public Date getCreationDate() {
     return getDate("creationDate");
+  }
+  
+  public void setCreationDate(Date aDate) { 
+    set("creationDate", aDate);
   }
 
   @Override

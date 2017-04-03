@@ -23,7 +23,7 @@ import org.springframework.util.Assert;
  * @author Arik Cohen
  * @since Jun 12, 2016
  */
-public class MapObject implements Map<String, Object>, Accessor {
+public class MapObject implements Map<String, Object>, Accessor, Mutator {
 
   private final HashMap<String, Object> map;
   
@@ -221,6 +221,18 @@ public class MapObject implements Map<String, Object>, Accessor {
   @Override
   public boolean equals(Object aObj) {
     return map.equals(aObj);
+  }
+
+  @Override
+  public void set(String aKey, Object aValue) {
+    put(aKey, aValue);
+  }
+
+  @Override
+  public void setIfNull(String aKey, Object aValue) {
+    if(get(aKey)==null) {
+      set(aKey, aValue);
+    }
   }
   
 }
