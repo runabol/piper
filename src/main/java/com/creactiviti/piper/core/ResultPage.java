@@ -54,7 +54,7 @@ public class ResultPage<T> extends MapObject implements Page<T> {
 
   @Override
   public int getNumber() {
-    return getInteger("number", -1);
+    return getInteger("number", 0);
   }
   
   public void setNumber (int aNumber) {
