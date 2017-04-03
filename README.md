@@ -60,11 +60,11 @@ Which will give you back something like:
 ```
 {
   "name": "Hello Demo",
-  "id": "bf248e568990435e8e62876b8dc47d81",
-  "creationDate": "2017-04-03T05:40:18+0000",
-  "startDate": "2017-04-03T05:40:18+0000",
-  "pipelineId": "demo/hello",
   "currentTask": 0,
+  "id": "396ab4b863244dd5bf376813d94f9932",
+  "creationDate": "2017-04-03T06:01:51+0000",
+  "startDate": "2017-04-03T06:01:51+0000",
+  "pipelineId": "demo/hello:7b911fe",
   "status": "STARTED"
 }
 ```
@@ -74,66 +74,69 @@ Which will give you back something like:
 Use the Job ID, to check for it's status:
 
 ```
-curl -s http://localhost:8080/jobs/bf248e568990435e8e62876b8dc47d81 
+curl -s http://localhost:8080/jobs/396ab4b863244dd5bf376813d94f9932 
 ```
 
 ```
 {
-  "id": "bf248e568990435e8e62876b8dc47d81",
-  "name": "Hello Demo",
-  "pipelineId": "demo/hello",
-  "currentTask": 3,
-  "status": "COMPLETED",
-  "completionDate": "2017-04-03T05:40:25+0000",
-  "creationDate": "2017-04-03T05:40:18+0000",
-  "startDate": "2017-04-03T05:40:18+0000",
   "execution": [
     {
-      "output": 6802,
-      "jobId": "bf248e568990435e8e62876b8dc47d81",
       "startInclusive": 0,
+      "label": "Generate a random number",
+      "type": "randomInt",
+      "creationDate": "2017-04-03T06:01:51+0000",
+      "output": 8495,
+      "jobId": "396ab4b863244dd5bf376813d94f9932",
       "name": "randomNumber",
       "endInclusive": 10000,
-      "completionDate": "2017-04-03T05:40:18+0000",
-      "label": "Generate a random number",
-      "id": "22bbd37330e3401ba9b31d22828e7cfb",
-      "type": "randomInt",
-      "creationDate": "2017-04-03T05:40:18+0000",
+      "completionDate": "2017-04-03T06:01:51+0000",
+      "taskNumber": 0,
+      "id": "fbd8bdaa63b54ffeb4c928ceb04de48a",
       "status": "COMPLETED"
     },
     {
-      "jobId": "bf248e568990435e8e62876b8dc47d81",
-      "completionDate": "2017-04-03T05:40:18+0000",
+      "jobId": "396ab4b863244dd5bf376813d94f9932",
+      "completionDate": "2017-04-03T06:01:52+0000",
       "label": "Print a greeting",
       "text": "Hello Arik",
-      "id": "f7c9b92dd3e349928b1a5fde8e4a3628",
+      "taskNumber": 1,
+      "id": "fa8342b300a04a09ad77e73066886628",
       "type": "print",
-      "creationDate": "2017-04-03T05:40:18+0000",
+      "creationDate": "2017-04-03T06:01:52+0000",
       "status": "COMPLETED"
     },
     {
-      "jobId": "bf248e568990435e8e62876b8dc47d81",
-      "completionDate": "2017-04-03T05:40:25+0000",
+      "jobId": "396ab4b863244dd5bf376813d94f9932",
+      "completionDate": "2017-04-03T06:02:01+0000",
       "label": "Sleep a little",
-      "id": "3400e0de67d34ae6b9eab3081b1fdd8a",
+      "taskNumber": 2,
+      "id": "bade523960d142f492c78465eba1ff02",
       "type": "sleep",
-      "millis": 6802,
-      "creationDate": "2017-04-03T05:40:18+0000",
+      "millis": 8495,
+      "creationDate": "2017-04-03T06:01:52+0000",
       "status": "COMPLETED"
     },
     {
-      "jobId": "bf248e568990435e8e62876b8dc47d81",
-      "completionDate": "2017-04-03T05:40:25+0000",
+      "jobId": "396ab4b863244dd5bf376813d94f9932",
+      "completionDate": "2017-04-03T06:02:01+0000",
       "label": "Print a farewell",
       "text": "Goodbye Arik",
-      "id": "1f504b0bb286428a933a0f0d8b0f8f27",
+      "taskNumber": 3,
+      "id": "9d2d3b68b6074c34babea0c3077a78cc",
       "type": "print",
-      "creationDate": "2017-04-03T05:40:25+0000",
+      "creationDate": "2017-04-03T06:02:01+0000",
       "status": "COMPLETED"
     }
-  ]
+  ],
+  "name": "Hello Demo",
+  "currentTask": 3,
+  "completionDate": "2017-04-03T06:02:01+0000",
+  "id": "396ab4b863244dd5bf376813d94f9932",
+  "creationDate": "2017-04-03T06:01:51+0000",
+  "startDate": "2017-04-03T06:01:51+0000",
+  "pipelineId": "demo/hello:7b911fe",
+  "status": "COMPLETED"
 }
-
 
 ```
 
