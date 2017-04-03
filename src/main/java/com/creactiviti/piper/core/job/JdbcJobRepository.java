@@ -41,7 +41,7 @@ public class JdbcJobRepository implements JobRepository {
 
   @Override
   public List<Job> findAll() {
-    return jdbc.query("select * from job order by id desc",this::jobRowMappper);
+    return jdbc.query("select * from job order by creation_date desc",this::jobRowMappper);
   }
   
   @Override
@@ -61,8 +61,9 @@ public class JdbcJobRepository implements JobRepository {
   public void create (Job aJob) {
     MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
     sqlParameterSource.addValue("id", aJob.getId());
+    sqlParameterSource.addValue("creationDate", aJob.getCreationDate());
     sqlParameterSource.addValue("data", writeValueAsJsonString(aJob));
-    jdbc.update("insert into job (id,data) values (:id,:data)", sqlParameterSource);
+    jdbc.update("insert into job (id,creation_date,data) values (:id,:creationDate,:data)", sqlParameterSource);
   }
   
   @Override
