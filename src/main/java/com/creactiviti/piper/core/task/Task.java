@@ -10,6 +10,8 @@ import com.creactiviti.piper.core.Accessor;
 
 public interface Task extends Accessor {
 
+  int getTaskNumber ();
+  
   String getType ();
   
   String getName ();

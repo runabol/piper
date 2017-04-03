@@ -8,9 +8,9 @@ package com.creactiviti.piper.core.pipeline;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.Resource;
@@ -37,7 +37,13 @@ public abstract class YamlPipelineRepository implements PipelineRepository  {
       String yaml = IOUtils.toString(in);
       Map<String,Object> yamlMap = mapper.readValue(yaml, Map.class);
       List<Map<String,Object>> rawTasks = (List<Map<String, Object>>) yamlMap.get("tasks");
-      List<Task> tasks = rawTasks.stream().map(rt -> new MutableTask(rt)).collect(Collectors.toList());
+      List<Task> tasks = new ArrayList<>();
+      for(int i=0; i<rawTasks.size(); i++) {
+        Map<String, Object> rt = rawTasks.get(i);
+        MutableTask mutableTask = new MutableTask(rt);
+        mutableTask.setTaskNumber(i);
+        tasks.add(mutableTask);
+      }
       yamlMap.put("tasks", tasks);
       return yamlMap;
     }

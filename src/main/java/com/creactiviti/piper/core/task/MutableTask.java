@@ -26,17 +26,9 @@ public class MutableTask extends MapObject implements Task {
     return getString("type");
   }
   
-  public void setType (String aType) {
-    set("type", aType);
-  }
-
   @Override
   public String getName() {
     return getString("name");
-  }
-  
-  public void setName(String aName) {
-    set("name", aName);
   }
   
   @Override
@@ -44,17 +36,18 @@ public class MutableTask extends MapObject implements Task {
     return getString("label");
   }
 
-  public void setLabel(String aLabel) {
-    set("label", aLabel);
-  }
-  
   @Override
   public String getNode() {
     return getString("node");
   }
   
-  public void setNode(String aNode) {
-    set("node", aNode);
+  @Override
+  public int getTaskNumber() {
+    return getInteger("taskNumber",-1);
+  }
+  
+  public void setTaskNumber (int aTaskNumber) {
+    set("taskNumber", aTaskNumber);
   }
   
 }
