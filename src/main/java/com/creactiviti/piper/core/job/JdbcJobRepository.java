@@ -18,7 +18,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 
 import com.creactiviti.piper.core.task.JobTask;
-import com.creactiviti.piper.core.task.TaskStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Throwables;
@@ -91,12 +90,12 @@ public class JdbcJobRepository implements JobRepository {
       sqlParameterSource.addValue("status", t.getStatus(), Types.VARCHAR);
       sqlParameterSource.addValue("creationDate", t.getCreationDate());
       sqlParameterSource.addValue("completionDate", t.getCompletionDate());
-      sqlParameterSource.addValue("output", wrapValueAsJsonString("output", t.getOutput()));
+      sqlParameterSource.addValue("data", writeValueAsJsonString(t));
       if(findJobTaskById(t.getId())==null) {
-        jdbc.update("insert into job_task (id,job_id,name,label,type,node,status,creation_date) values (:id,:jobId,:name,:label,:type,:node,:status,:creationDate)", sqlParameterSource);
+        jdbc.update("insert into job_task (id,job_id,name,label,type,node,status,creation_date,data) values (:id,:jobId,:name,:label,:type,:node,:status,:creationDate,:data)", sqlParameterSource);
       }
       else {
-        jdbc.update("update job_task set status=:status,completion_date=:completionDate,output=:output where id = :id ", sqlParameterSource);
+        jdbc.update("update job_task set status=:status,completion_date=:completionDate,data=:data where id = :id ", sqlParameterSource);
       }
     }
   }
@@ -110,25 +109,7 @@ public class JdbcJobRepository implements JobRepository {
   }
   
   private JobTask jobTaskRowMappper (ResultSet aRs, int aIndex) throws SQLException {
-    MutableJobTask t = new MutableJobTask();
-    t.setId(aRs.getString("id"));
-    t.setStatus(TaskStatus.valueOf(aRs.getString("status")));
-    t.setCreationDate(aRs.getTimestamp("creation_date"));
-    t.setCompletionDate(aRs.getTimestamp("completion_date"));
-    t.setJobId(aRs.getString("job_id"));
-    if(aRs.getString("output")!=null) {
-      t.setOutput(unwrapValueFromJsonString("output",aRs.getString("output")));
-    }
-    t.setType(aRs.getString("type"));
-    if(aRs.getString("node")!=null) {
-      t.setNode(aRs.getString("node"));
-    }
-    if(aRs.getString("name")!=null) {
-      t.setName(aRs.getString("name"));
-    }
-    if(aRs.getString("label")!=null) {
-      t.setLabel(aRs.getString("label"));
-    }
+    MutableJobTask t = new MutableJobTask(readValueFromString(aRs.getString("data")));
     return t;
   }
   
@@ -148,23 +129,23 @@ public class JdbcJobRepository implements JobRepository {
     return j;    
   }
   
-  private Object unwrapValueFromJsonString (String aKey, String aValue) {
+  private Map<String,Object> readValueFromString (String aValue) {
     if(aValue == null) {
       return null;
     }
     try {
-      return json.readValue(aValue, Map.class).get(aKey);
+      return json.readValue(aValue, Map.class);
     } catch (Exception e) {
       throw Throwables.propagate(e);
     }
   }
 
-  private String wrapValueAsJsonString (String aKey, Object aValue) {
+  private String writeValueAsJsonString (Object aValue) {
     if(aValue == null) {
       return null;
     }
     try {
-      return json.writeValueAsString(Collections.singletonMap(aKey,aValue));
+      return json.writeValueAsString(aValue);
     } catch (JsonProcessingException e) {
       throw Throwables.propagate(e);
     }

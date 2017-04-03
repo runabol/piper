@@ -17,11 +17,10 @@ CREATE TABLE job_task (
   label varchar(256),
   node varchar(256),
   status varchar(256) not null,
-  output text,
-  exception text,
   creation_date timestamp not null,
   start_date timestamp null,
   completion_date timestamp null,
   failed_date timestamp null,
-  execution_time int
+  execution_time int,
+  data text not null
 );
