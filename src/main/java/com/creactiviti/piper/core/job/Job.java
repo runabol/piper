@@ -41,7 +41,7 @@ public interface Job extends Accessor {
    * @return int
    *           The step ordinal number
    */
-  int getCurrentStep ();
+  int getCurrentTask ();
   
   /**
    * Returns the list of tasks that were executed as part

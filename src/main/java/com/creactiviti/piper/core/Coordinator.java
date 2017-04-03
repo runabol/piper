@@ -106,13 +106,13 @@ public class Coordinator {
   }
   
   private boolean hasMoreTasks (Job aJob, Pipeline aPipeline) {
-    return aJob.getCurrentStep()+1 < aPipeline.getTasks().size();
+    return aJob.getCurrentTask()+1 < aPipeline.getTasks().size();
   }
   
   private JobTask nextTask(MutableJob aJob, Pipeline aPipeline) {
-    aJob.setCurrentStep(aJob.getCurrentStep()+1);
+    aJob.setCurrentTask(aJob.getCurrentTask()+1);
     jobRepository.update(aJob);
-    Task task = aPipeline.getTasks().get(aJob.getCurrentStep());
+    Task task = aPipeline.getTasks().get(aJob.getCurrentTask());
     MutableJobTask mt = new MutableJobTask (task);
     mt.setJobId(aJob.getId());
     jobRepository.create(mt);

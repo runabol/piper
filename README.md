@@ -64,7 +64,7 @@ Which will give you back something like:
   "creationDate": "2017-04-03T05:40:18+0000",
   "startDate": "2017-04-03T05:40:18+0000",
   "pipelineId": "demo/hello",
-  "currentStep": 0,
+  "currentTask": 0,
   "status": "STARTED"
 }
 ```
@@ -82,7 +82,7 @@ curl -s http://localhost:8080/jobs/bf248e568990435e8e62876b8dc47d81
   "id": "bf248e568990435e8e62876b8dc47d81",
   "name": "Hello Demo",
   "pipelineId": "demo/hello",
-  "currentStep": 3,
+  "currentTask": 3,
   "status": "COMPLETED",
   "completionDate": "2017-04-03T05:40:25+0000",
   "creationDate": "2017-04-03T05:40:18+0000",
