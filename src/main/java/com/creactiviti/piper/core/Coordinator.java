@@ -72,7 +72,7 @@ public class Coordinator {
     MutableJob job = new MutableJob();
     job.setId(UUIDGenerator.generate());
     job.setName(aParameters.getString("name",pipeline.getName()));
-    job.setPipelineId(pipelineId);
+    job.setPipelineId(pipeline.getId());
     job.setStatus(JobStatus.STARTED);
     job.setStartDate(new Date());
     job.setCreationDate(new Date());
