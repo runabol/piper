@@ -74,6 +74,7 @@ public class Coordinator {
     job.setPipelineId(pipelineId);
     job.setStatus(JobStatus.STARTED);
     job.setStartDate(new Date());
+    job.setCreationDate(new Date());
     log.debug("Job {} started",job.getId());
     jobRepository.save(job);
     
@@ -109,7 +110,8 @@ public class Coordinator {
   
   private JobTask nextTask(MutableJob aJob, Pipeline aPipeline) {
     Task task = aPipeline.getTasks().get(aJob.getExecution().size());
-    MutableJobTask mt = new MutableJobTask (task.asMap());
+    MutableJobTask mt = new MutableJobTask (task);
+    mt.setJobId(aJob.getId());
     aJob.addTask(mt);
     return mt;
   }

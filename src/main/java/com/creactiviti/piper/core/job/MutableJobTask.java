@@ -12,6 +12,7 @@ import java.util.Map;
 import com.creactiviti.piper.core.Mutator;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.MutableTask;
+import com.creactiviti.piper.core.task.Task;
 import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
 
@@ -19,19 +20,32 @@ import com.creactiviti.piper.core.uuid.UUIDGenerator;
 public class MutableJobTask extends MutableTask implements JobTask, Mutator {
 
   public MutableJobTask (JobTask aSource) {
-    super(aSource.asMap());
+    this(aSource.asMap());
   }
   
-  public MutableJobTask (Map<String, Object> aSource) {
+  public MutableJobTask (Map<String,Object> aSource) {
     super(aSource);
-    setIfNull("id", UUIDGenerator.generate());
-    setIfNull("status", TaskStatus.CREATED);
-    setIfNull("creationDate", new Date());
+  }  
+  
+  public MutableJobTask (Task aSource) {
+    super(aSource);
+    set("id", UUIDGenerator.generate());
+    set("status", TaskStatus.CREATED);
+    set("creationDate", new Date());
   }
   
   @Override
   public String getId() {
     return getString("id");
+  }
+  
+  @Override
+  public String getJobId() {
+    return getString("jobId");
+  }
+
+  public void setJobId (String aJobId) {
+    set("jobId", aJobId);
   }
 
   @Override

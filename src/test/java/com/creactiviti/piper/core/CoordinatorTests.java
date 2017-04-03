@@ -6,15 +6,24 @@
  */
 package com.creactiviti.piper.core;
 
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.sql.DataSource;
+
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jdbc.EmbeddedDatabaseConnection;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import com.creactiviti.piper.core.context.InMemoryContextRepository;
-import com.creactiviti.piper.core.job.InMemoryJobRepository;
+import com.creactiviti.piper.core.job.JdbcJobRepository;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobStatus;
 import com.creactiviti.piper.core.messenger.SynchMessenger;
@@ -26,10 +35,15 @@ import com.creactiviti.piper.taskhandler.io.Print;
 import com.creactiviti.piper.taskhandler.time.Sleep;
 import com.google.common.collect.ImmutableMap;
 
+@RunWith(SpringRunner.class)
+@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 public class CoordinatorTests {
 
+  @Autowired
+  private DataSource dataSource;
+  
   @Test
-  public void testStartJob () {
+  public void testStartJob () throws SQLException {
     
     Worker worker = new Worker();
     Coordinator coordinator = new Coordinator ();
@@ -48,7 +62,9 @@ public class CoordinatorTests {
     worker.setTaskHandlerResolver(taskHandlerResolver);
     
     coordinator.setContextRepository(new InMemoryContextRepository());
-    InMemoryJobRepository jobRepository = new InMemoryJobRepository();
+    JdbcJobRepository jobRepository = new JdbcJobRepository();
+    jobRepository.setJdbcOperations(new NamedParameterJdbcTemplate(dataSource));
+    
     coordinator.setJobRepository(jobRepository);
     coordinator.setPipelineRepository(new FileSystemPipelineRepository());
     

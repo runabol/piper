@@ -12,6 +12,8 @@ public interface JobTask extends Task {
 
   String getId ();
   
+  String getJobId ();
+  
   TaskStatus getStatus ();
   
   Object getOutput ();

@@ -116,6 +116,10 @@ public class MutableJob implements Job {
     return creationDate;
   }
   
+  public void setCreationDate(Date aCreationDate) {
+    creationDate = aCreationDate;
+  }
+  
   @Override
   public String getPipelineId() {
     return pipelineId;
