@@ -154,9 +154,9 @@ Since `Coordinator` and `Worker` do not talk to each other directly but only thr
 
 # Roadmap
 
-- JdbcJobRepository
+- Job Restarts
 - Stop/Resume Jobs
 - For-Each support
 - AMQP Support
 - Job tags
-- Define job output
+- Define job output (e.g. `output: ${toInt(output)}`)
