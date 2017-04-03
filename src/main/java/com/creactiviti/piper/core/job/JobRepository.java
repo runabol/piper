@@ -24,4 +24,6 @@ public interface JobRepository {
   
   Job findJobByTaskId (String aTaskId);
   
+  List<JobTask> getExecution (String aJobId);
+  
 }

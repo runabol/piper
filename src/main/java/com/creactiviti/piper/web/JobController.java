@@ -20,6 +20,7 @@ import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.MapObject;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobRepository;
+import com.creactiviti.piper.core.job.MutableJob;
 
 @RestController
 public class JobController {
@@ -48,7 +49,10 @@ public class JobController {
   
   @GetMapping(value="/jobs/{id}")
   public Job get (@PathVariable("id")String aJobId) {
-    return jobRepository.findOne (aJobId);
+    Job job = jobRepository.findOne (aJobId);
+    MutableJob mjob = new MutableJob(job);
+    mjob.setExecution(jobRepository.getExecution(job.getId()));
+    return mjob;
   }
     
 }

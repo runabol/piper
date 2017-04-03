@@ -57,6 +57,11 @@ public class JdbcJobRepository implements JobRepository {
     return jdbc.query("select * from job order by id desc",this::jobRowMappper);
   }
   
+  @Override
+  public List<JobTask> getExecution(String aJobId) {
+    return jdbc.query("select * From job_task where job_id = :jobId ", Collections.singletonMap("jobId", aJobId),this::jobTaskRowMappper);
+  }
+  
   public void setJdbcOperations (NamedParameterJdbcOperations aJdbcOperations) {
     jdbc = aJdbcOperations;
   }
@@ -98,11 +103,7 @@ public class JdbcJobRepository implements JobRepository {
     jdbc.update("update job_task set data=:data where id = :id ", sqlParameterSource);
     return aJobTask;
   }
-  
-  private List<JobTask> findJobTasksByJobId (String aJobId) {
-    return jdbc.query("select * From job_task where job_id = :jobId ", Collections.singletonMap("jobId", aJobId),this::jobTaskRowMappper);
-  }
-  
+    
   private JobTask jobTaskRowMappper (ResultSet aRs, int aIndex) throws SQLException {
     MutableJobTask t = new MutableJobTask(readValueFromString(aRs.getString("data")));
     return t;
@@ -110,7 +111,6 @@ public class JdbcJobRepository implements JobRepository {
     
   private Job jobRowMappper (ResultSet aRs, int aIndex) throws SQLException {
     Map<String, Object> map = readValueFromString(aRs.getString("data"));
-    map.put("execution", findJobTasksByJobId(aRs.getString("id")));
     return new MutableJob(map);
   }
   
