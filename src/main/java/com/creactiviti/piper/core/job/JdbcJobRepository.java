@@ -16,9 +16,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 
 import com.creactiviti.piper.core.task.JobTask;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.creactiviti.piper.json.JsonHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Throwables;
 
 public class JdbcJobRepository implements JobRepository {
 
@@ -103,28 +102,11 @@ public class JdbcJobRepository implements JobRepository {
   }
   
   private Map<String,Object> readValueFromString (String aValue) {
-    if(aValue == null) {
-      return null;
-    }
-    try {
-      return json.readValue(aValue, Map.class);
-    } catch (Exception e) {
-      throw Throwables.propagate(e);
-    }
+    return JsonHelper.readValue(json, aValue, Map.class);
   }
 
   private String writeValueAsJsonString (Object aValue) {
-    if(aValue == null) {
-      return null;
-    }
-    try {
-      return json.writeValueAsString(aValue);
-    } catch (JsonProcessingException e) {
-      throw Throwables.propagate(e);
-    }
+    return JsonHelper.writeValueAsString(json, aValue);
   }
-
-
-  
 
 }
