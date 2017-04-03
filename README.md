@@ -155,6 +155,9 @@ Since `Coordinator` and `Worker` do not talk to each other directly but only thr
 # Roadmap
 
 - Job Restarts
+- Postgres Support
+- Standalone worker
+- Standalone Coordinator
 - Stop/Resume Jobs
 - For-Each support
 - AMQP Support
