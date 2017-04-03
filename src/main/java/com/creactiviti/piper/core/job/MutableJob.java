@@ -9,40 +9,29 @@ package com.creactiviti.piper.core.job;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.beans.BeanUtils;
 import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.task.JobTask;
-import com.creactiviti.piper.core.uuid.UUIDGenerator;
 
 public class MutableJob implements Job {
 
-  private final String id;
-  private final String pipelineId;
+  private String id;
+  private String pipelineId;
   private String name;
-  private final Date creationDate;
+  private Date creationDate;
   
   private JobStatus status = JobStatus.CREATED;
-  private Map<String,JobTask> execution = new LinkedHashMap<>();
+  private List<JobTask> execution = new ArrayList<>();
   
   private Date completionDate;
   private Date startDate;
   private Date failedDate;
   
-  /**
-   * Constructs a new {@link Job} instance.
-   * 
-   * @param aJob
-   */
-  public MutableJob (String aPipelineId) {
-    creationDate = new Date();
-    id = UUIDGenerator.generate();
-    pipelineId = aPipelineId;
-  }
+  public MutableJob () {}
   
   /**
    * Constructs a mutable version of a {@link Job}
@@ -51,19 +40,16 @@ public class MutableJob implements Job {
    * @param aSource
    */
   public MutableJob (Job aSource) {
-    id = aSource.getId();
-    pipelineId = aSource.getPipelineId();
-    creationDate = aSource.getCreationDate();
-    status = aSource.getStatus();
-    aSource.getExecution().forEach(t->execution.put(t.getId(), t));
-    completionDate = aSource.getCompletionDate();
-    startDate = aSource.getStartDate();
-    name = aSource.getName();
+    BeanUtils.copyProperties(aSource, this);
   }
     
   @Override
   public String getId() {
     return id;
+  }
+  
+  public void setId(String aId) {
+    id = aId;
   }
   
   @Override
@@ -77,11 +63,16 @@ public class MutableJob implements Job {
   
   @Override
   public List<JobTask> getExecution() {
-    return Collections.unmodifiableList(new ArrayList<JobTask>(execution.values()));
+    return Collections.unmodifiableList(execution);
+  }
+  
+  public void setExecution(List<JobTask> aExecution) {
+    Assert.notNull(aExecution, "execution list can't be null");
+    execution = new ArrayList<>(aExecution);
   }
   
   public void addTask (JobTask aTask) {
-    execution.put(aTask.getId(), aTask);
+    execution.add(aTask);
   }
     
   @Override
@@ -106,8 +97,18 @@ public class MutableJob implements Job {
   }
   
   public void updateTask (JobTask aJobTask) {
-    Assert.isTrue(execution.containsKey(aJobTask.getId()),"Unknown task: " + aJobTask.getId());
-    execution.put(aJobTask.getId(), aJobTask);
+    JobTask existingTask = findTask(aJobTask.getId());
+    Assert.isTrue(existingTask!=null,"Unknown task: " + aJobTask.getId());
+    execution.set(execution.indexOf(existingTask), aJobTask);
+  }
+  
+  private JobTask findTask (String aTaskId) {
+    for(JobTask t : execution) {
+      if(t.getId().equals(aTaskId)) {
+        return t;
+      }
+    }
+    return null;
   }
   
   @Override
@@ -118,6 +119,10 @@ public class MutableJob implements Job {
   @Override
   public String getPipelineId() {
     return pipelineId;
+  }
+  
+  public void setPipelineId(String aPipelineId) {
+    pipelineId = aPipelineId;
   }
   
   @Override

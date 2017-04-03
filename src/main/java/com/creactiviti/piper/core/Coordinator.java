@@ -30,6 +30,7 @@ import com.creactiviti.piper.core.task.Task;
 import com.creactiviti.piper.core.task.TaskEvaluator;
 import com.creactiviti.piper.core.task.TaskExecutor;
 import com.creactiviti.piper.core.task.TaskStatus;
+import com.creactiviti.piper.core.uuid.UUIDGenerator;
 
 /**
  * The central class responsible for coordinating 
@@ -68,7 +69,9 @@ public class Coordinator {
     
     validate(aParameters, pipeline);
 
-    MutableJob job = new MutableJob(pipelineId);
+    MutableJob job = new MutableJob();
+    job.setId(UUIDGenerator.generate());
+    job.setPipelineId(pipelineId);
     job.setStatus(JobStatus.STARTED);
     job.setStartDate(new Date());
     log.debug("Job {} started",job.getId());

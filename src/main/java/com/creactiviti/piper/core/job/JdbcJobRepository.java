@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -20,7 +19,7 @@ import com.creactiviti.piper.core.task.JobTask;
 
 public class JdbcJobRepository implements JobRepository {
 
-  @Autowired private NamedParameterJdbcOperations jdbc;
+  private NamedParameterJdbcOperations jdbc;
   
   @Override
   public Job findOne(String aId) {
@@ -33,7 +32,7 @@ public class JdbcJobRepository implements JobRepository {
   @Override
   public Job save(Job aJob) {
     SqlParameterSource jobParameterSource = new BeanPropertySqlParameterSource(aJob);
-    jdbc.update("insert into job (job_id,status,creation_date) values (:id,:status,:creationDate)", jobParameterSource);
+    jdbc.update("insert into job (id,name,pipeline_id,status,creation_date) values (:id,:name,:pipelineId,:status,:creationDate)", jobParameterSource);
     List<JobTask> tasks = aJob.getExecution();
     for(JobTask t : tasks) {
       Map<String, Object> taskParams = new HashMap<String, Object> ();
@@ -53,7 +52,16 @@ public class JdbcJobRepository implements JobRepository {
 
   @Override
   public List<Job> findAll() {
-    throw new UnsupportedOperationException();
+    return jdbc.query("select * from job order by id desc",(rs,i) ->{
+      MutableJob j = new MutableJob();
+      j.setPipelineId(rs.getString("pipeline_id"));
+      j.setId(rs.getString("id"));
+      return j;
+    });
+  }
+  
+  public void setJdbcOperations (NamedParameterJdbcOperations aJdbcOperations) {
+    jdbc = aJdbcOperations;
   }
 
 }
