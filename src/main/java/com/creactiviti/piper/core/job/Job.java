@@ -9,6 +9,7 @@ package com.creactiviti.piper.core.job;
 import java.util.Date;
 import java.util.List;
 
+import com.creactiviti.piper.core.Accessor;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.task.JobTask;
 
@@ -18,7 +19,7 @@ import com.creactiviti.piper.core.task.JobTask;
  * @author Arik Cohen
  * @since Jun 12, 2016
  */
-public interface Job {
+public interface Job extends Accessor {
 
   /**
    * Return the ID of the job.

@@ -8,12 +8,10 @@ package com.creactiviti.piper.core.job;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 
@@ -68,69 +66,52 @@ public class JdbcJobRepository implements JobRepository {
   }
   
   private void updateJob(Job aJob) {
-    BeanPropertySqlParameterSource jobParameterSource = new BeanPropertySqlParameterSource(aJob);
-    jobParameterSource.registerSqlType("status", Types.VARCHAR);
-    jdbc.update("update job set status=:status,completion_date=:completionDate,start_date=:startDate,failed_date=:failedDate where id = :id ", jobParameterSource);
-    insertOrUpdateJobTasks(aJob);
+    MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
+    sqlParameterSource.addValue("id", aJob.getId());
+    sqlParameterSource.addValue("data", writeValueAsJsonString(aJob));
+    jdbc.update("update job set data=:data where id = :id ", sqlParameterSource);
   }
 
   private void createJob(Job aJob) {
-    BeanPropertySqlParameterSource jobParameterSource = new BeanPropertySqlParameterSource(aJob);
-    jobParameterSource.registerSqlType("status", Types.VARCHAR);
-    jdbc.update("insert into job (id,name,pipeline_id,status,creation_date,start_date) values (:id,:name,:pipelineId,:status,:creationDate,:startDate)", jobParameterSource);
-    insertOrUpdateJobTasks(aJob);
-  }
-
-  private void insertOrUpdateJobTasks(Job aJob) {
-    List<JobTask> tasks = aJob.getExecution();
-    for(JobTask t : tasks) {      
-      MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
-      sqlParameterSource.addValue("id", t.getId());
-      sqlParameterSource.addValue("name", t.getName());
-      sqlParameterSource.addValue("label", t.getLabel());
-      sqlParameterSource.addValue("node", t.getNode());
-      sqlParameterSource.addValue("jobId", t.getJobId());
-      sqlParameterSource.addValue("type", t.getType());
-      sqlParameterSource.addValue("status", t.getStatus(), Types.VARCHAR);
-      sqlParameterSource.addValue("creationDate", t.getCreationDate());
-      sqlParameterSource.addValue("completionDate", t.getCompletionDate());
-      sqlParameterSource.addValue("data", writeValueAsJsonString(t));
-      if(findJobTaskById(t.getId())==null) {
-        jdbc.update("insert into job_task (id,job_id,name,label,type,node,status,creation_date,data) values (:id,:jobId,:name,:label,:type,:node,:status,:creationDate,:data)", sqlParameterSource);
-      }
-      else {
-        jdbc.update("update job_task set status=:status,completion_date=:completionDate,data=:data where id = :id ", sqlParameterSource);
-      }
-    }
-  }
-    
-  private JobTask findJobTaskById (String aJobTaskId) {
-    List<JobTask> query = jdbc.query("select * from job_task where id = :id", Collections.singletonMap("id", aJobTaskId),this::jobTaskRowMappper);
-    if(query.size() == 0) {
-      return null;
-    }
-    return query.get(0);
+    MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
+    sqlParameterSource.addValue("id", aJob.getId());
+    sqlParameterSource.addValue("data", writeValueAsJsonString(aJob));
+    jdbc.update("insert into job (id,data) values (:id,:data)", sqlParameterSource);
   }
   
-  private JobTask jobTaskRowMappper (ResultSet aRs, int aIndex) throws SQLException {
-    MutableJobTask t = new MutableJobTask(readValueFromString(aRs.getString("data")));
-    return t;
+  @Override
+  public JobTask create(JobTask aJobTask) {
+    MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
+    sqlParameterSource.addValue("id", aJobTask.getId());
+    sqlParameterSource.addValue("jobId", aJobTask.getJobId());
+    sqlParameterSource.addValue("data", writeValueAsJsonString(aJobTask));
+    jdbc.update("insert into job_task (id,job_id,data) values (:id,:jobId,:data)", sqlParameterSource);
+    return aJobTask;
+  }
+  
+  @Override
+  public JobTask update(JobTask aJobTask) {
+    MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
+    sqlParameterSource.addValue("id", aJobTask.getId());
+    sqlParameterSource.addValue("jobId", aJobTask.getJobId());
+    sqlParameterSource.addValue("data", writeValueAsJsonString(aJobTask));
+    jdbc.update("update job_task set data=:data where id = :id ", sqlParameterSource);
+    return aJobTask;
   }
   
   private List<JobTask> findJobTasksByJobId (String aJobId) {
     return jdbc.query("select * From job_task where job_id = :jobId ", Collections.singletonMap("jobId", aJobId),this::jobTaskRowMappper);
   }
   
+  private JobTask jobTaskRowMappper (ResultSet aRs, int aIndex) throws SQLException {
+    MutableJobTask t = new MutableJobTask(readValueFromString(aRs.getString("data")));
+    return t;
+  }
+    
   private Job jobRowMappper (ResultSet aRs, int aIndex) throws SQLException {
-    MutableJob j = new MutableJob();
-    j.setPipelineId(aRs.getString("pipeline_id"));
-    j.setId(aRs.getString("id"));
-    j.setExecution(findJobTasksByJobId(j.getId()));
-    j.setStatus(JobStatus.valueOf(aRs.getString("status")));
-    j.setCreationDate(aRs.getTimestamp("creation_date"));
-    j.setCompletionDate(aRs.getTimestamp("completion_date"));
-    j.setStartDate(aRs.getTimestamp("start_date"));
-    return j;    
+    Map<String, Object> map = readValueFromString(aRs.getString("data"));
+    map.put("execution", findJobTasksByJobId(aRs.getString("id")));
+    return new MutableJob(map);
   }
   
   private Map<String,Object> readValueFromString (String aValue) {
@@ -154,6 +135,8 @@ public class JdbcJobRepository implements JobRepository {
       throw Throwables.propagate(e);
     }
   }
+
+
   
 
 }

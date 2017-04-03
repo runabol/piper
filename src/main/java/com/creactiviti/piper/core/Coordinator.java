@@ -71,6 +71,7 @@ public class Coordinator {
 
     MutableJob job = new MutableJob();
     job.setId(UUIDGenerator.generate());
+    job.setName(aParameters.getString("name",pipeline.getName()));
     job.setPipelineId(pipelineId);
     job.setStatus(JobStatus.STARTED);
     job.setStartDate(new Date());
@@ -112,8 +113,7 @@ public class Coordinator {
     Task task = aPipeline.getTasks().get(aJob.getExecution().size());
     MutableJobTask mt = new MutableJobTask (task);
     mt.setJobId(aJob.getId());
-    aJob.addTask(mt);
-    return mt;
+    return jobRepository.create(mt);
   }
 
   private void executeNextTask (MutableJob aJob, Pipeline aPipeline) {
@@ -125,7 +125,7 @@ public class Coordinator {
   }
   
   private void completeJob (MutableJob aJob) {
-    MutableJob job = new MutableJob(aJob);
+    MutableJob job = new MutableJob((Job)aJob);
     job.setStatus(JobStatus.COMPLETED);
     job.setCompletionDate(new Date ());
     jobRepository.save(job);
@@ -169,7 +169,7 @@ public class Coordinator {
     Pipeline pipeline = pipelineRepository.findOne(job.getPipelineId());
     MutableJob mjob = new MutableJob (job);
     Assert.notNull(mjob,String.format("No job found for task %s ",aTask.getId()));
-    mjob.updateTask(task);
+    jobRepository.update(task);
     jobRepository.save(mjob);
     
     if(task.getOutput() != null) {
@@ -197,7 +197,7 @@ public class Coordinator {
     Assert.notNull(mjob,String.format("No job found for task %s ",aTask.getId()));
     mjob.setStatus(JobStatus.FAILED);
     mjob.setFailedDate(new Date ());
-    mjob.updateTask(task);
+    jobRepository.update(task);
     jobRepository.save(mjob);
   }
 

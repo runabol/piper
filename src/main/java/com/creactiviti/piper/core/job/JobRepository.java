@@ -8,6 +8,8 @@ package com.creactiviti.piper.core.job;
 
 import java.util.List;
 
+import com.creactiviti.piper.core.task.JobTask;
+
 public interface JobRepository {
   
   List<Job> findAll ();
@@ -15,6 +17,10 @@ public interface JobRepository {
   Job findOne (String aJobId);
   
   Job save (Job aJob);
+  
+  JobTask create (JobTask aJobTask);
+  
+  JobTask update (JobTask aJobTask);
   
   Job findJobByTaskId (String aTaskId);
   

@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.util.Assert;
 
@@ -65,6 +64,9 @@ public class MapObject implements Map<String, Object>, Accessor, Mutator {
   @Override
   public <T> List<T> getList(Object aKey, Class<T> aElementType) {
     List list = get(aKey, List.class);
+    if(list == null) {
+      return null;
+    }
     List<T> typedList = new ArrayList<>();
     for(Object item : list) {
       if(aElementType.equals(Accessor.class)) {
@@ -217,7 +219,7 @@ public class MapObject implements Map<String, Object>, Accessor, Mutator {
   
   @Override
   public Map<String, Object> asMap() {
-    return SerializationUtils.clone(map);
+    return Collections.unmodifiableMap(new HashMap<>(map));
   }
   
   public String toString() {
