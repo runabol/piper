@@ -47,14 +47,14 @@ public class JdbcJobRepository implements JobRepository {
   private void updateJob(Job aJob) {
     BeanPropertySqlParameterSource jobParameterSource = new BeanPropertySqlParameterSource(aJob);
     jobParameterSource.registerSqlType("status", Types.VARCHAR);
-    jdbc.update("update job set status=:status where id = :id ", jobParameterSource);
+    jdbc.update("update job set status=:status,completion_date=:completionDate,start_date=:startDate,failed_date=:failedDate where id = :id ", jobParameterSource);
     insertOrUpdateJobTasks(aJob);
   }
 
   private void createJob(Job aJob) {
     BeanPropertySqlParameterSource jobParameterSource = new BeanPropertySqlParameterSource(aJob);
     jobParameterSource.registerSqlType("status", Types.VARCHAR);
-    jdbc.update("insert into job (id,name,pipeline_id,status,creation_date) values (:id,:name,:pipelineId,:status,:creationDate)", jobParameterSource);
+    jdbc.update("insert into job (id,name,pipeline_id,status,creation_date,start_date) values (:id,:name,:pipelineId,:status,:creationDate,:startDate)", jobParameterSource);
     insertOrUpdateJobTasks(aJob);
   }
 
@@ -67,7 +67,7 @@ public class JdbcJobRepository implements JobRepository {
         jdbc.update("insert into job_task (id,job_id,type,status,creation_date) values (:id,:jobId,:type,:status,:creationDate)", taskParameterSource);
       }
       else {
-        jdbc.update("update job_task set status=:status,creation_date=:creationDate where id = :id ", taskParameterSource);
+        jdbc.update("update job_task set status=:status,completion_date=:completionDate where id = :id ", taskParameterSource);
       }
     }
   }
@@ -99,7 +99,9 @@ public class JdbcJobRepository implements JobRepository {
     MutableJobTask t = new MutableJobTask();
     t.setId(aRs.getString("id"));
     t.setStatus(TaskStatus.valueOf(aRs.getString("status")));
-    t.setCreationDate(aRs.getDate("creation_date"));
+    t.setCreationDate(aRs.getTimestamp("creation_date"));
+    t.setCompletionDate(aRs.getTimestamp("completion_date"));
+    t.setJobId(aRs.getString("job_id"));
     return t;
   }
   
@@ -113,6 +115,9 @@ public class JdbcJobRepository implements JobRepository {
     j.setId(aRs.getString("id"));
     j.setExecution(findJobTasksByJobId(j.getId()));
     j.setStatus(JobStatus.valueOf(aRs.getString("status")));
+    j.setCreationDate(aRs.getTimestamp("creation_date"));
+    j.setCompletionDate(aRs.getTimestamp("completion_date"));
+    j.setStartDate(aRs.getTimestamp("start_date"));
     return j;    
   }
 

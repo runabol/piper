@@ -5,7 +5,7 @@ CREATE TABLE job (
   name varchar(256) not null,
   creation_date timestamp not null,
   start_date timestamp null,
-  completion_date null,
+  completion_date timestamp null,
   failed_date null
 );
 
@@ -21,7 +21,7 @@ CREATE TABLE job_task (
   exception text,
   creation_date timestamp not null,
   start_date timestamp null,
-  completion_date null,
-  failed_date null,
+  completion_date timestamp null,
+  failed_date timestamp null,
   execution_time int
 );

@@ -11,17 +11,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.creactiviti.piper.core.context.InMemoryContextRepository;
-import com.creactiviti.piper.core.job.InMemoryJobRepository;
 
 @Configuration
 @ConditionalOnProperty(name="piper.persistence.provider",havingValue="inmemory")
 public class InMemoryPersistenceConfiguration {
 
-  @Bean
-  InMemoryJobRepository simpleJobRepository () {
-    return new InMemoryJobRepository();
-  }
-  
   @Bean
   InMemoryContextRepository simpleContextRepository () {
     return new InMemoryContextRepository();
