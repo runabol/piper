@@ -10,14 +10,14 @@ import java.util.List;
 
 public interface Page<T> {
   
-  List<T> getContent ();
+  List<T> getItems ();
   
   int getSize ();
   
   int getNumber ();
   
-  int totalElements ();
+  int getTotalItems ();
   
-  int totalPages ();
+  int getTotalPages ();
   
 }

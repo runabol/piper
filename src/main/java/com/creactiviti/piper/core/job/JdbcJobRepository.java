@@ -45,15 +45,15 @@ public class JdbcJobRepository implements JobRepository {
 
   @Override
   public Page<Job> findAll(int aPageNumber) {
-    Integer totalElements = jdbc.getJdbcOperations().queryForObject("select count(*) from job",Integer.class);
+    Integer totalItems = jdbc.getJdbcOperations().queryForObject("select count(*) from job",Integer.class);
     int offset = (aPageNumber-1) * DEFAULT_PAGE_SIZE;
     int limit = offset + DEFAULT_PAGE_SIZE;
-    List<Job> content = jdbc.query(String.format("select * from job order by creation_date desc offset %s limit %s",offset,limit),this::jobRowMappper);
+    List<Job> items = jdbc.query(String.format("select * from job order by creation_date desc offset %s limit %s",offset,limit),this::jobRowMappper);
     ResultPage<Job> resultPage = new ResultPage<>(Job.class);
-    resultPage.setContent(content);
-    resultPage.setNumber(content.size()>0?aPageNumber:0);
-    resultPage.setTotalElements(totalElements);
-    resultPage.setTotalPages(content.size()>0?totalElements/DEFAULT_PAGE_SIZE+1:0);
+    resultPage.setItems(items);
+    resultPage.setNumber(items.size()>0?aPageNumber:0);
+    resultPage.setTotalItems(totalItems);
+    resultPage.setTotalPages(items.size()>0?totalItems/DEFAULT_PAGE_SIZE+1:0);
     return resultPage;
   }
   

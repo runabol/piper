@@ -19,14 +19,14 @@ public class ResultPage<T> extends MapObject implements Page<T> {
   }
 
   @Override
-  public List<T> getContent() {
-    List<T> list = getList("content", elementType);
+  public List<T> getItems () {
+    List<T> list = getList("items", elementType);
     return list!=null?list:Collections.EMPTY_LIST;
   }
 
-  public void setContent (List<T> aContent) {
-    set("content", aContent);
-    set("size",aContent.size());
+  public void setItems (List<T> aItems) {
+    set("items", aItems);
+    set("size",aItems.size());
   }
   
   @Override
@@ -35,16 +35,16 @@ public class ResultPage<T> extends MapObject implements Page<T> {
   }
 
   @Override
-  public int totalElements() {
-    return getInteger("totalElements", 0);
+  public int getTotalItems() {
+    return getInteger("totalItems", 0);
   }
 
-  public void setTotalElements (int aTotalElements) {
-    set("totalElements", aTotalElements);
+  public void setTotalItems (int aTotalElements) {
+    set("totalItems", aTotalElements);
   }
   
   @Override
-  public int totalPages() {
+  public int getTotalPages() {
     return getInteger("totalPages", 0);
   }
   
