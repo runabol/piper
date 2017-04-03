@@ -39,7 +39,7 @@ public class JobController {
    * @return
    */
   @GetMapping(value="/jobs")
-  public Page<Job> list (@RequestParam(value="p",defaultValue="0") Integer aPageNumber) {
+  public Page<Job> list (@RequestParam(value="p",defaultValue="1") Integer aPageNumber) {
     return jobRepository.findAll(aPageNumber);
   }
   
