@@ -159,10 +159,10 @@ Since `Coordinator` and `Worker` do not talk to each other directly but only thr
 - Job Priority
 - Specialized workers
 - Postgres Support
-- Standalone worker
-- Standalone Coordinator
 - Stop/Resume Jobs
-- For-Each support
+- Each construct
+- Mapper construct
+- Parallel construct
 - AMQP Support
 - Job tags
 - Define job output (e.g. `output: ${int(output)}`)
