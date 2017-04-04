@@ -26,7 +26,7 @@ public class JdbcJobRepository implements JobRepository {
   private NamedParameterJdbcOperations jdbc;
   private ObjectMapper json = new ObjectMapper();
   
-  public static final int DEFAULT_PAGE_SIZE = 50;
+  public static final int DEFAULT_PAGE_SIZE = 25;
   
   @Override
   public Job findOne(String aId) {
@@ -56,12 +56,7 @@ public class JdbcJobRepository implements JobRepository {
     resultPage.setTotalPages(items.size()>0?totalItems/DEFAULT_PAGE_SIZE+1:0);
     return resultPage;
   }
-  
-  @Override
-  public List<JobTask> getExecution(String aJobId) {
-    return jdbc.query("select * From job_task where job_id = :jobId ", Collections.singletonMap("jobId", aJobId),this::jobTaskRowMappper);
-  }
-    
+      
   @Override
   public void update (Job aJob) {
     MutableJob job = new MutableJob(aJob);
@@ -124,6 +119,10 @@ public class JdbcJobRepository implements JobRepository {
 
   private String writeValueAsJsonString (Object aValue) {
     return JsonHelper.writeValueAsString(json, aValue);
+  }
+  
+  private List<JobTask> getExecution(String aJobId) {
+    return jdbc.query("select * From job_task where job_id = :jobId ", Collections.singletonMap("jobId", aJobId),this::jobTaskRowMappper);
   }
 
 }

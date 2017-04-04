@@ -24,7 +24,6 @@ import com.creactiviti.piper.core.MapObject;
 import com.creactiviti.piper.core.Page;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobRepository;
-import com.creactiviti.piper.core.job.MutableJob;
 
 @RestController
 @ConditionalOnPredicate(OnCoordinatorPredicate.class)
@@ -55,9 +54,7 @@ public class JobController {
   public Job get (@PathVariable("id")String aJobId) {
     Job job = jobRepository.findOne (aJobId);
     Assert.notNull(job,"Unknown job: " + aJobId);
-    MutableJob mjob = new MutableJob(job);
-    mjob.setExecution(jobRepository.getExecution(job.getId()));
-    return mjob;
+    return job;
   }
     
 }

@@ -6,8 +6,6 @@
  */
 package com.creactiviti.piper.core.job;
 
-import java.util.List;
-
 import com.creactiviti.piper.core.Page;
 import com.creactiviti.piper.core.task.JobTask;
 
@@ -26,7 +24,5 @@ public interface JobRepository {
   void update (JobTask aJobTask);
   
   Job findJobByTaskId (String aTaskId);
-  
-  List<JobTask> getExecution (String aJobId);
   
 }
