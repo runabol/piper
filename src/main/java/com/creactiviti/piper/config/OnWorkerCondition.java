@@ -16,7 +16,7 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 
 /**
  * A Condition that evaluates if piper.roles property 
- * contains the value <code>coordinator</code>.
+ * contains the value <code>worker</code>.
  *
  * @author Arik Cohen
  * @see ConditionalOnWorker
