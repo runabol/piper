@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.guava.GuavaCacheManager;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 
 import com.creactiviti.piper.cache.Clearable;
 import com.creactiviti.piper.git.GitOperations;
@@ -22,7 +22,7 @@ public class GitPipelineRepository extends YamlPipelineRepository implements Cle
   private String url;
   private String[] searchPaths;
   private GitOperations git = new JGitTemplate();
-  private CacheManager cacheManager = new GuavaCacheManager ();
+  private CacheManager cacheManager = new ConcurrentMapCacheManager();
   
   private static final String CACHE_ALL = GitPipelineRepository.class.getName()+".all";
   private static final String CACHE_ONE = GitPipelineRepository.class.getName()+".one";
