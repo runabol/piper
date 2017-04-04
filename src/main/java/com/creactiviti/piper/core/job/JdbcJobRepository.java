@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import com.creactiviti.piper.core.Page;
 import com.creactiviti.piper.core.ResultPage;
@@ -59,41 +60,46 @@ public class JdbcJobRepository implements JobRepository {
       
   @Override
   public void update (Job aJob) {
-    MutableJob job = new MutableJob(aJob);
-    job.remove("execution");
-    MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
-    sqlParameterSource.addValue("id", job.getId());
-    sqlParameterSource.addValue("data", writeValueAsJsonString(job));
-    jdbc.update("update job set data=:data where id = :id ", sqlParameterSource);
+    MapSqlParameterSource sqlParameterSource = createSqlParameterSource(aJob);
+    jdbc.update("update job set data=:data,status=:status where id = :id ", sqlParameterSource);
   }
 
   @Override
   public void create (Job aJob) {
+    MapSqlParameterSource sqlParameterSource = createSqlParameterSource(aJob);
+    jdbc.update("insert into job (id,creation_date,data,status) values (:id,:creationDate,:data,:status)", sqlParameterSource);
+  }
+
+  private MapSqlParameterSource createSqlParameterSource(Job aJob) {
     MutableJob job = new MutableJob(aJob);
-    job.remove("execution");
+    job.remove("execution"); // don't want to store the execution as part of the job's data
     MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
-    sqlParameterSource.addValue("id", aJob.getId());
+    sqlParameterSource.addValue("id", job.getId());
     sqlParameterSource.addValue("creationDate", job.getCreationDate());
     sqlParameterSource.addValue("data", writeValueAsJsonString(job));
-    jdbc.update("insert into job (id,creation_date,data) values (:id,:creationDate,:data)", sqlParameterSource);
+    sqlParameterSource.addValue("status", job.getStatus().toString());
+    return sqlParameterSource;
   }
   
   @Override
   public void create(JobTask aJobTask) {
-    MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
-    sqlParameterSource.addValue("id", aJobTask.getId());
-    sqlParameterSource.addValue("jobId", aJobTask.getJobId());
-    sqlParameterSource.addValue("data", writeValueAsJsonString(aJobTask));
-    jdbc.update("insert into job_task (id,job_id,data) values (:id,:jobId,:data)", sqlParameterSource);
+    SqlParameterSource sqlParameterSource = createSqlParameterSource(aJobTask);
+    jdbc.update("insert into job_task (id,job_id,data,status) values (:id,:jobId,:data,:status)", sqlParameterSource);
   }
   
   @Override
   public void update(JobTask aJobTask) {
+    SqlParameterSource sqlParameterSource = createSqlParameterSource(aJobTask);
+    jdbc.update("update job_task set data=:data,status=:status where id = :id ", sqlParameterSource);
+  }
+
+  private SqlParameterSource createSqlParameterSource(JobTask aJobTask) {
     MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
     sqlParameterSource.addValue("id", aJobTask.getId());
     sqlParameterSource.addValue("jobId", aJobTask.getJobId());
     sqlParameterSource.addValue("data", writeValueAsJsonString(aJobTask));
-    jdbc.update("update job_task set data=:data where id = :id ", sqlParameterSource);
+    sqlParameterSource.addValue("status", aJobTask.getStatus().toString());
+    return sqlParameterSource;
   }
     
   public void setJdbcOperations (NamedParameterJdbcOperations aJdbcOperations) {
