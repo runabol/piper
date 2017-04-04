@@ -8,6 +8,7 @@ import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.task.TaskHandlerResolver;
 
 @Configuration
+@ConditionalOnPredicate(OnWorkerPredicate.class)
 public class WorkerConfiguration {
   
   @Bean
