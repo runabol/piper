@@ -62,17 +62,19 @@ public class JdbcJobRepository implements JobRepository {
     MutableJob job = new MutableJob(aJob);
     job.remove("execution");
     MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
-    sqlParameterSource.addValue("id", aJob.getId());
-    sqlParameterSource.addValue("data", writeValueAsJsonString(aJob));
+    sqlParameterSource.addValue("id", job.getId());
+    sqlParameterSource.addValue("data", writeValueAsJsonString(job));
     jdbc.update("update job set data=:data where id = :id ", sqlParameterSource);
   }
 
   @Override
   public void create (Job aJob) {
+    MutableJob job = new MutableJob(aJob);
+    job.remove("execution");
     MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
     sqlParameterSource.addValue("id", aJob.getId());
-    sqlParameterSource.addValue("creationDate", aJob.getCreationDate());
-    sqlParameterSource.addValue("data", writeValueAsJsonString(aJob));
+    sqlParameterSource.addValue("creationDate", job.getCreationDate());
+    sqlParameterSource.addValue("data", writeValueAsJsonString(job));
     jdbc.update("insert into job (id,creation_date,data) values (:id,:creationDate,:data)", sqlParameterSource);
   }
   
