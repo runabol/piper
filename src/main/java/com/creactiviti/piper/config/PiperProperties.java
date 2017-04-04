@@ -16,6 +16,7 @@ public class PiperProperties {
   private SerializationProperties serialization;
   private PersistenceProperties persistence;
   private PipelineRepositoryProperties pipelineRepository;
+  private String[] roles;
 
   public SerializationProperties getSerialization() {
     return serialization;
@@ -39,6 +40,14 @@ public class PiperProperties {
   
   public void setPipelineRepository(PipelineRepositoryProperties aPipelineRepository) {
     pipelineRepository = aPipelineRepository;
+  }
+  
+  public void setRoles(String[] aRoles) {
+    roles = aRoles;
+  }
+  
+  public String[] getRoles() {
+    return roles;
   }
   
 }

@@ -51,15 +51,6 @@ public class JmsMessengerConfiguration {
     return jmsMessenger;
   }
   
-//  @Beta
-//  ObjectMapper objectMapper () {
-//    ObjectMapper objectMapper = new ObjectMapper();
-//    SimpleModule module = new SimpleModule();
-//    module.addSerializer(Throwable.class, new ExceptionSerializer());
-//    objectMapper.registerModule(module);
-//    return objectMapper;
-//  }
-  
   @Bean
   JmsTemplate jmsTemplate (PiperProperties piperProperties) {
     JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory);
