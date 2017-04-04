@@ -51,7 +51,7 @@ public class JmsMessengerConfiguration {
   }
   
   @Bean
-  @ConditionalOnPredicate(OnWorkerPredicate.class)
+  @ConditionalOnWorker
   DefaultMessageListenerContainer workerMessageListener (ObjectMapper aObjectMapper, Worker aWorker) {
     DefaultMessageListenerContainer container = new DefaultMessageListenerContainer();
     container.setConnectionFactory (connectionFactory);
@@ -62,7 +62,7 @@ public class JmsMessengerConfiguration {
   }
   
   @Bean
-  @ConditionalOnPredicate(OnCoordinatorPredicate.class)
+  @ConditionalOnCoordinator
   DefaultMessageListenerContainer completionsMessageListener (ObjectMapper aObjectMapper, Coordinator aCoordinator) throws JMSException {
     DefaultMessageListenerContainer container = new DefaultMessageListenerContainer();
     container.setConnectionFactory (connectionFactory);
@@ -73,7 +73,7 @@ public class JmsMessengerConfiguration {
   }
   
   @Bean
-  @ConditionalOnPredicate(OnCoordinatorPredicate.class)
+  @ConditionalOnCoordinator
   DefaultMessageListenerContainer errorsMessageListener (ObjectMapper aObjectMapper, Coordinator aCoordinator) throws JMSException {
     DefaultMessageListenerContainer container = new DefaultMessageListenerContainer();
     container.setConnectionFactory (connectionFactory);

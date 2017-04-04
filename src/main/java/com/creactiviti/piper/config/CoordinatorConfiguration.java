@@ -21,7 +21,7 @@ import com.creactiviti.piper.core.task.SpelTaskEvaluator;
 import com.creactiviti.piper.core.task.TaskExecutor;
 
 @Configuration
-@ConditionalOnPredicate(OnCoordinatorPredicate.class)
+@ConditionalOnCoordinator
 public class CoordinatorConfiguration {
 
   @Autowired

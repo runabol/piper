@@ -15,13 +15,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.HandlerMapping;
 
-import com.creactiviti.piper.config.ConditionalOnPredicate;
-import com.creactiviti.piper.config.OnCoordinatorPredicate;
+import com.creactiviti.piper.config.ConditionalOnCoordinator;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
 
 @RestController
-@ConditionalOnPredicate(OnCoordinatorPredicate.class)
+@ConditionalOnCoordinator
 public class PipelineController {
 
   @Autowired
