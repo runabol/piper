@@ -73,10 +73,4 @@ public class SpelTaskEvaluator implements TaskEvaluator {
     return context;
   }
   
-  public static void main (String[] args) {
-    ExpressionParser parser = new SpelExpressionParser();
-    String randomPhrase = parser.parseExpression("random number is #{joe}", new TemplateParserContext()).getValue(String.class);
-    System.out.println(randomPhrase);
-  }
-
 }

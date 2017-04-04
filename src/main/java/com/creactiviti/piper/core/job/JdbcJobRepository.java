@@ -64,6 +64,8 @@ public class JdbcJobRepository implements JobRepository {
     
   @Override
   public void update (Job aJob) {
+    MutableJob job = new MutableJob(aJob);
+    job.remove("execution");
     MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
     sqlParameterSource.addValue("id", aJob.getId());
     sqlParameterSource.addValue("data", writeValueAsJsonString(aJob));
@@ -112,6 +114,7 @@ public class JdbcJobRepository implements JobRepository {
     
   private Job jobRowMappper (ResultSet aRs, int aIndex) throws SQLException {
     Map<String, Object> map = readValueFromString(aRs.getString("data"));
+    map.put("execution", getExecution(aRs.getString("id")));
     return new MutableJob(map);
   }
   
