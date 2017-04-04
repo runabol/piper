@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.creactiviti.piper.config.ConditionalOnPredicate;
+import com.creactiviti.piper.config.OnCoordinatorPredicate;
 import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.MapObject;
 import com.creactiviti.piper.core.Page;
@@ -25,6 +27,7 @@ import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.MutableJob;
 
 @RestController
+@ConditionalOnPredicate(OnCoordinatorPredicate.class)
 public class JobController {
 
   @Autowired

@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.creactiviti.piper.cache.Clearable;
+import com.creactiviti.piper.config.ConditionalOnPredicate;
+import com.creactiviti.piper.config.OnCoordinatorPredicate;
 
 @RestController
+@ConditionalOnPredicate(OnCoordinatorPredicate.class)
 public class CacheController {
 
   @Autowired(required=false)
