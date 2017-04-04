@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 
@@ -36,12 +35,6 @@ public class JmsMessengerConfiguration {
   @Autowired
   private ConnectionFactory connectionFactory;
   
-  @Lazy
-  @Autowired
-  private Worker worker;
-  
-  @Autowired
-  private Coordinator coordinator;
   
   @Bean
   JmsMessenger jmsMessenger (JmsTemplate aJmsTemplate, ObjectMapper aObjectMapper) {
@@ -58,31 +51,34 @@ public class JmsMessengerConfiguration {
   }
   
   @Bean
-  DefaultMessageListenerContainer workerMessageListener (ObjectMapper aObjectMapper) {
+  @ConditionalOnPredicate(OnWorkerPredicate.class)
+  DefaultMessageListenerContainer workerMessageListener (ObjectMapper aObjectMapper, Worker aWorker) {
     DefaultMessageListenerContainer container = new DefaultMessageListenerContainer();
     container.setConnectionFactory (connectionFactory);
     container.setDestinationName("tasks");
-    MessageListener listener = (m) -> worker.handle(toTask(m, aObjectMapper));
+    MessageListener listener = (m) -> aWorker.handle(toTask(m, aObjectMapper));
     container.setMessageListener(listener);
     return container;
   }
   
   @Bean
-  DefaultMessageListenerContainer completionsMessageListener (ObjectMapper aObjectMapper) throws JMSException {
+  @ConditionalOnPredicate(OnCoordinatorPredicate.class)
+  DefaultMessageListenerContainer completionsMessageListener (ObjectMapper aObjectMapper, Coordinator aCoordinator) throws JMSException {
     DefaultMessageListenerContainer container = new DefaultMessageListenerContainer();
     container.setConnectionFactory (connectionFactory);
     container.setDestinationName("completions");
-    MessageListener listener = (m) -> coordinator.completeTask(toTask(m, aObjectMapper));
+    MessageListener listener = (m) -> aCoordinator.completeTask(toTask(m, aObjectMapper));
     container.setMessageListener(listener);
     return container;
   }
   
   @Bean
-  DefaultMessageListenerContainer errorsMessageListener (ObjectMapper aObjectMapper) throws JMSException {
+  @ConditionalOnPredicate(OnCoordinatorPredicate.class)
+  DefaultMessageListenerContainer errorsMessageListener (ObjectMapper aObjectMapper, Coordinator aCoordinator) throws JMSException {
     DefaultMessageListenerContainer container = new DefaultMessageListenerContainer();
     container.setConnectionFactory (connectionFactory);
     container.setDestinationName("errors");
-    MessageListener listener = (m) -> coordinator.error(toTask(m, aObjectMapper));
+    MessageListener listener = (m) -> aCoordinator.error(toTask(m, aObjectMapper));
     container.setMessageListener(listener);
     return container;
   }
