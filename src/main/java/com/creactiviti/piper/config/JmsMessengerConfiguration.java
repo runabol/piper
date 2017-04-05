@@ -14,6 +14,7 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +31,7 @@ import com.google.common.base.Throwables;
 
 @Configuration
 @EnableConfigurationProperties(PiperProperties.class)
+@ConditionalOnProperty(name="piper.messenger.provider",havingValue="jms")
 public class JmsMessengerConfiguration {
 
   @Autowired

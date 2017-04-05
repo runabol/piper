@@ -16,6 +16,7 @@ public class PiperProperties {
   private SerializationProperties serialization;
   private PersistenceProperties persistence;
   private PipelineRepositoryProperties pipelineRepository;
+  private MessengerProperties messenger;
   private String[] roles;
 
   public SerializationProperties getSerialization() {
@@ -48,6 +49,14 @@ public class PiperProperties {
   
   public String[] getRoles() {
     return roles;
+  }
+  
+  public MessengerProperties getMessenger() {
+    return messenger;
+  }
+  
+  public void setMessenger(MessengerProperties aMessenger) {
+    messenger = aMessenger;
   }
   
 }
