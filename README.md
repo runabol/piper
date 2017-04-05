@@ -14,6 +14,5 @@ See http://meetpiper.com
 - Each construct
 - Mapper construct
 - Parallel construct
-- AMQP Support
 - Job tags
 - Define job output (e.g. `output: ${int(output)}`)
