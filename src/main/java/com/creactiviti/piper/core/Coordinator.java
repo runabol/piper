@@ -88,7 +88,7 @@ public class Coordinator {
   }
   
   private void validate (MapObject aParameters, Pipeline aPipeline) {
-    List<Accessor> input = aPipeline.getInput();
+    List<Accessor> input = aPipeline.getInputs();
     for(Accessor in : input) {
       if(in.getBoolean("required", false)) {
         Assert.isTrue(aParameters.containsKey(in.get("name")), "Missing required param: " + in.get("name"));

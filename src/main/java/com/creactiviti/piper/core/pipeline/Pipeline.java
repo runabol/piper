@@ -38,5 +38,5 @@ public interface Pipeline {
   /**
    * Returns the pipeline's expected input
    */
-  List<Accessor> getInput ();
+  List<Accessor> getInputs ();
 }

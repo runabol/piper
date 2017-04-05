@@ -42,7 +42,7 @@ public class SimplePipeline extends MapObject implements Pipeline {
   }
 
   @Override
-  public List<Accessor> getInput() {
-    return getList("input",Accessor.class);
+  public List<Accessor> getInputs() {
+    return getList("inputs",Accessor.class);
   }
 }
