@@ -1,22 +1,19 @@
 package com.creactiviti.piper.core.messenger;
 
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.util.Assert;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Throwables;
 
 public class AmqpMessenger implements Messenger {
   
   private AmqpTemplate amqpTemplate;
   
-  private static final String DEFAULT_QUEUE = "tasks";
-
-  private ObjectMapper objectMapper = new ObjectMapper(); 
-    
   @Override
   public void send (String aRoutingKey, Object aMessage) {
     try {
-      amqpTemplate.convertAndSend(aRoutingKey!=null?aRoutingKey:DEFAULT_QUEUE, objectMapper.writeValueAsString(aMessage));
+      Assert.notNull(aRoutingKey,"routing key can't be null");
+      amqpTemplate.convertAndSend(aRoutingKey,aMessage);
     } catch (Exception e) {
       throw Throwables.propagate(e);
     }
@@ -26,7 +23,4 @@ public class AmqpMessenger implements Messenger {
     amqpTemplate = aAmqpTemplate;
   }
   
-  public void setObjectMapper(ObjectMapper aObjectMapper) {
-    objectMapper = aObjectMapper;
-  }
 }

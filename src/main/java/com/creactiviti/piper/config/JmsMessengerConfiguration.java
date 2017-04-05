@@ -8,6 +8,8 @@ package com.creactiviti.piper.config;
 
 import javax.jms.ConnectionFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer;
@@ -19,6 +21,7 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.annotation.JmsListenerConfigurer;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
+import org.springframework.jms.config.JmsListenerEndpoint;
 import org.springframework.jms.config.JmsListenerEndpointRegistrar;
 import org.springframework.jms.config.SimpleJmsListenerEndpoint;
 import org.springframework.jms.core.JmsTemplate;
@@ -52,6 +55,8 @@ public class JmsMessengerConfiguration implements JmsListenerConfigurer {
   
   @Autowired
   private PiperProperties properties;
+  
+  private final Logger logger = LoggerFactory.getLogger(getClass());
   
   @Bean
   JmsMessenger jmsMessenger (JmsTemplate aJmsTemplate, ObjectMapper aObjectMapper) {
@@ -90,14 +95,28 @@ public class JmsMessengerConfiguration implements JmsListenerConfigurer {
 
   @Override
   public void configureJmsListeners(JmsListenerEndpointRegistrar aRegistrar) {
+    String[] roles = properties.getRoles();
+    for(String role : roles) {
+      if(role.equals("worker")) {
+        aRegistrar.registerEndpoint(createListenerEndpoint("tasks", worker, "handle"));
+      }
+      else if (role.startsWith("worker.")) {
+        String destination = "tasks." + role.substring(role.indexOf('.')+1);
+        aRegistrar.registerEndpoint(createListenerEndpoint(destination, worker, "handle"));
+      }
+    }
+  }
+
+  private JmsListenerEndpoint createListenerEndpoint(String aDestination, Object aDelegate, String aMethodName) {
+    logger.info("Registring JMS Listener: {} -> {}:{}", aDestination, aDelegate.getClass().getName(), aMethodName);
     SimpleJmsListenerEndpoint endpoint = new SimpleJmsListenerEndpoint();
-    endpoint.setId("completionsEndpoint");
-    endpoint.setDestination("completions");
-    MessageListenerAdapter messageListener = new MessageListenerAdapter(coordinator);
+    endpoint.setId(aDestination+"Endpoint");
+    endpoint.setDestination(aDestination);
+    MessageListenerAdapter messageListener = new MessageListenerAdapter(aDelegate);
     messageListener.setMessageConverter(jacksonJmsMessageConverter(objectMapper));
-    messageListener.setDefaultListenerMethod("completeTask");
+    messageListener.setDefaultListenerMethod(aMethodName);
     endpoint.setMessageListener(messageListener);
-    //aRegistrar.registerEndpoint(endpoint);
+    return endpoint;
   }
     
 }

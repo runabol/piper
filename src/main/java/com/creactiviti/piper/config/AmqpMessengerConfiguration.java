@@ -3,8 +3,6 @@ package com.creactiviti.piper.config;
 
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageListener;
@@ -32,16 +30,9 @@ public class AmqpMessengerConfiguration {
   AmqpMessenger amqpMessenger (AmqpTemplate aAmqpTemplate, ObjectMapper aObjectMapper) {
     AmqpMessenger amqpMessenger = new AmqpMessenger();
     amqpMessenger.setAmqpTemplate(aAmqpTemplate);
-    amqpMessenger.setObjectMapper(aObjectMapper);
     return amqpMessenger;
   }
     
-  @PostConstruct
-  @ConditionalOnWorker
-  void createWorkerQueues () {
-    System.out.println("***********");
-  }
-  
   @Bean
   @ConditionalOnCoordinator
   Queue completionsQueue () {

@@ -24,7 +24,7 @@ public class DefaultTaskExecutor implements TaskExecutor, TaskExecutorResolver {
   @Override
   public void execute (JobTask aTask) {
     String node = aTask.getNode();
-    messenger.send(node!=null?node:DEFAULT_TASK_QUEUE, aTask);
+    messenger.send(node!=null?DEFAULT_TASK_QUEUE+"."+node:DEFAULT_TASK_QUEUE, aTask);
   }
   
   @Autowired

@@ -47,6 +47,7 @@ public class Worker {
    */
   public void handle (JobTask aTask) {
     try {
+      logger.debug("Recived task: {}",aTask);
       TaskHandler<?> taskHandler = taskHandlerResolver.resolve(aTask);
       Object output = taskHandler.handle(aTask);
       MutableJobTask completion = new MutableJobTask(aTask);

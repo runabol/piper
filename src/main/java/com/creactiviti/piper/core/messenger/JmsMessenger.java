@@ -7,6 +7,7 @@
 package com.creactiviti.piper.core.messenger;
 
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.util.Assert;
 
 import com.google.common.base.Throwables;
 
@@ -15,12 +16,11 @@ public class JmsMessenger implements Messenger {
 
   private JmsTemplate jmsTemplate;
   
-  private static final String DEFAULT_QUEUE = "tasks";
-
   @Override
   public void send (String aRoutingKey, Object aMessage) {
     try {
-      jmsTemplate.convertAndSend(aRoutingKey!=null?aRoutingKey:DEFAULT_QUEUE, aMessage);
+      Assert.notNull(aRoutingKey,"routing key can't be null");
+      jmsTemplate.convertAndSend(aRoutingKey, aMessage);
     } catch (Exception e) {
       throw Throwables.propagate(e);
     }
