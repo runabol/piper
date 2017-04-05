@@ -51,7 +51,7 @@ public class CoordinatorTests {
     Coordinator coordinator = new Coordinator ();
    
     SynchMessenger workerMessenger = new SynchMessenger();
-    workerMessenger.receive("completions", (o)->coordinator.completeTask((JobTask)o));
+    workerMessenger.receive("coordinator.completions", (o)->coordinator.completeTask((JobTask)o));
     worker.setMessenger(workerMessenger);
     DefaultTaskHandlerResolver taskHandlerResolver = new DefaultTaskHandlerResolver();
     
@@ -74,7 +74,7 @@ public class CoordinatorTests {
     coordinator.setPipelineRepository(new FileSystemPipelineRepository());
     
     SynchMessenger coordinatorMessenger = new SynchMessenger();
-    coordinatorMessenger.receive("tasks", (o)->worker.handle((JobTask)o));
+    coordinatorMessenger.receive("worker.tasks", (o)->worker.handle((JobTask)o));
     DefaultTaskExecutor taskExecutor = new DefaultTaskExecutor();
     taskExecutor.setMessenger(coordinatorMessenger);
     coordinator.setTaskExecutor(taskExecutor);

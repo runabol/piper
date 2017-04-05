@@ -21,7 +21,7 @@ public class WorkerTests {
   public void test1 () {
     Worker worker = new Worker();
     SynchMessenger messenger = new SynchMessenger();
-    messenger.receive("completions", (t)-> Assert.assertTrue(((JobTask)t).getOutput().equals("done")) );
+    messenger.receive("coordinator.completions", (t)-> Assert.assertTrue(((JobTask)t).getOutput().equals("done")) );
     worker.setMessenger(messenger);
     worker.setTaskHandlerResolver((jt) -> (t) -> "done");
     worker.handle(new MutableJobTask(Collections.EMPTY_MAP));
@@ -32,7 +32,7 @@ public class WorkerTests {
   public void test2 () {
     Worker worker = new Worker();
     SynchMessenger messenger = new SynchMessenger();
-    messenger.receive("errors", (t)-> Assert.assertTrue( ((JobTask)t).getException().getMessage().equals("bad input") ) );
+    messenger.receive("coordinator.errors", (t)-> Assert.assertTrue( ((JobTask)t).getException().getMessage().equals("bad input") ) );
     worker.setMessenger(messenger);
     worker.setTaskHandlerResolver((jt) -> (t) -> {
       throw new IllegalArgumentException("bad input");
