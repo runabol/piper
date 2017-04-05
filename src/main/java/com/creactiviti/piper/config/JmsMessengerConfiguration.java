@@ -59,7 +59,7 @@ public class JmsMessengerConfiguration implements JmsListenerConfigurer {
   private final Logger logger = LoggerFactory.getLogger(getClass());
   
   @Bean
-  JmsMessenger jmsMessenger (JmsTemplate aJmsTemplate, ObjectMapper aObjectMapper) {
+  JmsMessenger jmsMessenger (JmsTemplate aJmsTemplate) {
     JmsMessenger jmsMessenger = new JmsMessenger();
     jmsMessenger.setJmsTemplate(aJmsTemplate);
     return jmsMessenger;
@@ -81,12 +81,6 @@ public class JmsMessengerConfiguration implements JmsListenerConfigurer {
     return factory;
   }
 
-  @ConditionalOnWorker
-  @JmsListener(destination="tasks")
-  public void receiveTask (JobTask aTask) {
-    worker.handle(aTask);
-  }
-
   @ConditionalOnCoordinator
   @JmsListener(destination="completions")
   public void receiveCompletion (JobTask aTask) {
@@ -94,7 +88,7 @@ public class JmsMessengerConfiguration implements JmsListenerConfigurer {
   }
 
   @Override
-  public void configureJmsListeners(JmsListenerEndpointRegistrar aRegistrar) {
+  public void configureJmsListeners (JmsListenerEndpointRegistrar aRegistrar) {
     String[] roles = properties.getRoles();
     for(String role : roles) {
       if(role.equals("worker")) {
