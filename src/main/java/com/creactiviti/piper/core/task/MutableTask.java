@@ -41,6 +41,10 @@ public class MutableTask extends MapObject implements Task {
     return getString("node");
   }
   
+  public void setNode (String aNode) {
+    set("node", aNode);
+  }
+  
   @Override
   public int getTaskNumber() {
     return getInteger("taskNumber",-1);

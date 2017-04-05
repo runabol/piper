@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.messenger.Messenger;
 
@@ -25,6 +26,7 @@ public class DefaultTaskExecutor implements TaskExecutor, TaskExecutorResolver {
   @Override
   public void execute (JobTask aTask) {
     String node = aTask.getNode();
+    Assert.notNull(messenger,"messenger not configured");
     messenger.send(calculateRoutingKey(node), aTask);
   }
   
