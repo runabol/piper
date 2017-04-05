@@ -16,9 +16,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.annotation.JmsListener;
+import org.springframework.jms.annotation.JmsListenerConfigurer;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
+import org.springframework.jms.config.JmsListenerEndpointRegistrar;
+import org.springframework.jms.config.SimpleJmsListenerEndpoint;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.listener.adapter.MessageListenerAdapter;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
@@ -33,7 +37,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @EnableJms
 @EnableConfigurationProperties(PiperProperties.class)
 @ConditionalOnProperty(name="piper.messenger.provider",havingValue="jms")
-public class JmsMessengerConfiguration {
+public class JmsMessengerConfiguration implements JmsListenerConfigurer {
 
   @Autowired
   @ConditionalOnWorker
@@ -42,6 +46,12 @@ public class JmsMessengerConfiguration {
   @Autowired
   @ConditionalOnCoordinator
   private Coordinator coordinator;
+  
+  @Autowired
+  private ObjectMapper objectMapper;
+  
+  @Autowired
+  private PiperProperties properties;
   
   @Bean
   JmsMessenger jmsMessenger (JmsTemplate aJmsTemplate, ObjectMapper aObjectMapper) {
@@ -76,6 +86,18 @@ public class JmsMessengerConfiguration {
   @JmsListener(destination="completions")
   public void receiveCompletion (JobTask aTask) {
     coordinator.completeTask(aTask);
+  }
+
+  @Override
+  public void configureJmsListeners(JmsListenerEndpointRegistrar aRegistrar) {
+    SimpleJmsListenerEndpoint endpoint = new SimpleJmsListenerEndpoint();
+    endpoint.setId("completionsEndpoint");
+    endpoint.setDestination("completions");
+    MessageListenerAdapter messageListener = new MessageListenerAdapter(coordinator);
+    messageListener.setMessageConverter(jacksonJmsMessageConverter(objectMapper));
+    messageListener.setDefaultListenerMethod("completeTask");
+    endpoint.setMessageListener(messageListener);
+    //aRegistrar.registerEndpoint(endpoint);
   }
     
 }
