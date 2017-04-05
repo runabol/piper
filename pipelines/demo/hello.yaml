@@ -1,6 +1,6 @@
-id: demo/hello
-name: Hello World v2
-input:
+name: Hello World
+
+inputs:
   - name: name
     label: Your Name
     type: string
