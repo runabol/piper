@@ -7,6 +7,7 @@
 package com.creactiviti.piper.core;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +34,8 @@ import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.TaskHandler;
 import com.creactiviti.piper.taskhandler.io.Print;
 import com.creactiviti.piper.taskhandler.time.Sleep;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.collect.ImmutableMap;
 
 @RunWith(SpringRunner.class)
@@ -44,7 +47,6 @@ public class CoordinatorTests {
   
   @Test
   public void testStartJob () throws SQLException {
-    
     Worker worker = new Worker();
     Coordinator coordinator = new Coordinator ();
    
@@ -61,9 +63,12 @@ public class CoordinatorTests {
     
     worker.setTaskHandlerResolver(taskHandlerResolver);
     
+    ObjectMapper objectMapper = createObjectMapper();
+    
     coordinator.setContextRepository(new InMemoryContextRepository());
     JdbcJobRepository jobRepository = new JdbcJobRepository();
     jobRepository.setJdbcOperations(new NamedParameterJdbcTemplate(dataSource));
+    jobRepository.setObjectMapper(objectMapper);
     
     coordinator.setJobRepository(jobRepository);
     coordinator.setPipelineRepository(new FileSystemPipelineRepository());
@@ -79,6 +84,13 @@ public class CoordinatorTests {
     Job completedJob = jobRepository.findOne(job.getId());
     
     Assert.assertEquals(JobStatus.COMPLETED, completedJob.getStatus());
+  }
+
+  private ObjectMapper createObjectMapper() {
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+    objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZ"));
+    return objectMapper;
   }
   
   @Test(expected=IllegalArgumentException.class)

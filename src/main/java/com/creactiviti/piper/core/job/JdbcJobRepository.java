@@ -106,8 +106,8 @@ public class JdbcJobRepository implements JobRepository {
     jdbc = aJdbcOperations;
   }
   
-  public void setJson(ObjectMapper aJson) {
-    json = aJson;
+  public void setObjectMapper(ObjectMapper aObjectMapper) {
+    json = aObjectMapper;
   }
   
   private JobTask jobTaskRowMappper (ResultSet aRs, int aIndex) throws SQLException {
