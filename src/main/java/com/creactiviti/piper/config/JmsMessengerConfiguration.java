@@ -6,93 +6,76 @@
  */
 package com.creactiviti.piper.config;
 
-import java.util.Map;
-
 import javax.jms.ConnectionFactory;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageListener;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jms.annotation.EnableJms;
+import org.springframework.jms.annotation.JmsListener;
+import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
+import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.listener.DefaultMessageListenerContainer;
+import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
+import org.springframework.jms.support.converter.MessageConverter;
+import org.springframework.jms.support.converter.MessageType;
 
 import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.Worker;
-import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.messenger.JmsMessenger;
 import com.creactiviti.piper.core.task.JobTask;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Throwables;
 
 @Configuration
+@EnableJms
 @EnableConfigurationProperties(PiperProperties.class)
 @ConditionalOnProperty(name="piper.messenger.provider",havingValue="jms")
 public class JmsMessengerConfiguration {
 
   @Autowired
-  private ConnectionFactory connectionFactory;
+  @ConditionalOnWorker
+  private Worker worker;
   
+  @Autowired
+  @ConditionalOnCoordinator
+  private Coordinator coordinator;
   
   @Bean
   JmsMessenger jmsMessenger (JmsTemplate aJmsTemplate, ObjectMapper aObjectMapper) {
     JmsMessenger jmsMessenger = new JmsMessenger();
     jmsMessenger.setJmsTemplate(aJmsTemplate);
-    jmsMessenger.setObjectMapper(aObjectMapper);
     return jmsMessenger;
   }
   
-  @Bean
-  JmsTemplate jmsTemplate (PiperProperties piperProperties) {
-    JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory);
-    return jmsTemplate;
+  @Bean 
+  public MessageConverter jacksonJmsMessageConverter(ObjectMapper aObjectMapper) {
+    MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
+    converter.setObjectMapper(aObjectMapper);
+    converter.setTargetType(MessageType.TEXT);
+    converter.setTypeIdPropertyName("_type");
+    return converter;
   }
-  
+
   @Bean
+  public JmsListenerContainerFactory<?> jmsListenerContainerFactory(ConnectionFactory connectionFactory, DefaultJmsListenerContainerFactoryConfigurer configurer) {
+    DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
+    configurer.configure(factory, connectionFactory);
+    return factory;
+  }
+
   @ConditionalOnWorker
-  DefaultMessageListenerContainer workerMessageListener (ObjectMapper aObjectMapper, Worker aWorker) {
-    DefaultMessageListenerContainer container = new DefaultMessageListenerContainer();
-    container.setConnectionFactory (connectionFactory);
-    container.setDestinationName("tasks");
-    MessageListener listener = (m) -> aWorker.handle(toTask(m, aObjectMapper));
-    container.setMessageListener(listener);
-    return container;
+  @JmsListener(destination="tasks")
+  public void receiveTask (JobTask aTask) {
+    worker.handle(aTask);
   }
-  
-  @Bean
+
   @ConditionalOnCoordinator
-  DefaultMessageListenerContainer completionsMessageListener (ObjectMapper aObjectMapper, Coordinator aCoordinator) throws JMSException {
-    DefaultMessageListenerContainer container = new DefaultMessageListenerContainer();
-    container.setConnectionFactory (connectionFactory);
-    container.setDestinationName("completions");
-    MessageListener listener = (m) -> aCoordinator.completeTask(toTask(m, aObjectMapper));
-    container.setMessageListener(listener);
-    return container;
-  }
-  
-  @Bean
-  @ConditionalOnCoordinator
-  DefaultMessageListenerContainer errorsMessageListener (ObjectMapper aObjectMapper, Coordinator aCoordinator) throws JMSException {
-    DefaultMessageListenerContainer container = new DefaultMessageListenerContainer();
-    container.setConnectionFactory (connectionFactory);
-    container.setDestinationName("errors");
-    MessageListener listener = (m) -> aCoordinator.error(toTask(m, aObjectMapper));
-    container.setMessageListener(listener);
-    return container;
-  }
-  
-  private JobTask toTask (Message aMessage, ObjectMapper aObjectMapper) {
-    try {
-      String raw = aMessage.getBody(String.class);
-      Map<String, Object> task = aObjectMapper.readValue(raw,Map.class);
-      return new MutableJobTask(task);
-    } catch (Exception e) {
-      throw Throwables.propagate(e);
-    }
+  @JmsListener(destination="completions")
+  public void receiveCompletion (JobTask aTask) {
+    coordinator.completeTask(aTask);
   }
     
 }

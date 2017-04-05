@@ -8,7 +8,6 @@ package com.creactiviti.piper.core.messenger;
 
 import org.springframework.jms.core.JmsTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Throwables;
 
 
@@ -18,12 +17,10 @@ public class JmsMessenger implements Messenger {
   
   private static final String DEFAULT_QUEUE = "tasks";
 
-  private ObjectMapper objectMapper = new ObjectMapper(); 
-    
   @Override
   public void send (String aRoutingKey, Object aMessage) {
     try {
-      jmsTemplate.convertAndSend(aRoutingKey!=null?aRoutingKey:DEFAULT_QUEUE, objectMapper.writeValueAsString(aMessage));
+      jmsTemplate.convertAndSend(aRoutingKey!=null?aRoutingKey:DEFAULT_QUEUE, aMessage);
     } catch (Exception e) {
       throw Throwables.propagate(e);
     }
@@ -32,10 +29,5 @@ public class JmsMessenger implements Messenger {
   public void setJmsTemplate(JmsTemplate aJmsTemplate) {
     jmsTemplate = aJmsTemplate;
   }
-  
-  public void setObjectMapper(ObjectMapper aObjectMapper) {
-    objectMapper = aObjectMapper;
-  }
-  
   
 }
