@@ -55,13 +55,13 @@ public class Worker {
         completion.setOutput(output);
       }
       completion.setCompletionDate(new Date());
-      messenger.send("completions", completion);
+      messenger.send("coordinator.completions", completion);
     }
     catch (Exception e) {
       logger.error(e.getMessage(),e);
       MutableJobTask jobTask = new MutableJobTask(aTask);
       jobTask.setException(e);
-      messenger.send("errors", jobTask);
+      messenger.send("coordinator.errors", jobTask);
     }
   }
 

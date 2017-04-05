@@ -19,12 +19,25 @@ public class DefaultTaskExecutor implements TaskExecutor, TaskExecutorResolver {
 
   private Messenger messenger;
   
-  private static final String DEFAULT_TASK_QUEUE = "tasks";
+  private static final String DEFAULT_PREFIX = "worker";
+  private static final String DEFAULT_SUFFIX = "tasks";
   
   @Override
   public void execute (JobTask aTask) {
     String node = aTask.getNode();
-    messenger.send(node!=null?DEFAULT_TASK_QUEUE+"."+node:DEFAULT_TASK_QUEUE, aTask);
+    messenger.send(calculateRoutingKey(node), aTask);
+  }
+  
+  private String calculateRoutingKey (String aNode) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(DEFAULT_PREFIX)
+      .append(".");
+    if(aNode!=null) {
+      sb.append(aNode)
+        .append(".");
+    }
+    sb.append(DEFAULT_SUFFIX);
+    return sb.toString();
   }
   
   @Autowired
