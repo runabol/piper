@@ -21,7 +21,6 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.annotation.JmsListenerConfigurer;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
-import org.springframework.jms.config.JmsListenerEndpoint;
 import org.springframework.jms.config.JmsListenerEndpointRegistrar;
 import org.springframework.jms.config.SimpleJmsListenerEndpoint;
 import org.springframework.jms.core.JmsTemplate;
@@ -29,6 +28,7 @@ import org.springframework.jms.listener.adapter.MessageListenerAdapter;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
+import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.Worker;
@@ -56,6 +56,9 @@ public class JmsMessengerConfiguration implements JmsListenerConfigurer {
   @Autowired
   private PiperProperties properties;
   
+  @Autowired
+  private ConnectionFactory connectionFactory;
+  
   private final Logger logger = LoggerFactory.getLogger(getClass());
   
   @Bean
@@ -82,35 +85,51 @@ public class JmsMessengerConfiguration implements JmsListenerConfigurer {
   }
 
   @ConditionalOnCoordinator
-  @JmsListener(destination="completions")
+  @JmsListener(destination="coordinator.completions")
   public void receiveCompletion (JobTask aTask) {
     coordinator.completeTask(aTask);
+  }
+  
+  @ConditionalOnCoordinator
+  @JmsListener(destination="coordinator.errors")
+  public void receiveError (JobTask aTask) {
+    coordinator.error(aTask);
   }
 
   @Override
   public void configureJmsListeners (JmsListenerEndpointRegistrar aRegistrar) {
     String[] roles = properties.getRoles();
+    Assert.notNull(roles, "piper.roles must not be null");
     for(String role : roles) {
-      if(role.equals("worker")) {
-        aRegistrar.registerEndpoint(createListenerEndpoint("tasks", worker, "handle"));
+      if(role.startsWith("worker")) {
+        registerListenerEndpoint(aRegistrar, role, worker, "handle");
       }
-      else if (role.startsWith("worker.")) {
-        String destination = "tasks." + role.substring(role.indexOf('.')+1);
-        aRegistrar.registerEndpoint(createListenerEndpoint(destination, worker, "handle"));
-      }
-    }
+    }  
   }
 
-  private JmsListenerEndpoint createListenerEndpoint(String aDestination, Object aDelegate, String aMethodName) {
-    logger.info("Registring JMS Listener: {} -> {}:{}", aDestination, aDelegate.getClass().getName(), aMethodName);
-    SimpleJmsListenerEndpoint endpoint = new SimpleJmsListenerEndpoint();
-    endpoint.setId(aDestination+"Endpoint");
-    endpoint.setDestination(aDestination);
+  private void registerListenerEndpoint(JmsListenerEndpointRegistrar aRegistrar, String aRole, Object aDelegate, String aMethodName) {
+    logger.info("Registring JMS Listener: {} -> {}:{}", aRole, aDelegate.getClass().getName(), aMethodName);
+    
+    String queueName = RoleParser.queueName(aRole);
+    int concurrency = RoleParser.concurrency(aRole);
+
     MessageListenerAdapter messageListener = new MessageListenerAdapter(aDelegate);
     messageListener.setMessageConverter(jacksonJmsMessageConverter(objectMapper));
     messageListener.setDefaultListenerMethod(aMethodName);
+
+    SimpleJmsListenerEndpoint endpoint = new SimpleJmsListenerEndpoint();
+    endpoint.setId(queueName+"Endpoint");
+    endpoint.setDestination(queueName);
     endpoint.setMessageListener(messageListener);
-    return endpoint;
+
+    aRegistrar.registerEndpoint(endpoint,createContainerFactory(concurrency));
   }
-    
+
+  private DefaultJmsListenerContainerFactory createContainerFactory (int aConcurrency) {
+    DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
+    factory.setConcurrency(String.valueOf(aConcurrency));
+    factory.setConnectionFactory(connectionFactory);
+    return factory;
+  }
+  
 }

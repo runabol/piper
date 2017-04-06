@@ -1,8 +1,11 @@
+/* 
+ * Copyright (C) Creactiviti LLC - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Arik Cohen <arik@creactiviti.com>, Apr 2017
+ */
 package com.creactiviti.piper.config;
 
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +27,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.Worker;
@@ -55,8 +59,6 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
   private ConnectionFactory connectionFactory;
   
   private final Logger logger = LoggerFactory.getLogger(getClass());
-  
-  private static final Pattern ROLE_PATTERN = Pattern.compile("([a-zA-Z0-9\\.]+)(\\((\\d+)\\))*"); 
   
   @Bean
   RabbitAdmin admin (ConnectionFactory aConnectionFactory) {
@@ -104,6 +106,7 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
   @Override
   public void configureRabbitListeners(RabbitListenerEndpointRegistrar aRegistrar) {
     String[] roles = properties.getRoles();
+    Assert.notNull(roles, "piper.roles must not be null");
     for(String role : roles) {
       if(role.startsWith("worker")) {
         registerListenerEndpoint(aRegistrar, role, worker, "handle");
@@ -113,26 +116,20 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
   
   private void registerListenerEndpoint(RabbitListenerEndpointRegistrar aRegistrar, String aRole, Object aDelegate, String aMethodName) {
     logger.info("Registring AMQP Listener: {} -> {}:{}", aRole, aDelegate.getClass().getName(), aMethodName);
-    Matcher qMatcher = ROLE_PATTERN.matcher(aRole);
-    if(qMatcher.matches()) {
-      String queueName = qMatcher.group(1)+".tasks";
-      String concurrency = qMatcher.group(3);
-      admin(connectionFactory).declareQueue(new Queue(queueName));
-      
-      MessageListenerAdapter messageListener = new MessageListenerAdapter(aDelegate);
-      messageListener.setMessageConverter(jacksonAmqpMessageConverter(objectMapper));
-      messageListener.setDefaultListenerMethod(aMethodName);
-      
-      SimpleRabbitListenerEndpoint endpoint = new SimpleRabbitListenerEndpoint();
-      endpoint.setId(queueName+"Endpoint");
-      endpoint.setQueueNames(queueName);
-      endpoint.setMessageListener(messageListener);
-      
-      aRegistrar.registerEndpoint(endpoint,createContainerFactory(concurrency!=null?Integer.valueOf(concurrency):1));
-    }
-    else {
-      throw new IllegalArgumentException("Invalid role: " + aRole);
-    }
+    String queueName = RoleParser.queueName(aRole);
+    int concurrency = RoleParser.concurrency(aRole);
+    admin(connectionFactory).declareQueue(new Queue(queueName));
+
+    MessageListenerAdapter messageListener = new MessageListenerAdapter(aDelegate);
+    messageListener.setMessageConverter(jacksonAmqpMessageConverter(objectMapper));
+    messageListener.setDefaultListenerMethod(aMethodName);
+
+    SimpleRabbitListenerEndpoint endpoint = new SimpleRabbitListenerEndpoint();
+    endpoint.setId(queueName+"Endpoint");
+    endpoint.setQueueNames(queueName);
+    endpoint.setMessageListener(messageListener);
+
+    aRegistrar.registerEndpoint(endpoint,createContainerFactory(concurrency));
   }
   
   private SimpleRabbitListenerContainerFactory createContainerFactory (int aConcurrency) {
