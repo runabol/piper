@@ -89,7 +89,7 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
     return new Queue("coordinator.errors");
   }
   
-  @ConditionalOnCoordinator
+  @ConditionalOnCoordinator 
   @RabbitListener(queues="coordinator.completions")
   public void receiveCompletion (JobTask aTask) {
     coordinator.completeTask(aTask);
@@ -116,7 +116,6 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
     logger.info("Registring AMQP Listener: {} -> {}:{}", aRole, aDelegate.getClass().getName(), aMethodName);
     String queueName = RoleParser.queueName(aRole);
     int concurrency = RoleParser.concurrency(aRole);
-    admin(connectionFactory).declareQueue(new Queue(queueName));
 
     MessageListenerAdapter messageListener = new MessageListenerAdapter(aDelegate);
     messageListener.setMessageConverter(jacksonAmqpMessageConverter(objectMapper));
