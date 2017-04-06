@@ -1,5 +1,6 @@
 package com.creactiviti.piper.core.job;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.sql.DataSource;
@@ -14,6 +15,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.creactiviti.piper.core.Page;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 
 @RunWith(SpringRunner.class)
@@ -27,6 +30,7 @@ public class JdbcJobRepositoryTests {
   public void test1 () {
     JdbcJobRepository jobRepository = new JdbcJobRepository();
     jobRepository.setJdbcOperations(new NamedParameterJdbcTemplate(dataSource));
+    jobRepository.setObjectMapper(createObjectMapper());
     
     MutableJob job = new MutableJob();
     job.setId("1");
@@ -40,6 +44,38 @@ public class JdbcJobRepositoryTests {
     
     Job one = jobRepository.findOne("1");
     Assert.assertNotNull(one);
+  }
+  
+  @Test
+  public void test2 () {
+    JdbcJobRepository jobRepository = new JdbcJobRepository();
+    jobRepository.setJdbcOperations(new NamedParameterJdbcTemplate(dataSource));
+    jobRepository.setObjectMapper(createObjectMapper());
+    
+    MutableJob job = new MutableJob();
+    job.setId("2");
+    job.setCreationDate(new Date());
+    job.setStatus(JobStatus.CREATED);
+    jobRepository.create(job);
+    
+    Job one = jobRepository.findOne("2");
+    
+    MutableJob mjob = new MutableJob(one);
+    mjob.setStatus(JobStatus.FAILED);
+    
+    // test immutability
+    Assert.assertNotEquals(mjob.getStatus().toString(),one.getStatus().toString());  
+    
+    jobRepository.update(mjob);
+    one = jobRepository.findOne("2");
+    Assert.assertEquals("FAILED",one.getStatus().toString());  
+  }
+  
+  private ObjectMapper createObjectMapper() {
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+    objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZ"));
+    return objectMapper;
   }
   
 }
