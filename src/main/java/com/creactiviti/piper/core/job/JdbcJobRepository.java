@@ -15,6 +15,7 @@ import java.util.Map;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.Page;
 import com.creactiviti.piper.core.ResultPage;
@@ -73,6 +74,10 @@ public class JdbcJobRepository implements JobRepository {
   private MapSqlParameterSource createSqlParameterSource(Job aJob) {
     MutableJob job = new MutableJob(aJob);
     job.remove("execution"); // don't want to store the execution as part of the job's data
+    Assert.notNull(aJob, "job must not be null");
+    Assert.notNull(aJob.getId(), "job status must not be null");
+    Assert.notNull(aJob.getCreationDate(), "job creationDate must not be null");
+    Assert.notNull(aJob.getStatus(), "job status must not be null");
     MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
     sqlParameterSource.addValue("id", job.getId());
     sqlParameterSource.addValue("creationDate", job.getCreationDate());

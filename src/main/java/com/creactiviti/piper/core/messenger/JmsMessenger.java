@@ -9,25 +9,18 @@ package com.creactiviti.piper.core.messenger;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.util.Assert;
 
-import com.google.common.base.Throwables;
-
-
 public class JmsMessenger implements Messenger {
 
   private JmsTemplate jmsTemplate;
-  
+
   @Override
   public void send (String aRoutingKey, Object aMessage) {
-    try {
-      Assert.notNull(aRoutingKey,"routing key can't be null");
-      jmsTemplate.convertAndSend(aRoutingKey, aMessage);
-    } catch (Exception e) {
-      throw Throwables.propagate(e);
-    }
+    Assert.notNull(aRoutingKey,"routing key can't be null");
+    jmsTemplate.convertAndSend(aRoutingKey, aMessage);
   }
-  
+
   public void setJmsTemplate(JmsTemplate aJmsTemplate) {
     jmsTemplate = aJmsTemplate;
   }
-  
+
 }
