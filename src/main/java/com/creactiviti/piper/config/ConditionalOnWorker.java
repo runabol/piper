@@ -24,7 +24,7 @@ import org.springframework.context.annotation.Conditional;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.FIELD })
+@Target({ ElementType.TYPE, ElementType.METHOD })
 @Conditional(OnWorkerCondition.class)
 public @interface ConditionalOnWorker {
   

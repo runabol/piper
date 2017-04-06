@@ -41,12 +41,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @ConditionalOnProperty(name="piper.messenger.provider",havingValue="amqp")
 public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
   
-  @Autowired
-  @ConditionalOnWorker
+  @Autowired(required=false)
   private Worker worker;
   
-  @Autowired
-  @ConditionalOnCoordinator
+  @Autowired(required=false)
   private Coordinator coordinator;
   
   @Autowired
