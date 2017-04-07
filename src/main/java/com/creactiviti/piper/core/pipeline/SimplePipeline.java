@@ -6,6 +6,7 @@
  */
 package com.creactiviti.piper.core.pipeline;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +44,6 @@ public class SimplePipeline extends MapObject implements Pipeline {
 
   @Override
   public List<Accessor> getInputs() {
-    return getList("inputs",Accessor.class);
+    return getList("inputs",Accessor.class,Collections.EMPTY_LIST);
   }
 }

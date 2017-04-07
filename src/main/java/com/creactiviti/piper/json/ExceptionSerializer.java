@@ -24,8 +24,8 @@ public class ExceptionSerializer extends StdSerializer<Throwable> {
   @Override
   public void serialize(Throwable aException, JsonGenerator aGen, SerializerProvider aProvider) throws IOException {
     aGen.writeStartObject();
-    aGen.writeStringField("message", aException.getMessage());
-    aGen.writeObjectField("stackTrace", ExceptionUtils.getStackTrace(aException));
+      aGen.writeStringField("message", aException.getMessage());
+      aGen.writeStringField("stackTrace", ExceptionUtils.getStackTrace(aException));
     aGen.writeEndObject();
   }
 

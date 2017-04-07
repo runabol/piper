@@ -80,6 +80,12 @@ public class MapObject implements Map<String, Object>, Accessor, Mutator {
   }
   
   @Override
+  public <T> List<T> getList(Object aKey, Class<T> aElementType, List<T> aDefaultValue) {
+    List<T> list = getList(aKey, aElementType);
+    return list!=null?list:aDefaultValue;
+  }
+  
+  @Override
   public String getString (Object aKey) {
     Object value = get(aKey);
     return ConvertUtils.convert(value);

@@ -120,6 +120,21 @@ public interface Accessor {
    * @return The list of items
    */
   <T> List<T> getList (Object aKey, Class<T> aElementType);
+
+  /**
+   * Return the {@link List} of items associated with the given
+   * key.
+   * 
+   * @param aKey
+   *          The key associated with the desired value.
+   * @param aElementType
+   *          The type of the list elements.
+   * @param aDefaultValue
+   *          The list value to return none was not found
+   *          for the given key or if the value is null.
+   * @return The list of items
+   */
+  <T> List<T> getList (Object aKey, Class<T> aElementType, List<T> aDefaultValue);
   
   /**
    * Return the {@link Long} value associated with the given

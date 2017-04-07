@@ -155,7 +155,7 @@ public class Coordinator {
   public Job resume (String aJobId) {
     log.debug("Resuming job {}", aJobId);
     Job job = jobRepository.findOne (aJobId);
-    Assert.notNull(job,String.format("Unknown job {}",aJobId));
+    Assert.notNull(job,String.format("Unknown job %s",aJobId));
     Assert.isTrue(isRestartable(job), "can't stop job " + aJobId + " as it is " + job.getStatus());
     Pipeline pipeline = pipelineRepository.findOne(job.getPipelineId());
     MutableJob mjob = new MutableJob (job);
