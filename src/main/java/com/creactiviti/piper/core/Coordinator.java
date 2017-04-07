@@ -180,21 +180,23 @@ public class Coordinator {
     MutableJobTask task = new MutableJobTask(aTask);
     task.setStatus(TaskStatus.COMPLETED);
     Job job = jobRepository.findJobByTaskId (aTask.getId());
-    Pipeline pipeline = pipelineRepository.findOne(job.getPipelineId());
-    MutableJob mjob = new MutableJob (job);
-    mjob.setCurrentTask(mjob.getCurrentTask()+1);
-    Assert.notNull(mjob,String.format("No job found for task %s ",aTask.getId()));
-    jobRepository.update(task);
-    jobRepository.update(mjob);
-    
-    if(task.getOutput() != null) {
-      Context context = contextRepository.pop(job.getId());
-      MapContext newContext = new MapContext(context.asMap());
-      newContext.put(task.getName(), task.getOutput());
-      contextRepository.push(job.getId(), newContext);
+    if(job!=null) {
+      Pipeline pipeline = pipelineRepository.findOne(job.getPipelineId());
+      MutableJob mjob = new MutableJob (job);
+      mjob.setCurrentTask(mjob.getCurrentTask()+1);
+      jobRepository.update(task);
+      jobRepository.update(mjob);
+      if(task.getOutput() != null) {
+        Context context = contextRepository.pop(job.getId());
+        MapContext newContext = new MapContext(context.asMap());
+        newContext.put(task.getName(), task.getOutput());
+        contextRepository.push(job.getId(), newContext);
+      }
+      execute(mjob,pipeline);
     }
-    
-    execute(mjob,pipeline);
+    else {
+      log.error("Unknown job: {}",aTask.getJobId());
+    }
   }
 
   /**

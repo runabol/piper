@@ -6,12 +6,12 @@ See http://meetpiper.com
 
 # Roadmap
 
-- Search
-- Job Priority
-- Postgres Support
+- Persist context
 - Stop/Resume Jobs
 - Each construct
 - Mapper construct
 - Parallel construct
+- Search
+- Job Priority
 - Job tags
 - Define job output (e.g. `output: ${int(output)}`)
