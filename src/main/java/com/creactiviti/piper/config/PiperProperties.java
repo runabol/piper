@@ -15,8 +15,8 @@ public class PiperProperties {
   private PersistenceProperties persistence;
   private PipelineRepositoryProperties pipelineRepository;
   private MessengerProperties messenger;
-  private CoordinatorProperties coordinator;
-  private WorkerProperties worker;
+  private CoordinatorProperties coordinator = new CoordinatorProperties();
+  private WorkerProperties worker = new WorkerProperties();
 
   public SerializationProperties getSerialization() {
     return serialization;
