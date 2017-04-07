@@ -42,7 +42,9 @@ public class JdbcJobRepository implements JobRepository {
   @Override
   public Job findJobByTaskId(String aTaskId) {
     Map<String, String> params = Collections.singletonMap("id", aTaskId);
-    return jdbc.queryForObject("select * from job j where j.id = (select job_id from job_task jt where jt.id=:id)", params, this::jobRowMappper);
+    List<Job> list = jdbc.query("select * from job j where j.id = (select job_id from job_task jt where jt.id=:id)", params, this::jobRowMappper);
+    Assert.isTrue(list.size() < 2, "expecting 1 result, got: " + list.size());
+    return list.size() == 1 ? list.get(0) : null;
   }
 
   @Override

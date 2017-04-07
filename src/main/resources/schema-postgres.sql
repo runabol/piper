@@ -7,6 +7,8 @@ create table job (
   data text not null
 );
 
+CREATE INDEX ON job (creation_date);
+
 drop table if exists job_task;
 
 create table job_task (
@@ -16,6 +18,8 @@ create table job_task (
   data text not null
 );
 
+CREATE INDEX ON job_task (job_id);
+
 drop table if exists job_context;
 
 create table job_context (
@@ -24,3 +28,5 @@ create table job_context (
   creation_date timestamp not null,
   data text not null
 );
+
+CREATE INDEX ON job_context (job_id);
