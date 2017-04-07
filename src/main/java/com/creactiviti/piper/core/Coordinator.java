@@ -79,7 +79,8 @@ public class Coordinator {
     log.debug("Job {} started",job.getId());
     jobRepository.create(job);
     
-    Context context = new MapContext(aParameters);
+    MapContext context = new MapContext(aParameters);
+    context.setId(UUIDGenerator.generate());
     contextRepository.push(job.getId(),context);
     
     execute (job, pipeline);
@@ -189,6 +190,7 @@ public class Coordinator {
       if(task.getOutput() != null) {
         Context context = contextRepository.pop(job.getId());
         MapContext newContext = new MapContext(context.asMap());
+        newContext.setId(UUIDGenerator.generate());
         newContext.put(task.getName(), task.getOutput());
         contextRepository.push(job.getId(), newContext);
       }

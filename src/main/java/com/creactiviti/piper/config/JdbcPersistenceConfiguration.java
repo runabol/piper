@@ -9,9 +9,10 @@ package com.creactiviti.piper.config;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import com.creactiviti.piper.core.context.InMemoryContextRepository;
+import com.creactiviti.piper.core.context.JdbcContextRepository;
 import com.creactiviti.piper.core.job.JdbcJobRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -28,8 +29,11 @@ public class JdbcPersistenceConfiguration {
   }
   
   @Bean
-  InMemoryContextRepository simpleContextRepository () {
-    return new InMemoryContextRepository();
+  JdbcContextRepository jdbcContextRepository (JdbcTemplate aJdbcTemplate, ObjectMapper aObjectMapper) {
+    JdbcContextRepository repo = new JdbcContextRepository();
+    repo.setJdbcTemplate(aJdbcTemplate);
+    repo.setObjectMapper(aObjectMapper);
+    return repo;
   }
   
 }

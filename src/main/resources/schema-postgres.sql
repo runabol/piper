@@ -15,3 +15,12 @@ create table job_task (
   job_id varchar(256) not null,
   data text not null
 );
+
+drop table if exists job_context;
+
+create table job_context (
+  id varchar(256) not null primary key,
+  job_id varchar(256) not null,
+  creation_date timestamp not null,
+  data text not null
+);

@@ -20,11 +20,12 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.creactiviti.piper.config.Queues;
-import com.creactiviti.piper.core.context.InMemoryContextRepository;
+import com.creactiviti.piper.core.context.JdbcContextRepository;
 import com.creactiviti.piper.core.job.JdbcJobRepository;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobStatus;
@@ -66,7 +67,11 @@ public class CoordinatorTests {
     
     ObjectMapper objectMapper = createObjectMapper();
     
-    coordinator.setContextRepository(new InMemoryContextRepository());
+    JdbcContextRepository contextRepository = new JdbcContextRepository();
+    contextRepository.setJdbcTemplate(new JdbcTemplate(dataSource));
+    contextRepository.setObjectMapper(objectMapper);
+    
+    coordinator.setContextRepository(contextRepository);
     JdbcJobRepository jobRepository = new JdbcJobRepository();
     jobRepository.setJdbcOperations(new NamedParameterJdbcTemplate(dataSource));
     jobRepository.setObjectMapper(objectMapper);
