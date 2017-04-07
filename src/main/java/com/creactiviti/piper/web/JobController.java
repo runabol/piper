@@ -13,6 +13,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,11 +35,6 @@ public class JobController {
   @Autowired
   private Coordinator coordinator;
   
-  /**
-   * List all jobs
-   * 
-   * @return
-   */
   @GetMapping(value="/jobs")
   public Page<Job> list (@RequestParam(value="p",defaultValue="1") Integer aPageNumber) {
     return jobRepository.findAll(aPageNumber);
@@ -54,6 +50,11 @@ public class JobController {
     Job job = jobRepository.findOne (aJobId);
     Assert.notNull(job,"Unknown job: " + aJobId);
     return job;
+  }
+  
+  @PutMapping(value="/jobs/{id}/restart")
+  public Job restart (@PathVariable("id")String aJobId) {
+    return coordinator.resume(aJobId);
   }
     
 }

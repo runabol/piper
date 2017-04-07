@@ -109,10 +109,8 @@ public class Coordinator {
     return aJob.getCurrentTask()+1 < aPipeline.getTasks().size();
   }
   
-  private JobTask nextTask(MutableJob aJob, Pipeline aPipeline) {
-    aJob.setCurrentTask(aJob.getCurrentTask()+1);
-    jobRepository.update(aJob);
-    Task task = aPipeline.getTasks().get(aJob.getCurrentTask());
+  private JobTask nextTask(Job aJob, Pipeline aPipeline) {
+    Task task = aPipeline.getTasks().get(aJob.getCurrentTask()+1);
     MutableJobTask mt = new MutableJobTask (task);
     mt.setJobId(aJob.getId());
     jobRepository.create(mt);
@@ -155,7 +153,20 @@ public class Coordinator {
    * @return The resumed job
    */
   public Job resume (String aJobId) {
-    throw new UnsupportedOperationException();
+    log.debug("Resuming job {}", aJobId);
+    Job job = jobRepository.findOne (aJobId);
+    Assert.notNull(job,String.format("Unknown job {}",aJobId));
+    Assert.isTrue(isRestartable(job), "can't stop job " + aJobId + " as it is " + job.getStatus());
+    Pipeline pipeline = pipelineRepository.findOne(job.getPipelineId());
+    MutableJob mjob = new MutableJob (job);
+    mjob.setStatus(JobStatus.STARTED);
+    jobRepository.update(mjob);
+    execute(mjob,pipeline);
+    return mjob;
+  }
+  
+  private boolean isRestartable (Job aJob) {
+    return aJob.getStatus() == JobStatus.STOPPED || aJob.getStatus() == JobStatus.FAILED;
   }
 
   /**
@@ -171,6 +182,7 @@ public class Coordinator {
     Job job = jobRepository.findJobByTaskId (aTask.getId());
     Pipeline pipeline = pipelineRepository.findOne(job.getPipelineId());
     MutableJob mjob = new MutableJob (job);
+    mjob.setCurrentTask(mjob.getCurrentTask()+1);
     Assert.notNull(mjob,String.format("No job found for task %s ",aTask.getId()));
     jobRepository.update(task);
     jobRepository.update(mjob);

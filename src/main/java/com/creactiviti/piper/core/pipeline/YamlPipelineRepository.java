@@ -41,7 +41,7 @@ public abstract class YamlPipelineRepository implements PipelineRepository  {
       for(int i=0; i<rawTasks.size(); i++) {
         Map<String, Object> rt = rawTasks.get(i);
         MutableTask mutableTask = new MutableTask(rt);
-        mutableTask.setTaskNumber(i);
+        mutableTask.setTaskNumber(i+1);
         tasks.add(mutableTask);
       }
       yamlMap.put("tasks", tasks);

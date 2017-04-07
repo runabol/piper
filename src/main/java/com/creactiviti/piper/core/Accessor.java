@@ -172,6 +172,31 @@ public interface Accessor {
   Double getDouble (Object aKey, double aDefaultValue);
   
   /**
+   * Return the {@link Float} value associated with the given
+   * key -- converting as necessary.
+   * 
+   * @param aKey
+   *          The key associated with the desired value.
+   * @return The {@link Float} value associated with the given key --
+   *         converting as needed.
+   */
+  Float getFloat (Object aKey);
+  
+  /**
+   * Return the {@link Float} value associated with the given
+   * key -- converting as necessary.
+   * 
+   * @param aKey
+   *          The key associated with the desired value.
+   * @param aDefaultValue
+   *          The value to return if a value was not found
+   *          for the given key or if the value is null.
+   * @return The {@link Float} value associated with the given key --
+   *         converting as needed.
+   */
+  float getFloat (Object aKey, float aDefaultValue);
+  
+  /**
    * Return the {@link Integer} value associated with the given
    * key -- converting as necessary.
    * 

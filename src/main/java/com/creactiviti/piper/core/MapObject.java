@@ -170,6 +170,16 @@ public class MapObject implements Map<String, Object>, Accessor, Mutator {
   public Double getDouble(Object aKey, double aDefaultValue) {
     return get(aKey,Double.class,aDefaultValue);
   }
+  
+  @Override
+  public Float getFloat(Object aKey) {
+    return get(aKey,Float.class);
+  }
+  
+  @Override
+  public float getFloat(Object aKey, float aDefaultValue) {
+    return get(aKey,Float.class, aDefaultValue);
+  }
 
   @Override
   public Integer getInteger(Object aKey) {
