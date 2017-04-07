@@ -11,6 +11,7 @@ import java.util.Collections;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.creactiviti.piper.config.Queues;
 import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.messenger.SynchMessenger;
 import com.creactiviti.piper.core.task.JobTask;
@@ -21,7 +22,7 @@ public class WorkerTests {
   public void test1 () {
     Worker worker = new Worker();
     SynchMessenger messenger = new SynchMessenger();
-    messenger.receive("coordinator.completions", (t)-> Assert.assertTrue(((JobTask)t).getOutput().equals("done")) );
+    messenger.receive(Queues.COMPLETIONS, (t)-> Assert.assertTrue(((JobTask)t).getOutput().equals("done")) );
     worker.setMessenger(messenger);
     worker.setTaskHandlerResolver((jt) -> (t) -> "done");
     worker.handle(new MutableJobTask(Collections.EMPTY_MAP));
@@ -32,7 +33,7 @@ public class WorkerTests {
   public void test2 () {
     Worker worker = new Worker();
     SynchMessenger messenger = new SynchMessenger();
-    messenger.receive("coordinator.errors", (t)-> Assert.assertTrue( ((JobTask)t).getException().getMessage().equals("bad input") ) );
+    messenger.receive(Queues.ERRORS, (t)-> Assert.assertTrue( ((JobTask)t).getException().getMessage().equals("bad input") ) );
     worker.setMessenger(messenger);
     worker.setTaskHandlerResolver((jt) -> (t) -> {
       throw new IllegalArgumentException("bad input");

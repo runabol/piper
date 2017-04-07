@@ -7,12 +7,13 @@
 package com.creactiviti.piper.config;
 
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerEndpoint;
@@ -27,12 +28,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.Worker;
 import com.creactiviti.piper.core.messenger.AmqpMessenger;
-import com.creactiviti.piper.core.task.JobTask;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
@@ -77,56 +76,38 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
     return converter;
   }
   
-  @Bean
-  @ConditionalOnCoordinator
-  Queue completionsQueue () {
-    return new Queue("coordinator.completions");
-  }
-  
-  @Bean
-  @ConditionalOnCoordinator
-  Queue errorsQueue () {
-    return new Queue("coordinator.errors");
-  }
-  
-  @ConditionalOnCoordinator 
-  @RabbitListener(queues="coordinator.completions")
-  public void receiveCompletion (JobTask aTask) {
-    coordinator.completeTask(aTask);
-  }
-  
-  @ConditionalOnCoordinator
-  @RabbitListener(queues="coordinator.errors")
-  public void receiveError (JobTask aTask) {
-    coordinator.error(aTask);
-  }
-
   @Override
   public void configureRabbitListeners(RabbitListenerEndpointRegistrar aRegistrar) {
-    String[] roles = properties.getRoles();
-    Assert.notNull(roles, "piper.roles must not be null");
-    for(String role : roles) {
-      if(role.startsWith("worker")) {
-        registerListenerEndpoint(aRegistrar, role, worker, "handle");
-      }
-    }    
+    CoordinatorProperties coordinatorProperties = properties.getCoordinator();
+    WorkerProperties workerProperties = properties.getWorker();
+    if(coordinatorProperties.isEnabled()) {
+      registerListenerEndpoint(aRegistrar, Queues.COMPLETIONS, coordinatorProperties.getSubscriptions().getCompletions() , coordinator, "completeTask");
+      registerListenerEndpoint(aRegistrar, Queues.ERRORS, coordinatorProperties.getSubscriptions().getErrors(), coordinator, "error");
+    }
+    if(workerProperties.isEnabled()) {
+      Map<String, Object> subscriptions = workerProperties.getSubscriptions();
+      subscriptions.forEach((k,v) -> {
+        registerListenerEndpoint(aRegistrar, k, Integer.valueOf((String)v), worker, "handle");
+      });
+    }
   }
   
-  private void registerListenerEndpoint(RabbitListenerEndpointRegistrar aRegistrar, String aRole, Object aDelegate, String aMethodName) {
-    logger.info("Registring AMQP Listener: {} -> {}:{}", aRole, aDelegate.getClass().getName(), aMethodName);
-    String queueName = RoleParser.queueName(aRole);
-    int concurrency = RoleParser.concurrency(aRole);
+  
+  private void registerListenerEndpoint(RabbitListenerEndpointRegistrar aRegistrar, String aQueueName, int aConcurrency, Object aDelegate, String aMethodName) {
+    logger.info("Registring AMQP Listener: {} -> {}:{}", aQueueName, aDelegate.getClass().getName(), aMethodName);
 
+    admin(connectionFactory).declareQueue(new Queue(aQueueName));
+    
     MessageListenerAdapter messageListener = new MessageListenerAdapter(aDelegate);
     messageListener.setMessageConverter(jacksonAmqpMessageConverter(objectMapper));
     messageListener.setDefaultListenerMethod(aMethodName);
 
     SimpleRabbitListenerEndpoint endpoint = new SimpleRabbitListenerEndpoint();
-    endpoint.setId(queueName+"Endpoint");
-    endpoint.setQueueNames(queueName);
+    endpoint.setId(aQueueName+"Endpoint");
+    endpoint.setQueueNames(aQueueName);
     endpoint.setMessageListener(messageListener);
 
-    aRegistrar.registerEndpoint(endpoint,createContainerFactory(concurrency));
+    aRegistrar.registerEndpoint(endpoint,createContainerFactory(aConcurrency));
   }
   
   private SimpleRabbitListenerContainerFactory createContainerFactory (int aConcurrency) {

@@ -192,7 +192,7 @@ public class Coordinator {
    *          The task to handle.
    */
   public void error (JobTask aTask) {
-    log.debug("Completing task {}", aTask.getId());
+    log.debug("Erroring task {}", aTask);
     MutableJobTask task = new MutableJobTask(aTask);
     task.setStatus(TaskStatus.FAILED);
     Job job = jobRepository.findJobByTaskId (aTask.getId());

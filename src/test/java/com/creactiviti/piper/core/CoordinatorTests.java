@@ -23,6 +23,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.creactiviti.piper.config.Queues;
 import com.creactiviti.piper.core.context.InMemoryContextRepository;
 import com.creactiviti.piper.core.job.JdbcJobRepository;
 import com.creactiviti.piper.core.job.Job;
@@ -51,7 +52,7 @@ public class CoordinatorTests {
     Coordinator coordinator = new Coordinator ();
    
     SynchMessenger workerMessenger = new SynchMessenger();
-    workerMessenger.receive("coordinator.completions", (o)->coordinator.completeTask((JobTask)o));
+    workerMessenger.receive(Queues.COMPLETIONS, (o)->coordinator.completeTask((JobTask)o));
     worker.setMessenger(workerMessenger);
     DefaultTaskHandlerResolver taskHandlerResolver = new DefaultTaskHandlerResolver();
     
@@ -74,7 +75,7 @@ public class CoordinatorTests {
     coordinator.setPipelineRepository(new FileSystemPipelineRepository());
     
     SynchMessenger coordinatorMessenger = new SynchMessenger();
-    coordinatorMessenger.receive("worker.tasks", (o)->worker.handle((JobTask)o));
+    coordinatorMessenger.receive(Queues.TASKS, (o)->worker.handle((JobTask)o));
     DefaultTaskExecutor taskExecutor = new DefaultTaskExecutor();
     taskExecutor.setMessenger(coordinatorMessenger);
     coordinator.setTaskExecutor(taskExecutor);

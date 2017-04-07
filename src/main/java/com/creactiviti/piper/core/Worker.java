@@ -11,6 +11,7 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.creactiviti.piper.config.Queues;
 import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.task.JobTask;
@@ -55,13 +56,13 @@ public class Worker {
         completion.setOutput(output);
       }
       completion.setCompletionDate(new Date());
-      messenger.send("coordinator.completions", completion);
+      messenger.send(Queues.COMPLETIONS, completion);
     }
     catch (Exception e) {
       logger.error(e.getMessage(),e);
       MutableJobTask jobTask = new MutableJobTask(aTask);
       jobTask.setException(e);
-      messenger.send("coordinator.errors", jobTask);
+      messenger.send(Queues.ERRORS, jobTask);
     }
   }
 

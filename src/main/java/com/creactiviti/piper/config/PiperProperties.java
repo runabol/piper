@@ -15,7 +15,8 @@ public class PiperProperties {
   private PersistenceProperties persistence;
   private PipelineRepositoryProperties pipelineRepository;
   private MessengerProperties messenger;
-  private String[] roles;
+  private CoordinatorProperties coordinator;
+  private WorkerProperties worker;
 
   public SerializationProperties getSerialization() {
     return serialization;
@@ -41,20 +42,28 @@ public class PiperProperties {
     pipelineRepository = aPipelineRepository;
   }
   
-  public void setRoles(String[] aRoles) {
-    roles = aRoles;
-  }
-  
-  public String[] getRoles() {
-    return roles;
-  }
-  
   public MessengerProperties getMessenger() {
     return messenger;
   }
   
   public void setMessenger(MessengerProperties aMessenger) {
     messenger = aMessenger;
+  }
+
+  public CoordinatorProperties getCoordinator() {
+    return coordinator;
+  }
+  
+  public void setCoordinator(CoordinatorProperties aCoordinator) {
+    coordinator = aCoordinator;
+  }
+  
+  public WorkerProperties getWorker() {
+    return worker;
+  }
+  
+  public void setWorker(WorkerProperties aWorker) {
+    worker = aWorker;
   }
   
 }

@@ -12,6 +12,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import com.creactiviti.piper.config.Queues;
 import com.creactiviti.piper.core.messenger.Messenger;
 
 @Component
@@ -20,8 +21,7 @@ public class DefaultTaskExecutor implements TaskExecutor, TaskExecutorResolver {
 
   private Messenger messenger;
   
-  private static final String DEFAULT_PREFIX = "worker";
-  private static final String DEFAULT_SUFFIX = "tasks";
+  private static final String DEFAULT_QUEUE = Queues.TASKS;
   
   @Override
   public void execute (JobTask aTask) {
@@ -31,15 +31,7 @@ public class DefaultTaskExecutor implements TaskExecutor, TaskExecutorResolver {
   }
   
   private String calculateRoutingKey (String aNode) {
-    StringBuilder sb = new StringBuilder();
-    sb.append(DEFAULT_PREFIX)
-      .append(".");
-    if(aNode!=null) {
-      sb.append(aNode)
-        .append(".");
-    }
-    sb.append(DEFAULT_SUFFIX);
-    return sb.toString();
+    return aNode!=null?aNode:DEFAULT_QUEUE;
   }
   
   @Autowired

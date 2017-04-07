@@ -6,8 +6,6 @@
  */
 package com.creactiviti.piper.config;
 
-import java.util.Arrays;
-
 import org.springframework.boot.autoconfigure.condition.ConditionMessage;
 import org.springframework.boot.autoconfigure.condition.ConditionOutcome;
 import org.springframework.boot.autoconfigure.condition.SpringBootCondition;
@@ -25,8 +23,8 @@ public class OnWorkerCondition extends SpringBootCondition {
 
   @Override
   public ConditionOutcome getMatchOutcome(ConditionContext aContext, AnnotatedTypeMetadata aMetadata) {
-    String property = aContext.getEnvironment().getProperty("piper.roles");
-    boolean result = property!=null&&Arrays.asList(property.split(",")).stream().anyMatch((r)->r.startsWith("worker"));
+    String property = aContext.getEnvironment().getProperty("piper.worker.enabled");
+    boolean result = Boolean.valueOf(property);
     return new ConditionOutcome(result,ConditionMessage.forCondition(ConditionalOnWorker.class, "(" + getClass().getName() + ")").resultedIn(result));
   }
 

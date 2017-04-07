@@ -6,6 +6,8 @@
  */
 package com.creactiviti.piper.config;
 
+import java.util.Map;
+
 import javax.jms.ConnectionFactory;
 
 import org.slf4j.Logger;
@@ -28,7 +30,6 @@ import org.springframework.jms.listener.adapter.MessageListenerAdapter;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
-import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.Worker;
@@ -83,44 +84,46 @@ public class JmsMessengerConfiguration implements JmsListenerConfigurer {
   }
 
   @ConditionalOnCoordinator
-  @JmsListener(destination="coordinator.completions")
+  @JmsListener(destination=Queues.COMPLETIONS)
   public void receiveCompletion (JobTask aTask) {
     coordinator.completeTask(aTask);
   }
   
   @ConditionalOnCoordinator
-  @JmsListener(destination="coordinator.errors")
+  @JmsListener(destination=Queues.ERRORS)
   public void receiveError (JobTask aTask) {
     coordinator.error(aTask);
   }
 
   @Override
   public void configureJmsListeners (JmsListenerEndpointRegistrar aRegistrar) {
-    String[] roles = properties.getRoles();
-    Assert.notNull(roles, "piper.roles must not be null");
-    for(String role : roles) {
-      if(role.startsWith("worker")) {
-        registerListenerEndpoint(aRegistrar, role, worker, "handle");
-      }
-    }  
+    CoordinatorProperties coordinatorProperties = properties.getCoordinator();
+    WorkerProperties workerProperties = properties.getWorker();
+    if(coordinatorProperties.isEnabled()) {
+      registerListenerEndpoint(aRegistrar, Queues.COMPLETIONS, coordinatorProperties.getSubscriptions().getCompletions() , coordinator, "completeTask");
+      registerListenerEndpoint(aRegistrar, Queues.ERRORS, coordinatorProperties.getSubscriptions().getErrors(), coordinator, "error");
+    }
+    if(workerProperties.isEnabled()) {
+      Map<String, Object> subscriptions = workerProperties.getSubscriptions();
+      subscriptions.forEach((k,v) -> {
+        registerListenerEndpoint(aRegistrar, k, Integer.valueOf((String)v), worker, "handle");
+      });
+    }
   }
 
-  private void registerListenerEndpoint(JmsListenerEndpointRegistrar aRegistrar, String aRole, Object aDelegate, String aMethodName) {
-    logger.info("Registring JMS Listener: {} -> {}:{}", aRole, aDelegate.getClass().getName(), aMethodName);
+  private void registerListenerEndpoint(JmsListenerEndpointRegistrar aRegistrar, String aQueueName, int aConcurrency, Object aDelegate, String aMethodName) {
+    logger.info("Registring JMS Listener: {} -> {}:{}", aQueueName, aDelegate.getClass().getName(), aMethodName);
     
-    String queueName = RoleParser.queueName(aRole);
-    int concurrency = RoleParser.concurrency(aRole);
-
     MessageListenerAdapter messageListener = new MessageListenerAdapter(aDelegate);
     messageListener.setMessageConverter(jacksonJmsMessageConverter(objectMapper));
     messageListener.setDefaultListenerMethod(aMethodName);
 
     SimpleJmsListenerEndpoint endpoint = new SimpleJmsListenerEndpoint();
-    endpoint.setId(queueName+"Endpoint");
-    endpoint.setDestination(queueName);
+    endpoint.setId(aQueueName+"Endpoint");
+    endpoint.setDestination(aQueueName);
     endpoint.setMessageListener(messageListener);
 
-    aRegistrar.registerEndpoint(endpoint,createContainerFactory(concurrency));
+    aRegistrar.registerEndpoint(endpoint,createContainerFactory(aConcurrency));
   }
 
   private DefaultJmsListenerContainerFactory createContainerFactory (int aConcurrency) {
