@@ -6,7 +6,6 @@ See http://meetpiper.com
 
 # Roadmap
 
-- Job Restarts
 - Search
 - Job Priority
 - Postgres Support
