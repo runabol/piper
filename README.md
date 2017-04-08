@@ -8,6 +8,7 @@ See http://meetpiper.com
 
 
 - /stats
+- workers health
 - Stop/Resume Jobs
 - Each construct
 - Mapper construct
