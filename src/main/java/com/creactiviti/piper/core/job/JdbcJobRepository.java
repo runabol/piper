@@ -140,4 +140,9 @@ public class JdbcJobRepository implements JobRepository {
     return jdbc.query("select * From job_task where job_id = :jobId ", Collections.singletonMap("jobId", aJobId),this::jobTaskRowMappper);
   }
 
+  @Override
+  public int countRunningJobs() {
+    return jdbc.queryForObject("select count(*) from job where status='STARTED'", Collections.EMPTY_MAP, Integer.class);
+  }
+
 }

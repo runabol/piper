@@ -8,6 +8,7 @@ create table job (
 );
 
 CREATE INDEX ON job (creation_date);
+CREATE INDEX ON job (status);
 
 drop table if exists job_task;
 

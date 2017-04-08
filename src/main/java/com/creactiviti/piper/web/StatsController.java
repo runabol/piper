@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.creactiviti.piper.config.ConditionalOnCoordinator;
 import com.creactiviti.piper.stats.Stats;
 import com.creactiviti.piper.stats.StatsContributor;
 
@@ -23,6 +24,7 @@ import com.creactiviti.piper.stats.StatsContributor;
  * @since Apt 7, 2017
  */
 @RestController
+@ConditionalOnCoordinator
 public class StatsController {
 
   private final List<StatsContributor> statsContributors;
