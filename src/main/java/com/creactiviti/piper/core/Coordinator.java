@@ -127,6 +127,7 @@ public class Coordinator {
   }
   
   private void completeJob (MutableJob aJob) {
+    contextRepository.pop(aJob.getId());
     MutableJob job = new MutableJob((Job)aJob);
     job.setStatus(JobStatus.COMPLETED);
     job.setCompletionDate(new Date ());
