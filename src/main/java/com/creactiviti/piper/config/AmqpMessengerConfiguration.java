@@ -25,6 +25,7 @@ import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -51,12 +52,19 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
   private ObjectMapper objectMapper;
   
   @Autowired
+  private RabbitProperties rabbitProperties;
+  
+  @Autowired
   private PiperProperties properties;
   
   @Autowired
   private ConnectionFactory connectionFactory;
   
   private final Logger logger = LoggerFactory.getLogger(getClass());
+  
+  private static final String DEFAULT_USER = "guest";
+  private static final String DEFAULT_PASS = "guest";
+  private static final String DEFAULT_HOST = "localhost";
   
   @Bean
   RabbitAdmin admin (ConnectionFactory aConnectionFactory) {
@@ -65,7 +73,11 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
   
   @Bean
   RabbitManagementTemplate rabbitManagementTemplate () {
-    return new RabbitManagementTemplate("http://guest:guest@192.168.59.103:15672/api/");
+    String username = rabbitProperties.determineUsername();
+    String password = rabbitProperties.determinePassword();
+    String host = rabbitProperties.determineHost();
+    String url = String.format("http://%s:%s@%s:15672/api/",username!=null?username:DEFAULT_USER,username!=null?password:DEFAULT_PASS,host!=null?host:DEFAULT_HOST);
+    return new RabbitManagementTemplate(url);
   }
   
   @Bean
