@@ -27,4 +27,6 @@ public interface JobRepository {
   
   int countRunningJobs ();
   
+  int countCompletedJobsToday ();
+  
 }

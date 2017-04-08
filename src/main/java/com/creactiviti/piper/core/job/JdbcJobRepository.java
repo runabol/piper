@@ -145,4 +145,9 @@ public class JdbcJobRepository implements JobRepository {
     return jdbc.queryForObject("select count(*) from job where status='STARTED'", Collections.EMPTY_MAP, Integer.class);
   }
 
+  @Override
+  public int countCompletedJobsToday() {
+    return 0;
+  }
+
 }
