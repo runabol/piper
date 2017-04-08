@@ -4,14 +4,14 @@
  * Proprietary and confidential
  * Written by Arik Cohen <arik@creactiviti.com>, Mar 2017
  */
-package com.creactiviti.piper.core.job;
+package com.creactiviti.piper.stats;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.creactiviti.piper.config.ConditionalOnCoordinator;
+import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.stats.Stats.Builder;
-import com.creactiviti.piper.stats.StatsContributor;
 
 
 /**
@@ -22,7 +22,7 @@ import com.creactiviti.piper.stats.StatsContributor;
  * @since Apt 7, 2017
  */
 @Component
-@ConditionalOnCoordinator
+@ConditionalOnCoordinator 
 public class RunningJobsStatsContributor implements StatsContributor {
 
   @Autowired
