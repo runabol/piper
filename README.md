@@ -6,7 +6,8 @@ See http://meetpiper.com
 
 # Roadmap
 
-- Persist context
+
+- /stats
 - Stop/Resume Jobs
 - Each construct
 - Mapper construct
