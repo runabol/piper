@@ -19,6 +19,7 @@ import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFacto
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerEndpoint;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.amqp.rabbit.core.RabbitManagementTemplate;
 import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -60,6 +61,11 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
   @Bean
   RabbitAdmin admin (ConnectionFactory aConnectionFactory) {
     return new RabbitAdmin(aConnectionFactory);
+  }
+  
+  @Bean
+  RabbitManagementTemplate rabbitManagementTemplate () {
+    return new RabbitManagementTemplate("http://guest:guest@192.168.59.103:15672/api/");
   }
   
   @Bean
