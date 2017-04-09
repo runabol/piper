@@ -4,14 +4,19 @@
  * Proprietary and confidential
  * Written by Arik Cohen <arik@creactiviti.com>, Apr 2017
  */
-package com.creactiviti.piper.stats;
+package com.creactiviti.piper.metrics;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.endpoint.PublicMetrics;
+import org.springframework.boot.actuate.metrics.Metric;
 import org.springframework.stereotype.Component;
 
 import com.creactiviti.piper.config.ConditionalOnCoordinator;
 import com.creactiviti.piper.core.job.JobRepository;
-import com.creactiviti.piper.stats.Stats.Builder;
+import com.creactiviti.piper.stats.StatsContributor;
 
 
 /**
@@ -23,15 +28,17 @@ import com.creactiviti.piper.stats.Stats.Builder;
  */
 @Component
 @ConditionalOnCoordinator 
-public class JobsCompletedStatsContributor implements StatsContributor {
+public class JobsCompletedStatsContributor implements PublicMetrics {
 
   @Autowired
   private JobRepository jobRepository;
   
   @Override
-  public void contribute(Builder aBuilder) {
-    aBuilder.withDetail("jobs.completed.today", jobRepository.countCompletedJobsToday());
-    aBuilder.withDetail("jobs.completed.yesterday", jobRepository.countCompletedJobsYesterday());
+  public Collection<Metric<?>> metrics() {
+    return Arrays.asList(
+        new Metric<>("jobs.completed.today", jobRepository.countCompletedJobsToday()),
+        new Metric<>("jobs.completed.yesterday", jobRepository.countCompletedJobsYesterday())
+    );
   }
 
 }

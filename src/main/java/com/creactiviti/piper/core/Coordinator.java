@@ -255,5 +255,4 @@ public class Coordinator {
     taskEvaluator = aTaskEvaluator;
   }
   
-
 }
