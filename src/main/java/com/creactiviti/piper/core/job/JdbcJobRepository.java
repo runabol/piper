@@ -64,7 +64,7 @@ public class JdbcJobRepository implements JobRepository {
   @Override
   public void update (Job aJob) {
     MapSqlParameterSource sqlParameterSource = createSqlParameterSource(aJob);
-    jdbc.update("update job set data=:data,status=:status where id = :id ", sqlParameterSource);
+    jdbc.update("update job set data=:data,status=:status,completion_date=:completionDate where id = :id ", sqlParameterSource);
   }
 
   @Override
@@ -85,6 +85,7 @@ public class JdbcJobRepository implements JobRepository {
     sqlParameterSource.addValue("creationDate", job.getCreationDate());
     sqlParameterSource.addValue("data", writeValueAsJsonString(job));
     sqlParameterSource.addValue("status", job.getStatus().toString());
+    sqlParameterSource.addValue("completionDate", job.getCompletionDate());
     return sqlParameterSource;
   }
   
@@ -147,7 +148,12 @@ public class JdbcJobRepository implements JobRepository {
 
   @Override
   public int countCompletedJobsToday() {
-    return 0;
+    return jdbc.queryForObject("select count(*) from job where status='COMPLETED' and completion_date >= current_date", Collections.EMPTY_MAP, Integer.class);
+  }
+
+  @Override
+  public int countCompletedJobsYesterday() {
+    return jdbc.queryForObject("select count(*) from job where status='COMPLETED' and completion_date >= current_date-1 and completion_date < current_date-1 ", Collections.EMPTY_MAP, Integer.class);
   }
 
 }

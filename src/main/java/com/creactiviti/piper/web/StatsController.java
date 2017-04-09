@@ -19,6 +19,8 @@ import com.creactiviti.piper.stats.Stats;
 import com.creactiviti.piper.stats.StatsContributor;
 
 /**
+ * Exposes application stats such as what jobs are currently 
+ * running, what's in the work queues etc.
  * 
  * @author Arik Cohen
  * @since Apt 7, 2017
@@ -41,7 +43,7 @@ public class StatsController {
   @GetMapping("/stats")
   public Map<String, Object> render () {
     Stats.Builder builder = new Stats.Builder();
-    for (StatsContributor contributor : this.statsContributors) {
+    for (StatsContributor contributor : statsContributors) {
       contributor.contribute(builder);
     }
     Stats build = builder.build();

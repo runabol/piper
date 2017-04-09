@@ -16,21 +16,22 @@ import com.creactiviti.piper.stats.Stats.Builder;
 
 /**
  * a {@link StatsContributor} implementaion which calculates 
- * the number of jobs currently running.
+ * the number of jobs completed today.
  * 
  * @author Arik Cohen
  * @since Apr 8, 2017
  */
 @Component
 @ConditionalOnCoordinator 
-public class RunningJobsStatsContributor implements StatsContributor {
+public class JobsCompletedStatsContributor implements StatsContributor {
 
   @Autowired
   private JobRepository jobRepository;
   
   @Override
   public void contribute(Builder aBuilder) {
-    aBuilder.withDetail("jobs.running", jobRepository.countRunningJobs());
+    aBuilder.withDetail("jobs.completed.today", jobRepository.countCompletedJobsToday());
+    aBuilder.withDetail("jobs.completed.yesterday", jobRepository.countCompletedJobsYesterday());
   }
 
 }
