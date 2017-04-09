@@ -19,7 +19,6 @@ import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFacto
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerEndpoint;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
-import org.springframework.amqp.rabbit.core.RabbitManagementTemplate;
 import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -35,6 +34,7 @@ import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.Worker;
 import com.creactiviti.piper.core.messenger.AmqpMessenger;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rabbitmq.http.client.Client;
 
 @Configuration
 @EnableRabbit
@@ -72,12 +72,12 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
   }
   
   @Bean
-  RabbitManagementTemplate rabbitManagementTemplate () {
+  Client rabbitManagementTemplate () throws Exception {
     String username = rabbitProperties.determineUsername();
     String password = rabbitProperties.determinePassword();
     String host = rabbitProperties.determineHost();
     String url = String.format("http://%s:%s@%s:15672/api/",username!=null?username:DEFAULT_USER,username!=null?password:DEFAULT_PASS,host!=null?host:DEFAULT_HOST);
-    return new RabbitManagementTemplate(url);
+    return new Client(url);
   }
   
   @Bean
