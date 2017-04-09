@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.creactiviti.piper.config.Queues;
+import com.creactiviti.piper.core.event.Events;
+import com.creactiviti.piper.core.event.PiperEvent;
 import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.task.JobTask;
@@ -50,6 +52,7 @@ public class Worker {
     try {
       logger.debug("Recived task: {}",aTask);
       TaskHandler<?> taskHandler = taskHandlerResolver.resolve(aTask);
+      messenger.send(Queues.EVENTS, PiperEvent.of(Events.TASK_STARTED,"taskId",aTask.getId()));
       Object output = taskHandler.handle(aTask);
       MutableJobTask completion = new MutableJobTask(aTask);
       if(output!=null) {

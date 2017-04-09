@@ -228,6 +228,7 @@ public class Coordinator {
    *          The event to handle
    */
   public void on (Object aEvent) {
+    log.debug("Received event {}",aEvent);
     eventPublisher.publishEvent (aEvent);    
   }
  

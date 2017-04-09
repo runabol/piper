@@ -6,8 +6,7 @@ See http://meetpiper.com
 
 # Roadmap
 
-
-- /stats
+- events
 - workers health
 - Stop/Resume Jobs
 - Each construct

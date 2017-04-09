@@ -101,15 +101,13 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
     if(coordinatorProperties.isEnabled()) {
       registerListenerEndpoint(aRegistrar, Queues.COMPLETIONS, coordinatorProperties.getSubscriptions().getCompletions() , coordinator, "completeTask");
       registerListenerEndpoint(aRegistrar, Queues.ERRORS, coordinatorProperties.getSubscriptions().getErrors(), coordinator, "error");
+      registerListenerEndpoint(aRegistrar, Queues.EVENTS, coordinatorProperties.getSubscriptions().getEvents(), coordinator, "on");
     }
     if(workerProperties.isEnabled()) {
       Map<String, Object> subscriptions = workerProperties.getSubscriptions();
-      subscriptions.forEach((k,v) -> {
-        registerListenerEndpoint(aRegistrar, k, Integer.valueOf((String)v), worker, "handle");
-      });
+      subscriptions.forEach((k,v) -> registerListenerEndpoint(aRegistrar, k, Integer.valueOf((String)v), worker, "handle"));
     }
   }
-  
   
   private void registerListenerEndpoint(RabbitListenerEndpointRegistrar aRegistrar, String aQueueName, int aConcurrency, Object aDelegate, String aMethodName) {
     logger.info("Registring AMQP Listener: {} -> {}:{}", aQueueName, aDelegate.getClass().getName(), aMethodName);

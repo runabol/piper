@@ -4,6 +4,7 @@ public class CoordinatorSubscriptions {
 
   private int completions = 1;
   private int errors = 1;
+  private int events = 1;
 
   public int getCompletions() {
     return completions;
@@ -19,6 +20,14 @@ public class CoordinatorSubscriptions {
   
   public void setErrors(int aErrors) {
     errors = aErrors;
+  }
+  
+  public int getEvents() {
+    return events;
+  }
+  
+  public void setEvents(int aEvents) {
+    events = aEvents;
   }
   
 }
