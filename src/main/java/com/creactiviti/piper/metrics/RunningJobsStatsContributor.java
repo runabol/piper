@@ -16,11 +16,10 @@ import org.springframework.stereotype.Component;
 
 import com.creactiviti.piper.config.ConditionalOnCoordinator;
 import com.creactiviti.piper.core.job.JobRepository;
-import com.creactiviti.piper.stats.StatsContributor;
 
 
 /**
- * a {@link StatsContributor} implementaion which calculates 
+ * a {@link PublicMetrics} implementaion which calculates 
  * the number of jobs currently running.
  * 
  * @author Arik Cohen
