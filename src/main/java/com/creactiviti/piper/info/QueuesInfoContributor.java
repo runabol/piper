@@ -18,7 +18,7 @@ import com.rabbitmq.http.client.domain.QueueInfo;
 
 
 /**
- * a {@link StatsContributor} implementation which exposes any declared AMQP
+ * a {@link InfoContributor} implementation which exposes any declared AMQP
  * queues.
  * 
  * @author Arik Cohen
@@ -27,7 +27,7 @@ import com.rabbitmq.http.client.domain.QueueInfo;
 @Component
 @ConditionalOnCoordinator
 @ConditionalOnProperty(name="piper.messenger.provider", havingValue="amqp")
-public class AmqpStatsContributor implements InfoContributor {
+public class QueuesInfoContributor implements InfoContributor {
 
   private Client client;
   
