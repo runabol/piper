@@ -8,6 +8,7 @@ package com.creactiviti.piper.core;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,7 @@ import com.creactiviti.piper.core.task.TaskEvaluator;
 import com.creactiviti.piper.core.task.TaskExecutor;
 import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
+import com.creactiviti.piper.error.Error;
 
 /**
  * The central class responsible for coordinating 
@@ -42,7 +44,7 @@ import com.creactiviti.piper.core.uuid.UUIDGenerator;
  * @since Jun 12, 2016
  */
 public class Coordinator {
-  
+
   private PipelineRepository pipelineRepository;
   private JobRepository jobRepository;
   private JobTaskRepository jobTaskRepository;
@@ -50,11 +52,11 @@ public class Coordinator {
   private ContextRepository contextRepository;
   private TaskExecutor taskExecutor;
   private TaskEvaluator taskEvaluator = new NoOpTaskEvaluator();
-  
+
   private static final String PIPELINE = "pipeline";
-  
+
   private final Logger log = LoggerFactory.getLogger(getClass());
-  
+
   /**
    * Starts a job instance.
    * 
@@ -64,33 +66,34 @@ public class Coordinator {
    * @return Job
    *           The instance of the Job
    */
-  public Job start (MapObject aParameters) {
+  public Job start (Map<String,Object> aParameters) {
     Assert.notNull(aParameters,"parameters can't be null");
-    String pipelineId = aParameters.getRequiredString(PIPELINE);
+    MapObject params = MapObject.of(aParameters);
+    String pipelineId = params.getRequiredString(PIPELINE);
     Pipeline pipeline = pipelineRepository.findOne(pipelineId);    
     Assert.notNull(pipeline,String.format("Unkown pipeline: %s", pipelineId));
-    
-    validate(aParameters, pipeline);
+
+    validate(params, pipeline);
 
     MutableJob job = new MutableJob();
     job.setId(UUIDGenerator.generate());
-    job.setName(aParameters.getString("name",pipeline.getName()));
+    job.setName(params.getString("name",pipeline.getName()));
     job.setPipelineId(pipeline.getId());
     job.setStatus(JobStatus.STARTED);
     job.setStartDate(new Date());
     job.setCreationDate(new Date());
     log.debug("Job {} started",job.getId());
     jobRepository.create(job);
-    
-    MapContext context = new MapContext(aParameters);
+
+    MapContext context = new MapContext(params);
     context.setId(UUIDGenerator.generate());
     contextRepository.push(job.getId(),context);
-    
+
     execute (job, pipeline);
-    
+
     return job;
   }
-  
+
   private void validate (MapObject aParameters, Pipeline aPipeline) {
     List<Accessor> input = aPipeline.getInputs();
     for(Accessor in : input) {
@@ -99,7 +102,7 @@ public class Coordinator {
       }
     }
   }
-  
+
   private void execute (MutableJob aJob, Pipeline aPipeline) {
     if(hasMoreTasks(aJob, aPipeline)) {
       executeNextTask (aJob, aPipeline);
@@ -108,11 +111,11 @@ public class Coordinator {
       completeJob(aJob);
     }
   }
-  
+
   private boolean hasMoreTasks (Job aJob, Pipeline aPipeline) {
     return aJob.getCurrentTask()+1 < aPipeline.getTasks().size();
   }
-  
+
   private JobTask nextTask(Job aJob, Pipeline aPipeline) {
     Task task = aPipeline.getTasks().get(aJob.getCurrentTask()+1);
     MutableJobTask mt = new MutableJobTask (task);
@@ -129,7 +132,7 @@ public class Coordinator {
     JobTask evaluatedTask = taskEvaluator.evaluate(nextTask,context);
     taskExecutor.execute(evaluatedTask);
   }
-  
+
   private void completeJob (MutableJob aJob) {
     contextRepository.pop(aJob.getId());
     MutableJob job = new MutableJob((Job)aJob);
@@ -170,7 +173,7 @@ public class Coordinator {
     execute(mjob,pipeline);
     return mjob;
   }
-  
+
   private boolean isRestartable (Job aJob) {
     return aJob.getStatus() == JobStatus.STOPPED || aJob.getStatus() == JobStatus.FAILED;
   }
@@ -207,26 +210,24 @@ public class Coordinator {
   }
 
   /**
-   * Handle an error condition
+   * Handle an erroring task condition.
    * 
-   * @param aObject
-   *          The object that caused the error.
+   * @param aJobTask
+   *          The task that caused the error.
    */
-  public void error (Object aObject) {
+  public void handleTaskError (JobTask aTask) {
     try {
-      if(aObject instanceof JobTask) {
-        JobTask task = (JobTask) aObject;
-        log.debug("Erroring task {}", task);
-        MutableJobTask mtask = new MutableJobTask(task);
-        mtask.setStatus(TaskStatus.FAILED);
-        Job job = jobRepository.findJobByTaskId (mtask.getId());
-        MutableJob mjob = new MutableJob (job);
-        Assert.notNull(mjob,String.format("No job found for task %s ",mtask.getId()));
-        mjob.setStatus(JobStatus.FAILED);
-        mjob.setFailedDate(new Date ());
-        jobTaskRepository.update(mtask);
-        jobRepository.update(mjob);
-      }
+      Error error = aTask.getError();
+      log.debug("Erring task {}: {}\n{}", aTask.getId(), error.getMessage());
+      MutableJobTask mtask = new MutableJobTask(aTask);
+      mtask.setStatus(TaskStatus.FAILED);
+      Job job = jobRepository.findJobByTaskId (mtask.getId());
+      MutableJob mjob = new MutableJob (job);
+      Assert.notNull(mjob,String.format("No job found for task %s ",mtask.getId()));
+      mjob.setStatus(JobStatus.FAILED);
+      mjob.setFailedDate(new Date ());
+      jobTaskRepository.update(mtask);
+      jobRepository.update(mjob);
     }
     catch (Throwable e) {
       log.error(e.getMessage(),e);
@@ -245,7 +246,7 @@ public class Coordinator {
     log.debug("Received event {}",aEvent);
     eventPublisher.publishEvent(aEvent);
   }
- 
+
   public void setContextRepository(ContextRepository aContextRepository) {
     contextRepository = aContextRepository;
   }
@@ -253,7 +254,7 @@ public class Coordinator {
   public void setEventPublisher(ApplicationEventPublisher aEventPublisher) {
     eventPublisher = aEventPublisher;
   }
-  
+
   public void setJobRepository(JobRepository aJobRepository) {
     jobRepository = aJobRepository;
   }
@@ -261,17 +262,17 @@ public class Coordinator {
   public void setTaskExecutor(TaskExecutor aTaskExecutor) {
     taskExecutor = aTaskExecutor;
   }
-  
+
   public void setPipelineRepository(PipelineRepository aPipelineRepository) {
     pipelineRepository = aPipelineRepository;
   }
-  
+
   public void setTaskEvaluator(TaskEvaluator aTaskEvaluator) {
     taskEvaluator = aTaskEvaluator;
   }
-  
+
   public void setJobTaskRepository(JobTaskRepository aJobTaskRepository) {
     jobTaskRepository = aJobTaskRepository;
   }
-  
+
 }

@@ -8,6 +8,7 @@ package com.creactiviti.piper.core;
 
 import java.util.Date;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +20,7 @@ import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.TaskHandler;
 import com.creactiviti.piper.core.task.TaskHandlerResolver;
+import com.creactiviti.piper.error.ErrorObject;
 
 /**
  * <p>The class responsible for executing tasks spawned by the {@link Coordinator}.</p>
@@ -64,7 +66,7 @@ public class Worker {
     catch (Exception e) {
       logger.error(e.getMessage(),e);
       MutableJobTask jobTask = new MutableJobTask(aTask);
-      jobTask.setException(e);
+      jobTask.setError(new ErrorObject(e.getMessage(),ExceptionUtils.getStackFrames(e)));
       messenger.send(Queues.ERRORS, jobTask);
     }
   }

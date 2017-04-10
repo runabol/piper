@@ -15,6 +15,8 @@ import com.creactiviti.piper.core.task.MutableTask;
 import com.creactiviti.piper.core.task.Task;
 import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
+import com.creactiviti.piper.error.Error;
+import com.creactiviti.piper.error.ErrorObject;
 
 
 public class MutableJobTask extends MutableTask implements JobTask {
@@ -73,12 +75,12 @@ public class MutableJobTask extends MutableTask implements JobTask {
   }
   
   @Override
-  public Exception getException() {
-    return (Exception) get("exception");
+  public Error getError() {
+    return new ErrorObject(getMap("error"));
   }
   
-  public void setException (Throwable aException) {
-    set("exception", aException);
+  public void setError (Error aError) {
+    set("error", aError);
   }
   
   public void setStatus (TaskStatus aStatus) {

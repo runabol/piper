@@ -20,6 +20,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -32,6 +33,7 @@ import com.creactiviti.piper.core.job.JobStatus;
 import com.creactiviti.piper.core.messenger.SynchMessenger;
 import com.creactiviti.piper.core.pipeline.FileSystemPipelineRepository;
 import com.creactiviti.piper.core.task.DefaultTaskExecutor;
+import com.creactiviti.piper.core.task.JdbcJobTaskRepository;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.TaskHandler;
 import com.creactiviti.piper.taskhandler.io.Print;
@@ -47,6 +49,9 @@ public class CoordinatorTests {
   @Autowired
   private DataSource dataSource;
   
+  @Autowired
+  private ApplicationEventPublisher eventPublisher;
+  
   @Test
   public void testStartJob () throws SQLException {
     Worker worker = new Worker();
@@ -54,6 +59,8 @@ public class CoordinatorTests {
    
     SynchMessenger workerMessenger = new SynchMessenger();
     workerMessenger.receive(Queues.COMPLETIONS, (o)->coordinator.completeTask((JobTask)o));
+    workerMessenger.receive(Queues.EVENTS, (o)->coordinator.on(o));
+    
     worker.setMessenger(workerMessenger);
     DefaultTaskHandlerResolver taskHandlerResolver = new DefaultTaskHandlerResolver();
     
@@ -72,18 +79,26 @@ public class CoordinatorTests {
     contextRepository.setObjectMapper(objectMapper);
     
     coordinator.setContextRepository(contextRepository);
+    
+    JdbcJobTaskRepository taskRepository = new JdbcJobTaskRepository();
+    taskRepository.setJdbcOperations(new NamedParameterJdbcTemplate(dataSource));
+    taskRepository.setObjectMapper(createObjectMapper());
+    
     JdbcJobRepository jobRepository = new JdbcJobRepository();
     jobRepository.setJdbcOperations(new NamedParameterJdbcTemplate(dataSource));
     jobRepository.setObjectMapper(objectMapper);
+    jobRepository.setJobTaskRepository(taskRepository);
     
     coordinator.setJobRepository(jobRepository);
     coordinator.setPipelineRepository(new FileSystemPipelineRepository());
+    coordinator.setJobTaskRepository(taskRepository);
     
     SynchMessenger coordinatorMessenger = new SynchMessenger();
     coordinatorMessenger.receive(Queues.TASKS, (o)->worker.handle((JobTask)o));
     DefaultTaskExecutor taskExecutor = new DefaultTaskExecutor();
     taskExecutor.setMessenger(coordinatorMessenger);
     coordinator.setTaskExecutor(taskExecutor);
+    coordinator.setEventPublisher(eventPublisher);
         
     Job job = coordinator.start(MapObject.of(ImmutableMap.of("pipeline","demo/hello","name","me")));
     

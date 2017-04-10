@@ -8,6 +8,8 @@ package com.creactiviti.piper.core.task;
 
 import java.util.Date;
 
+import com.creactiviti.piper.error.Error;
+
 public interface JobTask extends Task {
 
   String getId ();
@@ -18,7 +20,7 @@ public interface JobTask extends Task {
   
   Object getOutput ();
   
-  Exception getException ();
+  Error getError ();
   
   Date getCreationDate ();
   

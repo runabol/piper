@@ -74,6 +74,16 @@ public interface Accessor {
   String getString (Object aKey);
 
   /**
+   * Return the array value associated with the given
+   * key.
+   * 
+   * @param aKey
+   *          The key associated with the desired value.
+   * @return The array value.
+   */
+  <T> T[] getArray (Object aKey, Class<T> aElementType);
+  
+  /**
    * Return the {@link MapObject} value associated with the given
    * key.
    * 

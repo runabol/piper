@@ -92,7 +92,7 @@ public class JmsMessengerConfiguration implements JmsListenerConfigurer {
   @ConditionalOnCoordinator
   @JmsListener(destination=Queues.ERRORS)
   public void receiveError (JobTask aTask) {
-    coordinator.error(aTask);
+    coordinator.handleTaskError(aTask);
   }
 
   @Override

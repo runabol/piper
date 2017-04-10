@@ -10,14 +10,13 @@ import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilde
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
-import com.creactiviti.piper.json.ExceptionSerializer;
-
 @Configuration
 public class JsonConfiguration implements Jackson2ObjectMapperBuilderCustomizer {
 
   @Override
   public void customize(Jackson2ObjectMapperBuilder aJacksonObjectMapperBuilder) {
-    aJacksonObjectMapperBuilder.serializerByType(Throwable.class, new ExceptionSerializer());
+    //aJacksonObjectMapperBuilder.serializerByType(Throwable.class, new ExceptionSerializer());
+    //aJacksonObjectMapperBuilder.deserializerByType(JobTaskException.class, new JobTaskExceptionDeserializer());
   }
 
 }

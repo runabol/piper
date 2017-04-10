@@ -23,9 +23,12 @@ public class WorkerTests {
     Worker worker = new Worker();
     SynchMessenger messenger = new SynchMessenger();
     messenger.receive(Queues.COMPLETIONS, (t)-> Assert.assertTrue(((JobTask)t).getOutput().equals("done")) );
+    messenger.receive(Queues.EVENTS, (t)-> {} );
     worker.setMessenger(messenger);
     worker.setTaskHandlerResolver((jt) -> (t) -> "done");
-    worker.handle(new MutableJobTask(Collections.EMPTY_MAP));
+    MutableJobTask task = new MutableJobTask(Collections.EMPTY_MAP);
+    task.setId("1234");
+    worker.handle(task);
   }
   
   
@@ -33,12 +36,15 @@ public class WorkerTests {
   public void test2 () {
     Worker worker = new Worker();
     SynchMessenger messenger = new SynchMessenger();
-    messenger.receive(Queues.ERRORS, (t)-> Assert.assertTrue( ((JobTask)t).getException().getMessage().equals("bad input") ) );
+    messenger.receive(Queues.ERRORS, (t)-> Assert.assertTrue( ((JobTask)t).getError().getMessage().equals("bad input") ) );
+    messenger.receive(Queues.EVENTS, (t)-> {} );
     worker.setMessenger(messenger);
     worker.setTaskHandlerResolver((jt) -> (t) -> {
       throw new IllegalArgumentException("bad input");
     });
-    worker.handle(new MutableJobTask(Collections.EMPTY_MAP));
+    MutableJobTask task = new MutableJobTask(Collections.EMPTY_MAP);
+    task.setId("1234");
+    worker.handle(task);
   }
   
   

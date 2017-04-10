@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerEndpoint;
@@ -38,7 +37,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.http.client.Client;
 
 @Configuration
-@EnableRabbit
 @EnableConfigurationProperties(PiperProperties.class)
 @ConditionalOnProperty(name="piper.messenger.provider",havingValue="amqp")
 public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
@@ -95,13 +93,18 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
     return converter;
   }
   
+  @Bean
+  public Queue dlqQueue () {
+    return new Queue(Queues.DLQ);
+  }
+  
   @Override
   public void configureRabbitListeners(RabbitListenerEndpointRegistrar aRegistrar) {
     CoordinatorProperties coordinatorProperties = properties.getCoordinator();
     WorkerProperties workerProperties = properties.getWorker();
     if(coordinatorProperties.isEnabled()) {
       registerListenerEndpoint(aRegistrar, Queues.COMPLETIONS, coordinatorProperties.getSubscriptions().getCompletions() , coordinator, "completeTask");
-      registerListenerEndpoint(aRegistrar, Queues.ERRORS, coordinatorProperties.getSubscriptions().getErrors(), coordinator, "error");
+      registerListenerEndpoint(aRegistrar, Queues.ERRORS, coordinatorProperties.getSubscriptions().getErrors(), coordinator, "handleTaskError");
       registerListenerEndpoint(aRegistrar, Queues.EVENTS, coordinatorProperties.getSubscriptions().getEvents(), coordinator, "on");
     }
     if(workerProperties.isEnabled()) {
@@ -115,7 +118,7 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
 
     Map<String, Object> args = new HashMap<String, Object>();
     args.put("x-dead-letter-exchange", "");
-    args.put("x-dead-letter-routing-key", Queues.ERRORS);
+    args.put("x-dead-letter-routing-key", Queues.DLQ);
     
     admin(connectionFactory).declareQueue(new Queue(aQueueName, true, false, false, args));
     
@@ -136,6 +139,7 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
     factory.setConcurrentConsumers(aConcurrency);
     factory.setConnectionFactory(connectionFactory);
     factory.setDefaultRequeueRejected(false);
+    factory.setMessageConverter(jacksonAmqpMessageConverter(objectMapper));
     return factory;
   }
   

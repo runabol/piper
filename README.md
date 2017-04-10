@@ -7,6 +7,7 @@ See http://meetpiper.com
 # Roadmap
 
 - events
+- retry
 - server-sent-event
 - workers health
 - Stop/Resume Jobs

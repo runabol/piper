@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.creactiviti.piper.config.ConditionalOnCoordinator;
 import com.creactiviti.piper.core.Coordinator;
-import com.creactiviti.piper.core.MapObject;
 import com.creactiviti.piper.core.Page;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobRepository;
@@ -42,7 +41,7 @@ public class JobController {
   
   @PostMapping("/jobs")
   public Job create (@RequestBody Map<String, Object> aJobRequest) {
-    return coordinator.start(MapObject.of(aJobRequest));
+    return coordinator.start(aJobRequest);
   }
   
   @GetMapping(value="/jobs/{id}")

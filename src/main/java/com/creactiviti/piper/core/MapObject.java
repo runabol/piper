@@ -6,6 +6,7 @@
  */
 package com.creactiviti.piper.core;
 
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,6 +32,10 @@ public class MapObject implements Map<String, Object>, Accessor, Mutator {
   private final HashMap<String, Object> map;
   
   private static final String TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZZ";
+  
+  public MapObject () {
+    map = new HashMap<>();
+  }
   
   public MapObject (Map<String, Object> aSource) {
     map = new HashMap<String, Object>(aSource);
@@ -235,23 +240,16 @@ public class MapObject implements Map<String, Object>, Accessor, Mutator {
     return Collections.unmodifiableMap(new HashMap<>(map));
   }
   
-  public String toString() {
-    return map.toString();
-  }
-  
-  public static MapObject empty () {
-    return new MapObject(Collections.EMPTY_MAP);
-  }
-  
-  public static MapObject of (Map<String,Object> aMap) {
-    return new MapObject(aMap);
-  }
-  
   @Override
-  public boolean equals(Object aObj) {
-    return map.equals(aObj);
+  public <T> T[] getArray(Object aKey, Class<T> aElementType) {
+    List<T> list = getList(aKey, aElementType);
+    T[] toR = (T[])Array.newInstance(aElementType, list.size());
+    for (int i = 0; i < list.size(); i++) {
+      toR[i] = list.get(i);
+    }
+    return toR;
   }
-
+  
   @Override
   public void set(String aKey, Object aValue) {
     put(aKey, aValue);
@@ -264,4 +262,20 @@ public class MapObject implements Map<String, Object>, Accessor, Mutator {
     }
   }
   
+  public String toString() {
+    return map.toString();
+  }
+    
+  @Override
+  public boolean equals(Object aObj) {
+    return map.equals(aObj);
+  }
+
+  public static MapObject empty () {
+    return new MapObject(Collections.EMPTY_MAP);
+  }
+  
+  public static MapObject of (Map<String,Object> aMap) {
+    return new MapObject(aMap);
+  }
 }
