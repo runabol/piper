@@ -35,6 +35,7 @@ import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.Worker;
 import com.creactiviti.piper.core.messenger.JmsMessenger;
 import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.error.Errorable;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
@@ -91,8 +92,8 @@ public class JmsMessengerConfiguration implements JmsListenerConfigurer {
   
   @ConditionalOnCoordinator
   @JmsListener(destination=Queues.ERRORS)
-  public void receiveError (JobTask aTask) {
-    coordinator.handleTaskError(aTask);
+  public void receiveError (Errorable aErrorable) {
+    coordinator.handleError(aErrorable);
   }
 
   @Override

@@ -10,6 +10,11 @@ import java.util.Map;
 
 import com.creactiviti.piper.core.MapObject;
 
+/**
+ * 
+ * @author Arik Cohen
+ * @since Apr 10, 2017
+ */
 public class ErrorObject extends MapObject implements Error {
 
   public ErrorObject () {

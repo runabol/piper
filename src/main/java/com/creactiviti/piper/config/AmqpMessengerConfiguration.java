@@ -104,7 +104,7 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
     WorkerProperties workerProperties = properties.getWorker();
     if(coordinatorProperties.isEnabled()) {
       registerListenerEndpoint(aRegistrar, Queues.COMPLETIONS, coordinatorProperties.getSubscriptions().getCompletions() , coordinator, "completeTask");
-      registerListenerEndpoint(aRegistrar, Queues.ERRORS, coordinatorProperties.getSubscriptions().getErrors(), coordinator, "handleTaskError");
+      registerListenerEndpoint(aRegistrar, Queues.ERRORS, coordinatorProperties.getSubscriptions().getErrors(), coordinator, "handleError");
       registerListenerEndpoint(aRegistrar, Queues.EVENTS, coordinatorProperties.getSubscriptions().getEvents(), coordinator, "on");
     }
     if(workerProperties.isEnabled()) {

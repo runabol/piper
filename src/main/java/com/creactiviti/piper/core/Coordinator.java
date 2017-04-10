@@ -35,6 +35,7 @@ import com.creactiviti.piper.core.task.TaskExecutor;
 import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
 import com.creactiviti.piper.error.Error;
+import com.creactiviti.piper.error.Errorable;
 
 /**
  * The central class responsible for coordinating 
@@ -215,11 +216,12 @@ public class Coordinator {
    * @param aJobTask
    *          The task that caused the error.
    */
-  public void handleTaskError (JobTask aTask) {
+  public void handleError (Errorable aErrorable) {
     try {
-      Error error = aTask.getError();
-      log.debug("Erring task {}: {}\n{}", aTask.getId(), error.getMessage());
-      MutableJobTask mtask = new MutableJobTask(aTask);
+      JobTask task = (JobTask) aErrorable;
+      Error error = task.getError();
+      log.debug("Erring task {}: {}\n{}", task.getId(), error.getMessage());
+      MutableJobTask mtask = new MutableJobTask(task);
       mtask.setStatus(TaskStatus.FAILED);
       Job job = jobRepository.findJobByTaskId (mtask.getId());
       MutableJob mjob = new MutableJob (job);
