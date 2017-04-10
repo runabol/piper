@@ -17,7 +17,8 @@ create table job_task (
   id varchar(256) not null primary key,
   status varchar(256) not null,
   job_id varchar(256) not null,
-  data text not null
+  data text not null,
+  creation_date timestamp not null
 );
 
 CREATE INDEX ON job_task (job_id);

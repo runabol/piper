@@ -31,21 +31,27 @@ public class QueueMetrics implements PublicMetrics {
 
   private Client client;
   
+  @Override
+  public Collection<Metric<?>> metrics() {
+    List<QueueInfo> queues = client.getQueues();
+    return queues.stream()
+                 .map(this::queueInfoToMeticMapper)
+                 .flatMap(List::stream)
+                 .collect(Collectors.toList());
+  }
+  
+  private List<Metric<Number>> queueInfoToMeticMapper (QueueInfo q) {
+    return Arrays.asList(
+      new Metric<>("queues."+q.getName()+".messages.total",q.getTotalMessages()),
+      new Metric<>("queues."+q.getName()+".messages.unacknowledged",q.getMessagesUnacknowledged()),
+      new Metric<>("queues."+q.getName()+".messages.ready",q.getMessagesReady())
+    );
+  }
+
   @Autowired
   public void setClient(Client aClient) {
     client = aClient;
   }
 
-  @Override
-  public Collection<Metric<?>> metrics() {
-    List<QueueInfo> queues = client.getQueues();
-    return queues.stream().map(q-> {
-      return Arrays.asList(
-          new Metric<>("queues."+q.getName()+".messages.total",q.getTotalMessages()),
-          new Metric<>("queues."+q.getName()+".messages.unacknowledged",q.getMessagesUnacknowledged()),
-          new Metric<>("queues."+q.getName()+".messages.ready",q.getMessagesReady())
-      );
-    }).flatMap(List::stream).collect(Collectors.toList());
-  }
 
 }

@@ -25,6 +25,8 @@ public interface JobRepository {
   
   Job findJobByTaskId (String aTaskId);
   
+  JobTask findTask (String aTaskId);
+  
   int countRunningJobs ();
   
   int countCompletedJobsToday ();
