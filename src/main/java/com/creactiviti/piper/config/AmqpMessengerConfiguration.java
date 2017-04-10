@@ -7,6 +7,7 @@
 package com.creactiviti.piper.config;
 
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -112,7 +113,11 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
   private void registerListenerEndpoint(RabbitListenerEndpointRegistrar aRegistrar, String aQueueName, int aConcurrency, Object aDelegate, String aMethodName) {
     logger.info("Registring AMQP Listener: {} -> {}:{}", aQueueName, aDelegate.getClass().getName(), aMethodName);
 
-    admin(connectionFactory).declareQueue(new Queue(aQueueName));
+    Map<String, Object> args = new HashMap<String, Object>();
+    args.put("x-dead-letter-exchange", "");
+    args.put("x-dead-letter-routing-key", Queues.ERRORS);
+    
+    admin(connectionFactory).declareQueue(new Queue(aQueueName, true, false, false, args));
     
     MessageListenerAdapter messageListener = new MessageListenerAdapter(aDelegate);
     messageListener.setMessageConverter(jacksonAmqpMessageConverter(objectMapper));
@@ -130,6 +135,7 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
     SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
     factory.setConcurrentConsumers(aConcurrency);
     factory.setConnectionFactory(connectionFactory);
+    factory.setDefaultRequeueRejected(false);
     return factory;
   }
   

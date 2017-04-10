@@ -7,6 +7,7 @@
 
 package com.creactiviti.piper.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,16 +25,23 @@ import com.creactiviti.piper.core.task.TaskExecutor;
 @ConditionalOnCoordinator
 public class CoordinatorConfiguration {
 
+  @Autowired private JobRepository jobRepository;
+  @Autowired private JobTaskRepository jobTaskRepository;
+  @Autowired private ContextRepository<Context> contextRepository;
+  @Autowired private ApplicationEventPublisher eventPublisher;
+  @Autowired private PipelineRepository pipelineRepository;
+  @Autowired private TaskExecutor taskExecutor;
+  
   @Bean
-  Coordinator coordinator (JobRepository aJobRepository, JobTaskRepository aJobTaskRepository, ContextRepository<Context> aContextRepository, ApplicationEventPublisher aEventPublisher, PipelineRepository aPipelineRepository, TaskExecutor aTaskExecutor) {
+  Coordinator coordinator (TaskExecutor aTaskExecutor) {
     Coordinator coordinator = new Coordinator();
-    coordinator.setContextRepository(aContextRepository);
-    coordinator.setEventPublisher(aEventPublisher);
-    coordinator.setJobRepository(aJobRepository);
-    coordinator.setJobTaskRepository(aJobTaskRepository);
-    coordinator.setPipelineRepository(aPipelineRepository);
+    coordinator.setContextRepository(contextRepository);
+    coordinator.setEventPublisher(eventPublisher);
+    coordinator.setJobRepository(jobRepository);
+    coordinator.setJobTaskRepository(jobTaskRepository);
+    coordinator.setPipelineRepository(pipelineRepository);
     coordinator.setTaskEvaluator(new SpelTaskEvaluator());
-    coordinator.setTaskExecutor(aTaskExecutor);
+    coordinator.setTaskExecutor(taskExecutor);
     return coordinator;
   }
   

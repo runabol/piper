@@ -207,22 +207,30 @@ public class Coordinator {
   }
 
   /**
-   * Handle an erroring task.
+   * Handle an error condition
    * 
-   * @param aTask
-   *          The task to handle.
+   * @param aObject
+   *          The object that caused the error.
    */
-  public void error (JobTask aTask) {
-    log.debug("Erroring task {}", aTask);
-    MutableJobTask task = new MutableJobTask(aTask);
-    task.setStatus(TaskStatus.FAILED);
-    Job job = jobRepository.findJobByTaskId (aTask.getId());
-    MutableJob mjob = new MutableJob (job);
-    Assert.notNull(mjob,String.format("No job found for task %s ",aTask.getId()));
-    mjob.setStatus(JobStatus.FAILED);
-    mjob.setFailedDate(new Date ());
-    jobTaskRepository.update(task);
-    jobRepository.update(mjob);
+  public void error (Object aObject) {
+    try {
+      if(aObject instanceof JobTask) {
+        JobTask task = (JobTask) aObject;
+        log.debug("Erroring task {}", task);
+        MutableJobTask mtask = new MutableJobTask(task);
+        mtask.setStatus(TaskStatus.FAILED);
+        Job job = jobRepository.findJobByTaskId (mtask.getId());
+        MutableJob mjob = new MutableJob (job);
+        Assert.notNull(mjob,String.format("No job found for task %s ",mtask.getId()));
+        mjob.setStatus(JobStatus.FAILED);
+        mjob.setFailedDate(new Date ());
+        jobTaskRepository.update(mtask);
+        jobRepository.update(mjob);
+      }
+    }
+    catch (Throwable e) {
+      log.error(e.getMessage(),e);
+    }
   }
 
   /**
