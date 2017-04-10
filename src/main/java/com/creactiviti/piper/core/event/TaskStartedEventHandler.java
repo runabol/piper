@@ -12,9 +12,9 @@ import org.springframework.context.PayloadApplicationEvent;
 import org.springframework.stereotype.Component;
 
 import com.creactiviti.piper.config.ConditionalOnCoordinator;
-import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.core.task.JobTaskRepository;
 import com.creactiviti.piper.core.task.TaskStatus;
 
 /**
@@ -26,23 +26,23 @@ import com.creactiviti.piper.core.task.TaskStatus;
 @ConditionalOnCoordinator
 public class TaskStartedEventHandler implements ApplicationListener<PayloadApplicationEvent<PiperEvent>> {
 
-  private JobRepository jobRepository;
+  private JobTaskRepository jobTaskRepository;
 
   @Override
   public void onApplicationEvent(PayloadApplicationEvent<PiperEvent> aEvent) {
     PiperEvent event = aEvent.getPayload();
     if(Events.TASK_STARTED.equals(event.getType())) {
       String taskId = event.getString("taskId");
-      JobTask task = jobRepository.findTask(taskId);
+      JobTask task = jobTaskRepository.findOne(taskId);
       MutableJobTask mtask = new MutableJobTask(task);
       mtask.setStatus(TaskStatus.STARTED);
-      jobRepository.update(mtask);
+      jobTaskRepository.update(mtask);
     }
   }
 
   @Autowired
-  public void setJobRepository(JobRepository aJobRepository) {
-    jobRepository = aJobRepository;
+  public void setJobTaskRepository(JobTaskRepository aJobTaskRepository) {
+    jobTaskRepository = aJobTaskRepository;
   }
   
 }

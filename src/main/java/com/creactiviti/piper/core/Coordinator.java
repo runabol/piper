@@ -26,6 +26,7 @@ import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.core.task.JobTaskRepository;
 import com.creactiviti.piper.core.task.NoOpTaskEvaluator;
 import com.creactiviti.piper.core.task.Task;
 import com.creactiviti.piper.core.task.TaskEvaluator;
@@ -44,6 +45,7 @@ public class Coordinator {
   
   private PipelineRepository pipelineRepository;
   private JobRepository jobRepository;
+  private JobTaskRepository jobTaskRepository;
   private ApplicationEventPublisher eventPublisher;
   private ContextRepository contextRepository;
   private TaskExecutor taskExecutor;
@@ -116,7 +118,7 @@ public class Coordinator {
     MutableJobTask mt = new MutableJobTask (task);
     mt.setJobId(aJob.getId());
     mt.setStatus(TaskStatus.CREATED);
-    jobRepository.create(mt);
+    jobTaskRepository.create(mt);
     return mt;
   }
 
@@ -188,7 +190,7 @@ public class Coordinator {
       Pipeline pipeline = pipelineRepository.findOne(job.getPipelineId());
       MutableJob mjob = new MutableJob (job);
       mjob.setCurrentTask(mjob.getCurrentTask()+1);
-      jobRepository.update(task);
+      jobTaskRepository.update(task);
       jobRepository.update(mjob);
       if(task.getOutput() != null) {
         Context context = contextRepository.pop(job.getId());
@@ -219,7 +221,7 @@ public class Coordinator {
     Assert.notNull(mjob,String.format("No job found for task %s ",aTask.getId()));
     mjob.setStatus(JobStatus.FAILED);
     mjob.setFailedDate(new Date ());
-    jobRepository.update(task);
+    jobTaskRepository.update(task);
     jobRepository.update(mjob);
   }
 
@@ -258,6 +260,10 @@ public class Coordinator {
   
   public void setTaskEvaluator(TaskEvaluator aTaskEvaluator) {
     taskEvaluator = aTaskEvaluator;
+  }
+  
+  public void setJobTaskRepository(JobTaskRepository aJobTaskRepository) {
+    jobTaskRepository = aJobTaskRepository;
   }
   
 }

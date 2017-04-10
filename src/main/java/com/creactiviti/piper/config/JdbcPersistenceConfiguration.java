@@ -14,12 +14,21 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import com.creactiviti.piper.core.context.JdbcContextRepository;
 import com.creactiviti.piper.core.job.JdbcJobRepository;
+import com.creactiviti.piper.core.task.JdbcJobTaskRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
 @ConditionalOnProperty(name="piper.persistence.provider",havingValue="jdbc")
 public class JdbcPersistenceConfiguration {
 
+  @Bean
+  JdbcJobTaskRepository jdbcJobTaskRepository (NamedParameterJdbcTemplate aJdbcTemplate, ObjectMapper aObjectMapper) {
+    JdbcJobTaskRepository jdbcJobTaskRepository = new JdbcJobTaskRepository();
+    jdbcJobTaskRepository.setJdbcOperations(aJdbcTemplate);
+    jdbcJobTaskRepository.setObjectMapper(aObjectMapper);
+    return jdbcJobTaskRepository;
+  }
+  
   @Bean
   JdbcJobRepository jdbcJobRepository (NamedParameterJdbcTemplate aJdbcTemplate, ObjectMapper aObjectMapper) {
     JdbcJobRepository jdbcJobRepository = new JdbcJobRepository();
