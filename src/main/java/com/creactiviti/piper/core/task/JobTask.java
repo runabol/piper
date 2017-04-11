@@ -9,8 +9,9 @@ package com.creactiviti.piper.core.task;
 import java.util.Date;
 
 import com.creactiviti.piper.error.Errorable;
+import com.creactiviti.piper.error.Retryable;
 
-public interface JobTask extends Task, Errorable {
+public interface JobTask extends Task, Errorable, Retryable {
 
   String getId ();
   
@@ -27,9 +28,5 @@ public interface JobTask extends Task, Errorable {
   Date getFailedDate ();
   
   long getExecutionTime ();
-  
-  int getRetry ();
-  
-  long getRetryDelay ();
   
 }
