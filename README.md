@@ -7,7 +7,6 @@ See http://meetpiper.com
 # Roadmap
 
 - events
-- retry
 - sequences (like in Clojure)
 - Clojure scripting support???
 - server-sent-event

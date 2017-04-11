@@ -33,14 +33,25 @@ public interface Retryable {
   
   /**
    * The delay to introduce between each 
-   * retry.
+   * retry. Values are to be specified using 
+   * the ISO-8601 format (excluding the PT prefix).
+   * e.g. 10s (ten seconds), 1m (one minute) etc. 
    * 
-   * Default 1000ms
+   * Default: 1s
    * 
    * @return int the delay (in ms) to introduce
+   * @see https://en.wikipedia.org/wiki/ISO_8601#Durations
    */
-  int getRetryDelay ();
-
+  String getRetryDelay ();
+  
+  /**
+   * Returns the calculated retry delay. 
+   * i.e.: delay * retryAttempts * retryDelayFactor
+   * 
+   * @return long the delay (in ms) to introduce
+   */
+  long getRetryDelayMillis ();
+  
   /**
    * The factor to use in order to calculate
    * the actual delay time between each 

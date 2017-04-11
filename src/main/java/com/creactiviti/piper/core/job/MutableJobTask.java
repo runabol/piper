@@ -6,6 +6,7 @@
  */
 package com.creactiviti.piper.core.job;
 
+import java.time.Duration;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
@@ -134,16 +135,16 @@ public class MutableJobTask extends MutableTask implements JobTask {
   }
   
   @Override
-  public int getRetryDelay() {
-    return getInteger("retryDelay",0);
+  public String getRetryDelay() {
+    return getString("retryDelay","1s");
   }
   
-  public void setRetryDelay (int aDelay) {
-    set("retryDelay", aDelay);
-  }
-  
-  public void setRetry (int aValue) {
-    set("retry", aValue);
+  @Override
+  public long getRetryDelayMillis () {
+    long delay = Duration.parse("PT" + getRetryDelay()).toMillis();
+    int retryAttempts = getRetryAttempts();
+    int retryDelayFactor = getRetryDelayFactor();
+    return delay * retryAttempts * retryDelayFactor;
   }
   
   public void setRetryAttempts (int aRetryAttempts) {

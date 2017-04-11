@@ -7,6 +7,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
+
 import org.junit.Test;
 
 import com.creactiviti.piper.core.job.JobRepository;
@@ -42,9 +44,8 @@ public class JobTaskErrorHandlerTests {
     handler.setJobRepository(jobRepo);
     handler.setJobTaskRepository(taskRepo);
     handler.setTaskExecutor(executor);
-    MutableJobTask errorable = new MutableJobTask();
+    MutableJobTask errorable = new MutableJobTask(Collections.singletonMap("retry",1));
     errorable.setId("1234");
-    errorable.setRetry(1);
     errorable.setError(new ErrorObject("something bad happened", new String[0]));
     handler.handle(errorable);
     verify(jobRepo,never()).update(any());

@@ -22,12 +22,12 @@ public class JmsMessenger implements Messenger {
     Assert.notNull(aRoutingKey,"routing key can't be null");
     if(aMessage instanceof Retryable) {
       Retryable r = (Retryable) aMessage;
-      delay(r.getRetryDelay());
+      delay(r.getRetryDelayMillis());
     }
     jmsTemplate.convertAndSend(aRoutingKey, aMessage);
   }
   
-  private void delay (int aValue) {
+  private void delay (long aValue) {
     try {
       TimeUnit.MILLISECONDS.sleep(aValue);
     } catch (InterruptedException e) {

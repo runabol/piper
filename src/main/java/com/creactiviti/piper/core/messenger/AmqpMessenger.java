@@ -21,7 +21,7 @@ public class AmqpMessenger implements Messenger {
     amqpTemplate.convertAndSend(Exchanges.DEFAULT,aRoutingKey,aMessage, (m) -> {
       if(aMessage instanceof Retryable) {
         Retryable r = (Retryable) aMessage;
-        m.getMessageProperties().setDelay(r.getRetryDelay());
+        m.getMessageProperties().setDelay((int)r.getRetryDelayMillis());
       }
       return m;
     });
