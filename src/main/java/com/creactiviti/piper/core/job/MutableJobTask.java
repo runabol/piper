@@ -150,6 +150,11 @@ public class MutableJobTask extends MutableTask implements JobTask {
     set("retryAttempts", aRetryAttempts);
   }
   
+  @Override
+  public int getRetryDelayFactor() {
+    return getInteger("retryDelayFactor",2);
+  }
+  
   
   
 }

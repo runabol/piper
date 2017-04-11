@@ -35,8 +35,19 @@ public interface Retryable {
    * The delay to introduce between each 
    * retry.
    * 
-   * @return long the delay (in ms) to introduce
+   * @return int the delay (in ms) to introduce
    */
   int getRetryDelay ();
-  
+
+  /**
+   * The factor to use in order to calculate
+   * the actual delay time between each 
+   * successive retry -- multiplying
+   * by the value of {@link #getRetryDelay()}.
+   * 
+   * Default: 2
+   * 
+   * @return int the retry delay factor
+   */
+  int getRetryDelayFactor ();
 }
