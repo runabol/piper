@@ -16,10 +16,10 @@ package com.creactiviti.piper.error;
 public interface Retryable {
 
   /**
-   * The retry value or how many times
-   * can this message be retried. 
+   * Defines the maximum number of times that 
+   * this message may be retries. 
    * 
-   * @return int the number of allows retries. 
+   * @return int the maximum number of retries. 
    */
   int getRetry ();
   
