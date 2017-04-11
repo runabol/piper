@@ -83,7 +83,7 @@ public class Worker {
    *          The ID of the task to cancel.
    */
   public void handle (ControlTask aControlTask) {
-    throw new UnsupportedOperationException();
+    logger.info("{}",aControlTask);
   }
 
   public void setTaskHandlerResolver(TaskHandlerResolver aTaskHandlerResolver) {

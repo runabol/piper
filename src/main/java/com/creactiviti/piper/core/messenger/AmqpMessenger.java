@@ -18,7 +18,7 @@ public class AmqpMessenger implements Messenger {
   @Override
   public void send (String aRoutingKey, Object aMessage) {
     Assert.notNull(aRoutingKey,"routing key can't be null");
-    amqpTemplate.convertAndSend(aRoutingKey,aMessage, (m) -> {
+    amqpTemplate.convertAndSend(determineExchange(aRoutingKey),determineRoutingKey(aRoutingKey),aMessage, (m) -> {
       if(aMessage instanceof Retryable) {
         Retryable r = (Retryable) aMessage;
         m.getMessageProperties().setDelay((int)r.getRetryDelayMillis());
@@ -27,6 +27,18 @@ public class AmqpMessenger implements Messenger {
     });
   }
 
+  private String determineExchange (String aRoutingKey) {
+    String[] routingKey = aRoutingKey.split("/");
+    Assert.isTrue(routingKey.length<=2,"Invalid routing key: " + aRoutingKey);
+    return routingKey.length==2?routingKey[0]:Exchanges.TASKS; 
+  }
+  
+  private String determineRoutingKey (String aRoutingKey) {
+    String[] routingKey = aRoutingKey.split("/");
+    Assert.isTrue(routingKey.length<=2,"Invalid routing key: " + aRoutingKey);
+    return routingKey.length==2?routingKey[1]:aRoutingKey; 
+  }
+  
   public void setAmqpTemplate(AmqpTemplate aAmqpTemplate) {
     amqpTemplate = aAmqpTemplate;
   }

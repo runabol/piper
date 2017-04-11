@@ -24,11 +24,11 @@ import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.JobStatus;
 import com.creactiviti.piper.core.job.MutableJob;
 import com.creactiviti.piper.core.job.MutableJobTask;
-import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.JobTaskRepository;
+import com.creactiviti.piper.core.task.MutableControlTask;
 import com.creactiviti.piper.core.task.NoOpTaskEvaluator;
 import com.creactiviti.piper.core.task.Task;
 import com.creactiviti.piper.core.task.TaskEvaluator;
@@ -55,7 +55,6 @@ public class Coordinator {
   private TaskExecutor taskExecutor;
   private TaskEvaluator taskEvaluator = new NoOpTaskEvaluator();
   private ErrorHandler errorHandler;
-  private Messenger messenger;
 
   private static final String PIPELINE = "pipeline";
 
@@ -108,7 +107,10 @@ public class Coordinator {
   }
 
   private void execute (MutableJob aJob, Pipeline aPipeline) {
-    if(hasMoreTasks(aJob, aPipeline)) {
+    if(aJob.getStatus() != JobStatus.STARTED) {
+      return;
+    }
+    else if(hasMoreTasks(aJob, aPipeline)) {
       executeNextTask (aJob, aPipeline);
     }
     else {
@@ -159,7 +161,13 @@ public class Coordinator {
     Assert.notNull(job,"Unknown job: " + aJobId);
     Assert.isTrue(job.getStatus()==JobStatus.STARTED,"Job " + aJobId + " can not be stopped as it is " + job.getStatus());
     if(job.getExecution().size() > 0) {
+      MutableJob mjob = new MutableJob(job);
+      mjob.setStatus(JobStatus.STOPPED);
+      jobRepository.update(mjob);
       JobTask currentTask = job.getExecution().get(job.getExecution().size()-1);
+      MutableControlTask ctask = new MutableControlTask("stop");
+      ctask.set("taskId", currentTask.getId());
+      taskExecutor.execute(ctask);
     }
     return job;
   }

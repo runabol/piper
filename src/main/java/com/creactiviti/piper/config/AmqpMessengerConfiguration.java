@@ -13,7 +13,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Exchange;
 import org.springframework.amqp.core.ExchangeBuilder;
@@ -39,7 +38,6 @@ import com.creactiviti.piper.core.Worker;
 import com.creactiviti.piper.core.messenger.AmqpMessenger;
 import com.creactiviti.piper.core.messenger.Exchanges;
 import com.creactiviti.piper.core.messenger.Queues;
-import com.creactiviti.piper.core.uuid.UUIDGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.http.client.Client;
 
@@ -107,8 +105,7 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
   
   @Bean
   Queue controlQueue () {
-    String queueId = String.format(Queues.CONTROL,UUIDGenerator.generate());
-    return new Queue(queueId,true,true,true);
+    return new Queue(Queues.CONTROL,true,true,true);
   }
   
   @Bean
@@ -126,14 +123,6 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
                           .build();
   }
   
-  @Bean
-  Binding binding () {
-    return BindingBuilder.bind(controlQueue())
-                         .to(controlExchange())
-                         .with(Exchanges.CONTROL)
-                         .noargs();
-  }
-  
   @Override
   public void configureRabbitListeners(RabbitListenerEndpointRegistrar aRegistrar) {
     CoordinatorProperties coordinatorProperties = properties.getCoordinator();
@@ -146,6 +135,7 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
     if(workerProperties.isEnabled()) {
       Map<String, Object> subscriptions = workerProperties.getSubscriptions();
       subscriptions.forEach((k,v) -> registerListenerEndpoint(aRegistrar, k, Integer.valueOf((String)v), worker, "handle"));
+      registerListenerEndpoint(aRegistrar, controlQueue(), controlExchange(), 1, worker, "handle");
     }
   }
   
@@ -157,10 +147,15 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
     args.put("x-dead-letter-routing-key", Queues.DLQ);
     
     Queue queue = new Queue(aQueueName, true, false, false, args);
-    admin(connectionFactory).declareQueue(queue);
-    admin(connectionFactory).declareBinding(BindingBuilder.bind(queue)
-                                                          .to(tasksExchange())
-                                                          .with(queue.getName())
+    
+    registerListenerEndpoint(aRegistrar, queue, tasksExchange(), aConcurrency, aDelegate, aMethodName);
+  }
+  
+  private void registerListenerEndpoint(RabbitListenerEndpointRegistrar aRegistrar, Queue aQueue, Exchange aExchange, int aConcurrency, Object aDelegate, String aMethodName) {
+    admin(connectionFactory).declareQueue(aQueue);
+    admin(connectionFactory).declareBinding(BindingBuilder.bind(aQueue)
+                                                          .to(aExchange)
+                                                          .with(aQueue.getName())
                                                           .noargs());
     
     MessageListenerAdapter messageListener = new MessageListenerAdapter(aDelegate);
@@ -168,8 +163,8 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
     messageListener.setDefaultListenerMethod(aMethodName);
 
     SimpleRabbitListenerEndpoint endpoint = new SimpleRabbitListenerEndpoint();
-    endpoint.setId(aQueueName+"Endpoint");
-    endpoint.setQueueNames(aQueueName);
+    endpoint.setId(aQueue.getName()+"Endpoint");
+    endpoint.setQueueNames(aQueue.getName());
     endpoint.setMessageListener(messageListener);
 
     aRegistrar.registerEndpoint(endpoint,createContainerFactory(aConcurrency));

@@ -15,6 +15,12 @@ import com.creactiviti.piper.core.MapObject;
  */
 public class MutableControlTask extends MapObject implements ControlTask {
 
+  public MutableControlTask() {}
+  
+  public MutableControlTask(String aType) {
+    set("type", aType);
+  }
+  
   @Override
   public String getType() {
     return getString("type");
