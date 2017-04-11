@@ -129,6 +129,11 @@ public class MutableJobTask extends MutableTask implements JobTask {
   }
   
   @Override
+  public int getRetryAttempts() {
+    return getInteger("retryAttempts", 0);
+  }
+  
+  @Override
   public int getRetryDelay() {
     return getInteger("retryDelay",0);
   }
@@ -139,6 +144,10 @@ public class MutableJobTask extends MutableTask implements JobTask {
   
   public void setRetry (int aValue) {
     set("retry", aValue);
+  }
+  
+  public void setRetryAttempts (int aRetryAttempts) {
+    set("retryAttempts", aRetryAttempts);
   }
   
   

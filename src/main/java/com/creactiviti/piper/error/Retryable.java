@@ -24,6 +24,14 @@ public interface Retryable {
   int getRetry ();
   
   /**
+   *  The number of times that this message 
+   *  has been retried.
+   * 
+   * @return int the number attempted retries. 
+   */
+  int getRetryAttempts ();
+  
+  /**
    * The delay to introduce between each 
    * retry.
    * 

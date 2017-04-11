@@ -48,6 +48,7 @@ public class JobTaskErrorHandler extends AbstractErrorHandler {
     MutableJobTask mtask = new MutableJobTask(jtask);
     if(jtask.getRetry() > 0) {
       mtask.setRetry(jtask.getRetry()-1);
+      mtask.setRetryAttempts(jtask.getRetryAttempts()+1);
       mtask.setRetryDelay(mtask.getRetryDelay()>0?mtask.getRetryDelay()*DELAY_FACTOR:INITIAL_RETRY_DELAY);
       jobTaskRepository.update(mtask);
       taskExecutor.execute(mtask);
