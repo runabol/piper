@@ -35,6 +35,8 @@ public interface Retryable {
    * The delay to introduce between each 
    * retry.
    * 
+   * Default 1000ms
+   * 
    * @return int the delay (in ms) to introduce
    */
   int getRetryDelay ();
