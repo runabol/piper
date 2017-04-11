@@ -18,6 +18,7 @@ import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFac
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.annotation.JmsListenerConfigurer;
@@ -33,8 +34,10 @@ import org.springframework.jms.support.converter.MessageType;
 
 import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.Worker;
+import com.creactiviti.piper.core.messenger.Exchanges;
 import com.creactiviti.piper.core.messenger.JmsMessenger;
 import com.creactiviti.piper.core.messenger.Queues;
+import com.creactiviti.piper.core.task.ControlTask;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.error.Errorable;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,9 +48,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @ConditionalOnProperty(name="piper.messenger.provider",havingValue="jms")
 public class JmsMessengerConfiguration implements JmsListenerConfigurer {
 
+  @Lazy
   @Autowired(required=false)
   private Worker worker;
   
+  @Lazy
   @Autowired(required=false)
   private Coordinator coordinator;
   
@@ -85,16 +90,19 @@ public class JmsMessengerConfiguration implements JmsListenerConfigurer {
     return factory;
   }
 
-  @ConditionalOnCoordinator
   @JmsListener(destination=Queues.COMPLETIONS)
   public void receiveCompletion (JobTask aTask) {
     coordinator.completeTask(aTask);
   }
   
-  @ConditionalOnCoordinator
   @JmsListener(destination=Queues.ERRORS)
   public void receiveError (Errorable aErrorable) {
     coordinator.handleError(aErrorable);
+  }
+  
+  @JmsListener(destination=Queues.ERRORS)
+  public void receiveControl (ControlTask aControlTask) {
+    worker.handle(aControlTask);
   }
 
   @Override
@@ -109,6 +117,7 @@ public class JmsMessengerConfiguration implements JmsListenerConfigurer {
     if(workerProperties.isEnabled()) {
       Map<String, Object> subscriptions = workerProperties.getSubscriptions();
       subscriptions.forEach((k,v) -> registerListenerEndpoint(aRegistrar, k, Integer.valueOf((String)v), worker, "handle"));
+      registerListenerEndpoint(aRegistrar, Exchanges.CONTROL+"/"+Exchanges.CONTROL, 1, worker, "handle");
     }
   }
 
