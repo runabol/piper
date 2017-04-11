@@ -28,4 +28,6 @@ public interface JobTask extends Task, Errorable {
   
   long getExecutionTime ();
   
+  int getRetry ();
+  
 }

@@ -123,4 +123,15 @@ public class MutableJobTask extends MutableTask implements JobTask {
     return 0;
   }
   
+  @Override
+  public int getRetry() {
+    return getInteger("retry", 0);
+  }
+  
+  public void setRetry (int aValue) {
+    set("retry", aValue);
+  }
+  
+  
+  
 }

@@ -62,6 +62,7 @@ public class CoordinatorConfiguration {
     JobTaskErrorHandler jobTaskErrorHandler = new JobTaskErrorHandler();
     jobTaskErrorHandler.setJobRepository(jobRepository);
     jobTaskErrorHandler.setJobTaskRepository(jobTaskRepository);
+    jobTaskErrorHandler.setTaskExecutor(taskExecutor);
     return jobTaskErrorHandler;
   }
   

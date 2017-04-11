@@ -190,6 +190,7 @@ public class Coordinator {
     log.debug("Completing task {}", aTask.getId());
     MutableJobTask task = new MutableJobTask(aTask);
     task.setStatus(TaskStatus.COMPLETED);
+    task.setError(null);
     Job job = jobRepository.findJobByTaskId (aTask.getId());
     if(job!=null) {
       Pipeline pipeline = pipelineRepository.findOne(job.getPipelineId());
