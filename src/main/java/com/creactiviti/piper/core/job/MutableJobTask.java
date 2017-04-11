@@ -118,6 +118,15 @@ public class MutableJobTask extends MutablePipelineTask implements JobTask {
   public Date getFailedDate() {
     return getDate("failedDate");
   }
+  
+  @Override
+  public Date getCancellationDate() {
+    return getDate("cancellationDate");
+  }
+  
+  public void setCancellationDate (Date aDate) {
+    set("cancellationDate", aDate);
+  }
 
   @Override
   public long getExecutionTime() {

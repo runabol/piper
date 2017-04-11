@@ -160,16 +160,19 @@ public class Coordinator {
     Job job = jobRepository.findOne(aJobId);
     Assert.notNull(job,"Unknown job: " + aJobId);
     Assert.isTrue(job.getStatus()==JobStatus.STARTED,"Job " + aJobId + " can not be stopped as it is " + job.getStatus());
-    if(job.getExecution().size() > 0) {
-      MutableJob mjob = new MutableJob(job);
-      mjob.setStatus(JobStatus.STOPPED);
-      jobRepository.update(mjob);
-      JobTask currentTask = job.getExecution().get(job.getExecution().size()-1);
+    MutableJob mjob = new MutableJob(job);
+    mjob.setStatus(JobStatus.STOPPED);
+    jobRepository.update(mjob);
+    if(mjob.getExecution().size() > 0) {
+      MutableJobTask currentTask = new MutableJobTask(job.getExecution().get(job.getExecution().size()-1));
+      currentTask.setStatus(TaskStatus.CANCELLED);
+      currentTask.setCancellationDate(new Date());
+      jobTaskRepository.update(currentTask);
       MutableControlTask ctask = new MutableControlTask("stop");
       ctask.set("taskId", currentTask.getId());
       taskExecutor.execute(ctask);
     }
-    return job;
+    return mjob;
   }
 
   /**

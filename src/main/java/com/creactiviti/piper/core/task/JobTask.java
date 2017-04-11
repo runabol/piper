@@ -24,6 +24,8 @@ public interface JobTask extends PipelineTask, Errorable, Retryable {
   Date getCreationDate ();
   
   Date getCompletionDate ();
+
+  Date getCancellationDate ();
   
   Date getFailedDate ();
   
