@@ -37,10 +37,12 @@ public class JobTaskErrorHandler extends AbstractErrorHandler {
   protected void handleInternal(Errorable aErrorable) {
     JobTask jtask = (JobTask) aErrorable;
     Error error = jtask.getError();
+    Assert.notNull(error,"error must not be null");
     logger.debug("Erring task {}: {}\n{}", jtask.getId(), error.getMessage());
     MutableJobTask mtask = new MutableJobTask(jtask);
     mtask.setStatus(TaskStatus.FAILED);
     Job job = jobRepository.findJobByTaskId (mtask.getId());
+    Assert.notNull(job,"job not found for task: " + mtask.getId());
     MutableJob mjob = new MutableJob (job);
     Assert.notNull(mjob,String.format("No job found for task %s ",mtask.getId()));
     mjob.setStatus(JobStatus.FAILED);

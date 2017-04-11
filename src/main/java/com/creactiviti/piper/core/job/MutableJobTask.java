@@ -76,7 +76,10 @@ public class MutableJobTask extends MutableTask implements JobTask {
   
   @Override
   public Error getError() {
-    return new ErrorObject(getMap("error"));
+    if(containsKey("error")) {
+      return new ErrorObject(getMap("error"));
+    }
+    return null;
   }
   
   public void setError (Error aError) {
