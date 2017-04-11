@@ -21,7 +21,7 @@ public class PrimaryTaskExecutor implements TaskExecutor {
   private List<TaskExecutorResolver> resolvers = new ArrayList<>();
   
   @Override
-  public void execute (JobTask aTask) {
+  public void execute (Task aTask) {
     for(TaskExecutorResolver resolver : resolvers) {
       TaskExecutor executor = resolver.resolve(aTask);
       if(executor != null) {

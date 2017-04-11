@@ -15,12 +15,12 @@ import org.springframework.stereotype.Component;
 public class EachTaskExecutor implements TaskExecutor, TaskExecutorResolver {
 
   @Override
-  public void execute(JobTask aTask) {
+  public void execute(Task aTask) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public TaskExecutor resolve (JobTask aTask) {
+  public TaskExecutor resolve (Task aTask) {
     if(aTask.getType().equals("each")) {
       return this;
     }

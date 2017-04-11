@@ -12,11 +12,11 @@ import org.junit.Test;
 import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.messenger.Queues;
 
-public class DefaultTaskExecutorTests {
+public class WorkTaskExecutorTests {
 
   @Test
   public void test1 () {
-    DefaultTaskExecutor executor = new DefaultTaskExecutor();
+    WorkTaskExecutor executor = new WorkTaskExecutor();
     executor.setMessenger((k,m)->Assert.assertEquals(Queues.TASKS, k));
     executor.execute(new MutableJobTask());
   }
@@ -25,7 +25,7 @@ public class DefaultTaskExecutorTests {
   public void test2 () {
     MutableJobTask task = new MutableJobTask();
     task.setNode("encoder");
-    DefaultTaskExecutor executor = new DefaultTaskExecutor();
+    WorkTaskExecutor executor = new WorkTaskExecutor();
     executor.setMessenger((k,m)->Assert.assertEquals("encoder", k));
     executor.execute(task);
   }
@@ -34,7 +34,7 @@ public class DefaultTaskExecutorTests {
   public void test3 () {
     MutableJobTask task = new MutableJobTask();
     task.setNode("encoder.xlarge");
-    DefaultTaskExecutor executor = new DefaultTaskExecutor();
+    WorkTaskExecutor executor = new WorkTaskExecutor();
     executor.setMessenger((k,m)->Assert.assertEquals("encoder.xlarge", k));
     executor.execute(task);
   }

@@ -27,6 +27,6 @@ public interface TaskExecutorResolver {
    * @return a {@link TaskExecutor} instance to execute the given task or <code>null</code> if 
    *         unable to resolve one. 
    */
-  TaskExecutor resolve (JobTask aTask);
+  TaskExecutor resolve (Task aTask);
   
 }

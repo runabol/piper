@@ -21,6 +21,6 @@ public interface TaskExecutor {
    * @param aTask
    *          The task to execute
    */
-  void execute (JobTask aTask);
+  void execute (Task aTask);
 
 }
