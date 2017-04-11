@@ -42,6 +42,7 @@ public class QueueMetrics implements PublicMetrics {
   
   private List<Metric<Number>> queueInfoToMeticMapper (QueueInfo q) {
     return Arrays.asList(
+      new Metric<>("queues."+q.getName()+".consumers",q.getConsumerCount()),
       new Metric<>("queues."+q.getName()+".messages.total",q.getTotalMessages()),
       new Metric<>("queues."+q.getName()+".messages.unacknowledged",q.getMessagesUnacknowledged()),
       new Metric<>("queues."+q.getName()+".messages.ready",q.getMessagesReady())
