@@ -165,6 +165,10 @@ public class MutableJobTask extends MutablePipelineTask implements JobTask {
     return getInteger("retryDelayFactor",2);
   }
   
+  @Override
+  public String getTimeout() {
+    return getString("timeout");
+  }
   
   
 }

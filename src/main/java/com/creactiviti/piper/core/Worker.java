@@ -6,9 +6,14 @@
  */
 package com.creactiviti.piper.core;
 
+import java.time.Duration;
 import java.util.Date;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -47,7 +52,11 @@ public class Worker {
   private Logger logger = LoggerFactory.getLogger(getClass());
   
   private final ExecutorService executors = Executors.newCachedThreadPool();
+  
+  private final Map<String, Future<?>> executions = new ConcurrentHashMap<>();
 
+  private static final long DEFAULT_TIME_OUT = 24 * 60 * 60 * 1000; 
+  
   /**
    * Handle the execution of a {@link JobTask}. Implementors
    * are expected to execute the task asynchronously. 
@@ -56,24 +65,50 @@ public class Worker {
    *          The task to execute.
    */
   public void handle (JobTask aTask) {
-    try {
-      logger.debug("Recived task: {}",aTask);
-      TaskHandler<?> taskHandler = taskHandlerResolver.resolve(aTask);
-      messenger.send(Queues.EVENTS, PiperEvent.of(Events.TASK_STARTED,"taskId",aTask.getId()));
-      Object output = taskHandler.handle(aTask);
-      MutableJobTask completion = new MutableJobTask(aTask);
-      if(output!=null) {
-        completion.setOutput(output);
+    
+    Future<?> future = executors.submit(() -> {
+      try {
+        logger.debug("Recived task: {}",aTask);
+        TaskHandler<?> taskHandler = taskHandlerResolver.resolve(aTask);
+        messenger.send(Queues.EVENTS, PiperEvent.of(Events.TASK_STARTED,"taskId",aTask.getId()));
+        Object output = taskHandler.handle(aTask);
+        MutableJobTask completion = new MutableJobTask(aTask);
+        if(output!=null) {
+          completion.setOutput(output);
+        }
+        completion.setCompletionDate(new Date());
+        messenger.send(Queues.COMPLETIONS, completion);
       }
-      completion.setCompletionDate(new Date());
-      messenger.send(Queues.COMPLETIONS, completion);
+      catch (Exception e) {
+        handleException(aTask, e);
+      }
+    });
+    
+    executions.put(aTask.getId(), future);
+    
+    try {
+      future.get(calculateTimeout(aTask), TimeUnit.MILLISECONDS);
+    } catch (Exception e) {
+      handleException(aTask, e);
     }
-    catch (Exception e) {
-      logger.error(e.getMessage(),e);
-      MutableJobTask jobTask = new MutableJobTask(aTask);
-      jobTask.setError(new ErrorObject(e.getMessage(),ExceptionUtils.getStackFrames(e)));
-      messenger.send(Queues.ERRORS, jobTask);
+    finally {
+      executions.remove(aTask.getId());
     }
+    
+  }
+  
+  private void handleException (JobTask aTask, Throwable e) {
+    logger.error(e.getMessage(),e);
+    MutableJobTask jobTask = new MutableJobTask(aTask);
+    jobTask.setError(new ErrorObject(e.getMessage(),ExceptionUtils.getStackFrames(e)));
+    messenger.send(Queues.ERRORS, jobTask);
+  }
+  
+  private long calculateTimeout (JobTask aTask) {
+    if(aTask.getTimeout() != null) {
+      return Duration.parse("PT"+aTask.getTimeout()).toMillis();
+    }
+    return DEFAULT_TIME_OUT;
   }
   
   /**

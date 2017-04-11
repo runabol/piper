@@ -18,9 +18,6 @@ import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFac
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.jms.annotation.EnableJms;
-import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.annotation.JmsListenerConfigurer;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
@@ -37,22 +34,16 @@ import com.creactiviti.piper.core.Worker;
 import com.creactiviti.piper.core.messenger.Exchanges;
 import com.creactiviti.piper.core.messenger.JmsMessenger;
 import com.creactiviti.piper.core.messenger.Queues;
-import com.creactiviti.piper.core.task.ControlTask;
-import com.creactiviti.piper.core.task.JobTask;
-import com.creactiviti.piper.error.Errorable;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
-@EnableJms
 @EnableConfigurationProperties(PiperProperties.class)
 @ConditionalOnProperty(name="piper.messenger.provider",havingValue="jms")
 public class JmsMessengerConfiguration implements JmsListenerConfigurer {
 
-  @Lazy
   @Autowired(required=false)
   private Worker worker;
   
-  @Lazy
   @Autowired(required=false)
   private Coordinator coordinator;
   
@@ -88,21 +79,6 @@ public class JmsMessengerConfiguration implements JmsListenerConfigurer {
     DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
     configurer.configure(factory, connectionFactory);
     return factory;
-  }
-
-  @JmsListener(destination=Queues.COMPLETIONS)
-  public void receiveCompletion (JobTask aTask) {
-    coordinator.completeTask(aTask);
-  }
-  
-  @JmsListener(destination=Queues.ERRORS)
-  public void receiveError (Errorable aErrorable) {
-    coordinator.handleError(aErrorable);
-  }
-  
-  @JmsListener(destination=Queues.ERRORS)
-  public void receiveControl (ControlTask aControlTask) {
-    worker.handle(aControlTask);
   }
 
   @Override
