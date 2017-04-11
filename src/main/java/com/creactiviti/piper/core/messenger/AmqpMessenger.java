@@ -18,7 +18,7 @@ public class AmqpMessenger implements Messenger {
   @Override
   public void send (String aRoutingKey, Object aMessage) {
     Assert.notNull(aRoutingKey,"routing key can't be null");
-    amqpTemplate.convertAndSend(Exchanges.DEFAULT,aRoutingKey,aMessage, (m) -> {
+    amqpTemplate.convertAndSend(aRoutingKey,aMessage, (m) -> {
       if(aMessage instanceof Retryable) {
         Retryable r = (Retryable) aMessage;
         m.getMessageProperties().setDelay((int)r.getRetryDelayMillis());

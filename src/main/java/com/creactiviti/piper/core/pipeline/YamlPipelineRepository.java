@@ -15,7 +15,7 @@ import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.Resource;
 
-import com.creactiviti.piper.core.task.MutableTask;
+import com.creactiviti.piper.core.task.MutablePipelineTask;
 import com.creactiviti.piper.core.task.Task;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -40,7 +40,7 @@ public abstract class YamlPipelineRepository implements PipelineRepository  {
       List<Task> tasks = new ArrayList<>();
       for(int i=0; i<rawTasks.size(); i++) {
         Map<String, Object> rt = rawTasks.get(i);
-        MutableTask mutableTask = new MutableTask(rt);
+        MutablePipelineTask mutableTask = new MutablePipelineTask(rt);
         mutableTask.setTaskNumber(i+1);
         tasks.add(mutableTask);
       }

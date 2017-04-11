@@ -6,10 +6,14 @@
  */
 package com.creactiviti.piper.core.task;
 
-import com.creactiviti.piper.core.Accessor;
+public interface PipelineTask extends Task {
 
-public interface Task extends Accessor {
+  int getTaskNumber ();
   
-  String getType ();
+  String getName ();
+  
+  String getLabel ();
+  
+  String getNode ();
   
 }

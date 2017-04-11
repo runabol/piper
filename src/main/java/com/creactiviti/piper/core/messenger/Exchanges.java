@@ -8,6 +8,7 @@ package com.creactiviti.piper.core.messenger;
 
 public interface Exchanges {
 
-  public static final String DEFAULT = "piper";
+  static final String TASKS = "piper.tasks";
+  static final String CONTROL = "piper.control";
   
 }

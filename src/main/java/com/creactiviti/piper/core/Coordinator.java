@@ -24,6 +24,7 @@ import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.JobStatus;
 import com.creactiviti.piper.core.job.MutableJob;
 import com.creactiviti.piper.core.job.MutableJobTask;
+import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.JobTask;
@@ -54,6 +55,7 @@ public class Coordinator {
   private TaskExecutor taskExecutor;
   private TaskEvaluator taskEvaluator = new NoOpTaskEvaluator();
   private ErrorHandler errorHandler;
+  private Messenger messenger;
 
   private static final String PIPELINE = "pipeline";
 
@@ -153,7 +155,13 @@ public class Coordinator {
    * @return The stopped {@link Job}
    */
   public Job stop (String aJobId) {
-    throw new UnsupportedOperationException();
+    Job job = jobRepository.findOne(aJobId);
+    Assert.notNull(job,"Unknown job: " + aJobId);
+    Assert.isTrue(job.getStatus()==JobStatus.STARTED,"Job " + aJobId + " can not be stopped as it is " + job.getStatus());
+    if(job.getExecution().size() > 0) {
+      JobTask currentTask = job.getExecution().get(job.getExecution().size()-1);
+    }
+    return job;
   }
 
   /**
@@ -266,5 +274,5 @@ public class Coordinator {
   public void setErrorHandler(ErrorHandler aErrorHandler) {
     errorHandler = aErrorHandler;
   }
-
+  
 }

@@ -7,16 +7,16 @@
 package com.creactiviti.piper.config;
 
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.AbstractExchange;
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Exchange;
+import org.springframework.amqp.core.ExchangeBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
@@ -39,6 +39,7 @@ import com.creactiviti.piper.core.Worker;
 import com.creactiviti.piper.core.messenger.AmqpMessenger;
 import com.creactiviti.piper.core.messenger.Exchanges;
 import com.creactiviti.piper.core.messenger.Queues;
+import com.creactiviti.piper.core.uuid.UUIDGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.http.client.Client;
 
@@ -100,31 +101,37 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
   }
   
   @Bean
-  public Queue dlqQueue () {
+  Queue dlqQueue () {
     return new Queue(Queues.DLQ);
   }
   
   @Bean
-  public Exchange exchange () {
-    return new CustomExchange();
+  Queue controlQueue () {
+    String queueId = String.format(Queues.CONTROL,UUIDGenerator.generate());
+    return new Queue(queueId,true,true,true);
   }
   
-  public static class CustomExchange extends AbstractExchange {
-
-    public CustomExchange() {
-      super(Exchanges.DEFAULT);
-    }
-
-    @Override
-    public String getType() {
-      return "x-delayed-message";
-    }
-    
-    @Override
-    public Map<String, Object> getArguments() {
-      return Collections.singletonMap("x-delayed-type", "direct");
-    }
-    
+  @Bean
+  Exchange tasksExchange () {
+    return ExchangeBuilder.directExchange(Exchanges.TASKS)
+                          .delayed()
+                          .durable(true)
+                          .build();
+  }
+  
+  @Bean
+  Exchange controlExchange () {
+    return ExchangeBuilder.fanoutExchange(Exchanges.CONTROL)
+                          .durable(true)
+                          .build();
+  }
+  
+  @Bean
+  Binding binding () {
+    return BindingBuilder.bind(controlQueue())
+                         .to(controlExchange())
+                         .with(Exchanges.CONTROL)
+                         .noargs();
   }
   
   @Override
@@ -152,7 +159,7 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
     Queue queue = new Queue(aQueueName, true, false, false, args);
     admin(connectionFactory).declareQueue(queue);
     admin(connectionFactory).declareBinding(BindingBuilder.bind(queue)
-                                                          .to(exchange())
+                                                          .to(tasksExchange())
                                                           .with(queue.getName())
                                                           .noargs());
     

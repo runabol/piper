@@ -9,7 +9,7 @@ package com.creactiviti.piper.core.pipeline;
 import java.util.List;
 
 import com.creactiviti.piper.core.Accessor;
-import com.creactiviti.piper.core.task.Task;
+import com.creactiviti.piper.core.task.PipelineTask;
 
 /**
  * Pipelines are the the blueprints that describe
@@ -33,7 +33,7 @@ public interface Pipeline {
   /**
    * Returns the steps that make up the pipeline.
    */
-  List<Task> getTasks ();
+  List<PipelineTask> getTasks ();
 
   /**
    * Returns the pipeline's expected input

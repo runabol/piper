@@ -14,7 +14,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.creactiviti.piper.core.Accessor;
 import com.creactiviti.piper.core.MapObject;
-import com.creactiviti.piper.core.task.Task;
+import com.creactiviti.piper.core.task.PipelineTask;
 
 public class SimplePipeline extends MapObject implements Pipeline {
 
@@ -33,8 +33,8 @@ public class SimplePipeline extends MapObject implements Pipeline {
   }
 
   @Override
-  public List<Task> getTasks() {
-    return getList("tasks", Task.class);
+  public List<PipelineTask> getTasks() {
+    return getList("tasks", PipelineTask.class);
   }
 
   @Override

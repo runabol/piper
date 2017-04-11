@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.Map;
 
 import com.creactiviti.piper.core.task.JobTask;
-import com.creactiviti.piper.core.task.MutableTask;
+import com.creactiviti.piper.core.task.MutablePipelineTask;
 import com.creactiviti.piper.core.task.Task;
 import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
@@ -20,7 +20,7 @@ import com.creactiviti.piper.error.Error;
 import com.creactiviti.piper.error.ErrorObject;
 
 
-public class MutableJobTask extends MutableTask implements JobTask {
+public class MutableJobTask extends MutablePipelineTask implements JobTask {
 
   public MutableJobTask () {
     this(Collections.EMPTY_MAP);

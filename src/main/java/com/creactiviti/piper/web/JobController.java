@@ -55,5 +55,10 @@ public class JobController {
   public Job restart (@PathVariable("id")String aJobId) {
     return coordinator.resume(aJobId);
   }
+  
+  @PutMapping(value="/jobs/{id}/stop")
+  public Job step (@PathVariable("id")String aJobId) {
+    return coordinator.stop(aJobId);
+  }
     
 }

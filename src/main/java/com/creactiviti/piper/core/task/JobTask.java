@@ -11,7 +11,7 @@ import java.util.Date;
 import com.creactiviti.piper.error.Errorable;
 import com.creactiviti.piper.error.Retryable;
 
-public interface JobTask extends Task, Errorable, Retryable {
+public interface JobTask extends PipelineTask, Errorable, Retryable {
 
   String getId ();
   

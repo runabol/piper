@@ -6,7 +6,6 @@ See http://meetpiper.com
 
 # Roadmap
 
-- events
 - sequences (like in Clojure)
 - Clojure scripting support???
 - server-sent-event

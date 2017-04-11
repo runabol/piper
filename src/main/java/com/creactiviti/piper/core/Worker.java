@@ -7,6 +7,8 @@
 package com.creactiviti.piper.core;
 
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import com.creactiviti.piper.core.event.PiperEvent;
 import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.messenger.Queues;
+import com.creactiviti.piper.core.task.ControlTask;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.TaskHandler;
 import com.creactiviti.piper.core.task.TaskHandlerResolver;
@@ -42,6 +45,8 @@ public class Worker {
   private Messenger messenger;
   
   private Logger logger = LoggerFactory.getLogger(getClass());
+  
+  private final ExecutorService executors = Executors.newCachedThreadPool();
 
   /**
    * Handle the execution of a {@link JobTask}. Implementors
@@ -70,14 +75,14 @@ public class Worker {
       messenger.send(Queues.ERRORS, jobTask);
     }
   }
-
+  
   /**
    * Cancel the execution of a running task.
    * 
    * @param aTaskId
    *          The ID of the task to cancel.
    */
-  public void cancel (String aTaskId) {
+  public void handle (ControlTask aControlTask) {
     throw new UnsupportedOperationException();
   }
 
