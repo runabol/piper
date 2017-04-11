@@ -13,6 +13,6 @@ package com.creactiviti.piper.error;
  */
 public interface ErrorHandler {
 
-  void handle (Errorable aError);
+  void handle (Errorable aErrorable);
   
 }

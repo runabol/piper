@@ -12,6 +12,7 @@ import java.util.List;
 import com.creactiviti.piper.core.Accessor;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.error.Errorable;
 
 /**
  * Represents an instance of a job.
@@ -19,7 +20,7 @@ import com.creactiviti.piper.core.task.JobTask;
  * @author Arik Cohen
  * @since Jun 12, 2016
  */
-public interface Job extends Accessor {
+public interface Job extends Accessor, Errorable {
 
   /**
    * Return the ID of the job.

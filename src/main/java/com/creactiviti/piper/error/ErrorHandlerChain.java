@@ -6,21 +6,28 @@
  */
 package com.creactiviti.piper.error;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.util.Assert;
+
+/**
+ * 
+ * @author Arik Cohen
+ * @since Apr 10, 2017
+ */
 public class ErrorHandlerChain implements ErrorHandler {
 
-  private final List<ErrorHandler> handlers = new ArrayList<>();
+  private final List<ErrorHandler> handlers;
 
   public ErrorHandlerChain(List<ErrorHandler> aHandlers) {
-    handlers.addAll(aHandlers);
+    Assert.notNull(aHandlers,"list of handlers must not be null");
+    handlers = aHandlers;
   }
   
   @Override
-  public void handle(Errorable aError) {
+  public void handle(Errorable aErrorable) {
     for(ErrorHandler handler : handlers) {
-      handler.handle(aError);
+      handler.handle(aErrorable);
     }
   }
 

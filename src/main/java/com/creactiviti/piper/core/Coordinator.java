@@ -34,7 +34,7 @@ import com.creactiviti.piper.core.task.TaskEvaluator;
 import com.creactiviti.piper.core.task.TaskExecutor;
 import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
-import com.creactiviti.piper.error.Error;
+import com.creactiviti.piper.error.ErrorHandler;
 import com.creactiviti.piper.error.Errorable;
 
 /**
@@ -53,6 +53,7 @@ public class Coordinator {
   private ContextRepository contextRepository;
   private TaskExecutor taskExecutor;
   private TaskEvaluator taskEvaluator = new NoOpTaskEvaluator();
+  private ErrorHandler errorHandler;
 
   private static final String PIPELINE = "pipeline";
 
@@ -211,29 +212,13 @@ public class Coordinator {
   }
 
   /**
-   * Handle an erroring task condition.
+   * Handle an application error.
    * 
-   * @param aJobTask
-   *          The task that caused the error.
+   * @param aErrorable
+   *          The erring message.
    */
   public void handleError (Errorable aErrorable) {
-    try {
-      JobTask task = (JobTask) aErrorable;
-      Error error = task.getError();
-      log.debug("Erring task {}: {}\n{}", task.getId(), error.getMessage());
-      MutableJobTask mtask = new MutableJobTask(task);
-      mtask.setStatus(TaskStatus.FAILED);
-      Job job = jobRepository.findJobByTaskId (mtask.getId());
-      MutableJob mjob = new MutableJob (job);
-      Assert.notNull(mjob,String.format("No job found for task %s ",mtask.getId()));
-      mjob.setStatus(JobStatus.FAILED);
-      mjob.setFailedDate(new Date ());
-      jobTaskRepository.update(mtask);
-      jobRepository.update(mjob);
-    }
-    catch (Throwable e) {
-      log.error(e.getMessage(),e);
-    }
+    errorHandler.handle(aErrorable);
   }
 
   /**
@@ -275,6 +260,10 @@ public class Coordinator {
 
   public void setJobTaskRepository(JobTaskRepository aJobTaskRepository) {
     jobTaskRepository = aJobTaskRepository;
+  }
+
+  public void setErrorHandler(ErrorHandler aErrorHandler) {
+    errorHandler = aErrorHandler;
   }
 
 }

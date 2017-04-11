@@ -7,6 +7,8 @@
 
 package com.creactiviti.piper.config;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +22,9 @@ import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.JobTaskRepository;
 import com.creactiviti.piper.core.task.SpelTaskEvaluator;
 import com.creactiviti.piper.core.task.TaskExecutor;
+import com.creactiviti.piper.error.ErrorHandler;
+import com.creactiviti.piper.error.ErrorHandlerChain;
+import com.creactiviti.piper.error.JobTaskErrorHandler;
 
 @Configuration
 @ConditionalOnCoordinator
@@ -42,7 +47,22 @@ public class CoordinatorConfiguration {
     coordinator.setPipelineRepository(pipelineRepository);
     coordinator.setTaskEvaluator(new SpelTaskEvaluator());
     coordinator.setTaskExecutor(taskExecutor);
+    coordinator.setErrorHandler(errorHandler());
     return coordinator;
+  }
+  
+
+  @Bean
+  ErrorHandler errorHandler () {
+    return new ErrorHandlerChain(Arrays.asList(jobTaskErrorHandler()));
+  }
+  
+  @Bean
+  JobTaskErrorHandler jobTaskErrorHandler () {
+    JobTaskErrorHandler jobTaskErrorHandler = new JobTaskErrorHandler();
+    jobTaskErrorHandler.setJobRepository(jobRepository);
+    jobTaskErrorHandler.setJobTaskRepository(jobTaskRepository);
+    return jobTaskErrorHandler;
   }
   
 }

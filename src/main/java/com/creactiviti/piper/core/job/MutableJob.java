@@ -15,6 +15,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.creactiviti.piper.core.MapObject;
 import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.error.Error;
+import com.creactiviti.piper.error.ErrorObject;
 
 public class MutableJob extends MapObject implements Job {
 
@@ -55,6 +57,18 @@ public class MutableJob extends MapObject implements Job {
   
   public void setName(String aName) {
     set("name", aName);
+  }
+  
+  @Override
+  public Error getError() {
+    if(containsKey("error")) {
+      return new ErrorObject(getMap("error"));
+    }
+    return null;
+  }
+  
+  public void setError (Error aError) {
+    set("error", aError);
   }
   
   @Override
