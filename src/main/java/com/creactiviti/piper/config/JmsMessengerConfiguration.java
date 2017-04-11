@@ -34,6 +34,7 @@ import org.springframework.jms.support.converter.MessageType;
 import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.Worker;
 import com.creactiviti.piper.core.messenger.JmsMessenger;
+import com.creactiviti.piper.core.messenger.Queues;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.error.Errorable;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -8,6 +8,8 @@ See http://meetpiper.com
 
 - events
 - retry
+- sequences (like in Clojure)
+- Clojure scripting support???
 - server-sent-event
 - workers health
 - Stop/Resume Jobs

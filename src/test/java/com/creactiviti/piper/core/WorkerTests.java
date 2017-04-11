@@ -11,8 +11,8 @@ import java.util.Collections;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.creactiviti.piper.config.Queues;
 import com.creactiviti.piper.core.job.MutableJobTask;
+import com.creactiviti.piper.core.messenger.Queues;
 import com.creactiviti.piper.core.messenger.SynchMessenger;
 import com.creactiviti.piper.core.task.JobTask;
 

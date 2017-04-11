@@ -34,6 +34,10 @@ public class JobTaskErrorHandler extends AbstractErrorHandler {
   private TaskExecutor taskExecutor;
 
   private Logger logger = LoggerFactory.getLogger(getClass());
+  
+  private static final int INITIAL_RETRY_DELAY = 2000;
+  
+  private static final int DELAY_FACTOR = 2;
 
   @Override
   protected void handleInternal(Errorable aErrorable) {
@@ -44,6 +48,7 @@ public class JobTaskErrorHandler extends AbstractErrorHandler {
     MutableJobTask mtask = new MutableJobTask(jtask);
     if(jtask.getRetry() > 0) {
       mtask.setRetry(jtask.getRetry()-1);
+      mtask.setRetryDelay(mtask.getRetryDelay()>0?mtask.getRetryDelay()*DELAY_FACTOR:INITIAL_RETRY_DELAY);
       jobTaskRepository.update(mtask);
       taskExecutor.execute(mtask);
     }

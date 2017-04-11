@@ -9,8 +9,8 @@ package com.creactiviti.piper.core.task;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.creactiviti.piper.config.Queues;
 import com.creactiviti.piper.core.job.MutableJobTask;
+import com.creactiviti.piper.core.messenger.Queues;
 
 public class DefaultTaskExecutorTests {
 

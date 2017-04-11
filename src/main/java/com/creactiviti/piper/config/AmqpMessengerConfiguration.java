@@ -7,12 +7,16 @@
 package com.creactiviti.piper.config;
 
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.AbstractExchange;
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Exchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
@@ -33,6 +37,8 @@ import org.springframework.context.annotation.Configuration;
 import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.Worker;
 import com.creactiviti.piper.core.messenger.AmqpMessenger;
+import com.creactiviti.piper.core.messenger.Exchanges;
+import com.creactiviti.piper.core.messenger.Queues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.http.client.Client;
 
@@ -98,6 +104,29 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
     return new Queue(Queues.DLQ);
   }
   
+  @Bean
+  public Exchange exchange () {
+    return new CustomExchange();
+  }
+  
+  public static class CustomExchange extends AbstractExchange {
+
+    public CustomExchange() {
+      super(Exchanges.DEFAULT);
+    }
+
+    @Override
+    public String getType() {
+      return "x-delayed-message";
+    }
+    
+    @Override
+    public Map<String, Object> getArguments() {
+      return Collections.singletonMap("x-delayed-type", "direct");
+    }
+    
+  }
+  
   @Override
   public void configureRabbitListeners(RabbitListenerEndpointRegistrar aRegistrar) {
     CoordinatorProperties coordinatorProperties = properties.getCoordinator();
@@ -120,7 +149,12 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
     args.put("x-dead-letter-exchange", "");
     args.put("x-dead-letter-routing-key", Queues.DLQ);
     
-    admin(connectionFactory).declareQueue(new Queue(aQueueName, true, false, false, args));
+    Queue queue = new Queue(aQueueName, true, false, false, args);
+    admin(connectionFactory).declareQueue(queue);
+    admin(connectionFactory).declareBinding(BindingBuilder.bind(queue)
+                                                          .to(exchange())
+                                                          .with(queue.getName())
+                                                          .noargs());
     
     MessageListenerAdapter messageListener = new MessageListenerAdapter(aDelegate);
     messageListener.setMessageConverter(jacksonAmqpMessageConverter(objectMapper));

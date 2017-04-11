@@ -30,4 +30,6 @@ public interface JobTask extends Task, Errorable {
   
   int getRetry ();
   
+  long getRetryDelay ();
+  
 }

@@ -12,8 +12,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import com.creactiviti.piper.config.Queues;
 import com.creactiviti.piper.core.messenger.Messenger;
+import com.creactiviti.piper.core.messenger.Queues;
 
 @Component
 @Order(Ordered.LOWEST_PRECEDENCE)

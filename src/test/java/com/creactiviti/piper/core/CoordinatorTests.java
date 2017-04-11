@@ -25,11 +25,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.creactiviti.piper.config.Queues;
 import com.creactiviti.piper.core.context.JdbcContextRepository;
 import com.creactiviti.piper.core.job.JdbcJobRepository;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobStatus;
+import com.creactiviti.piper.core.messenger.Queues;
 import com.creactiviti.piper.core.messenger.SynchMessenger;
 import com.creactiviti.piper.core.pipeline.FileSystemPipelineRepository;
 import com.creactiviti.piper.core.task.DefaultTaskExecutor;
