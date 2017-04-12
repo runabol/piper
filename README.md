@@ -10,7 +10,7 @@ See http://meetpiper.com
 - Clojure scripting support???
 - server-sent-event
 - workers health
-- Stop/Resume Jobs
+- Stop Jobs
 - Each construct
 - Mapper construct
 - Parallel construct
@@ -19,4 +19,3 @@ See http://meetpiper.com
 - Job tags
 - Define job output (e.g. `output: ${int(output)}`)
 - UI
-- task timeout
