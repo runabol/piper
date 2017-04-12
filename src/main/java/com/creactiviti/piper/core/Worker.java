@@ -10,10 +10,12 @@ import java.time.Duration;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -65,7 +67,6 @@ public class Worker {
    *          The task to execute.
    */
   public void handle (JobTask aTask) {
-    
     Future<?> future = executors.submit(() -> {
       try {
         logger.debug("Recived task: {}",aTask);
@@ -79,7 +80,7 @@ public class Worker {
         completion.setCompletionDate(new Date());
         messenger.send(Queues.COMPLETIONS, completion);
       }
-      catch (Exception e) {
+      catch (Throwable e) {
         handleException(aTask, e);
       }
     });
@@ -88,13 +89,9 @@ public class Worker {
     
     try {
       future.get(calculateTimeout(aTask), TimeUnit.MILLISECONDS);
-    } catch (Exception e) {
+    } catch (InterruptedException | ExecutionException | TimeoutException e) {
       handleException(aTask, e);
     }
-    finally {
-      executions.remove(aTask.getId());
-    }
-    
   }
   
   private void handleException (JobTask aTask, Throwable e) {
