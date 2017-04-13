@@ -19,3 +19,7 @@ See http://meetpiper.com
 - Job tags
 - Define job output (e.g. `output: ${int(output)}`)
 - UI
+- Streaming events 
+- Make a point in the docs that Piper is designed from the ground up to be extensible.  
+
+
