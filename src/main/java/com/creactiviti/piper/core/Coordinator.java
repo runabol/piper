@@ -217,7 +217,7 @@ public class Coordinator {
       mjob.setCurrentTask(mjob.getCurrentTask()+1);
       jobTaskRepository.update(task);
       jobRepository.update(mjob);
-      if(task.getOutput() != null) {
+      if(task.getOutput() != null && task.getName() != null) {
         Context context = contextRepository.pop(job.getId());
         MapContext newContext = new MapContext(context.asMap());
         newContext.setId(UUIDGenerator.generate());
