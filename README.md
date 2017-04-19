@@ -6,20 +6,19 @@ See http://meetpiper.com
 
 # Roadmap
 
-- sequences (like in Clojure)
-- Clojure scripting support???
-- server-sent-event
 - workers health
-- Stop Jobs
 - Each construct
 - Mapper construct
 - Parallel construct
 - Search
 - Job Priority
 - Job tags
-- Define job output (e.g. `output: ${int(output)}`)
+- Task output (e.g. `output: ${int(output)}`)
+- Job outputs
 - UI
 - Streaming events (i.e. long polling)
 - Make a point in the docs that Piper is designed from the ground up to be extensible.  
-
+- sequences (like in Clojure)
+- Clojure scripting support???
+- server-sent-event
 
