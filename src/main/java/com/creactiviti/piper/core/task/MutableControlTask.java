@@ -29,5 +29,5 @@ public class MutableControlTask extends MapObject implements ControlTask {
   public void setType (String aType) {
     set("type", aType);
   }
-
+  
 }

@@ -13,8 +13,10 @@ import org.springframework.stereotype.Component;
 
 import com.creactiviti.piper.config.ConditionalOnCoordinator;
 import com.creactiviti.piper.core.job.MutableJobTask;
+import com.creactiviti.piper.core.task.CancelTask;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.JobTaskRepository;
+import com.creactiviti.piper.core.task.TaskExecutor;
 import com.creactiviti.piper.core.task.TaskStatus;
 
 /**
@@ -27,6 +29,7 @@ import com.creactiviti.piper.core.task.TaskStatus;
 public class TaskStartedEventHandler implements ApplicationListener<PayloadApplicationEvent<PiperEvent>> {
 
   private JobTaskRepository jobTaskRepository;
+  private TaskExecutor taskExecutor;
 
   @Override
   public void onApplicationEvent(PayloadApplicationEvent<PiperEvent> aEvent) {
@@ -34,15 +37,25 @@ public class TaskStartedEventHandler implements ApplicationListener<PayloadAppli
     if(Events.TASK_STARTED.equals(event.getType())) {
       String taskId = event.getString("taskId");
       JobTask task = jobTaskRepository.findOne(taskId);
-      MutableJobTask mtask = new MutableJobTask(task);
-      mtask.setStatus(TaskStatus.STARTED);
-      jobTaskRepository.update(mtask);
+      if(task.getStatus() == TaskStatus.CREATED) {
+        MutableJobTask mtask = new MutableJobTask(task);
+        mtask.setStatus(TaskStatus.STARTED);
+        jobTaskRepository.update(mtask);
+      }
+      else if (task.getStatus() == TaskStatus.CANCELLED) {
+        taskExecutor.execute(new CancelTask(task.getId()));
+      }
     }
   }
 
   @Autowired
   public void setJobTaskRepository(JobTaskRepository aJobTaskRepository) {
     jobTaskRepository = aJobTaskRepository;
+  }
+
+  @Autowired
+  public void setTaskExecutor(TaskExecutor aTaskExecutor) {
+    taskExecutor = aTaskExecutor;
   }
   
 }

@@ -9,6 +9,7 @@ package com.creactiviti.piper.core;
 import java.time.Duration;
 import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -20,6 +21,7 @@ import java.util.concurrent.TimeoutException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.event.Events;
 import com.creactiviti.piper.core.event.PiperEvent;
@@ -55,7 +57,7 @@ public class Worker {
   
   private final ExecutorService executors = Executors.newCachedThreadPool();
   
-  private final Map<String, Future<?>> executions = new ConcurrentHashMap<>();
+  private final Map<String, Future<?>> taskExecutions = new ConcurrentHashMap<>();
 
   private static final long DEFAULT_TIME_OUT = 24 * 60 * 60 * 1000; 
   
@@ -80,24 +82,31 @@ public class Worker {
         completion.setCompletionDate(new Date());
         messenger.send(Queues.COMPLETIONS, completion);
       }
-      catch (Throwable e) {
+      catch (InterruptedException e) {
+        // ignore
+      }
+      catch (Exception e) {
         handleException(aTask, e);
       }
     });
     
-    executions.put(aTask.getId(), future);
+    taskExecutions.put(aTask.getId(), future);
     
     try {
       future.get(calculateTimeout(aTask), TimeUnit.MILLISECONDS);
     } catch (InterruptedException | ExecutionException | TimeoutException e) {
       handleException(aTask, e);
     }
+    catch (CancellationException e) {
+      logger.debug("Cancelled task: {}", aTask.getId());
+    }
+    
   }
   
-  private void handleException (JobTask aTask, Throwable e) {
-    logger.error(e.getMessage(),e);
+  private void handleException (JobTask aTask, Exception aException) {
+    logger.error(aException.getMessage(),aException);
     MutableJobTask jobTask = new MutableJobTask(aTask);
-    jobTask.setError(new ErrorObject(e.getMessage(),ExceptionUtils.getStackFrames(e)));
+    jobTask.setError(new ErrorObject(aException.getMessage(),ExceptionUtils.getStackFrames(aException)));
     messenger.send(Queues.ERRORS, jobTask);
   }
   
@@ -115,7 +124,15 @@ public class Worker {
    *          The ID of the task to cancel.
    */
   public void handle (ControlTask aControlTask) {
-    logger.info("{}",aControlTask);
+    Assert.notNull(aControlTask,"task must not be null");
+    if(ControlTask.TYPE_CANCEL.equals(aControlTask.getType())) {
+      String taskId = aControlTask.getRequiredString("taskId");
+      Future<?> future = taskExecutions.get(taskId);
+      if(future != null) {
+        logger.info("Cancelling task {}",taskId);
+        future.cancel(true);
+      }
+    }
   }
 
   public void setTaskHandlerResolver(TaskHandlerResolver aTaskHandlerResolver) {

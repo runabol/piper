@@ -26,9 +26,9 @@ import com.creactiviti.piper.core.job.MutableJob;
 import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
+import com.creactiviti.piper.core.task.CancelTask;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.JobTaskRepository;
-import com.creactiviti.piper.core.task.MutableControlTask;
 import com.creactiviti.piper.core.task.NoOpTaskEvaluator;
 import com.creactiviti.piper.core.task.Task;
 import com.creactiviti.piper.core.task.TaskEvaluator;
@@ -168,9 +168,7 @@ public class Coordinator {
       currentTask.setStatus(TaskStatus.CANCELLED);
       currentTask.setCancellationDate(new Date());
       jobTaskRepository.update(currentTask);
-      MutableControlTask ctask = new MutableControlTask("stop");
-      ctask.set("taskId", currentTask.getId());
-      taskExecutor.execute(ctask);
+      taskExecutor.execute(new CancelTask(currentTask.getId()));
     }
     return mjob;
   }
