@@ -6,10 +6,15 @@
  */
 package com.creactiviti.piper.core.task;
 
+/**
+ * Defines the various states that a {@link JobTask}
+ * can be in at any give moment in time.
+ * 
+ * @author Arik Cohen
+ */
 public enum TaskStatus {
 
   CREATED,
-  QUEUED, 
   STARTED, 
   FAILED, 
   CANCELLED, 
