@@ -93,9 +93,7 @@ public class AmqpMessengerConfiguration implements RabbitListenerConfigurer {
   
   @Bean 
   MessageConverter jacksonAmqpMessageConverter(ObjectMapper aObjectMapper) {
-    Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter();
-    converter.setJsonObjectMapper(aObjectMapper);
-    return converter;
+    return new Jackson2JsonMessageConverter(aObjectMapper);
   }
   
   @Bean
