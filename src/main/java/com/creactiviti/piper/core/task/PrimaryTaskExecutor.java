@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 @Primary
 @Component
-public class PrimaryTaskExecutor implements TaskExecutor {
+public class PrimaryTaskExecutor implements TaskExecutor<Task> {
   
   @Autowired
   private List<TaskExecutorResolver> resolvers = new ArrayList<>();

@@ -16,11 +16,11 @@ package com.creactiviti.piper.error;
  * @author Arik Cohen
  * @since Apt 10, 2017
  */
-public interface ErrorHandler {
+public interface ErrorHandler<E extends Errorable> {
 
   /**
    * Handle the given error.
    */
-  void handle (Errorable aErrorable);
+  void handle (E aErrorable);
   
 }

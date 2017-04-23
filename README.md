@@ -1,12 +1,12 @@
 # What is this?
 
-Piper is a miniature workflow engine written in Java and built atop Spring Boot. 
+Piper is a miniature workflow engine written in Java. 
 
 See http://meetpiper.com
 
 # Roadmap
 
-- workers health
+- Workers health
 - Each construct
 - Mapper construct
 - Parallel construct

@@ -6,8 +6,10 @@
  */
 package com.creactiviti.piper.error;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.util.Assert;
 
 /**
@@ -15,7 +17,7 @@ import org.springframework.util.Assert;
  * @author Arik Cohen
  * @since Apr 10, 2017
  */
-public class ErrorHandlerChain implements ErrorHandler {
+public class ErrorHandlerChain implements ErrorHandler<Errorable> {
 
   private final List<ErrorHandler> handlers;
 
@@ -27,7 +29,10 @@ public class ErrorHandlerChain implements ErrorHandler {
   @Override
   public void handle(Errorable aErrorable) {
     for(ErrorHandler handler : handlers) {
-      handler.handle(aErrorable);
+      Method method = BeanUtils.findDeclaredMethodWithMinimalParameters(handler.getClass(), "handle");
+      if(method.getParameters()[0].getType().isAssignableFrom(aErrorable.getClass())) {
+        handler.handle(aErrorable);
+      }
     }
   }
 

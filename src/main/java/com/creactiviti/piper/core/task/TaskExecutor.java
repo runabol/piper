@@ -13,7 +13,7 @@ package com.creactiviti.piper.core.task;
  * @author Arik Cohen
  * @since Mar 26, 2017
  */
-public interface TaskExecutor {
+public interface TaskExecutor<T extends Task> {
 
   /**
    * Executes a {@link JobTask} instance.
@@ -21,6 +21,6 @@ public interface TaskExecutor {
    * @param aTask
    *          The task to execute
    */
-  void execute (Task aTask);
+  void execute (T aTask);
 
 }

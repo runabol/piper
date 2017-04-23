@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class EachTaskExecutor implements TaskExecutor, TaskExecutorResolver {
+public class EachTaskExecutor implements TaskExecutor<JobTask>, TaskExecutorResolver {
 
   @Override
-  public void execute(Task aTask) {
+  public void execute(JobTask aTask) {
     throw new UnsupportedOperationException();
   }
 
