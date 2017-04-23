@@ -21,13 +21,14 @@ import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.JobTaskRepository;
 import com.creactiviti.piper.core.task.TaskExecutor;
 import com.creactiviti.piper.core.task.TaskStatus;
+import com.creactiviti.piper.core.uuid.UUIDGenerator;
 
 /**
  * 
  * @author Arik Cohen
  * @since Apr 10, 2017
  */
-public class JobTaskErrorHandler extends AbstractErrorHandler {
+public class JobTaskErrorHandler implements ErrorHandler<JobTask> {
 
   private JobRepository jobRepository;
   private JobTaskRepository jobTaskRepository;
@@ -36,15 +37,15 @@ public class JobTaskErrorHandler extends AbstractErrorHandler {
   private Logger logger = LoggerFactory.getLogger(getClass());
     
   @Override
-  protected void handleInternal(Errorable aErrorable) {
-    JobTask jtask = (JobTask) aErrorable;
-    Error error = jtask.getError();
+  public void handle(JobTask aTask) {
+    Error error = aTask.getError();
     Assert.notNull(error,"error must not be null");
-    logger.debug("Erring task {}: {}\n{}", jtask.getId(), error.getMessage());
-    MutableJobTask mtask = new MutableJobTask(jtask);
-    if(jtask.getRetry() > 0) {
-      mtask.setRetryAttempts(jtask.getRetryAttempts()+1);
-      jobTaskRepository.update(mtask);
+    logger.debug("Erring task {}: {}\n{}", aTask.getId(), error.getMessage());
+    MutableJobTask mtask = new MutableJobTask(aTask);
+    if(aTask.getRetry() > 0) {
+      mtask.setId(UUIDGenerator.generate());
+      mtask.setRetryAttempts(aTask.getRetryAttempts()+1);
+      jobTaskRepository.create(mtask);
       taskExecutor.execute(mtask);
     }
     else {
@@ -58,12 +59,6 @@ public class JobTaskErrorHandler extends AbstractErrorHandler {
       jobTaskRepository.update(mtask);
       jobRepository.update(mjob);
     }
-  }
-  
-
-  @Override
-  protected boolean canHandle(Errorable aErrorable) {
-    return (aErrorable instanceof JobTask);
   }
 
   public void setJobRepository(JobRepository aJobRepository) {
