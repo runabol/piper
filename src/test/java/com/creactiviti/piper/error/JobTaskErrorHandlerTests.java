@@ -2,7 +2,6 @@ package com.creactiviti.piper.error;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -33,8 +32,8 @@ public class JobTaskErrorHandlerTests {
     errorable.setId("1234");
     errorable.setError(new ErrorObject("something bad happened", new String[0]));
     handler.handle(errorable);
-    verify(jobRepo,times(1)).update(any());
-    verify(taskRepo,times(1)).update(any());
+    handler.handle(errorable);
+    verify(executor,times(0)).execute(any());
   }
   
   @Test
@@ -44,14 +43,11 @@ public class JobTaskErrorHandlerTests {
     handler.setJobRepository(jobRepo);
     handler.setJobTaskRepository(taskRepo);
     handler.setTaskExecutor(executor);
-    MutableJobTask errorable = new MutableJobTask(Collections.singletonMap("retry",1));
+    MutableJobTask errorable = new MutableJobTask(Collections.singletonMap("retry", 1));
     errorable.setId("1234");
     errorable.setError(new ErrorObject("something bad happened", new String[0]));
     handler.handle(errorable);
-    verify(jobRepo,never()).update(any());
-    verify(taskRepo,times(1)).update(any());
     verify(executor,times(1)).execute(any());
   }
- 
   
 }

@@ -41,22 +41,31 @@ public class JobTaskErrorHandler implements ErrorHandler<JobTask> {
     Error error = aTask.getError();
     Assert.notNull(error,"error must not be null");
     logger.debug("Erring task {}: {}\n{}", aTask.getId(), error.getMessage());
+    
+    // set task status to failed and persist
     MutableJobTask mtask = new MutableJobTask(aTask);
-    if(aTask.getRetry() > 0) {
-      mtask.setId(UUIDGenerator.generate());
-      mtask.setRetryAttempts(aTask.getRetryAttempts()+1);
-      jobTaskRepository.create(mtask);
-      taskExecutor.execute(mtask);
+    mtask.setStatus(TaskStatus.FAILED);
+    jobTaskRepository.update(mtask);
+    
+    // if the task is retryable, then retry it
+    if(aTask.getRetryAttempts() < aTask.getRetry()) {
+      MutableJobTask retryTask = new MutableJobTask(aTask);
+      retryTask.setId(UUIDGenerator.generate());
+      retryTask.setCreationDate(new Date());
+      retryTask.setError(null);
+      retryTask.setStatus(TaskStatus.CREATED);
+      retryTask.setRetryAttempts(aTask.getRetryAttempts()+1);
+      jobTaskRepository.create(retryTask);
+      taskExecutor.execute(retryTask);
     }
+    // if it's not retryable then we're gonna fail the job
     else {
-      mtask.setStatus(TaskStatus.FAILED);
-      Job job = jobRepository.findJobByTaskId (mtask.getId());
+      Job job = jobRepository.findJobByTaskId(mtask.getId());
       Assert.notNull(job,"job not found for task: " + mtask.getId());
       MutableJob mjob = new MutableJob (job);
       Assert.notNull(mjob,String.format("No job found for task %s ",mtask.getId()));
       mjob.setStatus(JobStatus.FAILED);
       mjob.setFailedDate(new Date ());
-      jobTaskRepository.update(mtask);
       jobRepository.update(mjob);
     }
   }
