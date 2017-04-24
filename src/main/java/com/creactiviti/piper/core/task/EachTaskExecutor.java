@@ -6,6 +6,10 @@
  */
 package com.creactiviti.piper.core.task;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -14,9 +18,13 @@ import org.springframework.stereotype.Component;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class EachTaskExecutor implements TaskExecutor<JobTask>, TaskExecutorResolver {
 
+  private TaskExecutor taskExecutor;
+  
   @Override
   public void execute (JobTask aTask) {
-    throw new UnsupportedOperationException();
+    List<Object> list = aTask.getList("list", Object.class);
+    Map<String, Object> iteratee = aTask.getMap("iteratee");
+    toString();
   }
 
   @Override
@@ -25,6 +33,11 @@ public class EachTaskExecutor implements TaskExecutor<JobTask>, TaskExecutorReso
       return this;
     }
     return null;
+  }
+  
+  @Autowired
+  public void setTaskExecutor(TaskExecutor aTaskExecutor) {
+    taskExecutor = aTaskExecutor;
   }
 
 }

@@ -95,4 +95,20 @@ public class SpelTaskEvaluatorTests {
     Assert.assertEquals(Integer.valueOf(15),evaluated.getInteger("mult"));
   }
   
+  @Test
+  public void test9 () {
+    SpelTaskEvaluator evaluator = new SpelTaskEvaluator();
+    JobTask jt = MutableJobTask.createFrom("message", "${name}");
+    JobTask evaluated = evaluator.evaluate(jt, new MapContext(Collections.EMPTY_MAP));
+    Assert.assertEquals("${name}",evaluated.getString("message"));
+  }
+
+  @Test
+  public void test10 () {
+    SpelTaskEvaluator evaluator = new SpelTaskEvaluator();
+    JobTask jt = MutableJobTask.createFrom("message", "yo ${name}");
+    JobTask evaluated = evaluator.evaluate(jt, new MapContext(Collections.EMPTY_MAP));
+    Assert.assertEquals("yo ${name}",evaluated.getString("message"));
+  }
+  
 }

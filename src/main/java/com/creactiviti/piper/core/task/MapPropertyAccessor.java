@@ -22,6 +22,14 @@ import org.springframework.expression.TypedValue;
  */
 public class MapPropertyAccessor implements PropertyAccessor {
 
+  private final String prefix;
+  private final String suffix;
+  
+  public MapPropertyAccessor(String aPrefix, String aSuffix) {
+    prefix = aPrefix;
+    suffix = aSuffix;
+  }
+  
   @Override
   public Class<?>[] getSpecificTargetClasses() {
     return new Class<?>[]{Map.class};
@@ -35,8 +43,14 @@ public class MapPropertyAccessor implements PropertyAccessor {
   @Override
   public TypedValue read(EvaluationContext aContext, Object aTarget, String aName) throws AccessException {
     Map<String,Object> map = (Map<String, Object>) aTarget;
-    Object value = map.get(aName);
-    return new TypedValue(value, TypeDescriptor.forObject(value));
+    if(map.containsKey(aName)) {
+      Object value = map.get(aName);
+      return new TypedValue(value, TypeDescriptor.forObject(value));
+    }
+    else {
+      Object value = String.format("%s%s%s", prefix, aName, suffix);
+      return new TypedValue(value, TypeDescriptor.forObject(value));
+    }
   }
 
   @Override

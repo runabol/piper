@@ -32,6 +32,9 @@ public class SpelTaskEvaluator implements TaskEvaluator {
 
   private final ExpressionParser parser = new SpelExpressionParser();
   
+  private static final String PREFIX = "${";
+  private static final String SUFFIX = "}";
+  
   @Override
   public JobTask evaluate(JobTask aJobTask, Context aContext) {
     Map<String, Object> map = aJobTask.asMap();
@@ -50,7 +53,7 @@ public class SpelTaskEvaluator implements TaskEvaluator {
   private Object evaluate (Object aValue, Context aContext) {
     StandardEvaluationContext context = createEvaluationContext(aContext);
     if(aValue instanceof String) {
-      Expression expression = parser.parseExpression((String)aValue,new TemplateParserContext("${","}"));
+      Expression expression = parser.parseExpression((String)aValue,new TemplateParserContext(PREFIX,SUFFIX));
       return(expression.getValue(context));
     }
     else if (aValue instanceof List) {
@@ -69,7 +72,7 @@ public class SpelTaskEvaluator implements TaskEvaluator {
 
   private StandardEvaluationContext createEvaluationContext(Context aContext) {
     StandardEvaluationContext context = new StandardEvaluationContext(aContext);
-    context.addPropertyAccessor(new MapPropertyAccessor());
+    context.addPropertyAccessor(new MapPropertyAccessor(PREFIX,SUFFIX));
     return context;
   }
   
