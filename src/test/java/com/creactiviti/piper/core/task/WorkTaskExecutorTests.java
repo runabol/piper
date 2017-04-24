@@ -16,8 +16,7 @@ public class WorkTaskExecutorTests {
 
   @Test
   public void test1 () {
-    WorkTaskDispatcher executor = new WorkTaskDispatcher();
-    executor.setMessenger((k,m)->Assert.assertEquals(Queues.TASKS, k));
+    WorkTaskDispatcher executor = new WorkTaskDispatcher((k,m)->Assert.assertEquals(Queues.TASKS, k));
     executor.dispatch(MutableJobTask.create());
   }
   
@@ -25,8 +24,7 @@ public class WorkTaskExecutorTests {
   public void test2 () {
     MutableJobTask task = MutableJobTask.create();
     task.setNode("encoder");
-    WorkTaskDispatcher executor = new WorkTaskDispatcher();
-    executor.setMessenger((k,m)->Assert.assertEquals("encoder", k));
+    WorkTaskDispatcher executor = new WorkTaskDispatcher((k,m)->Assert.assertEquals("encoder", k));
     executor.dispatch(task);
   }
   
@@ -34,8 +32,7 @@ public class WorkTaskExecutorTests {
   public void test3 () {
     MutableJobTask task = MutableJobTask.create();
     task.setNode("encoder.xlarge");
-    WorkTaskDispatcher executor = new WorkTaskDispatcher();
-    executor.setMessenger((k,m)->Assert.assertEquals("encoder.xlarge", k));
+    WorkTaskDispatcher executor = new WorkTaskDispatcher((k,m)->Assert.assertEquals("encoder.xlarge", k));
     executor.dispatch(task);
   }
   

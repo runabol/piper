@@ -96,8 +96,7 @@ public class CoordinatorTests {
     
     SynchMessenger coordinatorMessenger = new SynchMessenger();
     coordinatorMessenger.receive(Queues.TASKS, (o)->worker.handle((JobTask)o));
-    WorkTaskDispatcher taskDispatcher = new WorkTaskDispatcher();
-    taskDispatcher.setMessenger(coordinatorMessenger);
+    WorkTaskDispatcher taskDispatcher = new WorkTaskDispatcher(coordinatorMessenger);
     coordinator.setTaskDispatcher(taskDispatcher);
     coordinator.setEventPublisher(eventPublisher);
         

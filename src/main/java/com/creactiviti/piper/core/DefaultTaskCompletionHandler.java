@@ -10,8 +10,6 @@ import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.creactiviti.piper.core.context.Context;
 import com.creactiviti.piper.core.context.ContextRepository;
@@ -34,7 +32,6 @@ import com.creactiviti.piper.core.uuid.UUIDGenerator;
  * @author Arik Cohen
  * @since Apr 24, 2017
  */
-@Component
 public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
 
   private Logger log = LoggerFactory.getLogger(getClass());
@@ -90,27 +87,22 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
     log.debug("Job {} completed successfully",aJob.getId());
   }
   
-  @Autowired
   public void setJobRepository(JobRepository aJobRepository) {
     jobRepository = aJobRepository;
   }
   
-  @Autowired
   public void setPipelineRepository(PipelineRepository aPipelineRepository) {
     pipelineRepository = aPipelineRepository;
   }
 
-  @Autowired
   public void setJobTaskRepository(JobTaskRepository aJobTaskRepository) {
     jobTaskRepository = aJobTaskRepository;
   }
   
-  @Autowired
   public void setContextRepository(ContextRepository aContextRepository) {
     contextRepository = aContextRepository;
   }
   
-  @Autowired
   public void setJobExecutor(JobExecutor aJobExecutor) {
     jobExecutor = aJobExecutor;
   }

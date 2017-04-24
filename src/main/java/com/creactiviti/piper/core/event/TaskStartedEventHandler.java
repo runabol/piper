@@ -6,12 +6,9 @@
  */
 package com.creactiviti.piper.core.event;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.PayloadApplicationEvent;
-import org.springframework.stereotype.Component;
 
-import com.creactiviti.piper.config.ConditionalOnCoordinator;
 import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.task.CancelTask;
 import com.creactiviti.piper.core.task.JobTask;
@@ -24,12 +21,15 @@ import com.creactiviti.piper.core.task.TaskStatus;
  * @author Arik Cohen
  * @since Apt 9, 2017
  */
-@Component
-@ConditionalOnCoordinator
 public class TaskStartedEventHandler implements ApplicationListener<PayloadApplicationEvent<PiperEvent>> {
 
-  private JobTaskRepository jobTaskRepository;
-  private TaskDispatcher taskDispatcher;
+  private final JobTaskRepository jobTaskRepository;
+  private final TaskDispatcher taskDispatcher;
+  
+  public TaskStartedEventHandler(JobTaskRepository aJobTaskRepository, TaskDispatcher aTaskDispatcher) {
+    jobTaskRepository = aJobTaskRepository;
+    taskDispatcher = aTaskDispatcher;
+  }
 
   @Override
   public void onApplicationEvent(PayloadApplicationEvent<PiperEvent> aEvent) {
@@ -48,14 +48,4 @@ public class TaskStartedEventHandler implements ApplicationListener<PayloadAppli
     }
   }
 
-  @Autowired
-  public void setJobTaskRepository(JobTaskRepository aJobTaskRepository) {
-    jobTaskRepository = aJobTaskRepository;
-  }
-
-  @Autowired
-  public void setTaskDispatcher(TaskDispatcher aTaskDispatcher) {
-    taskDispatcher = aTaskDispatcher;
-  }
-  
 }

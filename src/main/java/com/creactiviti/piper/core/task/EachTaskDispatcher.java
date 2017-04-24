@@ -10,33 +10,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
-
 import com.creactiviti.piper.core.context.MapContext;
 import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
 
-@Component
-@Order(Ordered.HIGHEST_PRECEDENCE)
 public class EachTaskDispatcher implements TaskDispatcher<JobTask>, TaskDispatcherResolver {
   
-  private TaskDispatcher taskDispatcher;
-  private TaskEvaluator taskEvaluator = new SpelTaskEvaluator();
+  private final TaskDispatcher taskDispatcher;
+  private final TaskEvaluator taskEvaluator = new SpelTaskEvaluator();
   
-  // type: each
-  // list: [1, 2, 3]
-  // itemVar: item1
-  // iteratee: 
-  //   type: each
-  //   list: [4,5,6]
-  //   itemVar: item2
-  //   iteratee: 
-  //     type: print
-  //     text: "${item1} {item2}"
-  
+  public EachTaskDispatcher(TaskDispatcher aTaskDispatcher) {
+    taskDispatcher = aTaskDispatcher;
+  }
   
   @Override
   public void dispatch (JobTask aTask) {
@@ -60,13 +45,4 @@ public class EachTaskDispatcher implements TaskDispatcher<JobTask>, TaskDispatch
     return null;
   }
 
-  @Autowired
-  public void setTaskDispatcher(TaskDispatcher aTaskDispatcher) {
-    taskDispatcher = aTaskDispatcher;
-  }
-  
-  public void setTaskEvaluator(TaskEvaluator aTaskEvaluator) {
-    taskEvaluator = aTaskEvaluator;
-  }
-  
 }

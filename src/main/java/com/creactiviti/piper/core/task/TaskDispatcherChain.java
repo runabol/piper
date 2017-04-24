@@ -6,19 +6,14 @@
  */
 package com.creactiviti.piper.core.task;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Component;
-
-@Primary
-@Component
 public class TaskDispatcherChain implements TaskDispatcher<Task> {
   
-  @Autowired
-  private List<TaskDispatcherResolver> resolvers = new ArrayList<>();
+  private List<TaskDispatcherResolver> resolvers;
+  
+  public TaskDispatcherChain() {
+  }
   
   @Override
   public void dispatch (Task aTask) {
@@ -30,6 +25,10 @@ public class TaskDispatcherChain implements TaskDispatcher<Task> {
       }
     }
     throw new IllegalArgumentException("Unable to execute task: " + aTask);
+  }
+
+  public void setResolvers(List<TaskDispatcherResolver> aResolvers) {
+    resolvers = aResolvers;
   }
 
 }

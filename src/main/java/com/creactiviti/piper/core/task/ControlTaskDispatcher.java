@@ -6,11 +6,6 @@
  */
 package com.creactiviti.piper.core.task;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
-
 import com.creactiviti.piper.core.messenger.Exchanges;
 import com.creactiviti.piper.core.messenger.Messenger;
 
@@ -19,11 +14,13 @@ import com.creactiviti.piper.core.messenger.Messenger;
  * @author Arik Cohen
  * @since Apr 11, 2017
  */
-@Component
-@Order(Ordered.LOWEST_PRECEDENCE)
 public class ControlTaskDispatcher implements TaskDispatcher<ControlTask>, TaskDispatcherResolver {
 
-  private Messenger messenger;
+  private final Messenger messenger;
+  
+  public ControlTaskDispatcher (Messenger aMessenger) {
+    messenger = aMessenger;
+  }
   
   @Override
   public void dispatch(ControlTask aTask) {
@@ -38,9 +35,4 @@ public class ControlTaskDispatcher implements TaskDispatcher<ControlTask>, TaskD
     return null;
   }
 
-  @Autowired
-  public void setMessenger(Messenger aMessenger) {
-    messenger = aMessenger;
-  }
-  
 }

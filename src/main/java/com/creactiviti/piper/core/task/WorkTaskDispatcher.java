@@ -6,9 +6,6 @@
  */
 package com.creactiviti.piper.core.task;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -16,12 +13,15 @@ import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.messenger.Queues;
 
 @Component
-@Order(Ordered.LOWEST_PRECEDENCE)
 public class WorkTaskDispatcher implements TaskDispatcher<JobTask>, TaskDispatcherResolver {
 
-  private Messenger messenger;
+  private final Messenger messenger;
   
   private static final String DEFAULT_QUEUE = Queues.TASKS;
+  
+  public WorkTaskDispatcher (Messenger aMessenger) {
+    messenger = aMessenger;
+  }
   
   @Override
   public void dispatch (JobTask aTask) {
@@ -34,11 +34,6 @@ public class WorkTaskDispatcher implements TaskDispatcher<JobTask>, TaskDispatch
     return jtask.getNode()!=null?jtask.getNode():DEFAULT_QUEUE;
   }
   
-  @Autowired
-  public void setMessenger(Messenger aMessenger) {
-    messenger = aMessenger;
-  }
-
   @Override
   public TaskDispatcher resolve (Task aTask) {
     if(aTask instanceof JobTask) {
