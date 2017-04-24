@@ -36,6 +36,6 @@ public class ErrorHandlerChainTests {
       }
     };
     ErrorHandlerChain chain = new ErrorHandlerChain(Arrays.asList(errorHandler1,errorHandler2));
-    chain.handle(new MutableJobTask());
+    chain.handle(MutableJobTask.create());
   }
 }

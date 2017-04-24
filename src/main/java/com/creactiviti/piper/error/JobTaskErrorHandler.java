@@ -21,7 +21,6 @@ import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.JobTaskRepository;
 import com.creactiviti.piper.core.task.TaskExecutor;
 import com.creactiviti.piper.core.task.TaskStatus;
-import com.creactiviti.piper.core.uuid.UUIDGenerator;
 
 /**
  * 
@@ -43,17 +42,13 @@ public class JobTaskErrorHandler implements ErrorHandler<JobTask> {
     logger.debug("Erring task {}: {}\n{}", aTask.getId(), error.getMessage());
     
     // set task status to failed and persist
-    MutableJobTask mtask = new MutableJobTask(aTask);
+    MutableJobTask mtask = MutableJobTask.createForUpdate(aTask);
     mtask.setStatus(TaskStatus.FAILED);
     jobTaskRepository.update(mtask);
     
     // if the task is retryable, then retry it
     if(aTask.getRetryAttempts() < aTask.getRetry()) {
-      MutableJobTask retryTask = new MutableJobTask(aTask);
-      retryTask.setId(UUIDGenerator.generate());
-      retryTask.setCreationDate(new Date());
-      retryTask.setError(null);
-      retryTask.setStatus(TaskStatus.CREATED);
+      MutableJobTask retryTask = MutableJobTask.createNewFrom(aTask);
       retryTask.setRetryAttempts(aTask.getRetryAttempts()+1);
       jobTaskRepository.create(retryTask);
       taskExecutor.execute(retryTask);

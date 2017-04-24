@@ -6,8 +6,6 @@
  */
 package com.creactiviti.piper.core;
 
-import java.util.Collections;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,7 +24,7 @@ public class WorkerTests {
     messenger.receive(Queues.EVENTS, (t)-> {} );
     worker.setMessenger(messenger);
     worker.setTaskHandlerResolver((jt) -> (t) -> "done");
-    MutableJobTask task = new MutableJobTask(Collections.EMPTY_MAP);
+    MutableJobTask task = MutableJobTask.create();
     task.setId("1234");
     worker.handle(task);
   }
@@ -42,7 +40,7 @@ public class WorkerTests {
     worker.setTaskHandlerResolver((jt) -> (t) -> {
       throw new IllegalArgumentException("bad input");
     });
-    MutableJobTask task = new MutableJobTask(Collections.EMPTY_MAP);
+    MutableJobTask task = MutableJobTask.create();
     task.setId("1234");
     worker.handle(task);
   }

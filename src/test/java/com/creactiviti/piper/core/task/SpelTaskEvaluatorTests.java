@@ -21,7 +21,7 @@ public class SpelTaskEvaluatorTests {
   @Test
   public void test1 () {
     SpelTaskEvaluator evaluator = new SpelTaskEvaluator();
-    JobTask jt = new MutableJobTask(Collections.EMPTY_MAP);
+    JobTask jt = MutableJobTask.create();
     JobTask evaluated = evaluator.evaluate(jt, new MapContext(Collections.EMPTY_MAP));
     Assert.assertEquals(evaluated.asMap(),jt.asMap());
   }
@@ -29,7 +29,7 @@ public class SpelTaskEvaluatorTests {
   @Test
   public void test2 () {
     SpelTaskEvaluator evaluator = new SpelTaskEvaluator();
-    JobTask jt = new MutableJobTask(Collections.singletonMap("hello", "world"));
+    JobTask jt = MutableJobTask.createFrom("hello", "world");
     JobTask evaluated = evaluator.evaluate(jt, new MapContext(Collections.EMPTY_MAP));
     Assert.assertEquals(evaluated.asMap(),jt.asMap());
   }
@@ -37,7 +37,7 @@ public class SpelTaskEvaluatorTests {
   @Test
   public void test3 () {
     SpelTaskEvaluator evaluator = new SpelTaskEvaluator();
-    JobTask jt = new MutableJobTask(Collections.singletonMap("hello", "${name}"));
+    JobTask jt = MutableJobTask.createFrom("hello", "${name}");
     JobTask evaluated = evaluator.evaluate(jt, new MapContext(Collections.singletonMap("name", "arik")));
     Assert.assertEquals("arik",evaluated.getString("hello"));
   }
@@ -45,7 +45,7 @@ public class SpelTaskEvaluatorTests {
   @Test
   public void test4 () {
     SpelTaskEvaluator evaluator = new SpelTaskEvaluator();
-    JobTask jt = new MutableJobTask(Collections.singletonMap("hello", "${firstName} ${lastName}"));
+    JobTask jt = MutableJobTask.createFrom("hello", "${firstName} ${lastName}");
     MapContext ctx = new MapContext();
     ctx.put("firstName", "Arik");
     ctx.put("lastName", "Cohen");
@@ -56,7 +56,7 @@ public class SpelTaskEvaluatorTests {
   @Test
   public void test5 () {
     SpelTaskEvaluator evaluator = new SpelTaskEvaluator();
-    JobTask jt = new MutableJobTask(Collections.singletonMap("hello", "${T(java.lang.Integer).valueOf(number)}"));
+    JobTask jt = MutableJobTask.createFrom("hello", "${T(java.lang.Integer).valueOf(number)}");
     MapContext ctx = new MapContext();
     ctx.put("number", "5");
     JobTask evaluated = evaluator.evaluate(jt, ctx);
@@ -66,7 +66,7 @@ public class SpelTaskEvaluatorTests {
   @Test
   public void test6 () {
     SpelTaskEvaluator evaluator = new SpelTaskEvaluator();
-    JobTask jt = new MutableJobTask(Collections.singletonMap("list", Arrays.asList("${firstName}","${lastName}")));
+    JobTask jt = MutableJobTask.createFrom("list", Arrays.asList("${firstName}","${lastName}"));
     MapContext ctx = new MapContext();
     ctx.put("firstName", "Arik");
     ctx.put("lastName", "Cohen");
@@ -77,7 +77,7 @@ public class SpelTaskEvaluatorTests {
   @Test
   public void test7 () {
     SpelTaskEvaluator evaluator = new SpelTaskEvaluator();
-    JobTask jt = new MutableJobTask(Collections.singletonMap("map", Collections.singletonMap("hello", "${firstName}")));
+    JobTask jt = MutableJobTask.createFrom("map", Collections.singletonMap("hello", "${firstName}"));
     MapContext ctx = new MapContext();
     ctx.put("firstName", "Arik");
     JobTask evaluated = evaluator.evaluate(jt, ctx);
@@ -87,7 +87,7 @@ public class SpelTaskEvaluatorTests {
   @Test
   public void test8 () {
     SpelTaskEvaluator evaluator = new SpelTaskEvaluator();
-    JobTask jt = new MutableJobTask(Collections.singletonMap("mult","${n1*n2}"));
+    JobTask jt = MutableJobTask.createFrom("mult","${n1*n2}");
     MapContext ctx = new MapContext();
     ctx.put("n1", 5);
     ctx.put("n2", 3);

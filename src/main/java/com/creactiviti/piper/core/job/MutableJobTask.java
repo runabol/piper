@@ -13,6 +13,7 @@ import java.util.Map;
 
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.MutablePipelineTask;
+import com.creactiviti.piper.core.task.PipelineTask;
 import com.creactiviti.piper.core.task.Task;
 import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
@@ -22,23 +23,20 @@ import com.creactiviti.piper.error.ErrorObject;
 
 public class MutableJobTask extends MutablePipelineTask implements JobTask {
 
-  public MutableJobTask () {
+  private MutableJobTask () {
     this(Collections.EMPTY_MAP);
   }
   
-  public MutableJobTask (JobTask aSource) {
+  private MutableJobTask (JobTask aSource) {
     this(aSource.asMap());
   }
   
-  public MutableJobTask (Map<String,Object> aSource) {
+  private MutableJobTask (Map<String,Object> aSource) {
     super(aSource);
   }  
   
-  public MutableJobTask (Task aSource) {
+  private MutableJobTask (Task aSource) {
     super(aSource);
-    set("id", UUIDGenerator.generate());
-    set("status", TaskStatus.CREATED);
-    set("creationDate", new Date());
   }
   
   @Override
@@ -170,5 +168,79 @@ public class MutableJobTask extends MutablePipelineTask implements JobTask {
     return getString("timeout");
   }
   
+  /**
+   * Creates a new {@link MutableJobTask} instance 
+   * from a {@link PipelineTask}.
+   * 
+   * @param aTask
+   *         The {@link PipelineTask} to create this instance from.
+   * @return {@link MutableJobTask}
+   */
+  public static MutableJobTask createFrom (PipelineTask aTask) {
+    MutableJobTask jobTask = new MutableJobTask (aTask);
+    jobTask.setCreationDate(new Date());
+    jobTask.setId(UUIDGenerator.generate());
+    jobTask.setStatus(TaskStatus.CREATED);
+    return jobTask;
+  }
+  
+  /**
+   * Creates a new {@link MutableJobTask} instance, using the 
+   * given {@link JobTask} instance as a starting point. 
+   * 
+   * @param aJobTask
+   *          The {@link JobTask} instance to use as a starting 
+   *          point.
+   * @return the new {@link MutableJobTask}
+   */
+  public static MutableJobTask createNewFrom (JobTask aJobTask) {
+    MutableJobTask mutableJobTask = new MutableJobTask(aJobTask);
+    mutableJobTask.setId(UUIDGenerator.generate());
+    mutableJobTask.setCreationDate(new Date());
+    mutableJobTask.setStatus(TaskStatus.CREATED);
+    mutableJobTask.setError(null);
+    return mutableJobTask;
+  }
+
+  /**
+   * Creates a {@link MutableJobTask} instance which 
+   * is a copy of a {@link JobTask}.
+   * 
+   * @param aJobTask
+   *          The {@link JobTask} instance to copy.
+   * @return the new {@link MutableJobTask}
+   */
+  public static MutableJobTask createForUpdate (JobTask aJobTask) {
+    return new MutableJobTask(aJobTask);
+  }
+  
+  /**
+   * Creates an empty {@link MutableJobTask} instance.
+   * 
+   * @return The new {@link MutableJobTask}.
+   */
+  public static MutableJobTask create () {
+    return new MutableJobTask();
+  }
+  
+  /**
+   * Creates a {@link MutableJobTask} instance for the given 
+   * Key-Value pair.
+   * 
+   * @return The new {@link MutableJobTask}.
+   */
+  public static MutableJobTask createFrom (String aKey, Object aValue) {
+    return new MutableJobTask(Collections.singletonMap(aKey, aValue));
+  }
+ 
+  /**
+   * Creates a {@link MutableJobTask} instance for the given Key-Value
+   * map.
+   * 
+   * @return The new {@link MutableJobTask}.
+   */
+  public static MutableJobTask createFromMap (Map<String,Object> aSource) {
+    return new MutableJobTask(aSource);
+  }
   
 }

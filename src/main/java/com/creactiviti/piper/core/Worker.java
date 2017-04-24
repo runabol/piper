@@ -75,7 +75,7 @@ public class Worker {
         TaskHandler<?> taskHandler = taskHandlerResolver.resolve(aTask);
         messenger.send(Queues.EVENTS, PiperEvent.of(Events.TASK_STARTED,"taskId",aTask.getId()));
         Object output = taskHandler.handle(aTask);
-        MutableJobTask completion = new MutableJobTask(aTask);
+        MutableJobTask completion = MutableJobTask.createForUpdate(aTask);
         if(output!=null) {
           completion.setOutput(output);
         }
@@ -105,7 +105,7 @@ public class Worker {
   
   private void handleException (JobTask aTask, Exception aException) {
     logger.error(aException.getMessage(),aException);
-    MutableJobTask jobTask = new MutableJobTask(aTask);
+    MutableJobTask jobTask = MutableJobTask.createForUpdate(aTask);
     jobTask.setError(new ErrorObject(aException.getMessage(),ExceptionUtils.getStackFrames(aException)));
     messenger.send(Queues.ERRORS, jobTask);
   }

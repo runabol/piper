@@ -36,7 +36,7 @@ public class SpelTaskEvaluator implements TaskEvaluator {
   public JobTask evaluate(JobTask aJobTask, Context aContext) {
     Map<String, Object> map = aJobTask.asMap();
     Map<String, Object> newMap = evaluateInternal(map,aContext);
-    return new MutableJobTask(newMap);
+    return MutableJobTask.createFromMap(newMap);
   }
 
   private Map<String, Object> evaluateInternal(Map<String, Object> aMap, Context aContext) {

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class EachTaskExecutor implements TaskExecutor<JobTask>, TaskExecutorResolver {
 
   @Override
-  public void execute(JobTask aTask) {
+  public void execute (JobTask aTask) {
     throw new UnsupportedOperationException();
   }
 

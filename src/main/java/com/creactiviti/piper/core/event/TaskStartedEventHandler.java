@@ -38,7 +38,7 @@ public class TaskStartedEventHandler implements ApplicationListener<PayloadAppli
       String taskId = event.getString("taskId");
       JobTask task = jobTaskRepository.findOne(taskId);
       if(task.getStatus() == TaskStatus.CREATED) {
-        MutableJobTask mtask = new MutableJobTask(task);
+        MutableJobTask mtask = MutableJobTask.createForUpdate(task);
         mtask.setStatus(TaskStatus.STARTED);
         jobTaskRepository.update(mtask);
       }

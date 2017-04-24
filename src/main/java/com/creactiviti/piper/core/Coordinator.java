@@ -30,7 +30,7 @@ import com.creactiviti.piper.core.task.CancelTask;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.JobTaskRepository;
 import com.creactiviti.piper.core.task.NoOpTaskEvaluator;
-import com.creactiviti.piper.core.task.Task;
+import com.creactiviti.piper.core.task.PipelineTask;
 import com.creactiviti.piper.core.task.TaskEvaluator;
 import com.creactiviti.piper.core.task.TaskExecutor;
 import com.creactiviti.piper.core.task.TaskStatus;
@@ -123,10 +123,9 @@ public class Coordinator {
   }
 
   private JobTask nextTask(Job aJob, Pipeline aPipeline) {
-    Task task = aPipeline.getTasks().get(aJob.getCurrentTask()+1);
-    MutableJobTask mt = new MutableJobTask (task);
+    PipelineTask task = aPipeline.getTasks().get(aJob.getCurrentTask()+1);
+    MutableJobTask mt = MutableJobTask.createFrom (task);
     mt.setJobId(aJob.getId());
-    mt.setStatus(TaskStatus.CREATED);
     jobTaskRepository.create(mt);
     return mt;
   }
@@ -164,7 +163,7 @@ public class Coordinator {
     mjob.setStatus(JobStatus.STOPPED);
     jobRepository.update(mjob);
     if(mjob.getExecution().size() > 0) {
-      MutableJobTask currentTask = new MutableJobTask(job.getExecution().get(job.getExecution().size()-1));
+      MutableJobTask currentTask = MutableJobTask.createForUpdate(job.getExecution().get(job.getExecution().size()-1));
       currentTask.setStatus(TaskStatus.CANCELLED);
       currentTask.setCancellationDate(new Date());
       jobTaskRepository.update(currentTask);
@@ -205,7 +204,7 @@ public class Coordinator {
    */
   public void completeTask (JobTask aTask) {
     log.debug("Completing task {}", aTask.getId());
-    MutableJobTask task = new MutableJobTask(aTask);
+    MutableJobTask task = MutableJobTask.createForUpdate(aTask);
     task.setStatus(TaskStatus.COMPLETED);
     task.setError(null);
     Job job = jobRepository.findJobByTaskId (aTask.getId());
