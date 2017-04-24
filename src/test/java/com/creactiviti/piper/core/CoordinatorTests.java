@@ -32,10 +32,11 @@ import com.creactiviti.piper.core.job.JobStatus;
 import com.creactiviti.piper.core.messenger.Queues;
 import com.creactiviti.piper.core.messenger.SynchMessenger;
 import com.creactiviti.piper.core.pipeline.FileSystemPipelineRepository;
-import com.creactiviti.piper.core.task.WorkTaskExecutor;
+import com.creactiviti.piper.core.task.DefaultTaskHandlerResolver;
 import com.creactiviti.piper.core.task.JdbcJobTaskRepository;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.TaskHandler;
+import com.creactiviti.piper.core.task.WorkTaskExecutor;
 import com.creactiviti.piper.taskhandler.io.Print;
 import com.creactiviti.piper.taskhandler.time.Sleep;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -58,7 +59,7 @@ public class CoordinatorTests {
     Coordinator coordinator = new Coordinator ();
    
     SynchMessenger workerMessenger = new SynchMessenger();
-    workerMessenger.receive(Queues.COMPLETIONS, (o)->coordinator.completeTask((JobTask)o));
+    workerMessenger.receive(Queues.COMPLETIONS, (o)->coordinator.complete((JobTask)o));
     workerMessenger.receive(Queues.EVENTS, (o)->coordinator.on(o));
     
     worker.setMessenger(workerMessenger);

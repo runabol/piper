@@ -114,7 +114,7 @@ public class Coordinator {
       executeNextTask (aJob, aPipeline);
     }
     else {
-      completeJob(aJob);
+      complete(aJob);
     }
   }
 
@@ -138,7 +138,7 @@ public class Coordinator {
     taskExecutor.execute(evaluatedTask);
   }
 
-  private void completeJob (MutableJob aJob) {
+  private void complete (MutableJob aJob) {
     contextRepository.pop(aJob.getId());
     MutableJob job = new MutableJob((Job)aJob);
     job.setStatus(JobStatus.COMPLETED);
@@ -202,7 +202,7 @@ public class Coordinator {
    * @param aTask
    *          The task to complete.
    */
-  public void completeTask (JobTask aTask) {
+  public void complete (JobTask aTask) {
     log.debug("Completing task {}", aTask.getId());
     MutableJobTask task = MutableJobTask.createForUpdate(aTask);
     task.setStatus(TaskStatus.COMPLETED);

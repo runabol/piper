@@ -4,7 +4,7 @@
  * Proprietary and confidential
  * Written by Arik Cohen <arik@creactiviti.com>, Mar 2017
  */
-package com.creactiviti.piper.core;
+package com.creactiviti.piper.core.task;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,10 +12,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
-
-import com.creactiviti.piper.core.task.JobTask;
-import com.creactiviti.piper.core.task.TaskHandler;
-import com.creactiviti.piper.core.task.TaskHandlerResolver;
 
 @Component
 public class DefaultTaskHandlerResolver implements TaskHandlerResolver {

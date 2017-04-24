@@ -89,7 +89,7 @@ public class JmsMessengerConfiguration implements JmsListenerConfigurer {
     CoordinatorProperties coordinatorProperties = properties.getCoordinator();
     WorkerProperties workerProperties = properties.getWorker();
     if(coordinatorProperties.isEnabled()) {
-      registerListenerEndpoint(aRegistrar, Queues.COMPLETIONS, coordinatorProperties.getSubscriptions().getCompletions() , coordinator, "completeTask");
+      registerListenerEndpoint(aRegistrar, Queues.COMPLETIONS, coordinatorProperties.getSubscriptions().getCompletions() , coordinator, "complete");
       registerListenerEndpoint(aRegistrar, Queues.ERRORS, coordinatorProperties.getSubscriptions().getErrors(), coordinator, "handleError");
       registerListenerEndpoint(aRegistrar, Queues.EVENTS, coordinatorProperties.getSubscriptions().getEvents(), coordinator, "on");
     }
