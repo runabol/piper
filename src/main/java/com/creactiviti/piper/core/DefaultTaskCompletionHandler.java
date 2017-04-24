@@ -25,10 +25,6 @@ import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.JobTaskRepository;
-import com.creactiviti.piper.core.task.PipelineTask;
-import com.creactiviti.piper.core.task.SpelTaskEvaluator;
-import com.creactiviti.piper.core.task.TaskDispatcher;
-import com.creactiviti.piper.core.task.TaskEvaluator;
 import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
 
@@ -47,18 +43,16 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
   private PipelineRepository pipelineRepository;
   private JobTaskRepository jobTaskRepository;
   private ContextRepository contextRepository;
-  private TaskDispatcher taskDispatcher;
-  private TaskEvaluator taskEvaluator = new SpelTaskEvaluator();
+  private JobExecutor jobExecutor;
   
   @Override
-  public void handle(JobTask aTask) {
+  public void handle (JobTask aTask) {
     log.debug("Completing task {}", aTask.getId());
     MutableJobTask task = MutableJobTask.createForUpdate(aTask);
     task.setStatus(TaskStatus.COMPLETED);
     task.setError(null);
     Job job = jobRepository.findJobByTaskId (aTask.getId());
     if(job!=null) {
-      Pipeline pipeline = pipelineRepository.findOne(job.getPipelineId());
       MutableJob mjob = new MutableJob (job);
       mjob.setCurrentTask(mjob.getCurrentTask()+1);
       jobTaskRepository.update(task);
@@ -70,45 +64,23 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
         newContext.put(task.getName(), task.getOutput());
         contextRepository.push(job.getId(), newContext);
       }
-      execute(mjob,pipeline);
+      if(hasMoreTasks(mjob)) {
+        jobExecutor.execute(mjob);
+      }
+      else {
+        complete(mjob);
+      }
     }
     else {
       log.error("Unknown job: {}",aTask.getJobId());
     }
   }
-  
-  private void execute (MutableJob aJob, Pipeline aPipeline) {
-    if(aJob.getStatus() != JobStatus.STARTED) {
-      return;
-    }
-    else if(hasMoreTasks(aJob, aPipeline)) {
-      executeNextTask (aJob, aPipeline);
-    }
-    else {
-      complete(aJob);
-    }
+
+  private boolean hasMoreTasks (Job aJob) {
+    Pipeline pipeline = pipelineRepository.findOne(aJob.getPipelineId());
+    return aJob.getCurrentTask()+1 < pipeline.getTasks().size();
   }
 
-  private boolean hasMoreTasks (Job aJob, Pipeline aPipeline) {
-    return aJob.getCurrentTask()+1 < aPipeline.getTasks().size();
-  }
-
-  private JobTask nextTask(Job aJob, Pipeline aPipeline) {
-    PipelineTask task = aPipeline.getTasks().get(aJob.getCurrentTask()+1);
-    MutableJobTask mt = MutableJobTask.createFrom (task);
-    mt.setJobId(aJob.getId());
-    jobTaskRepository.create(mt);
-    return mt;
-  }
-
-  private void executeNextTask (MutableJob aJob, Pipeline aPipeline) {
-    JobTask nextTask = nextTask(aJob, aPipeline); 
-    jobRepository.update(aJob);
-    Context context = contextRepository.peek(aJob.getId());
-    JobTask evaluatedTask = taskEvaluator.evaluate(nextTask,context);
-    taskDispatcher.dispatch(evaluatedTask);
-  }
-  
   private void complete (MutableJob aJob) {
     contextRepository.pop(aJob.getId());
     MutableJob job = new MutableJob((Job)aJob);
@@ -139,12 +111,8 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
   }
   
   @Autowired
-  public void setTaskDispatcher(TaskDispatcher aTaskDispatcher) {
-    taskDispatcher = aTaskDispatcher;
-  }
-  
-  public void setTaskEvaluator(TaskEvaluator aTaskEvaluator) {
-    taskEvaluator = aTaskEvaluator;
+  public void setJobExecutor(JobExecutor aJobExecutor) {
+    jobExecutor = aJobExecutor;
   }
 
 }

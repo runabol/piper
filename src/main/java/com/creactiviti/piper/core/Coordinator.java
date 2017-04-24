@@ -16,7 +16,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.util.Assert;
 
-import com.creactiviti.piper.core.context.Context;
 import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.context.MapContext;
 import com.creactiviti.piper.core.job.Job;
@@ -29,10 +28,7 @@ import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.CancelTask;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.JobTaskRepository;
-import com.creactiviti.piper.core.task.NoOpTaskEvaluator;
-import com.creactiviti.piper.core.task.PipelineTask;
 import com.creactiviti.piper.core.task.TaskDispatcher;
-import com.creactiviti.piper.core.task.TaskEvaluator;
 import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
 import com.creactiviti.piper.error.ErrorHandler;
@@ -53,9 +49,9 @@ public class Coordinator {
   private ApplicationEventPublisher eventPublisher;
   private ContextRepository contextRepository;
   private TaskDispatcher taskDispatcher;
-  private TaskEvaluator taskEvaluator = new NoOpTaskEvaluator();
   private ErrorHandler errorHandler;
   private TaskCompletionHandler taskCompletionHandler;
+  private JobExecutor jobExecutor; 
   
   private static final String PIPELINE = "pipeline";
 
@@ -93,7 +89,7 @@ public class Coordinator {
     context.setId(UUIDGenerator.generate());
     contextRepository.push(job.getId(),context);
 
-    execute (job, pipeline);
+    jobExecutor.execute (job);
 
     return job;
   }
@@ -105,47 +101,6 @@ public class Coordinator {
         Assert.isTrue(aParameters.containsKey(in.get("name")), "Missing required param: " + in.get("name"));
       }
     }
-  }
-
-  private void execute (MutableJob aJob, Pipeline aPipeline) {
-    if(aJob.getStatus() != JobStatus.STARTED) {
-      return;
-    }
-    else if(hasMoreTasks(aJob, aPipeline)) {
-      executeNextTask (aJob, aPipeline);
-    }
-    else {
-      complete(aJob);
-    }
-  }
-
-  private boolean hasMoreTasks (Job aJob, Pipeline aPipeline) {
-    return aJob.getCurrentTask()+1 < aPipeline.getTasks().size();
-  }
-
-  private JobTask nextTask(Job aJob, Pipeline aPipeline) {
-    PipelineTask task = aPipeline.getTasks().get(aJob.getCurrentTask()+1);
-    MutableJobTask mt = MutableJobTask.createFrom (task);
-    mt.setJobId(aJob.getId());
-    jobTaskRepository.create(mt);
-    return mt;
-  }
-
-  private void executeNextTask (MutableJob aJob, Pipeline aPipeline) {
-    JobTask nextTask = nextTask(aJob, aPipeline); 
-    jobRepository.update(aJob);
-    Context context = contextRepository.peek(aJob.getId());
-    JobTask evaluatedTask = taskEvaluator.evaluate(nextTask,context);
-    taskDispatcher.dispatch(evaluatedTask);
-  }
-
-  private void complete (MutableJob aJob) {
-    contextRepository.pop(aJob.getId());
-    MutableJob job = new MutableJob((Job)aJob);
-    job.setStatus(JobStatus.COMPLETED);
-    job.setCompletionDate(new Date ());
-    jobRepository.update(job);
-    log.debug("Job {} completed successfully",aJob.getId());
   }
 
   /**
@@ -185,11 +140,10 @@ public class Coordinator {
     Job job = jobRepository.findOne (aJobId);
     Assert.notNull(job,String.format("Unknown job %s",aJobId));
     Assert.isTrue(isRestartable(job), "can't stop job " + aJobId + " as it is " + job.getStatus());
-    Pipeline pipeline = pipelineRepository.findOne(job.getPipelineId());
     MutableJob mjob = new MutableJob (job);
     mjob.setStatus(JobStatus.STARTED);
     jobRepository.update(mjob);
-    execute(mjob,pipeline);
+    jobExecutor.execute(mjob);
     return mjob;
   }
 
@@ -250,10 +204,6 @@ public class Coordinator {
     pipelineRepository = aPipelineRepository;
   }
 
-  public void setTaskEvaluator(TaskEvaluator aTaskEvaluator) {
-    taskEvaluator = aTaskEvaluator;
-  }
-
   public void setJobTaskRepository(JobTaskRepository aJobTaskRepository) {
     jobTaskRepository = aJobTaskRepository;
   }
@@ -264,6 +214,10 @@ public class Coordinator {
   
   public void setTaskCompletionHandler(TaskCompletionHandler aTaskCompletionHandler) {
     taskCompletionHandler = aTaskCompletionHandler;
+  }
+  
+  public void setJobExecutor(JobExecutor aJobExecutor) {
+    jobExecutor = aJobExecutor;
   }
   
 }

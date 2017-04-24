@@ -14,13 +14,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.creactiviti.piper.core.Coordinator;
+import com.creactiviti.piper.core.JobExecutor;
 import com.creactiviti.piper.core.TaskCompletionHandler;
 import com.creactiviti.piper.core.context.Context;
 import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.JobTaskRepository;
-import com.creactiviti.piper.core.task.SpelTaskEvaluator;
 import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.error.ErrorHandler;
 import com.creactiviti.piper.error.ErrorHandlerChain;
@@ -37,6 +37,7 @@ public class CoordinatorConfiguration {
   @Autowired private PipelineRepository pipelineRepository;
   @Autowired private TaskDispatcher taskDispatcher;
   @Autowired private TaskCompletionHandler taskCompletionHandler;
+  @Autowired private JobExecutor jobExecutor;
   
   @Bean
   Coordinator coordinator () {
@@ -46,7 +47,7 @@ public class CoordinatorConfiguration {
     coordinator.setJobRepository(jobRepository);
     coordinator.setJobTaskRepository(jobTaskRepository);
     coordinator.setPipelineRepository(pipelineRepository);
-    coordinator.setTaskEvaluator(new SpelTaskEvaluator());
+    coordinator.setJobExecutor(jobExecutor);
     coordinator.setTaskDispatcher(taskDispatcher);
     coordinator.setErrorHandler(errorHandler());
     coordinator.setTaskCompletionHandler(taskCompletionHandler);
