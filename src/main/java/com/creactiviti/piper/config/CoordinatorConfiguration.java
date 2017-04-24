@@ -20,7 +20,7 @@ import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.JobTaskRepository;
 import com.creactiviti.piper.core.task.SpelTaskEvaluator;
-import com.creactiviti.piper.core.task.TaskExecutor;
+import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.error.ErrorHandler;
 import com.creactiviti.piper.error.ErrorHandlerChain;
 import com.creactiviti.piper.error.JobTaskErrorHandler;
@@ -34,10 +34,10 @@ public class CoordinatorConfiguration {
   @Autowired private ContextRepository<Context> contextRepository;
   @Autowired private ApplicationEventPublisher eventPublisher;
   @Autowired private PipelineRepository pipelineRepository;
-  @Autowired private TaskExecutor taskExecutor;
+  @Autowired private TaskDispatcher taskDispatcher;
   
   @Bean
-  Coordinator coordinator (TaskExecutor aTaskExecutor) {
+  Coordinator coordinator () {
     Coordinator coordinator = new Coordinator();
     coordinator.setContextRepository(contextRepository);
     coordinator.setEventPublisher(eventPublisher);
@@ -45,7 +45,7 @@ public class CoordinatorConfiguration {
     coordinator.setJobTaskRepository(jobTaskRepository);
     coordinator.setPipelineRepository(pipelineRepository);
     coordinator.setTaskEvaluator(new SpelTaskEvaluator());
-    coordinator.setTaskExecutor(taskExecutor);
+    coordinator.setTaskDispatcher(taskDispatcher);
     coordinator.setErrorHandler(errorHandler());
     return coordinator;
   }
@@ -61,7 +61,7 @@ public class CoordinatorConfiguration {
     JobTaskErrorHandler jobTaskErrorHandler = new JobTaskErrorHandler();
     jobTaskErrorHandler.setJobRepository(jobRepository);
     jobTaskErrorHandler.setJobTaskRepository(jobTaskRepository);
-    jobTaskErrorHandler.setTaskExecutor(taskExecutor);
+    jobTaskErrorHandler.setTaskDispatcher(taskDispatcher);
     return jobTaskErrorHandler;
   }
   

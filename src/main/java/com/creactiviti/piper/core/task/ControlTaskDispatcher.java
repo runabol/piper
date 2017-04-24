@@ -21,17 +21,17 @@ import com.creactiviti.piper.core.messenger.Messenger;
  */
 @Component
 @Order(Ordered.LOWEST_PRECEDENCE)
-public class ControlTaskExecutor implements TaskExecutor<ControlTask>, TaskExecutorResolver {
+public class ControlTaskDispatcher implements TaskDispatcher<ControlTask>, TaskDispatcherResolver {
 
   private Messenger messenger;
   
   @Override
-  public void execute(ControlTask aTask) {
+  public void dispatch(ControlTask aTask) {
     messenger.send(Exchanges.CONTROL+"/"+Exchanges.CONTROL, aTask);
   }
 
   @Override
-  public TaskExecutor resolve(Task aTask) {
+  public TaskDispatcher resolve(Task aTask) {
     if(aTask instanceof ControlTask) {
       return this; 
     }

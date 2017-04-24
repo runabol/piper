@@ -36,7 +36,7 @@ import com.creactiviti.piper.core.task.DefaultTaskHandlerResolver;
 import com.creactiviti.piper.core.task.JdbcJobTaskRepository;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.TaskHandler;
-import com.creactiviti.piper.core.task.WorkTaskExecutor;
+import com.creactiviti.piper.core.task.WorkTaskDispatcher;
 import com.creactiviti.piper.taskhandler.io.Print;
 import com.creactiviti.piper.taskhandler.time.Sleep;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -96,9 +96,9 @@ public class CoordinatorTests {
     
     SynchMessenger coordinatorMessenger = new SynchMessenger();
     coordinatorMessenger.receive(Queues.TASKS, (o)->worker.handle((JobTask)o));
-    WorkTaskExecutor taskExecutor = new WorkTaskExecutor();
-    taskExecutor.setMessenger(coordinatorMessenger);
-    coordinator.setTaskExecutor(taskExecutor);
+    WorkTaskDispatcher taskDispatcher = new WorkTaskDispatcher();
+    taskDispatcher.setMessenger(coordinatorMessenger);
+    coordinator.setTaskDispatcher(taskDispatcher);
     coordinator.setEventPublisher(eventPublisher);
         
     Job job = coordinator.start(MapObject.of(ImmutableMap.of("pipeline","demo/hello","name","me")));

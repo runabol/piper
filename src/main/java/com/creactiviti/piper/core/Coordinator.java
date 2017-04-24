@@ -31,8 +31,8 @@ import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.JobTaskRepository;
 import com.creactiviti.piper.core.task.NoOpTaskEvaluator;
 import com.creactiviti.piper.core.task.PipelineTask;
+import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.core.task.TaskEvaluator;
-import com.creactiviti.piper.core.task.TaskExecutor;
 import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
 import com.creactiviti.piper.error.ErrorHandler;
@@ -52,7 +52,7 @@ public class Coordinator {
   private JobTaskRepository jobTaskRepository;
   private ApplicationEventPublisher eventPublisher;
   private ContextRepository contextRepository;
-  private TaskExecutor taskExecutor;
+  private TaskDispatcher taskDispatcher;
   private TaskEvaluator taskEvaluator = new NoOpTaskEvaluator();
   private ErrorHandler errorHandler;
 
@@ -135,7 +135,7 @@ public class Coordinator {
     jobRepository.update(aJob);
     Context context = contextRepository.peek(aJob.getId());
     JobTask evaluatedTask = taskEvaluator.evaluate(nextTask,context);
-    taskExecutor.execute(evaluatedTask);
+    taskDispatcher.dispatch(evaluatedTask);
   }
 
   private void complete (MutableJob aJob) {
@@ -167,7 +167,7 @@ public class Coordinator {
       currentTask.setStatus(TaskStatus.CANCELLED);
       currentTask.setCancellationDate(new Date());
       jobTaskRepository.update(currentTask);
-      taskExecutor.execute(new CancelTask(currentTask.getId()));
+      taskDispatcher.dispatch(new CancelTask(currentTask.getId()));
     }
     return mjob;
   }
@@ -263,8 +263,8 @@ public class Coordinator {
     jobRepository = aJobRepository;
   }
 
-  public void setTaskExecutor(TaskExecutor aTaskExecutor) {
-    taskExecutor = aTaskExecutor;
+  public void setTaskDispatcher(TaskDispatcher aTaskDispatcher) {
+    taskDispatcher = aTaskDispatcher;
   }
 
   public void setPipelineRepository(PipelineRepository aPipelineRepository) {

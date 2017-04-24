@@ -15,17 +15,17 @@ import org.springframework.stereotype.Component;
 
 @Primary
 @Component
-public class PrimaryTaskExecutor implements TaskExecutor<Task> {
+public class TaskDispatcherChain implements TaskDispatcher<Task> {
   
   @Autowired
-  private List<TaskExecutorResolver> resolvers = new ArrayList<>();
+  private List<TaskDispatcherResolver> resolvers = new ArrayList<>();
   
   @Override
-  public void execute (Task aTask) {
-    for(TaskExecutorResolver resolver : resolvers) {
-      TaskExecutor executor = resolver.resolve(aTask);
+  public void dispatch (Task aTask) {
+    for(TaskDispatcherResolver resolver : resolvers) {
+      TaskDispatcher executor = resolver.resolve(aTask);
       if(executor != null) {
-        executor.execute(aTask);
+        executor.dispatch(aTask);
         return;
       }
     }

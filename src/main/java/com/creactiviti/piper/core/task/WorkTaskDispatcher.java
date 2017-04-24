@@ -17,14 +17,14 @@ import com.creactiviti.piper.core.messenger.Queues;
 
 @Component
 @Order(Ordered.LOWEST_PRECEDENCE)
-public class WorkTaskExecutor implements TaskExecutor<JobTask>, TaskExecutorResolver {
+public class WorkTaskDispatcher implements TaskDispatcher<JobTask>, TaskDispatcherResolver {
 
   private Messenger messenger;
   
   private static final String DEFAULT_QUEUE = Queues.TASKS;
   
   @Override
-  public void execute (JobTask aTask) {
+  public void dispatch (JobTask aTask) {
     Assert.notNull(messenger,"messenger not configured");
     messenger.send(calculateRoutingKey(aTask), aTask);
   }
@@ -40,7 +40,7 @@ public class WorkTaskExecutor implements TaskExecutor<JobTask>, TaskExecutorReso
   }
 
   @Override
-  public TaskExecutor resolve (Task aTask) {
+  public TaskDispatcher resolve (Task aTask) {
     if(aTask instanceof JobTask) {
       return this; 
     }

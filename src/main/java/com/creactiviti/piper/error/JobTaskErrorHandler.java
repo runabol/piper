@@ -19,7 +19,7 @@ import com.creactiviti.piper.core.job.MutableJob;
 import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.JobTaskRepository;
-import com.creactiviti.piper.core.task.TaskExecutor;
+import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.core.task.TaskStatus;
 
 /**
@@ -31,7 +31,7 @@ public class JobTaskErrorHandler implements ErrorHandler<JobTask> {
 
   private JobRepository jobRepository;
   private JobTaskRepository jobTaskRepository;
-  private TaskExecutor taskExecutor;
+  private TaskDispatcher taskDispatcher;
 
   private Logger logger = LoggerFactory.getLogger(getClass());
     
@@ -51,7 +51,7 @@ public class JobTaskErrorHandler implements ErrorHandler<JobTask> {
       MutableJobTask retryTask = MutableJobTask.createNewFrom(aTask);
       retryTask.setRetryAttempts(aTask.getRetryAttempts()+1);
       jobTaskRepository.create(retryTask);
-      taskExecutor.execute(retryTask);
+      taskDispatcher.dispatch(retryTask);
     }
     // if it's not retryable then we're gonna fail the job
     else {
@@ -72,9 +72,9 @@ public class JobTaskErrorHandler implements ErrorHandler<JobTask> {
   public void setJobTaskRepository(JobTaskRepository aJobTaskRepository) {
     jobTaskRepository = aJobTaskRepository;
   }
-  
-  public void setTaskExecutor(TaskExecutor aTaskExecutor) {
-    taskExecutor = aTaskExecutor;
+
+  public void setTaskDispatcher(TaskDispatcher aTaskDispatcher) {
+    taskDispatcher = aTaskDispatcher;
   }
 
 }

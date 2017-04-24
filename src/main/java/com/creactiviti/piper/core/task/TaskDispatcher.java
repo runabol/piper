@@ -7,20 +7,20 @@
 package com.creactiviti.piper.core.task;
 
 /**
- * A strategy interface used by implementations who are 
- * responsible for executing {@link JobTask} instances.
+ * A strategy interface for dispatching {@link JobTask}
+ * instances to be executed.
  * 
  * @author Arik Cohen
  * @since Mar 26, 2017
  */
-public interface TaskExecutor<T extends Task> {
+public interface TaskDispatcher<T extends Task> {
 
   /**
-   * Executes a {@link JobTask} instance.
+   * Dispatches a {@link JobTask} instance.
    * 
    * @param aTask
-   *          The task to execute
+   *          The task to dispatch
    */
-  void execute (T aTask);
+  void dispatch (T aTask);
 
 }

@@ -12,13 +12,13 @@ import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.MutableJob;
 import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.task.JobTaskRepository;
-import com.creactiviti.piper.core.task.TaskExecutor;
+import com.creactiviti.piper.core.task.TaskDispatcher;
 
 public class JobTaskErrorHandlerTests {
 
   private JobRepository jobRepo = mock(JobRepository.class);
   private JobTaskRepository taskRepo = mock(JobTaskRepository.class);
-  private TaskExecutor executor = mock(TaskExecutor.class);
+  private TaskDispatcher taskDispatcher = mock(TaskDispatcher.class);
   
   @Test
   public void test1 () {
@@ -31,7 +31,7 @@ public class JobTaskErrorHandlerTests {
     errorable.setError(new ErrorObject("something bad happened", new String[0]));
     handler.handle(errorable);
     handler.handle(errorable);
-    verify(executor,times(0)).execute(any());
+    verify(taskDispatcher,times(0)).dispatch(any());
   }
   
   @Test
@@ -40,12 +40,12 @@ public class JobTaskErrorHandlerTests {
     JobTaskErrorHandler handler = new JobTaskErrorHandler();
     handler.setJobRepository(jobRepo);
     handler.setJobTaskRepository(taskRepo);
-    handler.setTaskExecutor(executor);
+    handler.setTaskDispatcher(taskDispatcher);
     MutableJobTask errorable = MutableJobTask.createFrom("retry", 1);
     errorable.setId("1234");
     errorable.setError(new ErrorObject("something bad happened", new String[0]));
     handler.handle(errorable);
-    verify(executor,times(1)).execute(any());
+    verify(taskDispatcher,times(1)).dispatch(any());
   }
   
 }

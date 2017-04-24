@@ -16,7 +16,7 @@ import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.task.CancelTask;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.JobTaskRepository;
-import com.creactiviti.piper.core.task.TaskExecutor;
+import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.core.task.TaskStatus;
 
 /**
@@ -29,7 +29,7 @@ import com.creactiviti.piper.core.task.TaskStatus;
 public class TaskStartedEventHandler implements ApplicationListener<PayloadApplicationEvent<PiperEvent>> {
 
   private JobTaskRepository jobTaskRepository;
-  private TaskExecutor taskExecutor;
+  private TaskDispatcher taskDispatcher;
 
   @Override
   public void onApplicationEvent(PayloadApplicationEvent<PiperEvent> aEvent) {
@@ -43,7 +43,7 @@ public class TaskStartedEventHandler implements ApplicationListener<PayloadAppli
         jobTaskRepository.update(mtask);
       }
       else if (task.getStatus() == TaskStatus.CANCELLED) {
-        taskExecutor.execute(new CancelTask(task.getId()));
+        taskDispatcher.dispatch(new CancelTask(task.getId()));
       }
     }
   }
@@ -54,8 +54,8 @@ public class TaskStartedEventHandler implements ApplicationListener<PayloadAppli
   }
 
   @Autowired
-  public void setTaskExecutor(TaskExecutor aTaskExecutor) {
-    taskExecutor = aTaskExecutor;
+  public void setTaskDispatcher(TaskDispatcher aTaskDispatcher) {
+    taskDispatcher = aTaskDispatcher;
   }
   
 }
