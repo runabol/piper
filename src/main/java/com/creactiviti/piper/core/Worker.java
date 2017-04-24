@@ -51,14 +51,12 @@ import com.creactiviti.piper.error.ErrorObject;
 public class Worker {
 
   private TaskHandlerResolver taskHandlerResolver;
-  private Messenger messenger;
-  
-  private Logger logger = LoggerFactory.getLogger(getClass());
-  
+  private Messenger messenger;  
   private final ExecutorService executors = Executors.newCachedThreadPool();
-  
   private final Map<String, Future<?>> taskExecutions = new ConcurrentHashMap<>();
 
+  private Logger logger = LoggerFactory.getLogger(getClass());
+  
   private static final long DEFAULT_TIME_OUT = 24 * 60 * 60 * 1000; 
   
   /**

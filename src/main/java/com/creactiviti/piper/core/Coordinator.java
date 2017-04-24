@@ -55,7 +55,8 @@ public class Coordinator {
   private TaskDispatcher taskDispatcher;
   private TaskEvaluator taskEvaluator = new NoOpTaskEvaluator();
   private ErrorHandler errorHandler;
-
+  private TaskCompletionHandler taskCompletionHandler;
+  
   private static final String PIPELINE = "pipeline";
 
   private final Logger log = LoggerFactory.getLogger(getClass());
@@ -203,29 +204,7 @@ public class Coordinator {
    *          The task to complete.
    */
   public void complete (JobTask aTask) {
-    log.debug("Completing task {}", aTask.getId());
-    MutableJobTask task = MutableJobTask.createForUpdate(aTask);
-    task.setStatus(TaskStatus.COMPLETED);
-    task.setError(null);
-    Job job = jobRepository.findJobByTaskId (aTask.getId());
-    if(job!=null) {
-      Pipeline pipeline = pipelineRepository.findOne(job.getPipelineId());
-      MutableJob mjob = new MutableJob (job);
-      mjob.setCurrentTask(mjob.getCurrentTask()+1);
-      jobTaskRepository.update(task);
-      jobRepository.update(mjob);
-      if(task.getOutput() != null && task.getName() != null) {
-        Context context = contextRepository.pop(job.getId());
-        MapContext newContext = new MapContext(context.asMap());
-        newContext.setId(UUIDGenerator.generate());
-        newContext.put(task.getName(), task.getOutput());
-        contextRepository.push(job.getId(), newContext);
-      }
-      execute(mjob,pipeline);
-    }
-    else {
-      log.error("Unknown job: {}",aTask.getJobId());
-    }
+    taskCompletionHandler.handle(aTask);
   }
 
   /**
@@ -281,6 +260,10 @@ public class Coordinator {
 
   public void setErrorHandler(ErrorHandler aErrorHandler) {
     errorHandler = aErrorHandler;
+  }
+  
+  public void setTaskCompletionHandler(TaskCompletionHandler aTaskCompletionHandler) {
+    taskCompletionHandler = aTaskCompletionHandler;
   }
   
 }

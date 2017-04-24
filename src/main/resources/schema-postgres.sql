@@ -15,6 +15,7 @@ drop table if exists job_task;
 
 create table job_task (
   id varchar(256) not null primary key,
+  parent_id varchar(256) null,
   status varchar(256) not null,
   job_id varchar(256) not null,
   data text not null,

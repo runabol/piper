@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.creactiviti.piper.core.Coordinator;
+import com.creactiviti.piper.core.TaskCompletionHandler;
 import com.creactiviti.piper.core.context.Context;
 import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.job.JobRepository;
@@ -35,6 +36,7 @@ public class CoordinatorConfiguration {
   @Autowired private ApplicationEventPublisher eventPublisher;
   @Autowired private PipelineRepository pipelineRepository;
   @Autowired private TaskDispatcher taskDispatcher;
+  @Autowired private TaskCompletionHandler taskCompletionHandler;
   
   @Bean
   Coordinator coordinator () {
@@ -47,6 +49,7 @@ public class CoordinatorConfiguration {
     coordinator.setTaskEvaluator(new SpelTaskEvaluator());
     coordinator.setTaskDispatcher(taskDispatcher);
     coordinator.setErrorHandler(errorHandler());
+    coordinator.setTaskCompletionHandler(taskCompletionHandler);
     return coordinator;
   }
   

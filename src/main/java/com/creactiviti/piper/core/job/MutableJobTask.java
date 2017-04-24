@@ -49,6 +49,15 @@ public class MutableJobTask extends MutablePipelineTask implements JobTask {
   }
   
   @Override
+  public String getParentId() {
+    return getString("parentId");
+  }
+  
+  public void setParentId (String aParentId) {
+    set("parentId", aParentId);
+  }
+  
+  @Override
   public String getJobId() {
     return getString("jobId");
   }

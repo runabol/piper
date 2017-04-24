@@ -15,6 +15,8 @@ public interface JobTask extends PipelineTask, Errorable, Retryable {
 
   String getId ();
   
+  String getParentId ();
+  
   String getJobId ();
   
   TaskStatus getStatus ();
