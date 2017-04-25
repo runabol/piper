@@ -21,4 +21,4 @@ See http://meetpiper.com
 - sequences (like in Clojure)
 - Clojure scripting support???
 - server-sent-event
-
+- send bug report through email

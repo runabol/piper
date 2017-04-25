@@ -18,5 +18,7 @@ import com.creactiviti.piper.core.task.JobTask;
 public interface TaskCompletionHandler {
   
   void handle (JobTask aJobTask);
+  
+  boolean canHandle (JobTask aJobTask);
 
 }

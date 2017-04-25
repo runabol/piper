@@ -107,4 +107,9 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
     jobExecutor = aJobExecutor;
   }
 
+  @Override
+  public boolean canHandle(JobTask aJobTask) {
+    return aJobTask.getParentId()==null;
+  }
+
 }

@@ -13,6 +13,8 @@ import org.springframework.expression.AccessException;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.PropertyAccessor;
 import org.springframework.expression.TypedValue;
+import org.springframework.expression.spel.SpelEvaluationException;
+import org.springframework.expression.spel.SpelMessage;
 
 /**
  * Simple {@link PropertyAccessor} that can access {@link Map} properties.
@@ -48,8 +50,7 @@ public class MapPropertyAccessor implements PropertyAccessor {
       return new TypedValue(value, TypeDescriptor.forObject(value));
     }
     else {
-      Object value = String.format("%s%s%s", prefix, aName, suffix);
-      return new TypedValue(value, TypeDescriptor.forObject(value));
+      throw new SpelEvaluationException(SpelMessage.PROPERTY_OR_FIELD_NOT_READABLE, aName, aTarget.getClass());
     }
   }
 

@@ -110,5 +110,28 @@ public class SpelTaskEvaluatorTests {
     JobTask evaluated = evaluator.evaluate(jt, new MapContext(Collections.EMPTY_MAP));
     Assert.assertEquals("yo ${name}",evaluated.getString("message"));
   }
+
+  @Test
+  public void test11 () {
+    SpelTaskEvaluator evaluator = new SpelTaskEvaluator();
+    JobTask jt = MutableJobTask.createFrom("thing", "${number}");
+    JobTask evaluated = evaluator.evaluate(jt, new MapContext(Collections.singletonMap("number", 1)));
+    Assert.assertEquals(Integer.valueOf(1),evaluated.get("thing"));
+  }
+
+  @Test
+  public void test12 () {
+    SpelTaskEvaluator evaluator = new SpelTaskEvaluator();
+    JobTask jt = MutableJobTask.createFrom("thing", "${number*3}");
+    JobTask evaluated = evaluator.evaluate(jt, new MapContext(Collections.singletonMap("number", 1)));
+    Assert.assertEquals(Integer.valueOf(3),evaluated.get("thing"));
+  }
   
+  @Test
+  public void test13 () {
+    SpelTaskEvaluator evaluator = new SpelTaskEvaluator();
+    JobTask jt = MutableJobTask.createFrom("thing", "${number*3}");
+    JobTask evaluated = evaluator.evaluate(jt, new MapContext(Collections.EMPTY_MAP));
+    Assert.assertEquals("${number*3}",evaluated.get("thing"));
+  }
 }

@@ -12,9 +12,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.common.TemplateParserContext;
+import org.springframework.expression.spel.SpelEvaluationException;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
@@ -35,6 +38,8 @@ public class SpelTaskEvaluator implements TaskEvaluator {
   private static final String PREFIX = "${";
   private static final String SUFFIX = "}";
   
+  private Logger logger = LoggerFactory.getLogger(getClass());
+  
   @Override
   public JobTask evaluate(JobTask aJobTask, Context aContext) {
     Map<String, Object> map = aJobTask.asMap();
@@ -54,7 +59,13 @@ public class SpelTaskEvaluator implements TaskEvaluator {
     StandardEvaluationContext context = createEvaluationContext(aContext);
     if(aValue instanceof String) {
       Expression expression = parser.parseExpression((String)aValue,new TemplateParserContext(PREFIX,SUFFIX));
-      return(expression.getValue(context));
+      try {
+        return(expression.getValue(context));
+      }
+      catch (SpelEvaluationException e) {
+        logger.debug(e.getMessage());
+        return aValue;
+      }
     }
     else if (aValue instanceof List) {
       List<Object> evaluatedlist = new ArrayList<>();

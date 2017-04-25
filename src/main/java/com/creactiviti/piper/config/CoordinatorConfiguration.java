@@ -17,6 +17,8 @@ import org.springframework.context.annotation.Configuration;
 import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.DefaultJobExecutor;
 import com.creactiviti.piper.core.DefaultTaskCompletionHandler;
+import com.creactiviti.piper.core.EachTaskCompletionHandler;
+import com.creactiviti.piper.core.TaskCompletionHandlerChain;
 import com.creactiviti.piper.core.context.Context;
 import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.event.TaskStartedEventHandler;
@@ -75,7 +77,15 @@ public class CoordinatorConfiguration {
   }
   
   @Bean
-  DefaultTaskCompletionHandler taskCompletionHandler () {
+  TaskCompletionHandlerChain taskCompletionHandler () {
+    return new TaskCompletionHandlerChain(Arrays.asList(
+      eachTaskCompletionHandler(),
+      defaultTaskCompletionHandler()
+    ));
+  }
+  
+  @Bean
+  DefaultTaskCompletionHandler defaultTaskCompletionHandler () {
     DefaultTaskCompletionHandler taskCompletionHandler = new DefaultTaskCompletionHandler();
     taskCompletionHandler.setContextRepository(contextRepository);
     taskCompletionHandler.setJobExecutor(jobExecutor());
@@ -83,6 +93,11 @@ public class CoordinatorConfiguration {
     taskCompletionHandler.setJobTaskRepository(jobTaskRepository);
     taskCompletionHandler.setPipelineRepository(pipelineRepository);
     return taskCompletionHandler;
+  }
+  
+  @Bean
+  EachTaskCompletionHandler eachTaskCompletionHandler () {
+    return new EachTaskCompletionHandler(jobTaskRepository,defaultTaskCompletionHandler());
   }
   
   @Bean
@@ -115,7 +130,7 @@ public class CoordinatorConfiguration {
   
   @Bean
   EachTaskDispatcher eachTaskDispatcher (TaskDispatcher aTaskDispatcher) {
-    return new EachTaskDispatcher(aTaskDispatcher);
+    return new EachTaskDispatcher(aTaskDispatcher,jobTaskRepository);
   }
   
   @Bean

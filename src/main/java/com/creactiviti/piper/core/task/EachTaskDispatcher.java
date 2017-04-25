@@ -7,6 +7,7 @@
 package com.creactiviti.piper.core.task;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -18,9 +19,11 @@ public class EachTaskDispatcher implements TaskDispatcher<JobTask>, TaskDispatch
   
   private final TaskDispatcher taskDispatcher;
   private final TaskEvaluator taskEvaluator = new SpelTaskEvaluator();
+  private final JobTaskRepository jobTaskRepository;
   
-  public EachTaskDispatcher(TaskDispatcher aTaskDispatcher) {
+  public EachTaskDispatcher(TaskDispatcher aTaskDispatcher, JobTaskRepository aJobTaskRepository) {
     taskDispatcher = aTaskDispatcher;
+    jobTaskRepository = aJobTaskRepository;
   }
   
   @Override
@@ -31,8 +34,12 @@ public class EachTaskDispatcher implements TaskDispatcher<JobTask>, TaskDispatch
       MutableJobTask eachTask = MutableJobTask.createFromMap(iteratee);
       eachTask.setId(UUIDGenerator.generate());
       eachTask.setParentId(aTask.getId());
+      eachTask.setStatus(TaskStatus.CREATED);
+      eachTask.setJobId(aTask.getJobId());
+      eachTask.setCreationDate(new Date());
       MapContext context = new MapContext(Collections.singletonMap(aTask.getString("itemVar","item"), item));
       JobTask evaluatedEachTask = taskEvaluator.evaluate(eachTask, context);
+      jobTaskRepository.create(evaluatedEachTask);
       taskDispatcher.dispatch(evaluatedEachTask);
     }
   }
