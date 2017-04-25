@@ -31,4 +31,13 @@ public interface Mutator {
    *          The value to associate with the key (can be <code>null</code>).
    */
   void setIfNull (String aKey, Object aValue);
+  
+  /**
+   * Increment the specified key counter by 1.
+   * 
+   * @param aKey the name of the counter
+   * @return the new counter value
+   */
+  long increment (String aKey);
+  
 }

@@ -134,4 +134,12 @@ public class SpelTaskEvaluatorTests {
     JobTask evaluated = evaluator.evaluate(jt, new MapContext(Collections.EMPTY_MAP));
     Assert.assertEquals("${number*3}",evaluated.get("thing"));
   }
+  
+  @Test
+  public void test14 () {
+    SpelTaskEvaluator evaluator = new SpelTaskEvaluator();
+    JobTask jt = MutableJobTask.createFrom("list", "${range(1,3)}");
+    JobTask evaluated = evaluator.evaluate(jt, new MapContext(Collections.EMPTY_MAP));
+    Assert.assertEquals(Arrays.asList(1,2,3),evaluated.get("list"));
+  }
 }

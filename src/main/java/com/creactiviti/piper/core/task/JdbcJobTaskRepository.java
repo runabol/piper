@@ -50,16 +50,20 @@ public class JdbcJobTaskRepository implements JobTaskRepository {
   
   @Override
   public List<JobTask> getExecution(String aJobId) {
-    return jdbc.query("select * From job_task where job_id = :jobId order by creation_date asc", Collections.singletonMap("jobId", aJobId),this::jobTaskRowMappper);
-    //return jdbc.query("select * From job_task where job_id = :jobId and parent_id is null order by creation_date asc", Collections.singletonMap("jobId", aJobId),this::jobTaskRowMappper);
+    return jdbc.query("select * From job_task where job_id = :jobId and parent_id is null order by creation_date asc", Collections.singletonMap("jobId", aJobId),this::jobTaskRowMappper);
   }
   
   @Override
   @Transactional
-  public int updateSubTask (JobTask aJobSubTask) {
+  public long completeSubTask (JobTask aJobSubTask) {
     Assert.notNull(aJobSubTask.getParentId(), "parentId can't be null");
+    JobTask parentTask = jdbc.queryForObject("select * from job_task where id = :id for update", Collections.singletonMap("id", aJobSubTask.getParentId()),this::jobTaskRowMappper);
+    MutableJobTask mparentTask = MutableJobTask.createForUpdate(parentTask);
+    List<Object> list = parentTask.getList("list", Object.class);
+    long increment = mparentTask.increment("iterations");
     update(aJobSubTask);
-    return jdbc.queryForObject("select count(*) from job_task where parent_id=:parentId and (status = 'CREATED' or status = 'STARTED') ", Collections.singletonMap("parentId", aJobSubTask.getParentId()), Integer.class);
+    update(mparentTask);
+    return (list.size()-increment);
   }
   
   private JobTask jobTaskRowMappper (ResultSet aRs, int aIndex) throws SQLException {

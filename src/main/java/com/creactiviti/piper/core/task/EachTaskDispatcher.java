@@ -13,9 +13,10 @@ import java.util.Map;
 
 import org.springframework.util.Assert;
 
-import com.creactiviti.piper.core.TaskCompletionHandler;
 import com.creactiviti.piper.core.context.MapContext;
 import com.creactiviti.piper.core.job.MutableJobTask;
+import com.creactiviti.piper.core.messenger.Messenger;
+import com.creactiviti.piper.core.messenger.Queues;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
 
 /**
@@ -31,12 +32,12 @@ public class EachTaskDispatcher implements TaskDispatcher<JobTask>, TaskDispatch
   private final TaskDispatcher taskDispatcher;
   private final TaskEvaluator taskEvaluator = new SpelTaskEvaluator();
   private final JobTaskRepository jobTaskRepository;
-  private final TaskCompletionHandler taskCompletionHandler;
+  private final Messenger messenger;
 
-  public EachTaskDispatcher (TaskDispatcher aTaskDispatcher, JobTaskRepository aJobTaskRepository, TaskCompletionHandler aTaskCompletionHandler) {
+  public EachTaskDispatcher (TaskDispatcher aTaskDispatcher, JobTaskRepository aJobTaskRepository, Messenger aMessenger) {
     taskDispatcher = aTaskDispatcher;
     jobTaskRepository = aJobTaskRepository;
-    taskCompletionHandler = aTaskCompletionHandler;
+    messenger = aMessenger;
   }
 
   @Override
@@ -60,7 +61,9 @@ public class EachTaskDispatcher implements TaskDispatcher<JobTask>, TaskDispatch
       }
     }
     else {
-      taskCompletionHandler.handle(aTask);
+      MutableJobTask completion = MutableJobTask.createForUpdate(aTask);
+      completion.setCompletionDate(new Date());
+      messenger.send(Queues.COMPLETIONS, completion);
     }
   }
 

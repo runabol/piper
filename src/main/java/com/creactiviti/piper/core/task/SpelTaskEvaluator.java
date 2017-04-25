@@ -11,11 +11,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.MethodExecutor;
+import org.springframework.expression.MethodResolver;
+import org.springframework.expression.TypedValue;
 import org.springframework.expression.common.TemplateParserContext;
 import org.springframework.expression.spel.SpelEvaluationException;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -84,7 +89,26 @@ public class SpelTaskEvaluator implements TaskEvaluator {
   private StandardEvaluationContext createEvaluationContext(Context aContext) {
     StandardEvaluationContext context = new StandardEvaluationContext(aContext);
     context.addPropertyAccessor(new MapPropertyAccessor(PREFIX,SUFFIX));
+    context.addMethodResolver(methodResolver());
     return context;
+  }
+  
+  private MethodResolver methodResolver () {
+    return (ctx,target,name,args) -> {
+      if("range".equals(name)) {
+        return range();
+      }
+      return null;
+    };
+  }
+  
+  private MethodExecutor range () {
+    return (ctx,target,args) -> {
+      List<Integer> value = IntStream.rangeClosed((int)args[0], (int)args[1])
+                                     .boxed()
+                                     .collect(Collectors.toList());
+      return new TypedValue(value);
+    };
   }
   
 }

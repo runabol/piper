@@ -16,14 +16,14 @@ import java.util.Collections;
 
 import org.junit.Test;
 
-import com.creactiviti.piper.core.TaskCompletionHandler;
 import com.creactiviti.piper.core.job.MutableJobTask;
+import com.creactiviti.piper.core.messenger.Messenger;
 
 public class EachTaskDispatcherTests {
   
   private JobTaskRepository taskRepo = mock(JobTaskRepository.class);
   private TaskDispatcher taskDispatcher = mock(TaskDispatcher.class);
-  private TaskCompletionHandler taskCompletionHandler = mock(TaskCompletionHandler.class);
+  private Messenger messenger = mock(Messenger.class);
   
   @Test(expected=IllegalArgumentException.class)
   public void test1 ()  {
@@ -33,24 +33,24 @@ public class EachTaskDispatcherTests {
   
   @Test
   public void test2 ()  {
-    EachTaskDispatcher dispatcher = new EachTaskDispatcher(taskDispatcher, taskRepo,taskCompletionHandler);
+    EachTaskDispatcher dispatcher = new EachTaskDispatcher(taskDispatcher, taskRepo,messenger);
     MutableJobTask task = MutableJobTask.create();
     task.set("list", Arrays.asList(1,2,3));
     task.set("iteratee", Collections.singletonMap("type", "print"));
     dispatcher.dispatch(task);
     verify(taskDispatcher,times(3)).dispatch(any());
-    verify(taskCompletionHandler,times(0)).handle(any());
+    verify(messenger,times(0)).send(any(),any());
   }
   
   @Test
   public void test3 ()  {
-    EachTaskDispatcher dispatcher = new EachTaskDispatcher(taskDispatcher, taskRepo,taskCompletionHandler);
+    EachTaskDispatcher dispatcher = new EachTaskDispatcher(taskDispatcher, taskRepo,messenger);
     MutableJobTask task = MutableJobTask.create();
     task.set("list", Arrays.asList());
     task.set("iteratee", Collections.singletonMap("type", "print"));
     dispatcher.dispatch(task);
     verify(taskDispatcher,times(0)).dispatch(any());
-    verify(taskCompletionHandler,times(1)).handle(any());
+    verify(messenger,times(1)).send(any(),any());
   }
 
 }

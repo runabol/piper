@@ -262,6 +262,17 @@ public class MapObject implements Map<String, Object>, Accessor, Mutator {
     }
   }
   
+  @Override
+  public long increment(String aKey) {
+    Long counter = getLong(aKey);
+    if(counter == null) {
+      counter = 0L;
+    }
+    counter++;
+    set(aKey, counter);
+    return counter;
+  }
+  
   public String toString() {
     return map.toString();
   }

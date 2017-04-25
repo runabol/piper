@@ -18,5 +18,5 @@ public interface JobTaskRepository {
   
   List<JobTask> getExecution (String aJobId);
 
-  int updateSubTask (JobTask aJobSubTask); 
+  long completeSubTask (JobTask aJobSubTask); 
 }
