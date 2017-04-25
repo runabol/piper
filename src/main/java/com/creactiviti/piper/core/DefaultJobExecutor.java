@@ -57,7 +57,6 @@ public class DefaultJobExecutor implements JobExecutor {
     PipelineTask task = aPipeline.getTasks().get(aJob.getCurrentTask()+1);
     MutableJobTask mt = MutableJobTask.createFrom (task);
     mt.setJobId(aJob.getId());
-    jobTaskRepository.create(mt);
     return mt;
   }
 
@@ -66,6 +65,7 @@ public class DefaultJobExecutor implements JobExecutor {
     jobRepository.update(aJob);
     Context context = contextRepository.peek(aJob.getId());
     JobTask evaluatedTask = taskEvaluator.evaluate(nextTask,context);
+    jobTaskRepository.create(evaluatedTask);
     taskDispatcher.dispatch(evaluatedTask);
   }
   
