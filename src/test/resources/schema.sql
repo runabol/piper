@@ -8,6 +8,7 @@ create table job (
 
 create table job_task (
   id varchar(256) not null primary key,
+  parent_id varchar(256),
   status varchar(256) not null,
   job_id varchar(256) not null,
   data text not null,

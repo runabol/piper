@@ -241,6 +241,13 @@ public class MutableJobTask extends MutablePipelineTask implements JobTask {
   public static MutableJobTask createFrom (String aKey, Object aValue) {
     return new MutableJobTask(Collections.singletonMap(aKey, aValue));
   }
+  
+  public static MutableJobTask createFrom (String aKey1, Object aValue1, String aKey2, Object aValue2) {
+    MutableJobTask task = create();
+    task.set(aKey1, aValue1);
+    task.set(aKey2, aValue2);
+    return task;
+  }
  
   /**
    * Creates a {@link MutableJobTask} instance for the given Key-Value

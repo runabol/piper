@@ -130,7 +130,7 @@ public class CoordinatorConfiguration {
   
   @Bean
   EachTaskDispatcher eachTaskDispatcher (TaskDispatcher aTaskDispatcher) {
-    return new EachTaskDispatcher(aTaskDispatcher,jobTaskRepository);
+    return new EachTaskDispatcher(aTaskDispatcher,jobTaskRepository,taskCompletionHandler());
   }
   
   @Bean

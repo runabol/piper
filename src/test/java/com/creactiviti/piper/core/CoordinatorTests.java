@@ -80,7 +80,7 @@ public class CoordinatorTests {
     contextRepository.setObjectMapper(objectMapper);
     
     coordinator.setContextRepository(contextRepository);
-    
+        
     JdbcJobTaskRepository taskRepository = new JdbcJobTaskRepository();
     taskRepository.setJdbcOperations(new NamedParameterJdbcTemplate(dataSource));
     taskRepository.setObjectMapper(createObjectMapper());
@@ -99,6 +99,22 @@ public class CoordinatorTests {
     WorkTaskDispatcher taskDispatcher = new WorkTaskDispatcher(coordinatorMessenger);
     coordinator.setTaskDispatcher(taskDispatcher);
     coordinator.setEventPublisher(eventPublisher);
+    
+    DefaultJobExecutor jobExecutor = new DefaultJobExecutor ();
+    jobExecutor.setContextRepository(contextRepository);
+    jobExecutor.setJobRepository(jobRepository);
+    jobExecutor.setJobTaskRepository(taskRepository);
+    jobExecutor.setPipelineRepository(new FileSystemPipelineRepository());
+    jobExecutor.setTaskDispatcher(taskDispatcher);
+    coordinator.setJobExecutor(jobExecutor);
+    
+    DefaultTaskCompletionHandler taskCompletionHandler = new DefaultTaskCompletionHandler();
+    taskCompletionHandler.setContextRepository(contextRepository);
+    taskCompletionHandler.setJobExecutor(jobExecutor);
+    taskCompletionHandler.setJobRepository(jobRepository);
+    taskCompletionHandler.setJobTaskRepository(taskRepository);
+    taskCompletionHandler.setPipelineRepository(new FileSystemPipelineRepository());
+    coordinator.setTaskCompletionHandler(taskCompletionHandler);
         
     Job job = coordinator.start(MapObject.of(ImmutableMap.of("pipeline","demo/hello","name","me")));
     
