@@ -18,6 +18,7 @@ import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.DefaultJobExecutor;
 import com.creactiviti.piper.core.DefaultTaskCompletionHandler;
 import com.creactiviti.piper.core.EachTaskCompletionHandler;
+import com.creactiviti.piper.core.TaskCompletionHandler;
 import com.creactiviti.piper.core.TaskCompletionHandlerChain;
 import com.creactiviti.piper.core.context.Context;
 import com.creactiviti.piper.core.context.ContextRepository;
@@ -78,10 +79,12 @@ public class CoordinatorConfiguration {
   
   @Bean
   TaskCompletionHandlerChain taskCompletionHandler () {
-    return new TaskCompletionHandlerChain(Arrays.asList(
-      eachTaskCompletionHandler(),
+    TaskCompletionHandlerChain taskCompletionHandlerChain = new TaskCompletionHandlerChain();
+    taskCompletionHandlerChain.setTaskCompletionHandlers(Arrays.asList(
+      eachTaskCompletionHandler(taskCompletionHandlerChain),
       defaultTaskCompletionHandler()
     ));
+    return taskCompletionHandlerChain;
   }
   
   @Bean
@@ -96,8 +99,8 @@ public class CoordinatorConfiguration {
   }
   
   @Bean
-  EachTaskCompletionHandler eachTaskCompletionHandler () {
-    return new EachTaskCompletionHandler(jobTaskRepository,defaultTaskCompletionHandler());
+  EachTaskCompletionHandler eachTaskCompletionHandler (TaskCompletionHandler aTaskCompletionHandler) {
+    return new EachTaskCompletionHandler(jobTaskRepository,aTaskCompletionHandler);
   }
   
   @Bean

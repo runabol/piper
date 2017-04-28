@@ -88,7 +88,7 @@ public class SpelTaskEvaluator implements TaskEvaluator {
 
   private StandardEvaluationContext createEvaluationContext(Context aContext) {
     StandardEvaluationContext context = new StandardEvaluationContext(aContext);
-    context.addPropertyAccessor(new MapPropertyAccessor(PREFIX,SUFFIX));
+    context.addPropertyAccessor(new MapPropertyAccessor());
     context.addMethodResolver(methodResolver());
     return context;
   }

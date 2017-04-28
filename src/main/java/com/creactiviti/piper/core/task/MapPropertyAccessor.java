@@ -13,8 +13,6 @@ import org.springframework.expression.AccessException;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.PropertyAccessor;
 import org.springframework.expression.TypedValue;
-import org.springframework.expression.spel.SpelEvaluationException;
-import org.springframework.expression.spel.SpelMessage;
 
 /**
  * Simple {@link PropertyAccessor} that can access {@link Map} properties.
@@ -24,14 +22,6 @@ import org.springframework.expression.spel.SpelMessage;
  */
 public class MapPropertyAccessor implements PropertyAccessor {
 
-  private final String prefix;
-  private final String suffix;
-  
-  public MapPropertyAccessor(String aPrefix, String aSuffix) {
-    prefix = aPrefix;
-    suffix = aSuffix;
-  }
-  
   @Override
   public Class<?>[] getSpecificTargetClasses() {
     return new Class<?>[]{Map.class};
@@ -39,19 +29,17 @@ public class MapPropertyAccessor implements PropertyAccessor {
 
   @Override
   public boolean canRead(EvaluationContext aContext, Object aTarget, String aName) throws AccessException {
-    return aTarget instanceof Map;
+    if(!(aTarget instanceof Map)) {
+      return false;
+    }
+    return ((Map)aTarget).containsKey(aName);
   }
 
   @Override
   public TypedValue read(EvaluationContext aContext, Object aTarget, String aName) throws AccessException {
     Map<String,Object> map = (Map<String, Object>) aTarget;
-    if(map.containsKey(aName)) {
-      Object value = map.get(aName);
-      return new TypedValue(value, TypeDescriptor.forObject(value));
-    }
-    else {
-      throw new SpelEvaluationException(SpelMessage.PROPERTY_OR_FIELD_NOT_READABLE, aName, aTarget.getClass());
-    }
+    Object value = map.get(aName);
+    return new TypedValue(value, TypeDescriptor.forObject(value));
   }
 
   @Override

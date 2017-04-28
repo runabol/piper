@@ -39,7 +39,7 @@ public class DefaultJobExecutor implements JobExecutor {
   public void execute (Job aJob) {
     Pipeline pipeline = pipelineRepository.findOne(aJob.getPipelineId());
     if(aJob.getStatus() != JobStatus.STARTED) {
-      return;
+      throw new IllegalStateException("should not be here");
     }
     else if(hasMoreTasks(aJob, pipeline)) {
       executeNextTask (aJob, pipeline);

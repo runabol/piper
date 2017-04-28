@@ -15,6 +15,7 @@ import org.junit.Test;
 import com.creactiviti.piper.core.MapObject;
 import com.creactiviti.piper.core.context.MapContext;
 import com.creactiviti.piper.core.job.MutableJobTask;
+import com.google.common.collect.ImmutableMap;
 
 public class SpelTaskEvaluatorTests {
 
@@ -149,5 +150,13 @@ public class SpelTaskEvaluatorTests {
     JobTask jt = MutableJobTask.createFrom("sub",Collections.singletonMap("list", "${range(1,3)}"));
     JobTask evaluated = evaluator.evaluate(jt, new MapContext(Collections.EMPTY_MAP));
     Assert.assertEquals(Arrays.asList(1,2,3),evaluated.getMap("sub").get("list"));
+  }
+  
+  @Test
+  public void test16 () {
+    SpelTaskEvaluator evaluator = new SpelTaskEvaluator();
+    JobTask jt = MutableJobTask.createFrom("message", "${item1}-${item2}");
+    JobTask evaluated = evaluator.evaluate(jt, new MapContext(ImmutableMap.of("item1", "hello","item2","world")));
+    Assert.assertEquals("hello-world",evaluated.get("message"));
   }
 }

@@ -1,16 +1,13 @@
 package com.creactiviti.piper.core;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.creactiviti.piper.core.task.JobTask;
 
 public class TaskCompletionHandlerChain implements TaskCompletionHandler {
 
-  private final List<TaskCompletionHandler> taskCompletionHandlers;
-  
-  public TaskCompletionHandlerChain(List<TaskCompletionHandler> aTaskCompletionHandlers) {
-    taskCompletionHandlers = aTaskCompletionHandlers;
-  }
+  private List<TaskCompletionHandler> taskCompletionHandlers = new ArrayList<>();
   
   @Override
   public void handle (JobTask aJobTask) {
@@ -24,6 +21,10 @@ public class TaskCompletionHandlerChain implements TaskCompletionHandler {
   @Override
   public boolean canHandle(JobTask aJobTask) {
     return true;
+  }
+  
+  public void setTaskCompletionHandlers(List<TaskCompletionHandler> aTaskCompletionHandlers) {
+    taskCompletionHandlers = aTaskCompletionHandlers;
   }
 
 }
