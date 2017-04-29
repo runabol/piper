@@ -60,10 +60,14 @@ public class EachTaskDispatcher implements TaskDispatcher<JobTask>, TaskDispatch
         context.setId(UUIDGenerator.generate());
         context.set(aTask.getString("itemVar","item"), item);
         contextRepository.push(aTask.getJobId(), context);
-        JobTask evaluatedEachTask = taskEvaluator.evaluate(eachTask, context);
-        jobTaskRepository.create(evaluatedEachTask);
-        taskDispatcher.dispatch(evaluatedEachTask);
-        contextRepository.pop(aTask.getJobId());
+        try{
+          JobTask evaluatedEachTask = taskEvaluator.evaluate(eachTask, context);
+          jobTaskRepository.create(evaluatedEachTask);
+          taskDispatcher.dispatch(evaluatedEachTask);
+        }
+        finally {
+          contextRepository.pop(aTask.getJobId());
+        }
       }
     }
     else {

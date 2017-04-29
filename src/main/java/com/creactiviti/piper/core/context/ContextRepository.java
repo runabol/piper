@@ -14,5 +14,7 @@ public interface ContextRepository<T extends Context> {
   
   T peek (String aJobId);
   
+  int stackSize (String aJobId);
+  
   
 }

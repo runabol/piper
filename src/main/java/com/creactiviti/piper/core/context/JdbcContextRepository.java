@@ -48,6 +48,12 @@ public class JdbcContextRepository implements ContextRepository<Context> {
     return jdbc.queryForObject(sql,new Object[]{aJobId},this::contextRowMapper);
   }
   
+  @Override
+  public int stackSize(String aJobId) {
+    String sql = "select count(*) from job_context where job_id = ?";
+    return jdbc.queryForObject(sql, Integer.class,aJobId);
+  }
+  
   private Context contextRowMapper (ResultSet aResultSet, int aIndex) throws SQLException {
     String data = aResultSet.getString(2);
     return new MapContext(JsonHelper.readValue(objectMapper, data, Map.class));    
