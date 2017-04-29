@@ -114,6 +114,7 @@ public class CoordinatorTests {
     taskCompletionHandler.setJobRepository(jobRepository);
     taskCompletionHandler.setJobTaskRepository(taskRepository);
     taskCompletionHandler.setPipelineRepository(new FileSystemPipelineRepository());
+    taskCompletionHandler.setEventPublisher(eventPublisher);
     coordinator.setTaskCompletionHandler(taskCompletionHandler);
         
     Job job = coordinator.start(MapObject.of(ImmutableMap.of("pipeline","demo/hello","name","me")));

@@ -74,6 +74,7 @@ public class CoordinatorConfiguration {
     jobTaskErrorHandler.setJobRepository(jobRepository);
     jobTaskErrorHandler.setJobTaskRepository(jobTaskRepository);
     jobTaskErrorHandler.setTaskDispatcher(taskDispatcher());
+    jobTaskErrorHandler.setEventPublisher(eventPublisher);
     return jobTaskErrorHandler;
   }
   
@@ -95,6 +96,7 @@ public class CoordinatorConfiguration {
     taskCompletionHandler.setJobRepository(jobRepository);
     taskCompletionHandler.setJobTaskRepository(jobTaskRepository);
     taskCompletionHandler.setPipelineRepository(pipelineRepository);
+    taskCompletionHandler.setEventPublisher(eventPublisher);
     return taskCompletionHandler;
   }
   
@@ -133,7 +135,7 @@ public class CoordinatorConfiguration {
   
   @Bean
   EachTaskDispatcher eachTaskDispatcher (TaskDispatcher aTaskDispatcher) {
-    return new EachTaskDispatcher(aTaskDispatcher,jobTaskRepository,messenger);
+    return new EachTaskDispatcher(aTaskDispatcher,jobTaskRepository,messenger,contextRepository);
   }
   
   @Bean

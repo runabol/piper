@@ -10,12 +10,15 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.Collections;
 
 import org.junit.Test;
 
+import com.creactiviti.piper.core.context.ContextRepository;
+import com.creactiviti.piper.core.context.MapContext;
 import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.messenger.Messenger;
 
@@ -24,16 +27,18 @@ public class EachTaskDispatcherTests {
   private JobTaskRepository taskRepo = mock(JobTaskRepository.class);
   private TaskDispatcher taskDispatcher = mock(TaskDispatcher.class);
   private Messenger messenger = mock(Messenger.class);
+  private ContextRepository contextRepository = mock(ContextRepository.class);
   
   @Test(expected=IllegalArgumentException.class)
   public void test1 ()  {
-    EachTaskDispatcher dispatcher = new EachTaskDispatcher(null,null,null);
+    EachTaskDispatcher dispatcher = new EachTaskDispatcher(null,null,null,null);
     dispatcher.dispatch(MutableJobTask.create());
   }
   
   @Test
   public void test2 ()  {
-    EachTaskDispatcher dispatcher = new EachTaskDispatcher(taskDispatcher, taskRepo,messenger);
+    when(contextRepository.peek(any())).thenReturn(new MapContext());
+    EachTaskDispatcher dispatcher = new EachTaskDispatcher(taskDispatcher, taskRepo,messenger,contextRepository);
     MutableJobTask task = MutableJobTask.create();
     task.set("list", Arrays.asList(1,2,3));
     task.set("iteratee", Collections.singletonMap("type", "print"));
@@ -44,7 +49,7 @@ public class EachTaskDispatcherTests {
   
   @Test
   public void test3 ()  {
-    EachTaskDispatcher dispatcher = new EachTaskDispatcher(taskDispatcher, taskRepo,messenger);
+    EachTaskDispatcher dispatcher = new EachTaskDispatcher(taskDispatcher, taskRepo,messenger,contextRepository);
     MutableJobTask task = MutableJobTask.create();
     task.set("list", Arrays.asList());
     task.set("iteratee", Collections.singletonMap("type", "print"));

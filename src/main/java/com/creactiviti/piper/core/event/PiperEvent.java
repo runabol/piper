@@ -39,10 +39,18 @@ public class PiperEvent extends MapObject {
     return of (aType, Collections.EMPTY_MAP);
   }
   
-  public static PiperEvent of (String aType, String aKey, String aValue) {
+  public static PiperEvent of (String aType, String aKey, Object aValue) {
     Assert.notNull(aKey,"key must not be null");
     Assert.notNull(aValue,"value for " + aKey + " must not be null");
     return of(aType,ImmutableMap.of(aKey, aValue));
+  }
+  
+  public static PiperEvent of (String aType, String aKey1, Object aValue1, String aKey2, Object aValue2) {
+    Assert.notNull(aKey1,"key must not be null");
+    Assert.notNull(aValue1,"value for " + aKey1 + " must not be null");
+    Assert.notNull(aKey2,"key must not be null");
+    Assert.notNull(aValue2,"value for " + aKey2 + " must not be null");
+    return of(aType,ImmutableMap.of(aKey1, aValue1,aKey2,aValue2));
   }
   
   public static PiperEvent of (String aType, Map<String, Object> aProperties) {

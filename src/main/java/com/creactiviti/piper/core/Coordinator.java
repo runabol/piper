@@ -18,6 +18,8 @@ import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.context.MapContext;
+import com.creactiviti.piper.core.event.Events;
+import com.creactiviti.piper.core.event.PiperEvent;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.JobStatus;
@@ -84,6 +86,7 @@ public class Coordinator {
     job.setCreationDate(new Date());
     log.debug("Job {} started",job.getId());
     jobRepository.create(job);
+    eventPublisher.publishEvent(PiperEvent.of(Events.JOB_STATUS,"jobId",job.getId(),"status",job.getStatus()));
 
     MapContext context = new MapContext(params);
     context.setId(UUIDGenerator.generate());
@@ -118,6 +121,7 @@ public class Coordinator {
     MutableJob mjob = new MutableJob(job);
     mjob.setStatus(JobStatus.STOPPED);
     jobRepository.update(mjob);
+    eventPublisher.publishEvent(PiperEvent.of(Events.JOB_STATUS,"jobId",job.getId(),"status",job.getStatus()));
     if(mjob.getExecution().size() > 0) {
       MutableJobTask currentTask = MutableJobTask.createForUpdate(job.getExecution().get(job.getExecution().size()-1));
       currentTask.setStatus(TaskStatus.CANCELLED);

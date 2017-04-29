@@ -6,7 +6,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
+
 import org.junit.Test;
+import org.springframework.context.ApplicationEventPublisher;
 
 import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.MutableJob;
@@ -19,11 +22,13 @@ public class JobTaskErrorHandlerTests {
   private JobRepository jobRepo = mock(JobRepository.class);
   private JobTaskRepository taskRepo = mock(JobTaskRepository.class);
   private TaskDispatcher taskDispatcher = mock(TaskDispatcher.class);
+  private ApplicationEventPublisher eventPublisher = mock(ApplicationEventPublisher.class);
   
   @Test
   public void test1 () {
-    when(jobRepo.findJobByTaskId("1234")).thenReturn(new MutableJob());
+    when(jobRepo.findJobByTaskId("1234")).thenReturn(new MutableJob(Collections.singletonMap("id","4567")));
     JobTaskErrorHandler handler = new JobTaskErrorHandler();
+    handler.setEventPublisher(eventPublisher);
     handler.setJobRepository(jobRepo);
     handler.setJobTaskRepository(taskRepo);
     MutableJobTask errorable = MutableJobTask.create();

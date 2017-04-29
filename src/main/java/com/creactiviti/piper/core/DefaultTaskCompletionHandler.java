@@ -10,10 +10,13 @@ import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 
 import com.creactiviti.piper.core.context.Context;
 import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.context.MapContext;
+import com.creactiviti.piper.core.event.Events;
+import com.creactiviti.piper.core.event.PiperEvent;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.JobStatus;
@@ -41,6 +44,7 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
   private JobTaskRepository jobTaskRepository;
   private ContextRepository contextRepository;
   private JobExecutor jobExecutor;
+  private ApplicationEventPublisher eventPublisher;
   
   @Override
   public void handle (JobTask aTask) {
@@ -84,6 +88,7 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
     job.setStatus(JobStatus.COMPLETED);
     job.setCompletionDate(new Date ());
     jobRepository.update(job);
+    eventPublisher.publishEvent(PiperEvent.of(Events.JOB_STATUS, "jobId", aJob.getId(), "status", aJob.getStatus()));
     log.debug("Job {} completed successfully",aJob.getId());
   }
   
@@ -105,6 +110,10 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
   
   public void setJobExecutor(JobExecutor aJobExecutor) {
     jobExecutor = aJobExecutor;
+  }
+  
+  public void setEventPublisher(ApplicationEventPublisher aEventPublisher) {
+    eventPublisher = aEventPublisher;
   }
 
   @Override

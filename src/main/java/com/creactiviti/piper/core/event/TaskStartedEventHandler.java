@@ -6,6 +6,8 @@
  */
 package com.creactiviti.piper.core.event;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.PayloadApplicationEvent;
 
@@ -26,6 +28,8 @@ public class TaskStartedEventHandler implements ApplicationListener<PayloadAppli
   private final JobTaskRepository jobTaskRepository;
   private final TaskDispatcher taskDispatcher;
   
+  private final Logger logger = LoggerFactory.getLogger(getClass());
+  
   public TaskStartedEventHandler(JobTaskRepository aJobTaskRepository, TaskDispatcher aTaskDispatcher) {
     jobTaskRepository = aJobTaskRepository;
     taskDispatcher = aTaskDispatcher;
@@ -37,7 +41,10 @@ public class TaskStartedEventHandler implements ApplicationListener<PayloadAppli
     if(Events.TASK_STARTED.equals(event.getType())) {
       String taskId = event.getString("taskId");
       JobTask task = jobTaskRepository.findOne(taskId);
-      if(task.getStatus() == TaskStatus.CREATED) {
+      if(task == null) {
+        logger.error("Unkown task: {}",taskId);
+      }
+      else if(task.getStatus() == TaskStatus.CREATED) {
         MutableJobTask mtask = MutableJobTask.createForUpdate(task);
         mtask.setStatus(TaskStatus.STARTED);
         jobTaskRepository.update(mtask);

@@ -21,6 +21,10 @@ public class MapContext extends MapObject implements Context {
     super(aSource);
   }
   
+  public MapContext (Context aSource) {
+    super(aSource.asMap());
+  }
+  
   @Override
   public String getId() {
     return getString("id");

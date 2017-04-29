@@ -10,8 +10,11 @@ import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.util.Assert;
 
+import com.creactiviti.piper.core.event.Events;
+import com.creactiviti.piper.core.event.PiperEvent;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.JobStatus;
@@ -32,6 +35,7 @@ public class JobTaskErrorHandler implements ErrorHandler<JobTask> {
   private JobRepository jobRepository;
   private JobTaskRepository jobTaskRepository;
   private TaskDispatcher taskDispatcher;
+  private ApplicationEventPublisher eventPublisher;
 
   private Logger logger = LoggerFactory.getLogger(getClass());
     
@@ -62,6 +66,7 @@ public class JobTaskErrorHandler implements ErrorHandler<JobTask> {
       mjob.setStatus(JobStatus.FAILED);
       mjob.setFailedDate(new Date ());
       jobRepository.update(mjob);
+      eventPublisher.publishEvent(PiperEvent.of(Events.JOB_STATUS, "jobId", mjob.getId(), "status", mjob.getStatus()));
     }
   }
 
@@ -75,6 +80,10 @@ public class JobTaskErrorHandler implements ErrorHandler<JobTask> {
 
   public void setTaskDispatcher(TaskDispatcher aTaskDispatcher) {
     taskDispatcher = aTaskDispatcher;
+  }
+  
+  public void setEventPublisher(ApplicationEventPublisher aEventPublisher) {
+    eventPublisher = aEventPublisher;
   }
 
 }
