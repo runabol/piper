@@ -59,6 +59,11 @@ public class JobTaskErrorHandler implements ErrorHandler<JobTask> {
     }
     // if it's not retryable then we're gonna fail the job
     else {
+      while(mtask.getParentId()!=null) { // mark parent tasks as FAILED as well
+        mtask = MutableJobTask.createForUpdate(jobTaskRepository.findOne(mtask.getParentId()));
+        mtask.setStatus(TaskStatus.FAILED);
+        jobTaskRepository.update(mtask);
+      }
       Job job = jobRepository.findJobByTaskId(mtask.getId());
       Assert.notNull(job,"job not found for task: " + mtask.getId());
       MutableJob mjob = new MutableJob (job);

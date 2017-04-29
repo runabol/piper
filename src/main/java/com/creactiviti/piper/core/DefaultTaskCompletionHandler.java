@@ -89,7 +89,8 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
     job.setCompletionDate(new Date ());
     jobRepository.update(job);
     eventPublisher.publishEvent(PiperEvent.of(Events.JOB_STATUS, "jobId", aJob.getId(), "status", aJob.getStatus()));
-    log.debug("Job {} completed successfully",aJob.getId());
+    int stackSize = contextRepository.stackSize(aJob.getId());
+    log.debug("Job {} completed successfully, stack size: {}",aJob.getId(),stackSize);
   }
   
   public void setJobRepository(JobRepository aJobRepository) {
