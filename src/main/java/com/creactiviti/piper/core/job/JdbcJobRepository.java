@@ -65,13 +65,13 @@ public class JdbcJobRepository implements JobRepository {
   @Override
   public void update (Job aJob) {
     MapSqlParameterSource sqlParameterSource = createSqlParameterSource(aJob);
-    jdbc.update("update job set data=:data,status=:status,start_time=:startTime,end_time=:endTime where id = :id ", sqlParameterSource);
+    jdbc.update("update job set data=:data,status=:status,start_time=:startTime,end_time=:endTime,current_task=:currentTask,pipeline_id=:pipelineId,name=:name where id = :id ", sqlParameterSource);
   }
 
   @Override
   public void create (Job aJob) {
     MapSqlParameterSource sqlParameterSource = createSqlParameterSource(aJob);
-    jdbc.update("insert into job (id,create_time,start_time,data,status) values (:id,:createTime,:startTime,:data,:status)", sqlParameterSource);
+    jdbc.update("insert into job (id,create_time,start_time,data,status,current_task,pipeline_id,name) values (:id,:createTime,:startTime,:data,:status,:currentTask,:pipelineId,:name)", sqlParameterSource);
   }
 
   private MapSqlParameterSource createSqlParameterSource(Job aJob) {
@@ -83,11 +83,14 @@ public class JdbcJobRepository implements JobRepository {
     Assert.notNull(aJob.getStatus(), "job status must not be null");
     MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
     sqlParameterSource.addValue("id", job.getId());
-    sqlParameterSource.addValue("createTime", job.getCreateTime());
     sqlParameterSource.addValue("data", writeValueAsJsonString(job));
     sqlParameterSource.addValue("status", job.getStatus().toString());
-    sqlParameterSource.addValue("endTime", job.getEndTime());
+    sqlParameterSource.addValue("currentTask", job.getCurrentTask());
+    sqlParameterSource.addValue("pipelineId", job.getPipelineId());
+    sqlParameterSource.addValue("name", job.getName());
+    sqlParameterSource.addValue("createTime", job.getCreateTime());
     sqlParameterSource.addValue("startTime", job.getStartTime());
+    sqlParameterSource.addValue("endTime", job.getEndTime());
     return sqlParameterSource;
   }
   

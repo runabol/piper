@@ -18,6 +18,12 @@ import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.error.Error;
 import com.creactiviti.piper.error.ErrorObject;
 
+/**
+ * An implementation of the {@link Job} interface
+ * based on {@link MapObject}.
+ * 
+ * @author Arik Cohen
+ */
 public class MutableJob extends MapObject implements Job {
 
   public MutableJob () {
