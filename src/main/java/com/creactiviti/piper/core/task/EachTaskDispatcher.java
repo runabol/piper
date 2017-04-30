@@ -55,7 +55,7 @@ public class EachTaskDispatcher implements TaskDispatcher<JobTask>, TaskDispatch
         eachTask.setParentId(aTask.getId());
         eachTask.setStatus(TaskStatus.CREATED);
         eachTask.setJobId(aTask.getJobId());
-        eachTask.setCreationDate(new Date());
+        eachTask.setCreateTime(new Date());
         MapContext context = new MapContext (contextRepository.peek(aTask.getJobId()));
         context.setId(UUIDGenerator.generate());
         context.set(aTask.getString("itemVar","item"), item);
@@ -72,7 +72,7 @@ public class EachTaskDispatcher implements TaskDispatcher<JobTask>, TaskDispatch
     }
     else {
       MutableJobTask completion = MutableJobTask.createForUpdate(aTask);
-      completion.setCompletionDate(new Date());
+      completion.setEndTime(new Date());
       messenger.send(Queues.COMPLETIONS, completion);
     }
   }

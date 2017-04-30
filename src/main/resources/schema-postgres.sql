@@ -4,6 +4,7 @@ create table job (
   id varchar(256) not null primary key,
   status varchar(256) not null,
   create_time timestamp not null,
+  start_time timestamp,
   end_time timestamp,
   data text not null
 );
@@ -19,7 +20,7 @@ create table job_task (
   status varchar(256) not null,
   job_id varchar(256) not null,
   data text not null,
-  creation_date timestamp not null
+  create_time timestamp not null
 );
 
 CREATE INDEX ON job_task (job_id);
@@ -29,7 +30,7 @@ drop table if exists job_context;
 create table job_context (
   id varchar(256) not null primary key,
   job_id varchar(256) not null,
-  creation_date timestamp not null,
+  create_time timestamp not null,
   data text not null
 );
 

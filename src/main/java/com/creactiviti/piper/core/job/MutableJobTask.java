@@ -104,36 +104,23 @@ public class MutableJobTask extends MutablePipelineTask implements JobTask {
   }
   
   @Override
-  public Date getCreationDate() {
-    return getDate("creationDate");
+  public Date getCreateTime() {
+    return getDate("createTime");
   }
   
-  public void setCreationDate(Date aDate) { 
-    set("creationDate", aDate);
+  public void setCreateTime(Date aDate) { 
+    set("createTime", aDate);
   }
 
   @Override
-  public Date getCompletionDate() {
-    return getDate("completionDate");
+  public Date getEndTime() {
+    return getDate("endTime");
   }
   
-  public void setCompletionDate(Date aDate) {
-    set("completionDate", aDate);
+  public void setEndTime(Date aDate) {
+    set("endTime", aDate);
   }
 
-  @Override
-  public Date getFailedDate() {
-    return getDate("failedDate");
-  }
-  
-  @Override
-  public Date getCancellationDate() {
-    return getDate("cancellationDate");
-  }
-  
-  public void setCancellationDate (Date aDate) {
-    set("cancellationDate", aDate);
-  }
 
   @Override
   public long getExecutionTime() {
@@ -187,7 +174,7 @@ public class MutableJobTask extends MutablePipelineTask implements JobTask {
    */
   public static MutableJobTask createFrom (PipelineTask aTask) {
     MutableJobTask jobTask = new MutableJobTask (aTask);
-    jobTask.setCreationDate(new Date());
+    jobTask.setCreateTime(new Date());
     jobTask.setId(UUIDGenerator.generate());
     jobTask.setStatus(TaskStatus.CREATED);
     return jobTask;
@@ -205,7 +192,7 @@ public class MutableJobTask extends MutablePipelineTask implements JobTask {
   public static MutableJobTask createNewFrom (JobTask aJobTask) {
     MutableJobTask mutableJobTask = new MutableJobTask(aJobTask);
     mutableJobTask.setId(UUIDGenerator.generate());
-    mutableJobTask.setCreationDate(new Date());
+    mutableJobTask.setCreateTime(new Date());
     mutableJobTask.setStatus(TaskStatus.CREATED);
     mutableJobTask.setError(null);
     return mutableJobTask;

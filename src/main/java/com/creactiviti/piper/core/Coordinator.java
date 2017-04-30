@@ -125,7 +125,7 @@ public class Coordinator {
     if(mjob.getExecution().size() > 0) {
       MutableJobTask currentTask = MutableJobTask.createForUpdate(job.getExecution().get(job.getExecution().size()-1));
       currentTask.setStatus(TaskStatus.CANCELLED);
-      currentTask.setCancellationDate(new Date());
+      currentTask.setEndTime(new Date());
       jobTaskRepository.update(currentTask);
       taskDispatcher.dispatch(new CancelTask(currentTask.getId()));
     }

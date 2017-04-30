@@ -33,7 +33,7 @@ public class JdbcJobTaskRepository implements JobTaskRepository {
   @Override
   public void create(JobTask aJobTask) {
     SqlParameterSource sqlParameterSource = createSqlParameterSource(aJobTask);
-    jdbc.update("insert into job_task (id,parent_id,job_id,data,status,creation_date) values (:id,:parentId,:jobId,:data,:status,:creationDate)", sqlParameterSource);
+    jdbc.update("insert into job_task (id,parent_id,job_id,data,status,create_time) values (:id,:parentId,:jobId,:data,:status,:createTime)", sqlParameterSource);
   }
   
   @Override
@@ -50,7 +50,7 @@ public class JdbcJobTaskRepository implements JobTaskRepository {
   
   @Override
   public List<JobTask> getExecution(String aJobId) {
-    return jdbc.query("select * From job_task where job_id = :jobId order by creation_date asc", Collections.singletonMap("jobId", aJobId),this::jobTaskRowMappper);
+    return jdbc.query("select * From job_task where job_id = :jobId order by create_time asc", Collections.singletonMap("jobId", aJobId),this::jobTaskRowMappper);
   }
   
   @Override
@@ -77,7 +77,7 @@ public class JdbcJobTaskRepository implements JobTaskRepository {
     sqlParameterSource.addValue("jobId", aJobTask.getJobId());
     sqlParameterSource.addValue("data", writeValueAsJsonString(aJobTask));
     sqlParameterSource.addValue("status", aJobTask.getStatus().toString());
-    sqlParameterSource.addValue("creationDate", aJobTask.getCreationDate());
+    sqlParameterSource.addValue("createTime", aJobTask.getCreateTime());
     return sqlParameterSource;
   }
   

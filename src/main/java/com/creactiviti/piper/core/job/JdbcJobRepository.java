@@ -65,13 +65,13 @@ public class JdbcJobRepository implements JobRepository {
   @Override
   public void update (Job aJob) {
     MapSqlParameterSource sqlParameterSource = createSqlParameterSource(aJob);
-    jdbc.update("update job set data=:data,status=:status,end_time=:endTime where id = :id ", sqlParameterSource);
+    jdbc.update("update job set data=:data,status=:status,start_time=:startTime,end_time=:endTime where id = :id ", sqlParameterSource);
   }
 
   @Override
   public void create (Job aJob) {
     MapSqlParameterSource sqlParameterSource = createSqlParameterSource(aJob);
-    jdbc.update("insert into job (id,create_time,data,status) values (:id,:createTime,:data,:status)", sqlParameterSource);
+    jdbc.update("insert into job (id,create_time,start_time,data,status) values (:id,:createTime,:startTime,:data,:status)", sqlParameterSource);
   }
 
   private MapSqlParameterSource createSqlParameterSource(Job aJob) {
@@ -87,6 +87,7 @@ public class JdbcJobRepository implements JobRepository {
     sqlParameterSource.addValue("data", writeValueAsJsonString(job));
     sqlParameterSource.addValue("status", job.getStatus().toString());
     sqlParameterSource.addValue("endTime", job.getEndTime());
+    sqlParameterSource.addValue("startTime", job.getStartTime());
     return sqlParameterSource;
   }
   

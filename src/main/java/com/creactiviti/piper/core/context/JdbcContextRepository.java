@@ -31,7 +31,7 @@ public class JdbcContextRepository implements ContextRepository<Context> {
   
   @Override
   public void push(String aJobId, Context aContext) {
-    jdbc.update("insert into job_context (id,job_id,data,creation_date) values (?,?,?,?)",aContext.getId(),aJobId,JsonHelper.writeValueAsString(objectMapper, aContext), new Date());
+    jdbc.update("insert into job_context (id,job_id,data,create_time) values (?,?,?,?)",aContext.getId(),aJobId,JsonHelper.writeValueAsString(objectMapper, aContext), new Date());
   }
 
   @Override
@@ -44,7 +44,7 @@ public class JdbcContextRepository implements ContextRepository<Context> {
 
   @Override
   public Context peek (String aJobId) {
-    String sql = "select id,data from job_context where job_id = ? order by creation_date desc limit 1";
+    String sql = "select id,data from job_context where job_id = ? order by create_time desc limit 1";
     return jdbc.queryForObject(sql,new Object[]{aJobId},this::contextRowMapper);
   }
   

@@ -77,7 +77,7 @@ public class Worker {
         if(output!=null) {
           completion.setOutput(output);
         }
-        completion.setCompletionDate(new Date());
+        completion.setEndTime(new Date());
         messenger.send(Queues.COMPLETIONS, completion);
       }
       catch (InterruptedException e) {

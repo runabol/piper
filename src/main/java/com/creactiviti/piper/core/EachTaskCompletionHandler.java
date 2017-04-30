@@ -32,7 +32,7 @@ public class EachTaskCompletionHandler implements TaskCompletionHandler {
   public void handle (JobTask aJobTask) {
     MutableJobTask mtask = MutableJobTask.createForUpdate(aJobTask);
     mtask.setStatus(TaskStatus.COMPLETED);
-    mtask.setCompletionDate(new Date());
+    mtask.setEndTime(new Date());
     long updateSubTask = jobTaskRepository.completeSubTask(mtask);
     if(updateSubTask == 0) {
       taskCompletionHandler.handle(jobTaskRepository.findOne(aJobTask.getParentId()));
