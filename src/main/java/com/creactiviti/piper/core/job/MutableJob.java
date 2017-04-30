@@ -91,25 +91,21 @@ public class MutableJob extends MapObject implements Job {
     set("status", aStatus);
   }
   
-  public void setCompletionDate(Date aCompletionDate) {
-    set("completionDate", aCompletionDate);
+  public void setEndTime(Date aEndTime) {
+    set("endTime", aEndTime);
   }
   
-  public void setStartDate(Date aStartDate) {
-    set("startDate",aStartDate);
-  }
-  
-  public void setFailedDate(Date aFailedDate) {
-    set("failedDate",aFailedDate);
+  public void setStartTime(Date aStartTime) {
+    set("startTime",aStartTime);
   }
   
   @Override
-  public Date getCreationDate() {
-    return getDate("creationDate");
+  public Date getCreateTime() {
+    return getDate("createTime");
   }
   
-  public void setCreationDate(Date aCreationDate) {
-    set("creationDate",aCreationDate);
+  public void setCreateTime (Date aCreateTime) {
+    set("createTime",aCreateTime);
   }
   
   @Override
@@ -122,18 +118,13 @@ public class MutableJob extends MapObject implements Job {
   }
   
   @Override
-  public Date getStartDate() {
-    return getDate("startDate");
+  public Date getStartTime() {
+    return getDate("startTime");
   }
   
   @Override
-  public Date getFailedDate() {
-    return getDate("failedDate");
-  }
-  
-  @Override
-  public Date getCompletionDate() {
-    return getDate("completionDate");
+  public Date getEndTime() {
+    return getDate("endTime");
   }
   
   @Override

@@ -82,8 +82,8 @@ public class Coordinator {
     job.setName(params.getString("name",pipeline.getName()));
     job.setPipelineId(pipeline.getId());
     job.setStatus(JobStatus.STARTED);
-    job.setStartDate(new Date());
-    job.setCreationDate(new Date());
+    job.setStartTime(new Date());
+    job.setCreateTime(new Date());
     log.debug("Job {} started",job.getId());
     jobRepository.create(job);
     eventPublisher.publishEvent(PiperEvent.of(Events.JOB_STATUS,"jobId",job.getId(),"status",job.getStatus()));

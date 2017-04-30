@@ -1,8 +1,8 @@
 create table job (
   id varchar(256) not null primary key,
   status varchar(256) not null,
-  creation_date timestamp not null,
-  completion_date timestamp,
+  create_time timestamp not null,
+  end_time timestamp,
   data text not null
 );
 

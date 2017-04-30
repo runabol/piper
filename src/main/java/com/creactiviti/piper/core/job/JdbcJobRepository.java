@@ -53,7 +53,7 @@ public class JdbcJobRepository implements JobRepository {
     Integer totalItems = jdbc.getJdbcOperations().queryForObject("select count(*) from job",Integer.class);
     int offset = (aPageNumber-1) * DEFAULT_PAGE_SIZE;
     int limit = DEFAULT_PAGE_SIZE;
-    List<Job> items = jdbc.query(String.format("select * from job order by creation_date desc offset %s limit %s",offset,limit),this::jobRowMappper);
+    List<Job> items = jdbc.query(String.format("select * from job order by create_time desc offset %s limit %s",offset,limit),this::jobRowMappper);
     ResultPage<Job> resultPage = new ResultPage<>(Job.class);
     resultPage.setItems(items);
     resultPage.setNumber(items.size()>0?aPageNumber:0);
@@ -65,13 +65,13 @@ public class JdbcJobRepository implements JobRepository {
   @Override
   public void update (Job aJob) {
     MapSqlParameterSource sqlParameterSource = createSqlParameterSource(aJob);
-    jdbc.update("update job set data=:data,status=:status,completion_date=:completionDate where id = :id ", sqlParameterSource);
+    jdbc.update("update job set data=:data,status=:status,end_time=:endTime where id = :id ", sqlParameterSource);
   }
 
   @Override
   public void create (Job aJob) {
     MapSqlParameterSource sqlParameterSource = createSqlParameterSource(aJob);
-    jdbc.update("insert into job (id,creation_date,data,status) values (:id,:creationDate,:data,:status)", sqlParameterSource);
+    jdbc.update("insert into job (id,create_time,data,status) values (:id,:createTime,:data,:status)", sqlParameterSource);
   }
 
   private MapSqlParameterSource createSqlParameterSource(Job aJob) {
@@ -79,14 +79,14 @@ public class JdbcJobRepository implements JobRepository {
     job.remove("execution"); // don't want to store the execution as part of the job's data
     Assert.notNull(aJob, "job must not be null");
     Assert.notNull(aJob.getId(), "job status must not be null");
-    Assert.notNull(aJob.getCreationDate(), "job creationDate must not be null");
+    Assert.notNull(aJob.getCreateTime(), "job createTime must not be null");
     Assert.notNull(aJob.getStatus(), "job status must not be null");
     MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
     sqlParameterSource.addValue("id", job.getId());
-    sqlParameterSource.addValue("creationDate", job.getCreationDate());
+    sqlParameterSource.addValue("createTime", job.getCreateTime());
     sqlParameterSource.addValue("data", writeValueAsJsonString(job));
     sqlParameterSource.addValue("status", job.getStatus().toString());
-    sqlParameterSource.addValue("completionDate", job.getCompletionDate());
+    sqlParameterSource.addValue("endTime", job.getEndTime());
     return sqlParameterSource;
   }
   
@@ -127,12 +127,12 @@ public class JdbcJobRepository implements JobRepository {
 
   @Override
   public int countCompletedJobsToday() {
-    return jdbc.queryForObject("select count(*) from job where status='COMPLETED' and completion_date >= current_date", Collections.EMPTY_MAP, Integer.class);
+    return jdbc.queryForObject("select count(*) from job where status='COMPLETED' and end_time >= current_date", Collections.EMPTY_MAP, Integer.class);
   }
 
   @Override
   public int countCompletedJobsYesterday() {
-    return jdbc.queryForObject("select count(*) from job where status='COMPLETED' and completion_date >= current_date-1 and completion_date < current_date-1 ", Collections.EMPTY_MAP, Integer.class);
+    return jdbc.queryForObject("select count(*) from job where status='COMPLETED' and end_time >= current_date-1 and end_time < current_date-1 ", Collections.EMPTY_MAP, Integer.class);
   }
 
 }

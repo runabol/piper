@@ -69,7 +69,7 @@ public class JobTaskErrorHandler implements ErrorHandler<JobTask> {
       MutableJob mjob = new MutableJob (job);
       Assert.notNull(mjob,String.format("No job found for task %s ",mtask.getId()));
       mjob.setStatus(JobStatus.FAILED);
-      mjob.setFailedDate(new Date ());
+      mjob.setEndTime(new Date ());
       jobRepository.update(mjob);
       eventPublisher.publishEvent(PiperEvent.of(Events.JOB_STATUS, "jobId", mjob.getId(), "status", mjob.getStatus()));
     }

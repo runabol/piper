@@ -50,7 +50,7 @@ public class JdbcJobTaskRepository implements JobTaskRepository {
   
   @Override
   public List<JobTask> getExecution(String aJobId) {
-    return jdbc.query("select * From job_task where job_id = :jobId and parent_id is null order by creation_date asc", Collections.singletonMap("jobId", aJobId),this::jobTaskRowMappper);
+    return jdbc.query("select * From job_task where job_id = :jobId order by creation_date asc", Collections.singletonMap("jobId", aJobId),this::jobTaskRowMappper);
   }
   
   @Override

@@ -67,34 +67,26 @@ public interface Job extends Accessor, Errorable {
   String getName ();
 
   /**
-   * Return the date of when the job was originally 
+   * Return the time when the job was originally 
    * created.
    * 
    * @return {@link Date}
    */
-  Date getCreationDate ();
+  Date getCreateTime ();
     
   /**
-   * Return the date of when the job began 
+   * Return the time of when the job began 
    * execution.
    * 
    * @return {@link Date}
    */
-  Date getStartDate();  
+  Date getStartTime ();  
   
   /**
-   * Return the date of when the job finished
-   * successfully.
+   * Get time execution entered end status: COMPLETED, STOPPED, FAILED 
    * 
    * @return {@link Date}
    */
-  Date getCompletionDate ();
-  
-  /**
-   * Return the date of when the job failed.
-   * 
-   * @return {@link Date}
-   */
-  Date getFailedDate ();
+  Date getEndTime ();
   
 }

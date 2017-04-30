@@ -40,7 +40,7 @@ public class JdbcJobRepositoryTests {
     
     MutableJob job = new MutableJob();
     job.setId("1");
-    job.setCreationDate(new Date());
+    job.setCreateTime(new Date());
     job.setStatus(JobStatus.CREATED);
     jobRepository.create(job);
     
@@ -65,7 +65,7 @@ public class JdbcJobRepositoryTests {
     
     MutableJob job = new MutableJob();
     job.setId("2");
-    job.setCreationDate(new Date());
+    job.setCreateTime(new Date());
     job.setStatus(JobStatus.CREATED);
     jobRepository.create(job);
     
