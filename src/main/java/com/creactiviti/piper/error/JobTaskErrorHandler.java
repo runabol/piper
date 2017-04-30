@@ -48,6 +48,7 @@ public class JobTaskErrorHandler implements ErrorHandler<JobTask> {
     // set task status to failed and persist
     MutableJobTask mtask = MutableJobTask.createForUpdate(aTask);
     mtask.setStatus(TaskStatus.FAILED);
+    mtask.setEndTime(new Date ());
     jobTaskRepository.update(mtask);
     
     // if the task is retryable, then retry it
@@ -62,6 +63,7 @@ public class JobTaskErrorHandler implements ErrorHandler<JobTask> {
       while(mtask.getParentId()!=null) { // mark parent tasks as FAILED as well
         mtask = MutableJobTask.createForUpdate(jobTaskRepository.findOne(mtask.getParentId()));
         mtask.setStatus(TaskStatus.FAILED);
+        mtask.setEndTime(new Date());
         jobTaskRepository.update(mtask);
       }
       Job job = jobRepository.findJobByTaskId(mtask.getId());

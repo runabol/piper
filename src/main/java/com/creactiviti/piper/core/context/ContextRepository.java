@@ -16,5 +16,4 @@ public interface ContextRepository<T extends Context> {
   
   int stackSize (String aJobId);
   
-  
 }

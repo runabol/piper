@@ -122,8 +122,8 @@ public class Coordinator {
     mjob.setStatus(JobStatus.STOPPED);
     jobRepository.update(mjob);
     eventPublisher.publishEvent(PiperEvent.of(Events.JOB_STATUS,"jobId",job.getId(),"status",job.getStatus()));
-    if(mjob.getExecution().size() > 0) {
-      MutableJobTask currentTask = MutableJobTask.createForUpdate(job.getExecution().get(job.getExecution().size()-1));
+    if(mjob.getTasks().size() > 0) {
+      MutableJobTask currentTask = MutableJobTask.createForUpdate(job.getTasks().get(job.getTasks().size()-1));
       currentTask.setStatus(TaskStatus.CANCELLED);
       currentTask.setEndTime(new Date());
       jobTaskRepository.update(currentTask);

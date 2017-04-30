@@ -50,7 +50,7 @@ public interface Job extends Accessor, Errorable {
    * 
    * @return {@link List}
    */
-  List<JobTask> getExecution ();
+  List<JobTask> getTasks ();
 
   /**
    * Return the job's pipeline id.

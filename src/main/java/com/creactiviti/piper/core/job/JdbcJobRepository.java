@@ -76,7 +76,7 @@ public class JdbcJobRepository implements JobRepository {
 
   private MapSqlParameterSource createSqlParameterSource(Job aJob) {
     MutableJob job = new MutableJob(aJob);
-    job.remove("execution"); // don't want to store the execution as part of the job's data
+    job.remove("tasks"); // don't want to store the tasks as part of the job's data
     Assert.notNull(aJob, "job must not be null");
     Assert.notNull(aJob.getId(), "job status must not be null");
     Assert.notNull(aJob.getCreateTime(), "job createTime must not be null");
@@ -105,7 +105,7 @@ public class JdbcJobRepository implements JobRepository {
   
   private Job jobRowMappper (ResultSet aRs, int aIndex) throws SQLException {
     Map<String, Object> map = readValueFromString(aRs.getString("data"));
-    map.put("execution", getExecution(aRs.getString("id")));
+    map.put("tasks", getTasks(aRs.getString("id")));
     return new MutableJob(map);
   }
   
@@ -117,8 +117,8 @@ public class JdbcJobRepository implements JobRepository {
     return JsonHelper.writeValueAsString(json, aValue);
   }
   
-  private List<JobTask> getExecution(String aJobId) {
-    return jobTaskRepository.getExecution(aJobId);
+  private List<JobTask> getTasks(String aJobId) {
+    return jobTaskRepository.getTasks(aJobId);
   }
 
   @Override
