@@ -8,6 +8,7 @@ See http://meetpiper.com
 
 - Workers health
 - Each construct
+- fork/join
 - Mapper construct
 - Parallel construct
 - Search
