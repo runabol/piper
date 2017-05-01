@@ -49,11 +49,10 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
   @Override
   public void handle (JobTask aTask) {
     log.debug("Completing task {}", aTask.getId());
-    MutableJobTask task = MutableJobTask.createForUpdate(aTask);
-    task.setStatus(TaskStatus.COMPLETED);
-    task.setError(null);
     Job job = jobRepository.findJobByTaskId (aTask.getId());
     if(job!=null) {
+      MutableJobTask task = MutableJobTask.createForUpdate(aTask);
+      task.setStatus(TaskStatus.COMPLETED);
       MutableJob mjob = new MutableJob (job);
       mjob.setCurrentTask(mjob.getCurrentTask()+1);
       jobTaskRepository.update(task);

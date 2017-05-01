@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.beans.BeanUtils;
 
 import com.creactiviti.piper.core.MapObject;
 import com.creactiviti.piper.core.task.JobTask;
@@ -35,7 +35,8 @@ public class MutableJob extends MapObject implements Job {
   }
   
   public MutableJob (Job aSource) {
-    super(aSource.asMap());
+    super();
+    BeanUtils.copyProperties(aSource, this);
   }
     
   @Override
@@ -67,7 +68,7 @@ public class MutableJob extends MapObject implements Job {
   
   @Override
   public Error getError() {
-    if(containsKey("error")) {
+    if(get("error")!=null) {
       return new ErrorObject(getMap("error"));
     }
     return null;
@@ -131,11 +132,6 @@ public class MutableJob extends MapObject implements Job {
   @Override
   public Date getEndTime() {
     return getDate("endTime");
-  }
-  
-  @Override
-  public String toString() {
-    return ToStringBuilder.reflectionToString(this);
   }
   
 }

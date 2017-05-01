@@ -1,6 +1,9 @@
 create table job (
   id varchar(256) not null primary key,
   status varchar(256) not null,
+  current_task int not null,
+  pipeline_id varchar(256) not null,
+  name varchar(256),
   start_time timestamp,
   create_time timestamp not null,
   end_time timestamp,

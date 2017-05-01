@@ -38,11 +38,11 @@ public class JdbcJobTaskRepository implements JobTaskRepository {
   
   @Override
   @Transactional
-  public void update(JobTask aJobTask) {
+  public void update (JobTask aJobTask) {
     MutableJobTask mjobTask = MutableJobTask.createForUpdate(aJobTask);
-    JobTask jobTask = jdbc.queryForObject("select * from job_task where id = :id for update", Collections.singletonMap("id", aJobTask.getId()),this::jobTaskRowMappper);
-    if(jobTask.getStatus() == TaskStatus.COMPLETED) { // FIXME: hack
-      mjobTask.setStatus(TaskStatus.COMPLETED);
+    JobTask currentTask = jdbc.queryForObject("select * from job_task where id = :id for update", Collections.singletonMap("id", aJobTask.getId()),this::jobTaskRowMappper);
+    if(currentTask.getStatus().value() > aJobTask.getStatus().value()) { 
+      return;
     }
     SqlParameterSource sqlParameterSource = createSqlParameterSource(mjobTask);
     jdbc.update("update job_task set data=:data,status=:status where id = :id ", sqlParameterSource);
