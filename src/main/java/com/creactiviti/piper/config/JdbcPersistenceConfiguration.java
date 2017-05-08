@@ -14,7 +14,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import com.creactiviti.piper.core.context.JdbcContextRepository;
 import com.creactiviti.piper.core.job.JdbcJobRepository;
-import com.creactiviti.piper.core.task.JdbcJobTaskRepository;
+import com.creactiviti.piper.core.task.JdbcTaskExecutionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
@@ -22,8 +22,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class JdbcPersistenceConfiguration {
 
   @Bean
-  JdbcJobTaskRepository jdbcJobTaskRepository (NamedParameterJdbcTemplate aJdbcTemplate, ObjectMapper aObjectMapper) {
-    JdbcJobTaskRepository jdbcJobTaskRepository = new JdbcJobTaskRepository();
+  JdbcTaskExecutionRepository jdbcJobTaskRepository (NamedParameterJdbcTemplate aJdbcTemplate, ObjectMapper aObjectMapper) {
+    JdbcTaskExecutionRepository jdbcJobTaskRepository = new JdbcTaskExecutionRepository();
     jdbcJobTaskRepository.setJdbcOperations(aJdbcTemplate);
     jdbcJobTaskRepository.setObjectMapper(aObjectMapper);
     return jdbcJobTaskRepository;

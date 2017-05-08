@@ -46,7 +46,7 @@ public class SpelTaskEvaluator implements TaskEvaluator {
   private Logger logger = LoggerFactory.getLogger(getClass());
   
   @Override
-  public JobTask evaluate(JobTask aJobTask, Context aContext) {
+  public TaskExecution evaluate(TaskExecution aJobTask, Context aContext) {
     Map<String, Object> map = aJobTask.asMap();
     Map<String, Object> newMap = evaluateInternal(map,aContext);
     return MutableJobTask.createFromMap(newMap);

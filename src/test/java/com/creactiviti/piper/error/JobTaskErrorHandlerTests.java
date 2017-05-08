@@ -14,13 +14,13 @@ import org.springframework.context.ApplicationEventPublisher;
 import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.MutableJob;
 import com.creactiviti.piper.core.job.MutableJobTask;
-import com.creactiviti.piper.core.task.JobTaskRepository;
+import com.creactiviti.piper.core.task.TaskExecutionRepository;
 import com.creactiviti.piper.core.task.TaskDispatcher;
 
 public class JobTaskErrorHandlerTests {
 
   private JobRepository jobRepo = mock(JobRepository.class);
-  private JobTaskRepository taskRepo = mock(JobTaskRepository.class);
+  private TaskExecutionRepository taskRepo = mock(TaskExecutionRepository.class);
   private TaskDispatcher taskDispatcher = mock(TaskDispatcher.class);
   private ApplicationEventPublisher eventPublisher = mock(ApplicationEventPublisher.class);
   

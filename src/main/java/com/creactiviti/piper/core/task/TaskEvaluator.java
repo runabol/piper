@@ -17,14 +17,14 @@ import com.creactiviti.piper.core.context.Context;
 public interface TaskEvaluator {
 
   /**
-   * Evaluate the {@link JobTask}
+   * Evaluate the {@link TaskExecution}
    * 
    * @param aJobTask
-   *          The {@link JobTask} instance to evaluate
+   *          The {@link TaskExecution} instance to evaluate
    * @param aContext
    *          The context to evaluate the task against
-   * @return the evaluate {@link JobTask}.
+   * @return the evaluate {@link TaskExecution}.
    */
-  JobTask evaluate (JobTask aJobTask, Context aContext);
+  TaskExecution evaluate (TaskExecution aJobTask, Context aContext);
   
 }

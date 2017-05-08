@@ -8,7 +8,7 @@ import org.junit.Test;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.MutableJob;
 import com.creactiviti.piper.core.job.MutableJobTask;
-import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.core.task.TaskExecution;
 
 public class ErrorHandlerChainTests {
 
@@ -30,8 +30,8 @@ public class ErrorHandlerChainTests {
         throw new IllegalStateException("should not get here");
       }
     };
-    ErrorHandler errorHandler2 = new ErrorHandler<JobTask>() {
-      public void handle(JobTask jt) {
+    ErrorHandler errorHandler2 = new ErrorHandler<TaskExecution>() {
+      public void handle(TaskExecution jt) {
         Assert.assertEquals(MutableJobTask.class, jt.getClass()); 
       }
     };

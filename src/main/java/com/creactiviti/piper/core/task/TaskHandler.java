@@ -7,7 +7,7 @@
 package com.creactiviti.piper.core.task;
 
 /**
- * A startegy interface used for executing a {@link JobTask}.
+ * A startegy interface used for executing a {@link TaskExecution}.
  * 
  * @author Arik Cohen
  * @since Jun 12, 2016

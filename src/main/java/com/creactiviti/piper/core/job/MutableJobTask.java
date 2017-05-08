@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
-import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.MutablePipelineTask;
 import com.creactiviti.piper.core.task.PipelineTask;
 import com.creactiviti.piper.core.task.Task;
@@ -21,13 +21,13 @@ import com.creactiviti.piper.error.Error;
 import com.creactiviti.piper.error.ErrorObject;
 
 
-public class MutableJobTask extends MutablePipelineTask implements JobTask {
+public class MutableJobTask extends MutablePipelineTask implements TaskExecution {
 
   private MutableJobTask () {
     this(Collections.EMPTY_MAP);
   }
   
-  private MutableJobTask (JobTask aSource) {
+  private MutableJobTask (TaskExecution aSource) {
     this(aSource.asMap());
   }
   
@@ -172,14 +172,14 @@ public class MutableJobTask extends MutablePipelineTask implements JobTask {
   
   /**
    * Creates a new {@link MutableJobTask} instance, using the 
-   * given {@link JobTask} instance as a starting point. 
+   * given {@link TaskExecution} instance as a starting point. 
    * 
    * @param aJobTask
-   *          The {@link JobTask} instance to use as a starting 
+   *          The {@link TaskExecution} instance to use as a starting 
    *          point.
    * @return the new {@link MutableJobTask}
    */
-  public static MutableJobTask createNewFrom (JobTask aJobTask) {
+  public static MutableJobTask createNewFrom (TaskExecution aJobTask) {
     MutableJobTask mutableJobTask = new MutableJobTask(aJobTask);
     mutableJobTask.setId(UUIDGenerator.generate());
     mutableJobTask.setCreateTime(new Date());
@@ -190,13 +190,13 @@ public class MutableJobTask extends MutablePipelineTask implements JobTask {
 
   /**
    * Creates a {@link MutableJobTask} instance which 
-   * is a copy of a {@link JobTask}.
+   * is a copy of a {@link TaskExecution}.
    * 
    * @param aJobTask
-   *          The {@link JobTask} instance to copy.
+   *          The {@link TaskExecution} instance to copy.
    * @return the new {@link MutableJobTask}
    */
-  public static MutableJobTask createForUpdate (JobTask aJobTask) {
+  public static MutableJobTask createForUpdate (TaskExecution aJobTask) {
     return new MutableJobTask(aJobTask);
   }
   

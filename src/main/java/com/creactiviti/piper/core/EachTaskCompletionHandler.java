@@ -9,8 +9,8 @@ package com.creactiviti.piper.core;
 import java.util.Date;
 
 import com.creactiviti.piper.core.job.MutableJobTask;
-import com.creactiviti.piper.core.task.JobTask;
-import com.creactiviti.piper.core.task.JobTaskRepository;
+import com.creactiviti.piper.core.task.TaskExecution;
+import com.creactiviti.piper.core.task.TaskExecutionRepository;
 import com.creactiviti.piper.core.task.TaskStatus;
 
 /**
@@ -20,16 +20,16 @@ import com.creactiviti.piper.core.task.TaskStatus;
  */
 public class EachTaskCompletionHandler implements TaskCompletionHandler {
 
-  private final JobTaskRepository jobTaskRepository;
+  private final TaskExecutionRepository jobTaskRepository;
   private final TaskCompletionHandler taskCompletionHandler;
   
-  public EachTaskCompletionHandler(JobTaskRepository aJobTaskRepository, TaskCompletionHandler aTaskCompletionHandler) {
+  public EachTaskCompletionHandler(TaskExecutionRepository aJobTaskRepository, TaskCompletionHandler aTaskCompletionHandler) {
     jobTaskRepository = aJobTaskRepository;
     taskCompletionHandler = aTaskCompletionHandler;
   }
   
   @Override
-  public void handle (JobTask aJobTask) {
+  public void handle (TaskExecution aJobTask) {
     MutableJobTask mtask = MutableJobTask.createForUpdate(aJobTask);
     mtask.setStatus(TaskStatus.COMPLETED);
     mtask.setEndTime(new Date());
@@ -40,7 +40,7 @@ public class EachTaskCompletionHandler implements TaskCompletionHandler {
   }
 
   @Override
-  public boolean canHandle(JobTask aJobTask) {
+  public boolean canHandle(TaskExecution aJobTask) {
     return aJobTask.getParentId()!=null;
   }
 

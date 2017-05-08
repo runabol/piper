@@ -6,10 +6,10 @@
  */
 package com.creactiviti.piper.core;
 
-import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.core.task.TaskExecution;
 
 /**
- * A strategy interface for handling {@link JobTask}
+ * A strategy interface for handling {@link TaskExecution}
  * completions.
  * 
  * @author Arik Cohen
@@ -17,8 +17,8 @@ import com.creactiviti.piper.core.task.JobTask;
  */
 public interface TaskCompletionHandler {
   
-  void handle (JobTask aJobTask);
+  void handle (TaskExecution aJobTask);
   
-  boolean canHandle (JobTask aJobTask);
+  boolean canHandle (TaskExecution aJobTask);
 
 }

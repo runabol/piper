@@ -13,7 +13,7 @@ import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.messenger.Queues;
 
 @Component
-public class WorkTaskDispatcher implements TaskDispatcher<JobTask>, TaskDispatcherResolver {
+public class WorkTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDispatcherResolver {
 
   private final Messenger messenger;
   
@@ -24,19 +24,19 @@ public class WorkTaskDispatcher implements TaskDispatcher<JobTask>, TaskDispatch
   }
   
   @Override
-  public void dispatch (JobTask aTask) {
+  public void dispatch (TaskExecution aTask) {
     Assert.notNull(messenger,"messenger not configured");
     messenger.send(calculateRoutingKey(aTask), aTask);
   }
   
   private String calculateRoutingKey (Task aTask) {
-    JobTask jtask = (JobTask) aTask;
+    TaskExecution jtask = (TaskExecution) aTask;
     return jtask.getNode()!=null?jtask.getNode():DEFAULT_QUEUE;
   }
   
   @Override
   public TaskDispatcher resolve (Task aTask) {
-    if(aTask instanceof JobTask) {
+    if(aTask instanceof TaskExecution) {
       return this; 
     }
     return null;

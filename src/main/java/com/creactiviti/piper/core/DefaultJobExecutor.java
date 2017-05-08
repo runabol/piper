@@ -14,8 +14,8 @@ import com.creactiviti.piper.core.job.JobStatus;
 import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
-import com.creactiviti.piper.core.task.JobTask;
-import com.creactiviti.piper.core.task.JobTaskRepository;
+import com.creactiviti.piper.core.task.TaskExecution;
+import com.creactiviti.piper.core.task.TaskExecutionRepository;
 import com.creactiviti.piper.core.task.PipelineTask;
 import com.creactiviti.piper.core.task.SpelTaskEvaluator;
 import com.creactiviti.piper.core.task.TaskDispatcher;
@@ -29,7 +29,7 @@ import com.creactiviti.piper.core.task.TaskEvaluator;
 public class DefaultJobExecutor implements JobExecutor {
 
   private PipelineRepository pipelineRepository;
-  private JobTaskRepository jobTaskRepository;
+  private TaskExecutionRepository jobTaskRepository;
   private JobRepository jobRepository;
   private ContextRepository contextRepository;
   private TaskDispatcher taskDispatcher;
@@ -53,7 +53,7 @@ public class DefaultJobExecutor implements JobExecutor {
     return aJob.getCurrentTask()+1 < aPipeline.getTasks().size();
   }
 
-  private JobTask nextTask(Job aJob, Pipeline aPipeline) {
+  private TaskExecution nextTask(Job aJob, Pipeline aPipeline) {
     PipelineTask task = aPipeline.getTasks().get(aJob.getCurrentTask()+1);
     MutableJobTask mt = MutableJobTask.createFrom (task);
     mt.setJobId(aJob.getId());
@@ -61,10 +61,10 @@ public class DefaultJobExecutor implements JobExecutor {
   }
 
   private void executeNextTask (Job aJob, Pipeline aPipeline) {
-    JobTask nextTask = nextTask(aJob, aPipeline); 
+    TaskExecution nextTask = nextTask(aJob, aPipeline); 
     jobRepository.update(aJob);
     Context context = contextRepository.peek(aJob.getId());
-    JobTask evaluatedTask = taskEvaluator.evaluate(nextTask,context);
+    TaskExecution evaluatedTask = taskEvaluator.evaluate(nextTask,context);
     jobTaskRepository.create(evaluatedTask);
     taskDispatcher.dispatch(evaluatedTask);
   }
@@ -77,7 +77,7 @@ public class DefaultJobExecutor implements JobExecutor {
     jobRepository = aJobRepository;
   }
   
-  public void setJobTaskRepository(JobTaskRepository aJobTaskRepository) {
+  public void setJobTaskRepository(TaskExecutionRepository aJobTaskRepository) {
     jobTaskRepository = aJobTaskRepository;
   }
   

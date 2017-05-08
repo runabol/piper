@@ -19,13 +19,13 @@ import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.Page;
 import com.creactiviti.piper.core.ResultPage;
-import com.creactiviti.piper.core.task.JobTask;
-import com.creactiviti.piper.core.task.JobTaskRepository;
+import com.creactiviti.piper.core.task.TaskExecution;
+import com.creactiviti.piper.core.task.TaskExecutionRepository;
 
 public class JdbcJobRepository implements JobRepository {
 
   private NamedParameterJdbcOperations jdbc;
-  private JobTaskRepository jobTaskRepository;
+  private TaskExecutionRepository jobTaskRepository;
   
   public static final int DEFAULT_PAGE_SIZE = 25;
   
@@ -90,7 +90,7 @@ public class JdbcJobRepository implements JobRepository {
     return sqlParameterSource;
   }
   
-  public void setJobTaskRepository(JobTaskRepository aJobTaskRepository) {
+  public void setJobTaskRepository(TaskExecutionRepository aJobTaskRepository) {
     jobTaskRepository = aJobTaskRepository;
   }
     
@@ -112,7 +112,7 @@ public class JdbcJobRepository implements JobRepository {
     return new MutableJob(map);
   }
   
-  private List<JobTask> getExecution(String aJobId) {
+  private List<TaskExecution> getExecution(String aJobId) {
     return jobTaskRepository.getExecution(aJobId);
   }
 

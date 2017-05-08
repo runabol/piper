@@ -29,7 +29,7 @@ import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.messenger.Queues;
 import com.creactiviti.piper.core.task.ControlTask;
-import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskHandler;
 import com.creactiviti.piper.core.task.TaskHandlerResolver;
 import com.creactiviti.piper.error.ErrorObject;
@@ -60,13 +60,13 @@ public class Worker {
   private static final long DEFAULT_TIME_OUT = 24 * 60 * 60 * 1000; 
   
   /**
-   * Handle the execution of a {@link JobTask}. Implementors
+   * Handle the execution of a {@link TaskExecution}. Implementors
    * are expected to execute the task asynchronously. 
    * 
    * @param aTask
    *          The task to execute.
    */
-  public void handle (JobTask aTask) {
+  public void handle (TaskExecution aTask) {
     Future<?> future = executors.submit(() -> {
       try {
         logger.debug("Recived task: {}",aTask);
@@ -101,14 +101,14 @@ public class Worker {
     
   }
   
-  private void handleException (JobTask aTask, Exception aException) {
+  private void handleException (TaskExecution aTask, Exception aException) {
     logger.error(aException.getMessage(),aException);
     MutableJobTask jobTask = MutableJobTask.createForUpdate(aTask);
     jobTask.setError(new ErrorObject(aException.getMessage(),ExceptionUtils.getStackFrames(aException)));
     messenger.send(Queues.ERRORS, jobTask);
   }
   
-  private long calculateTimeout (JobTask aTask) {
+  private long calculateTimeout (TaskExecution aTask) {
     if(aTask.getTimeout() != null) {
       return Duration.parse("PT"+aTask.getTimeout()).toMillis();
     }

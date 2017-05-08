@@ -15,7 +15,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.creactiviti.piper.core.Page;
-import com.creactiviti.piper.core.task.JdbcJobTaskRepository;
+import com.creactiviti.piper.core.task.JdbcTaskExecutionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -29,7 +29,7 @@ public class JdbcJobRepositoryTests {
   
   @Test
   public void test1 () {
-    JdbcJobTaskRepository taskRepository = new JdbcJobTaskRepository();
+    JdbcTaskExecutionRepository taskRepository = new JdbcTaskExecutionRepository();
     taskRepository.setJdbcOperations(new NamedParameterJdbcTemplate(dataSource));
     taskRepository.setObjectMapper(createObjectMapper());
     
@@ -54,7 +54,7 @@ public class JdbcJobRepositoryTests {
   
   @Test
   public void test2 () {
-    JdbcJobTaskRepository taskRepository = new JdbcJobTaskRepository();
+    JdbcTaskExecutionRepository taskRepository = new JdbcTaskExecutionRepository();
     taskRepository.setJdbcOperations(new NamedParameterJdbcTemplate(dataSource));
     taskRepository.setObjectMapper(createObjectMapper());
     

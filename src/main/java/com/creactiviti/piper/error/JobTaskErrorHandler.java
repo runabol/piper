@@ -20,8 +20,8 @@ import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.JobStatus;
 import com.creactiviti.piper.core.job.MutableJob;
 import com.creactiviti.piper.core.job.MutableJobTask;
-import com.creactiviti.piper.core.task.JobTask;
-import com.creactiviti.piper.core.task.JobTaskRepository;
+import com.creactiviti.piper.core.task.TaskExecution;
+import com.creactiviti.piper.core.task.TaskExecutionRepository;
 import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.core.task.TaskStatus;
 
@@ -30,17 +30,17 @@ import com.creactiviti.piper.core.task.TaskStatus;
  * @author Arik Cohen
  * @since Apr 10, 2017
  */
-public class JobTaskErrorHandler implements ErrorHandler<JobTask> {
+public class JobTaskErrorHandler implements ErrorHandler<TaskExecution> {
 
   private JobRepository jobRepository;
-  private JobTaskRepository jobTaskRepository;
+  private TaskExecutionRepository jobTaskRepository;
   private TaskDispatcher taskDispatcher;
   private ApplicationEventPublisher eventPublisher;
 
   private Logger logger = LoggerFactory.getLogger(getClass());
     
   @Override
-  public void handle(JobTask aTask) {
+  public void handle(TaskExecution aTask) {
     Error error = aTask.getError();
     Assert.notNull(error,"error must not be null");
     logger.debug("Erring task {}: {}\n{}", aTask.getId(), error.getMessage());
@@ -81,7 +81,7 @@ public class JobTaskErrorHandler implements ErrorHandler<JobTask> {
     jobRepository = aJobRepository;
   }
 
-  public void setJobTaskRepository(JobTaskRepository aJobTaskRepository) {
+  public void setJobTaskRepository(TaskExecutionRepository aJobTaskRepository) {
     jobTaskRepository = aJobTaskRepository;
   }
 

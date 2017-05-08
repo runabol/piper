@@ -14,7 +14,7 @@ import java.util.Map;
 import org.springframework.beans.BeanUtils;
 
 import com.creactiviti.piper.core.MapObject;
-import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.error.Error;
 import com.creactiviti.piper.error.ErrorObject;
 
@@ -79,12 +79,12 @@ public class MutableJob extends MapObject implements Job {
   }
   
   @Override
-  public List<JobTask> getExecution() {
-    List<JobTask> list = getList("execution", JobTask.class);
+  public List<TaskExecution> getExecution() {
+    List<TaskExecution> list = getList("execution", TaskExecution.class);
     return list!=null?list:Collections.EMPTY_LIST;
   }
   
-  public void setTasks(List<JobTask> aTasks) {
+  public void setTasks(List<TaskExecution> aTasks) {
     set("tasks", aTasks);
   }
   

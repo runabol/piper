@@ -24,7 +24,7 @@ import com.creactiviti.piper.core.messenger.Messenger;
 
 public class EachTaskDispatcherTests {
   
-  private JobTaskRepository taskRepo = mock(JobTaskRepository.class);
+  private TaskExecutionRepository taskRepo = mock(TaskExecutionRepository.class);
   private TaskDispatcher taskDispatcher = mock(TaskDispatcher.class);
   private Messenger messenger = mock(Messenger.class);
   private ContextRepository contextRepository = mock(ContextRepository.class);

@@ -11,7 +11,22 @@ import java.util.Date;
 import com.creactiviti.piper.error.Errorable;
 import com.creactiviti.piper.error.Retryable;
 
-public interface JobTask extends PipelineTask, Errorable, Retryable {
+/**
+ * Extends the {@link Task} interface to add execution semantics to 
+ * the task. 
+ * 
+ * {@link TaskExecution} instances capture the life cycle of a single 
+ * execution of a task. By single execution is meant that the task
+ * goes through the following states: 
+ * 
+ * 1. CREATED
+ * 2. STARTED
+ * 3. COMPLETED or FAILED or CANCELLED
+ * 
+ * @author Arik Cohen
+ * @since May 8, 2017
+ */
+public interface TaskExecution extends PipelineTask, Errorable, Retryable {
 
   /**
    * Get the unique id of the task instance.

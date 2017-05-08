@@ -7,7 +7,7 @@
 package com.creactiviti.piper.core.task;
 
 /**
- * A strategy interface for dispatching {@link JobTask}
+ * A strategy interface for dispatching {@link TaskExecution}
  * instances to be executed.
  * 
  * @author Arik Cohen
@@ -16,7 +16,7 @@ package com.creactiviti.piper.core.task;
 public interface TaskDispatcher<T extends Task> {
 
   /**
-   * Dispatches a {@link JobTask} instance.
+   * Dispatches a {@link TaskExecution} instance.
    * 
    * @param aTask
    *          The task to dispatch

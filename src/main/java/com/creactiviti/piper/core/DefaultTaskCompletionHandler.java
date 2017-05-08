@@ -24,8 +24,8 @@ import com.creactiviti.piper.core.job.MutableJob;
 import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
-import com.creactiviti.piper.core.task.JobTask;
-import com.creactiviti.piper.core.task.JobTaskRepository;
+import com.creactiviti.piper.core.task.TaskExecution;
+import com.creactiviti.piper.core.task.TaskExecutionRepository;
 import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
 
@@ -41,13 +41,13 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
   
   private JobRepository jobRepository;
   private PipelineRepository pipelineRepository;
-  private JobTaskRepository jobTaskRepository;
+  private TaskExecutionRepository jobTaskRepository;
   private ContextRepository contextRepository;
   private JobExecutor jobExecutor;
   private ApplicationEventPublisher eventPublisher;
   
   @Override
-  public void handle (JobTask aTask) {
+  public void handle (TaskExecution aTask) {
     log.debug("Completing task {}", aTask.getId());
     Job job = jobRepository.findJobByTaskId (aTask.getId());
     if(job!=null) {
@@ -100,7 +100,7 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
     pipelineRepository = aPipelineRepository;
   }
 
-  public void setJobTaskRepository(JobTaskRepository aJobTaskRepository) {
+  public void setJobTaskRepository(TaskExecutionRepository aJobTaskRepository) {
     jobTaskRepository = aJobTaskRepository;
   }
   
@@ -117,7 +117,7 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
   }
 
   @Override
-  public boolean canHandle(JobTask aJobTask) {
+  public boolean canHandle(TaskExecution aJobTask) {
     return aJobTask.getParentId()==null;
   }
 

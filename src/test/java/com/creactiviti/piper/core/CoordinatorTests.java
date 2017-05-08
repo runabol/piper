@@ -33,8 +33,8 @@ import com.creactiviti.piper.core.messenger.Queues;
 import com.creactiviti.piper.core.messenger.SynchMessenger;
 import com.creactiviti.piper.core.pipeline.FileSystemPipelineRepository;
 import com.creactiviti.piper.core.task.DefaultTaskHandlerResolver;
-import com.creactiviti.piper.core.task.JdbcJobTaskRepository;
-import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.core.task.JdbcTaskExecutionRepository;
+import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskHandler;
 import com.creactiviti.piper.core.task.WorkTaskDispatcher;
 import com.creactiviti.piper.taskhandler.io.Print;
@@ -59,7 +59,7 @@ public class CoordinatorTests {
     Coordinator coordinator = new Coordinator ();
    
     SynchMessenger workerMessenger = new SynchMessenger();
-    workerMessenger.receive(Queues.COMPLETIONS, (o)->coordinator.complete((JobTask)o));
+    workerMessenger.receive(Queues.COMPLETIONS, (o)->coordinator.complete((TaskExecution)o));
     workerMessenger.receive(Queues.EVENTS, (o)->coordinator.on(o));
     
     worker.setMessenger(workerMessenger);
@@ -81,7 +81,7 @@ public class CoordinatorTests {
     
     coordinator.setContextRepository(contextRepository);
         
-    JdbcJobTaskRepository taskRepository = new JdbcJobTaskRepository();
+    JdbcTaskExecutionRepository taskRepository = new JdbcTaskExecutionRepository();
     taskRepository.setJdbcOperations(new NamedParameterJdbcTemplate(dataSource));
     taskRepository.setObjectMapper(createObjectMapper());
     
@@ -94,7 +94,7 @@ public class CoordinatorTests {
     coordinator.setJobTaskRepository(taskRepository);
     
     SynchMessenger coordinatorMessenger = new SynchMessenger();
-    coordinatorMessenger.receive(Queues.TASKS, (o)->worker.handle((JobTask)o));
+    coordinatorMessenger.receive(Queues.TASKS, (o)->worker.handle((TaskExecution)o));
     WorkTaskDispatcher taskDispatcher = new WorkTaskDispatcher(coordinatorMessenger);
     coordinator.setTaskDispatcher(taskDispatcher);
     coordinator.setEventPublisher(eventPublisher);

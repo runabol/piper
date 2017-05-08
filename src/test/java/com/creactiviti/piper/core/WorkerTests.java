@@ -12,7 +12,7 @@ import org.junit.Test;
 import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.messenger.Queues;
 import com.creactiviti.piper.core.messenger.SynchMessenger;
-import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.core.task.TaskExecution;
 
 public class WorkerTests {
 
@@ -20,7 +20,7 @@ public class WorkerTests {
   public void test1 () {
     Worker worker = new Worker();
     SynchMessenger messenger = new SynchMessenger();
-    messenger.receive(Queues.COMPLETIONS, (t)-> Assert.assertTrue(((JobTask)t).getOutput().equals("done")) );
+    messenger.receive(Queues.COMPLETIONS, (t)-> Assert.assertTrue(((TaskExecution)t).getOutput().equals("done")) );
     messenger.receive(Queues.EVENTS, (t)-> {} );
     worker.setMessenger(messenger);
     worker.setTaskHandlerResolver((jt) -> (t) -> "done");
@@ -34,7 +34,7 @@ public class WorkerTests {
   public void test2 () {
     Worker worker = new Worker();
     SynchMessenger messenger = new SynchMessenger();
-    messenger.receive(Queues.ERRORS, (t)-> Assert.assertTrue( ((JobTask)t).getError().getMessage().equals("bad input") ) );
+    messenger.receive(Queues.ERRORS, (t)-> Assert.assertTrue( ((TaskExecution)t).getError().getMessage().equals("bad input") ) );
     messenger.receive(Queues.EVENTS, (t)-> {} );
     worker.setMessenger(messenger);
     worker.setTaskHandlerResolver((jt) -> (t) -> {

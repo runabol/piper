@@ -28,8 +28,8 @@ import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.CancelTask;
-import com.creactiviti.piper.core.task.JobTask;
-import com.creactiviti.piper.core.task.JobTaskRepository;
+import com.creactiviti.piper.core.task.TaskExecution;
+import com.creactiviti.piper.core.task.TaskExecutionRepository;
 import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
@@ -47,7 +47,7 @@ public class Coordinator {
 
   private PipelineRepository pipelineRepository;
   private JobRepository jobRepository;
-  private JobTaskRepository jobTaskRepository;
+  private TaskExecutionRepository jobTaskRepository;
   private ApplicationEventPublisher eventPublisher;
   private ContextRepository contextRepository;
   private TaskDispatcher taskDispatcher;
@@ -161,7 +161,7 @@ public class Coordinator {
    * @param aTask
    *          The task to complete.
    */
-  public void complete (JobTask aTask) {
+  public void complete (TaskExecution aTask) {
     taskCompletionHandler.handle(aTask);
   }
 
@@ -208,7 +208,7 @@ public class Coordinator {
     pipelineRepository = aPipelineRepository;
   }
 
-  public void setJobTaskRepository(JobTaskRepository aJobTaskRepository) {
+  public void setJobTaskRepository(TaskExecutionRepository aJobTaskRepository) {
     jobTaskRepository = aJobTaskRepository;
   }
 

@@ -8,15 +8,15 @@ package com.creactiviti.piper.core.task;
 
 import java.util.List;
 
-public interface JobTaskRepository {
+public interface TaskExecutionRepository {
   
-  JobTask findOne (String aJobTaskId);
+  TaskExecution findOne (String aId);
   
-  void create (JobTask aJobTask);
+  void create (TaskExecution aTaskExecution);
   
-  void update (JobTask aJobTask);
+  void update (TaskExecution aTaskExecution);
   
-  List<JobTask> getExecution (String aJobId);
+  List<TaskExecution> getExecution (String aJobId);
 
-  long completeSubTask (JobTask aJobSubTask); 
+  long completeSubTask (TaskExecution aTaskExecution); 
 }

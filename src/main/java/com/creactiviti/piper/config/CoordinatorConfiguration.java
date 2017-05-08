@@ -28,7 +28,7 @@ import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.ControlTaskDispatcher;
 import com.creactiviti.piper.core.task.EachTaskDispatcher;
-import com.creactiviti.piper.core.task.JobTaskRepository;
+import com.creactiviti.piper.core.task.TaskExecutionRepository;
 import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.core.task.TaskDispatcherChain;
 import com.creactiviti.piper.core.task.TaskDispatcherResolver;
@@ -42,7 +42,7 @@ import com.creactiviti.piper.error.JobTaskErrorHandler;
 public class CoordinatorConfiguration {
 
   @Autowired private JobRepository jobRepository;
-  @Autowired private JobTaskRepository jobTaskRepository;
+  @Autowired private TaskExecutionRepository jobTaskRepository;
   @Autowired private ContextRepository<Context> contextRepository;
   @Autowired private ApplicationEventPublisher eventPublisher;
   @Autowired private PipelineRepository pipelineRepository;

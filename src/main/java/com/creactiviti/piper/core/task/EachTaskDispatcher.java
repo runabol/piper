@@ -27,15 +27,15 @@ import com.creactiviti.piper.core.uuid.UUIDGenerator;
  * @author Arik Cohen
  * @since Apr 25, 2017
  */
-public class EachTaskDispatcher implements TaskDispatcher<JobTask>, TaskDispatcherResolver {
+public class EachTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDispatcherResolver {
 
   private final TaskDispatcher taskDispatcher;
   private final TaskEvaluator taskEvaluator = new SpelTaskEvaluator();
-  private final JobTaskRepository jobTaskRepository;
+  private final TaskExecutionRepository jobTaskRepository;
   private final Messenger messenger;
   private final ContextRepository contextRepository;
 
-  public EachTaskDispatcher (TaskDispatcher aTaskDispatcher, JobTaskRepository aJobTaskRepository, Messenger aMessenger, ContextRepository aContextRepository) {
+  public EachTaskDispatcher (TaskDispatcher aTaskDispatcher, TaskExecutionRepository aJobTaskRepository, Messenger aMessenger, ContextRepository aContextRepository) {
     taskDispatcher = aTaskDispatcher;
     jobTaskRepository = aJobTaskRepository;
     messenger = aMessenger;
@@ -43,7 +43,7 @@ public class EachTaskDispatcher implements TaskDispatcher<JobTask>, TaskDispatch
   }
 
   @Override
-  public void dispatch (JobTask aTask) {
+  public void dispatch (TaskExecution aTask) {
     List<Object> list = aTask.getList("list", Object.class);
     Assert.notNull(list,"'list' property can't be null");
     Map<String, Object> iteratee = aTask.getMap("iteratee");
@@ -61,7 +61,7 @@ public class EachTaskDispatcher implements TaskDispatcher<JobTask>, TaskDispatch
         context.set(aTask.getString("itemVar","item"), item);
         contextRepository.push(aTask.getJobId(), context);
         try{
-          JobTask evaluatedEachTask = taskEvaluator.evaluate(eachTask, context);
+          TaskExecution evaluatedEachTask = taskEvaluator.evaluate(eachTask, context);
           jobTaskRepository.create(evaluatedEachTask);
           taskDispatcher.dispatch(evaluatedEachTask);
         }

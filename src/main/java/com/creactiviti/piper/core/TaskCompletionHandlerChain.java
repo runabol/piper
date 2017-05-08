@@ -3,14 +3,14 @@ package com.creactiviti.piper.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.core.task.TaskExecution;
 
 public class TaskCompletionHandlerChain implements TaskCompletionHandler {
 
   private List<TaskCompletionHandler> taskCompletionHandlers = new ArrayList<>();
   
   @Override
-  public void handle (JobTask aJobTask) {
+  public void handle (TaskExecution aJobTask) {
     for(TaskCompletionHandler handler : taskCompletionHandlers) {
       if(handler.canHandle(aJobTask)) {
         handler.handle(aJobTask);
@@ -19,7 +19,7 @@ public class TaskCompletionHandlerChain implements TaskCompletionHandler {
   }
 
   @Override
-  public boolean canHandle(JobTask aJobTask) {
+  public boolean canHandle(TaskExecution aJobTask) {
     return true;
   }
   

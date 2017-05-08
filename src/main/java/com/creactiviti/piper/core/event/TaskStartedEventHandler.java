@@ -13,8 +13,8 @@ import org.springframework.context.PayloadApplicationEvent;
 
 import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.task.CancelTask;
-import com.creactiviti.piper.core.task.JobTask;
-import com.creactiviti.piper.core.task.JobTaskRepository;
+import com.creactiviti.piper.core.task.TaskExecution;
+import com.creactiviti.piper.core.task.TaskExecutionRepository;
 import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.core.task.TaskStatus;
 
@@ -25,12 +25,12 @@ import com.creactiviti.piper.core.task.TaskStatus;
  */
 public class TaskStartedEventHandler implements ApplicationListener<PayloadApplicationEvent<PiperEvent>> {
 
-  private final JobTaskRepository jobTaskRepository;
+  private final TaskExecutionRepository jobTaskRepository;
   private final TaskDispatcher taskDispatcher;
   
   private final Logger logger = LoggerFactory.getLogger(getClass());
   
-  public TaskStartedEventHandler(JobTaskRepository aJobTaskRepository, TaskDispatcher aTaskDispatcher) {
+  public TaskStartedEventHandler(TaskExecutionRepository aJobTaskRepository, TaskDispatcher aTaskDispatcher) {
     jobTaskRepository = aJobTaskRepository;
     taskDispatcher = aTaskDispatcher;
   }
@@ -40,7 +40,7 @@ public class TaskStartedEventHandler implements ApplicationListener<PayloadAppli
     PiperEvent event = aEvent.getPayload();
     if(Events.TASK_STARTED.equals(event.getType())) {
       String taskId = event.getString("taskId");
-      JobTask task = jobTaskRepository.findOne(taskId);
+      TaskExecution task = jobTaskRepository.findOne(taskId);
       if(task == null) {
         logger.error("Unkown task: {}",taskId);
       }

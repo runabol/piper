@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.creactiviti.piper.core.pipeline.Pipeline;
-import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.error.Errorable;
 
 /**
@@ -49,7 +49,7 @@ public interface Job extends Errorable {
    * 
    * @return {@link List}
    */
-  List<JobTask> getExecution ();
+  List<TaskExecution> getExecution ();
 
   /**
    * Return the job's pipeline id.
