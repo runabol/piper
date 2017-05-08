@@ -9,7 +9,7 @@ package com.creactiviti.piper.taskhandler.random;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Component;
 
-import com.creactiviti.piper.core.task.JobTask;
+import com.creactiviti.piper.core.task.Task;
 import com.creactiviti.piper.core.task.TaskHandler;
 
 /**
@@ -24,7 +24,7 @@ import com.creactiviti.piper.core.task.TaskHandler;
 public class Rogue implements TaskHandler<Object> {
 
   @Override
-  public Object handle(JobTask aTask) throws Exception {
+  public Object handle(Task aTask) throws Exception {
     float nextFloat = RandomUtils.nextFloat(0, 1);
     float probabilty = aTask.getFloat("probabilty",0.5f);
     if(nextFloat > probabilty) {

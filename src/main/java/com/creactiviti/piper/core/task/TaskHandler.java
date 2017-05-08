@@ -14,6 +14,6 @@ package com.creactiviti.piper.core.task;
  */
 public interface TaskHandler<O> {
 
-  O handle (JobTask aTask) throws Exception;
+  O handle (Task aTask) throws Exception;
   
 }

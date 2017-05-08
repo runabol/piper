@@ -19,7 +19,7 @@ public class DefaultTaskHandlerResolver implements TaskHandlerResolver {
   private Map<String, TaskHandler<?>> taskHandlers = new HashMap<String, TaskHandler<?>>();
   
   @Override
-  public TaskHandler<?> resolve(JobTask aJobTask) {
+  public TaskHandler<?> resolve(Task aJobTask) {
     TaskHandler<?> taskHandler = taskHandlers.get(aJobTask.getType());
     Assert.notNull(taskHandler,"Unknown task handler: " + aJobTask.getType());
     return taskHandler;

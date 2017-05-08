@@ -20,6 +20,6 @@ package com.creactiviti.piper.core.task;
  */
 public interface TaskHandlerResolver {
 
-  TaskHandler<?> resolve (JobTask aJobTask);
+  TaskHandler<?> resolve (Task aJobTask);
   
 }
