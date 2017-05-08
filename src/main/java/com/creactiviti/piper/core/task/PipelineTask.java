@@ -47,4 +47,15 @@ public interface PipelineTask extends Task {
    */
   String getNode ();
   
+  /**
+   * Returns the timeout expression which describes when this task
+   * should be deemed as timed-out.
+   * 
+   * The formats accepted are based on the ISO-8601 
+   * duration format with days considered to be exactly 24 hours.
+   * 
+   * @return String
+   */
+  String getTimeout ();
+  
 }

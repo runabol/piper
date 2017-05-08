@@ -54,4 +54,9 @@ public class MutablePipelineTask extends MapObject implements PipelineTask {
     set("taskNumber", aTaskNumber);
   }
   
+  @Override
+  public String getTimeout() {
+    return getString("timeout");
+  }
+  
 }

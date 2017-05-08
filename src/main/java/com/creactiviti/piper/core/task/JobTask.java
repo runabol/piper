@@ -66,17 +66,6 @@ public interface JobTask extends PipelineTask, Errorable, Retryable {
    * @return Date
    */
   Date getEndTime ();
-
-  /**
-   * Returns the timeout expression which describes when this task
-   * should be deemed as timed-out.
-   * 
-   * The formats accepted are based on the ISO-8601 
-   * duration format with days considered to be exactly 24 hours.
-   * 
-   * @return String
-   */
-  String getTimeout ();
   
   /**
    * Returns the total time in ms for this task
