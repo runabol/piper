@@ -6,8 +6,7 @@ create table job (
   name varchar(256),
   create_time timestamp not null,
   start_time timestamp,
-  end_time timestamp,
-  data text not null
+  end_time timestamp
 );
 
 create table job_task (

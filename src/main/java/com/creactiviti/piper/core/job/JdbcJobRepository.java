@@ -9,6 +9,7 @@ package com.creactiviti.piper.core.job;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,13 +21,10 @@ import com.creactiviti.piper.core.Page;
 import com.creactiviti.piper.core.ResultPage;
 import com.creactiviti.piper.core.task.JobTask;
 import com.creactiviti.piper.core.task.JobTaskRepository;
-import com.creactiviti.piper.json.JsonHelper;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JdbcJobRepository implements JobRepository {
 
   private NamedParameterJdbcOperations jdbc;
-  private ObjectMapper json = new ObjectMapper();
   private JobTaskRepository jobTaskRepository;
   
   public static final int DEFAULT_PAGE_SIZE = 25;
@@ -65,25 +63,23 @@ public class JdbcJobRepository implements JobRepository {
   @Override
   public void update (Job aJob) {
     MapSqlParameterSource sqlParameterSource = createSqlParameterSource(aJob);
-    jdbc.update("update job set data=:data,status=:status,start_time=:startTime,end_time=:endTime,current_task=:currentTask,pipeline_id=:pipelineId,name=:name where id = :id ", sqlParameterSource);
+    jdbc.update("update job set status=:status,start_time=:startTime,end_time=:endTime,current_task=:currentTask,pipeline_id=:pipelineId,name=:name where id = :id ", sqlParameterSource);
   }
 
   @Override
   public void create (Job aJob) {
     MapSqlParameterSource sqlParameterSource = createSqlParameterSource(aJob);
-    jdbc.update("insert into job (id,create_time,start_time,data,status,current_task,pipeline_id,name) values (:id,:createTime,:startTime,:data,:status,:currentTask,:pipelineId,:name)", sqlParameterSource);
+    jdbc.update("insert into job (id,create_time,start_time,status,current_task,pipeline_id,name) values (:id,:createTime,:startTime,:status,:currentTask,:pipelineId,:name)", sqlParameterSource);
   }
 
   private MapSqlParameterSource createSqlParameterSource(Job aJob) {
     MutableJob job = new MutableJob(aJob);
-    job.remove("tasks"); // don't want to store the tasks as part of the job's data
     Assert.notNull(aJob, "job must not be null");
     Assert.notNull(aJob.getId(), "job status must not be null");
     Assert.notNull(aJob.getCreateTime(), "job createTime must not be null");
     Assert.notNull(aJob.getStatus(), "job status must not be null");
     MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
     sqlParameterSource.addValue("id", job.getId());
-    sqlParameterSource.addValue("data", writeValueAsJsonString(job));
     sqlParameterSource.addValue("status", job.getStatus().toString());
     sqlParameterSource.addValue("currentTask", job.getCurrentTask());
     sqlParameterSource.addValue("pipelineId", job.getPipelineId());
@@ -101,27 +97,23 @@ public class JdbcJobRepository implements JobRepository {
   public void setJdbcOperations (NamedParameterJdbcOperations aJdbcOperations) {
     jdbc = aJdbcOperations;
   }
-  
-  public void setObjectMapper(ObjectMapper aObjectMapper) {
-    json = aObjectMapper;
-  }
-  
+
   private Job jobRowMappper (ResultSet aRs, int aIndex) throws SQLException {
-    Map<String, Object> map = readValueFromString(aRs.getString("data"));
-    map.put("tasks", getTasks(aRs.getString("id")));
+    Map<String, Object> map = new HashMap<>();
+    map.put("id", aRs.getString("id"));
+    map.put("status", aRs.getString("status"));
+    map.put("currentTask", aRs.getInt("current_task"));
+    map.put("pipelineId", aRs.getString("pipeline_id"));
+    map.put("name", aRs.getString("name"));
+    map.put("createTime", aRs.getDate("create_time"));
+    map.put("startTime", aRs.getDate("start_time"));
+    map.put("endTime", aRs.getDate("end_time"));
+    map.put("execution", getExecution(aRs.getString("id")));
     return new MutableJob(map);
   }
   
-  private Map<String,Object> readValueFromString (String aValue) {
-    return JsonHelper.readValue(json, aValue, Map.class);
-  }
-
-  private String writeValueAsJsonString (Object aValue) {
-    return JsonHelper.writeValueAsString(json, aValue);
-  }
-  
-  private List<JobTask> getTasks(String aJobId) {
-    return jobTaskRepository.getTasks(aJobId);
+  private List<JobTask> getExecution(String aJobId) {
+    return jobTaskRepository.getExecution(aJobId);
   }
 
   @Override

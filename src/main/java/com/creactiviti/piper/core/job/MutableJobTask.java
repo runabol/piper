@@ -99,11 +99,6 @@ public class MutableJobTask extends MutablePipelineTask implements JobTask {
   }
   
   @Override
-  public void set (String aKey, Object aValue) {
-    put(aKey, aValue);
-  }
-  
-  @Override
   public Date getCreateTime() {
     return getDate("createTime");
   }

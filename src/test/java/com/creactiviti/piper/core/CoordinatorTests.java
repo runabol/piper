@@ -87,7 +87,6 @@ public class CoordinatorTests {
     
     JdbcJobRepository jobRepository = new JdbcJobRepository();
     jobRepository.setJdbcOperations(new NamedParameterJdbcTemplate(dataSource));
-    jobRepository.setObjectMapper(objectMapper);
     jobRepository.setJobTaskRepository(taskRepository);
     
     coordinator.setJobRepository(jobRepository);

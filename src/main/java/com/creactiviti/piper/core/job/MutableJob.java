@@ -79,8 +79,8 @@ public class MutableJob extends MapObject implements Job {
   }
   
   @Override
-  public List<JobTask> getTasks() {
-    List<JobTask> list = getList("tasks", JobTask.class);
+  public List<JobTask> getExecution() {
+    List<JobTask> list = getList("execution", JobTask.class);
     return list!=null?list:Collections.EMPTY_LIST;
   }
   

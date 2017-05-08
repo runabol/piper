@@ -35,7 +35,6 @@ public class JdbcJobRepositoryTests {
     
     JdbcJobRepository jobRepository = new JdbcJobRepository();
     jobRepository.setJdbcOperations(new NamedParameterJdbcTemplate(dataSource));
-    jobRepository.setObjectMapper(createObjectMapper());
     jobRepository.setJobTaskRepository(taskRepository);
     
     MutableJob job = new MutableJob();
@@ -61,7 +60,6 @@ public class JdbcJobRepositoryTests {
     
     JdbcJobRepository jobRepository = new JdbcJobRepository();
     jobRepository.setJdbcOperations(new NamedParameterJdbcTemplate(dataSource));
-    jobRepository.setObjectMapper(createObjectMapper());
     jobRepository.setJobTaskRepository(taskRepository);
     
     MutableJob job = new MutableJob();

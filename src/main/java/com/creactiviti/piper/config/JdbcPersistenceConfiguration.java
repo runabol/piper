@@ -33,7 +33,6 @@ public class JdbcPersistenceConfiguration {
   JdbcJobRepository jdbcJobRepository (NamedParameterJdbcTemplate aJdbcTemplate, ObjectMapper aObjectMapper) {
     JdbcJobRepository jdbcJobRepository = new JdbcJobRepository();
     jdbcJobRepository.setJdbcOperations(aJdbcTemplate);
-    jdbcJobRepository.setObjectMapper(aObjectMapper);
     jdbcJobRepository.setJobTaskRepository(jdbcJobTaskRepository(aJdbcTemplate,aObjectMapper));
     return jdbcJobRepository;
   }
