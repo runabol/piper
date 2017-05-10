@@ -73,7 +73,7 @@ public class JdbcJobRepository implements JobRepository {
   }
 
   private MapSqlParameterSource createSqlParameterSource(Job aJob) {
-    MutableJob job = new MutableJob(aJob);
+    SimpleJob job = new SimpleJob(aJob);
     Assert.notNull(aJob, "job must not be null");
     Assert.notNull(aJob.getId(), "job status must not be null");
     Assert.notNull(aJob.getCreateTime(), "job createTime must not be null");
@@ -109,7 +109,7 @@ public class JdbcJobRepository implements JobRepository {
     map.put("startTime", aRs.getDate("start_time"));
     map.put("endTime", aRs.getDate("end_time"));
     map.put("execution", getExecution(aRs.getString("id")));
-    return new MutableJob(map);
+    return new SimpleJob(map);
   }
   
   private List<TaskExecution> getExecution(String aJobId) {

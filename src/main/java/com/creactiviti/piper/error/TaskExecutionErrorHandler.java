@@ -18,7 +18,7 @@ import com.creactiviti.piper.core.event.PiperEvent;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.JobStatus;
-import com.creactiviti.piper.core.job.MutableJob;
+import com.creactiviti.piper.core.job.SimpleJob;
 import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskExecutionRepository;
@@ -68,7 +68,7 @@ public class TaskExecutionErrorHandler implements ErrorHandler<TaskExecution> {
       }
       Job job = jobRepository.findJobByTaskId(mtask.getId());
       Assert.notNull(job,"job not found for task: " + mtask.getId());
-      MutableJob mjob = new MutableJob (job);
+      SimpleJob mjob = new SimpleJob (job);
       Assert.notNull(mjob,String.format("No job found for task %s ",mtask.getId()));
       mjob.setStatus(JobStatus.FAILED);
       mjob.setEndTime(new Date ());

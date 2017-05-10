@@ -23,7 +23,7 @@ import com.creactiviti.piper.core.event.PiperEvent;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.JobStatus;
-import com.creactiviti.piper.core.job.MutableJob;
+import com.creactiviti.piper.core.job.SimpleJob;
 import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
@@ -77,7 +77,7 @@ public class Coordinator {
 
     validate(params, pipeline);
 
-    MutableJob job = new MutableJob();
+    SimpleJob job = new SimpleJob();
     job.setId(UUIDGenerator.generate());
     job.setName(params.getString("name",pipeline.getName()));
     job.setPipelineId(pipeline.getId());
@@ -118,7 +118,7 @@ public class Coordinator {
     Job job = jobRepository.findOne(aJobId);
     Assert.notNull(job,"Unknown job: " + aJobId);
     Assert.isTrue(job.getStatus()==JobStatus.STARTED,"Job " + aJobId + " can not be stopped as it is " + job.getStatus());
-    MutableJob mjob = new MutableJob(job);
+    SimpleJob mjob = new SimpleJob(job);
     mjob.setStatus(JobStatus.STOPPED);
     jobRepository.update(mjob);
     eventPublisher.publishEvent(PiperEvent.of(Events.JOB_STATUS,"jobId",job.getId(),"status",job.getStatus()));
@@ -144,7 +144,7 @@ public class Coordinator {
     Job job = jobRepository.findOne (aJobId);
     Assert.notNull(job,String.format("Unknown job %s",aJobId));
     Assert.isTrue(isRestartable(job), "can't stop job " + aJobId + " as it is " + job.getStatus());
-    MutableJob mjob = new MutableJob (job);
+    SimpleJob mjob = new SimpleJob (job);
     mjob.setStatus(JobStatus.STARTED);
     jobRepository.update(mjob);
     jobExecutor.execute(mjob);

@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.creactiviti.piper.core.job.Job;
-import com.creactiviti.piper.core.job.MutableJob;
+import com.creactiviti.piper.core.job.SimpleJob;
 import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.task.TaskExecution;
 
@@ -16,11 +16,11 @@ public class ErrorHandlerChainTests {
   public void test1() {
     ErrorHandler errorHandler = new ErrorHandler<Job>() {
       public void handle(Job j) {
-        Assert.assertEquals(MutableJob.class, j.getClass()); 
+        Assert.assertEquals(SimpleJob.class, j.getClass()); 
       }
     };
     ErrorHandlerChain chain = new ErrorHandlerChain(Arrays.asList(errorHandler));
-    chain.handle(new MutableJob());
+    chain.handle(new SimpleJob());
   }
 
   @Test

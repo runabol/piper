@@ -37,7 +37,7 @@ public class JdbcJobRepositoryTests {
     jobRepository.setJdbcOperations(new NamedParameterJdbcTemplate(dataSource));
     jobRepository.setJobTaskRepository(taskRepository);
     
-    MutableJob job = new MutableJob();
+    SimpleJob job = new SimpleJob();
     job.setPipelineId("demo:1234");
     job.setId("1");
     job.setCreateTime(new Date());
@@ -62,7 +62,7 @@ public class JdbcJobRepositoryTests {
     jobRepository.setJdbcOperations(new NamedParameterJdbcTemplate(dataSource));
     jobRepository.setJobTaskRepository(taskRepository);
     
-    MutableJob job = new MutableJob();
+    SimpleJob job = new SimpleJob();
     job.setId("2");
     job.setPipelineId("demo:1234");
     job.setCreateTime(new Date());
@@ -71,7 +71,7 @@ public class JdbcJobRepositoryTests {
     
     Job one = jobRepository.findOne("2");
     
-    MutableJob mjob = new MutableJob(one);
+    SimpleJob mjob = new SimpleJob(one);
     mjob.setStatus(JobStatus.FAILED);
     
     // test immutability

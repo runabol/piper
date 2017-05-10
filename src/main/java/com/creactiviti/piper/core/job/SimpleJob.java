@@ -24,17 +24,17 @@ import com.creactiviti.piper.error.ErrorObject;
  * 
  * @author Arik Cohen
  */
-public class MutableJob extends MapObject implements Job {
+public class SimpleJob extends MapObject implements Job {
 
-  public MutableJob () {
+  public SimpleJob () {
     super(Collections.EMPTY_MAP);
   }
   
-  public MutableJob (Map<String,Object> aSource) {
+  public SimpleJob (Map<String,Object> aSource) {
     super(aSource);
   }
   
-  public MutableJob (Job aSource) {
+  public SimpleJob (Job aSource) {
     super();
     BeanUtils.copyProperties(aSource, this);
   }

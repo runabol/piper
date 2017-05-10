@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.springframework.context.ApplicationEventPublisher;
 
 import com.creactiviti.piper.core.job.JobRepository;
-import com.creactiviti.piper.core.job.MutableJob;
+import com.creactiviti.piper.core.job.SimpleJob;
 import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.task.TaskExecutionRepository;
 import com.creactiviti.piper.core.task.TaskDispatcher;
@@ -26,7 +26,7 @@ public class TaskExecutionErrorHandlerTests {
   
   @Test
   public void test1 () {
-    when(jobRepo.findJobByTaskId("1234")).thenReturn(new MutableJob(Collections.singletonMap("id","4567")));
+    when(jobRepo.findJobByTaskId("1234")).thenReturn(new SimpleJob(Collections.singletonMap("id","4567")));
     TaskExecutionErrorHandler handler = new TaskExecutionErrorHandler();
     handler.setEventPublisher(eventPublisher);
     handler.setJobRepository(jobRepo);
@@ -41,7 +41,7 @@ public class TaskExecutionErrorHandlerTests {
   
   @Test
   public void test2 () {
-    when(jobRepo.findJobByTaskId("1234")).thenReturn(new MutableJob());
+    when(jobRepo.findJobByTaskId("1234")).thenReturn(new SimpleJob());
     TaskExecutionErrorHandler handler = new TaskExecutionErrorHandler();
     handler.setJobRepository(jobRepo);
     handler.setJobTaskRepository(taskRepo);
