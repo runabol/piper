@@ -13,11 +13,11 @@ import com.creactiviti.piper.core.MapObject;
  * @author Arik Cohen
  * @since Apr 11, 2017
  */
-public class MutableControlTask extends MapObject implements ControlTask {
+public class SimpleControlTask extends MapObject implements ControlTask {
 
-  public MutableControlTask() {}
+  public SimpleControlTask() {}
   
-  public MutableControlTask(String aType) {
+  public SimpleControlTask(String aType) {
     set("type", aType);
   }
   

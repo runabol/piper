@@ -11,13 +11,13 @@ import java.util.Map;
 import com.creactiviti.piper.core.MapObject;
 
 
-public class MutablePipelineTask extends MapObject implements PipelineTask {
+public class SimplePipelineTask extends MapObject implements PipelineTask {
 
-  public MutablePipelineTask (Task aSource) {
+  public SimplePipelineTask (Task aSource) {
     super(aSource.asMap());
   }
   
-  public MutablePipelineTask (Map<String, Object> aSource) {
+  public SimplePipelineTask (Map<String, Object> aSource) {
     super(aSource);
   }
   

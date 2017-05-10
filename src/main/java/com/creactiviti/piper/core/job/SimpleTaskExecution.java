@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.Map;
 
 import com.creactiviti.piper.core.task.TaskExecution;
-import com.creactiviti.piper.core.task.MutablePipelineTask;
+import com.creactiviti.piper.core.task.SimplePipelineTask;
 import com.creactiviti.piper.core.task.PipelineTask;
 import com.creactiviti.piper.core.task.Task;
 import com.creactiviti.piper.core.task.TaskStatus;
@@ -21,7 +21,7 @@ import com.creactiviti.piper.error.Error;
 import com.creactiviti.piper.error.ErrorObject;
 
 
-public class SimpleTaskExecution extends MutablePipelineTask implements TaskExecution {
+public class SimpleTaskExecution extends SimplePipelineTask implements TaskExecution {
 
   private SimpleTaskExecution () {
     this(Collections.EMPTY_MAP);
