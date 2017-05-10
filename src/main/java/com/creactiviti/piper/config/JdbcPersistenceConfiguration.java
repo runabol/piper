@@ -14,6 +14,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import com.creactiviti.piper.core.context.JdbcContextRepository;
 import com.creactiviti.piper.core.job.JdbcJobRepository;
+import com.creactiviti.piper.core.task.CounterRepository;
+import com.creactiviti.piper.core.task.JdbcCounterRepository;
 import com.creactiviti.piper.core.task.JdbcTaskExecutionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -43,6 +45,11 @@ public class JdbcPersistenceConfiguration {
     repo.setJdbcTemplate(aJdbcTemplate);
     repo.setObjectMapper(aObjectMapper);
     return repo;
+  }
+  
+  @Bean
+  CounterRepository counterRepository (JdbcTemplate aJdbcOperations) {
+    return new JdbcCounterRepository(aJdbcOperations);
   }
   
 }

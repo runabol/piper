@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.json.JsonHelper;
@@ -58,18 +57,6 @@ public class JdbcTaskExecutionRepository implements TaskExecutionRepository {
     return jdbc.query("select * From task_execution where job_id = :jobId order by create_time asc", Collections.singletonMap("jobId", aJobId),this::jobTaskRowMappper);
   }
   
-  @Override
-  @Transactional
-  public long completeSubTask (TaskExecution aTaskExecution) {
-    Assert.notNull(aTaskExecution.getParentId(), "parentId can't be null");
-    SimpleTaskExecution parentTask = SimpleTaskExecution.createForUpdate(jdbc.queryForObject("select * from task_execution where id = :id for update", Collections.singletonMap("id", aTaskExecution.getParentId()),this::jobTaskRowMappper));
-    List<Object> list = parentTask.getList("list", Object.class);
-    long increment = parentTask.increment("iterations");
-    merge(aTaskExecution);
-    merge(parentTask);
-    return (list.size()-increment);
-  }
-  
   private TaskExecution jobTaskRowMappper (ResultSet aRs, int aIndex) throws SQLException {
     return SimpleTaskExecution.createFromMap(readValueFromString(aRs.getString("data")));
   }
@@ -102,6 +89,8 @@ public class JdbcTaskExecutionRepository implements TaskExecutionRepository {
   private String writeValueAsJsonString (Object aValue) {
     return JsonHelper.writeValueAsString(json, aValue);
   }
+
+
   
 
 }

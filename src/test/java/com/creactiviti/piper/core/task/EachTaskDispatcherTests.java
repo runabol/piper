@@ -28,17 +28,18 @@ public class EachTaskDispatcherTests {
   private TaskDispatcher taskDispatcher = mock(TaskDispatcher.class);
   private Messenger messenger = mock(Messenger.class);
   private ContextRepository contextRepository = mock(ContextRepository.class);
+  private CounterRepository counterRepository = mock(CounterRepository.class);
   
   @Test(expected=IllegalArgumentException.class)
   public void test1 ()  {
-    EachTaskDispatcher dispatcher = new EachTaskDispatcher(null,null,null,null);
+    EachTaskDispatcher dispatcher = new EachTaskDispatcher(null,null,null,null,null);
     dispatcher.dispatch(SimpleTaskExecution.create());
   }
   
   @Test
   public void test2 ()  {
     when(contextRepository.peek(any())).thenReturn(new MapContext());
-    EachTaskDispatcher dispatcher = new EachTaskDispatcher(taskDispatcher, taskRepo,messenger,contextRepository);
+    EachTaskDispatcher dispatcher = new EachTaskDispatcher(taskDispatcher, taskRepo,messenger,contextRepository,counterRepository);
     SimpleTaskExecution task = SimpleTaskExecution.create();
     task.set("list", Arrays.asList(1,2,3));
     task.set("iteratee", Collections.singletonMap("type", "print"));
@@ -49,7 +50,7 @@ public class EachTaskDispatcherTests {
   
   @Test
   public void test3 ()  {
-    EachTaskDispatcher dispatcher = new EachTaskDispatcher(taskDispatcher, taskRepo,messenger,contextRepository);
+    EachTaskDispatcher dispatcher = new EachTaskDispatcher(taskDispatcher, taskRepo,messenger,contextRepository,counterRepository);
     SimpleTaskExecution task = SimpleTaskExecution.create();
     task.set("list", Arrays.asList());
     task.set("iteratee", Collections.singletonMap("type", "print"));

@@ -27,11 +27,12 @@ import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.ControlTaskDispatcher;
+import com.creactiviti.piper.core.task.CounterRepository;
 import com.creactiviti.piper.core.task.EachTaskDispatcher;
-import com.creactiviti.piper.core.task.TaskExecutionRepository;
 import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.core.task.TaskDispatcherChain;
 import com.creactiviti.piper.core.task.TaskDispatcherResolver;
+import com.creactiviti.piper.core.task.TaskExecutionRepository;
 import com.creactiviti.piper.core.task.WorkTaskDispatcher;
 import com.creactiviti.piper.error.ErrorHandler;
 import com.creactiviti.piper.error.ErrorHandlerChain;
@@ -46,6 +47,7 @@ public class CoordinatorConfiguration {
   @Autowired private ContextRepository<Context> contextRepository;
   @Autowired private ApplicationEventPublisher eventPublisher;
   @Autowired private PipelineRepository pipelineRepository;
+  @Autowired private CounterRepository counterRepository;
   @Autowired private Messenger messenger;
   
   @Bean
@@ -102,7 +104,7 @@ public class CoordinatorConfiguration {
   
   @Bean
   EachTaskCompletionHandler eachTaskCompletionHandler (TaskCompletionHandler aTaskCompletionHandler) {
-    return new EachTaskCompletionHandler(jobTaskRepository,aTaskCompletionHandler);
+    return new EachTaskCompletionHandler(jobTaskRepository,aTaskCompletionHandler,counterRepository);
   }
   
   @Bean
@@ -135,7 +137,7 @@ public class CoordinatorConfiguration {
   
   @Bean
   EachTaskDispatcher eachTaskDispatcher (TaskDispatcher aTaskDispatcher) {
-    return new EachTaskDispatcher(aTaskDispatcher,jobTaskRepository,messenger,contextRepository);
+    return new EachTaskDispatcher(aTaskDispatcher,jobTaskRepository,messenger,contextRepository,counterRepository);
   }
   
   @Bean

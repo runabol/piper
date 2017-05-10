@@ -7,6 +7,7 @@
 package com.creactiviti.piper.core;
 
 import com.creactiviti.piper.core.job.SimpleTaskExecution;
+import com.creactiviti.piper.core.task.CounterRepository;
 import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskExecutionRepository;
 import com.creactiviti.piper.core.task.TaskStatus;
@@ -18,27 +19,30 @@ import com.creactiviti.piper.core.task.TaskStatus;
  */
 public class EachTaskCompletionHandler implements TaskCompletionHandler {
 
-  private final TaskExecutionRepository jobTaskRepository;
+  private final TaskExecutionRepository taskExecutionRepo;
   private final TaskCompletionHandler taskCompletionHandler;
+  private final CounterRepository counterRepository;
   
-  public EachTaskCompletionHandler(TaskExecutionRepository aJobTaskRepository, TaskCompletionHandler aTaskCompletionHandler) {
-    jobTaskRepository = aJobTaskRepository;
+  public EachTaskCompletionHandler(TaskExecutionRepository aTaskExecutionRepo, TaskCompletionHandler aTaskCompletionHandler, CounterRepository aCounterRepository) {
+    taskExecutionRepo = aTaskExecutionRepo;
     taskCompletionHandler = aTaskCompletionHandler;
+    counterRepository = aCounterRepository;
   }
   
   @Override
-  public void handle (TaskExecution aJobTask) {
-    SimpleTaskExecution mtask = SimpleTaskExecution.createForUpdate(aJobTask);
+  public void handle (TaskExecution aTaskExecution) {
+    SimpleTaskExecution mtask = SimpleTaskExecution.createForUpdate(aTaskExecution);
     mtask.setStatus(TaskStatus.COMPLETED);
-    long updateSubTask = jobTaskRepository.completeSubTask(mtask);
-    if(updateSubTask == 0) {
-      taskCompletionHandler.handle(jobTaskRepository.findOne(aJobTask.getParentId()));
+    taskExecutionRepo.merge(mtask);
+    long subtasksLeft = counterRepository.decrement(aTaskExecution.getParentId());
+    if(subtasksLeft == 0) {
+      taskCompletionHandler.handle(taskExecutionRepo.findOne(aTaskExecution.getParentId()));
     }
   }
 
   @Override
-  public boolean canHandle(TaskExecution aJobTask) {
-    return aJobTask.getParentId()!=null;
+  public boolean canHandle(TaskExecution aTaskExecution) {
+    return aTaskExecution.getParentId()!=null;
   }
 
 }

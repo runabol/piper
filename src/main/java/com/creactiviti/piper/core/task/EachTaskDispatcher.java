@@ -34,12 +34,14 @@ public class EachTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDi
   private final TaskExecutionRepository jobTaskRepository;
   private final Messenger messenger;
   private final ContextRepository contextRepository;
+  private final CounterRepository counterRepository;
 
-  public EachTaskDispatcher (TaskDispatcher aTaskDispatcher, TaskExecutionRepository aJobTaskRepository, Messenger aMessenger, ContextRepository aContextRepository) {
+  public EachTaskDispatcher (TaskDispatcher aTaskDispatcher, TaskExecutionRepository aJobTaskRepository, Messenger aMessenger, ContextRepository aContextRepository, CounterRepository aCounterRepository) {
     taskDispatcher = aTaskDispatcher;
     jobTaskRepository = aJobTaskRepository;
     messenger = aMessenger;
     contextRepository = aContextRepository;
+    counterRepository = aCounterRepository;
   }
 
   @Override
@@ -49,6 +51,7 @@ public class EachTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDi
     Map<String, Object> iteratee = aTask.getMap("iteratee");
     Assert.notNull(list,"'iteratee' property can't be null");
     if(list.size() > 0) {
+      counterRepository.set(aTask.getId(), list.size());
       for(Object item : list) {
         SimpleTaskExecution eachTask = SimpleTaskExecution.createFromMap(iteratee);
         eachTask.setId(UUIDGenerator.generate());

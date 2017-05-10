@@ -24,7 +24,7 @@ public interface TaskExecutionRepository {
    * @param aTaskExecution
    */
   void create (TaskExecution aTaskExecution);
-  
+
   /**
    * Merges the state of the given {@link TaskExecution} instance
    * with its persistent representation and returns the merged
@@ -42,5 +42,5 @@ public interface TaskExecutionRepository {
    */
   List<TaskExecution> getExecution (String aJobId);
 
-  long completeSubTask (TaskExecution aTaskExecution); 
+  
 }
