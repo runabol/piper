@@ -37,6 +37,7 @@ public class EachTaskCompletionHandler implements TaskCompletionHandler {
     long subtasksLeft = counterRepository.decrement(aTaskExecution.getParentId());
     if(subtasksLeft == 0) {
       taskCompletionHandler.handle(taskExecutionRepo.findOne(aTaskExecution.getParentId()));
+      counterRepository.delete(aTaskExecution.getParentId());
     }
   }
 

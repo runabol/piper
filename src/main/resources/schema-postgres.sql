@@ -14,7 +14,7 @@ create table job (
 CREATE INDEX ON job (creation_date);
 CREATE INDEX ON job (status);
 
-drop table if exists job_task;
+drop table if exists task_execution;
 
 create table task_execution (
   id varchar(256) not null primary key,
@@ -27,7 +27,7 @@ create table task_execution (
   data text not null
 );
 
-CREATE INDEX ON job_task (job_id);
+CREATE INDEX ON task_execution (job_id);
 
 drop table if exists job_context;
 
@@ -39,3 +39,8 @@ create table job_context (
 );
 
 CREATE INDEX ON job_context (job_id);
+
+create table counter (
+  id varchar(256) not null primary key,
+  value bigint not null
+);
