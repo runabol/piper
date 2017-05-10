@@ -45,6 +45,10 @@ public class JdbcTaskExecutionRepository implements TaskExecutionRepository {
       merged = SimpleTaskExecution.createForUpdate(current);
       ((SimpleTaskExecution)merged).setStartTime(aTaskExecution.getStartTime());
     }
+    else if (aTaskExecution.getStatus().isTerminated() && current.getStatus() == TaskStatus.STARTED) {
+      merged = SimpleTaskExecution.createForUpdate(aTaskExecution);
+      ((SimpleTaskExecution)merged).setStartTime(current.getStartTime());      
+    }
     SqlParameterSource sqlParameterSource = createSqlParameterSource(merged);
     jdbc.update("update task_execution set data=:data,status=:status,start_time=:startTime,end_time=:endTime where id = :id ", sqlParameterSource);
     return merged;

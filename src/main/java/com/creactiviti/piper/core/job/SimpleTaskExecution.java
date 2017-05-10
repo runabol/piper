@@ -114,6 +114,7 @@ public class SimpleTaskExecution extends SimplePipelineTask implements TaskExecu
 
   public void setStartTime(Date aDate) {
     set("startTime", aDate);
+    updateExecutionTime();
   }
   
   @Override
@@ -123,10 +124,25 @@ public class SimpleTaskExecution extends SimplePipelineTask implements TaskExecu
   
   public void setEndTime(Date aDate) {
     set("endTime", aDate);
+    updateExecutionTime();
   }
 
+  private void updateExecutionTime () {
+    Date startTime = getStartTime();
+    Date endTime = getEndTime();
+    if(startTime != null && endTime != null) {
+      set("executionTime", endTime.getTime() - startTime.getTime());
+    }
+    else {
+      set("executionTime",0);
+    }
+  }
+  
   @Override
   public long getExecutionTime() {
+    if(getDate("executionTime")!=null) {
+      return getDate("executionTime").getTime();
+    }
     return 0;
   }
   

@@ -46,14 +46,14 @@ public class TaskStartedEventHandler implements ApplicationListener<PayloadAppli
       if(task == null) {
         logger.error("Unkown task: {}",taskId);
       }
-      else if(task.getStatus() == TaskStatus.CREATED) {
+      else if (task.getStatus() == TaskStatus.CANCELLED) {
+        taskDispatcher.dispatch(new CancelTask(task.getId()));
+      }
+      else {
         SimpleTaskExecution mtask = SimpleTaskExecution.createForUpdate(task);
         mtask.setStartTime(new Date());
         mtask.setStatus(TaskStatus.STARTED);
         jobTaskRepository.merge(mtask);
-      }
-      else if (task.getStatus() == TaskStatus.CANCELLED) {
-        taskDispatcher.dispatch(new CancelTask(task.getId()));
       }
     }
   }
