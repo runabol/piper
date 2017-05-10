@@ -32,13 +32,13 @@ public class TaskStartedEventHandler implements ApplicationListener<PayloadAppli
   
   private final Logger logger = LoggerFactory.getLogger(getClass());
   
-  public TaskStartedEventHandler(TaskExecutionRepository aJobTaskRepository, TaskDispatcher aTaskDispatcher) {
+  public TaskStartedEventHandler (TaskExecutionRepository aJobTaskRepository, TaskDispatcher aTaskDispatcher) {
     jobTaskRepository = aJobTaskRepository;
     taskDispatcher = aTaskDispatcher;
   }
 
   @Override
-  public void onApplicationEvent(PayloadApplicationEvent<PiperEvent> aEvent) {
+  public void onApplicationEvent (PayloadApplicationEvent<PiperEvent> aEvent) {
     PiperEvent event = aEvent.getPayload();
     if(Events.TASK_STARTED.equals(event.getType())) {
       String taskId = event.getString("taskId");
@@ -51,7 +51,7 @@ public class TaskStartedEventHandler implements ApplicationListener<PayloadAppli
       }
       else {
         SimpleTaskExecution mtask = SimpleTaskExecution.createForUpdate(task);
-        mtask.setStartTime(new Date());
+        mtask.setStartTime(event.getTimestamp());
         mtask.setStatus(TaskStatus.STARTED);
         jobTaskRepository.merge(mtask);
       }

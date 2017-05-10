@@ -27,7 +27,7 @@ public interface TaskExecutionRepository {
   
   /**
    * Merges the state of the given {@link TaskExecution} instance
-   * with its persistent representation and returns the reconciled
+   * with its persistent representation and returns the merged
    * version.
    * 
    * @param aTaskExecution

@@ -6,8 +6,6 @@
  */
 package com.creactiviti.piper.core;
 
-import java.util.Date;
-
 import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskExecutionRepository;
@@ -32,7 +30,6 @@ public class EachTaskCompletionHandler implements TaskCompletionHandler {
   public void handle (TaskExecution aJobTask) {
     SimpleTaskExecution mtask = SimpleTaskExecution.createForUpdate(aJobTask);
     mtask.setStatus(TaskStatus.COMPLETED);
-    mtask.setEndTime(new Date());
     long updateSubTask = jobTaskRepository.completeSubTask(mtask);
     if(updateSubTask == 0) {
       taskCompletionHandler.handle(jobTaskRepository.findOne(aJobTask.getParentId()));

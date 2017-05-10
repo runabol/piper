@@ -243,13 +243,6 @@ public class SimpleTaskExecution extends SimplePipelineTask implements TaskExecu
     return new SimpleTaskExecution(Collections.singletonMap(aKey, aValue));
   }
   
-  public static SimpleTaskExecution createFrom (String aKey1, Object aValue1, String aKey2, Object aValue2) {
-    SimpleTaskExecution task = create();
-    task.set(aKey1, aValue1);
-    task.set(aKey2, aValue2);
-    return task;
-  }
- 
   /**
    * Creates a {@link SimpleTaskExecution} instance for the given Key-Value
    * map.

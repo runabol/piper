@@ -40,14 +40,13 @@ public class JdbcTaskExecutionRepository implements TaskExecutionRepository {
   @Transactional
   public TaskExecution merge (TaskExecution aTaskExecution) {
     TaskExecution current = jdbc.queryForObject("select * from task_execution where id = :id for update", Collections.singletonMap("id", aTaskExecution.getId()),this::jobTaskRowMappper);
-    TaskExecution merged = aTaskExecution;  
+    SimpleTaskExecution merged = SimpleTaskExecution.createForUpdate(aTaskExecution);  
     if(current.getStatus().isTerminated() && aTaskExecution.getStatus() == TaskStatus.STARTED) {
       merged = SimpleTaskExecution.createForUpdate(current);
-      ((SimpleTaskExecution)merged).setStartTime(aTaskExecution.getStartTime());
+      merged.setStartTime(aTaskExecution.getStartTime());
     }
     else if (aTaskExecution.getStatus().isTerminated() && current.getStatus() == TaskStatus.STARTED) {
-      merged = SimpleTaskExecution.createForUpdate(aTaskExecution);
-      ((SimpleTaskExecution)merged).setStartTime(current.getStartTime());      
+      merged.setStartTime(current.getStartTime());      
     }
     SqlParameterSource sqlParameterSource = createSqlParameterSource(merged);
     jdbc.update("update task_execution set data=:data,status=:status,start_time=:startTime,end_time=:endTime where id = :id ", sqlParameterSource);
@@ -61,14 +60,13 @@ public class JdbcTaskExecutionRepository implements TaskExecutionRepository {
   
   @Override
   @Transactional
-  public long completeSubTask (TaskExecution aJobSubTask) {
-    Assert.notNull(aJobSubTask.getParentId(), "parentId can't be null");
-    TaskExecution parentTask = jdbc.queryForObject("select * from task_execution where id = :id for update", Collections.singletonMap("id", aJobSubTask.getParentId()),this::jobTaskRowMappper);
-    SimpleTaskExecution mparentTask = SimpleTaskExecution.createForUpdate(parentTask);
+  public long completeSubTask (TaskExecution aTaskExecution) {
+    Assert.notNull(aTaskExecution.getParentId(), "parentId can't be null");
+    SimpleTaskExecution parentTask = SimpleTaskExecution.createForUpdate(jdbc.queryForObject("select * from task_execution where id = :id for update", Collections.singletonMap("id", aTaskExecution.getParentId()),this::jobTaskRowMappper));
     List<Object> list = parentTask.getList("list", Object.class);
-    long increment = mparentTask.increment("iterations");
-    merge(aJobSubTask);
-    merge(mparentTask);
+    long increment = parentTask.increment("iterations");
+    merge(aTaskExecution);
+    merge(parentTask);
     return (list.size()-increment);
   }
   

@@ -7,6 +7,7 @@
 package com.creactiviti.piper.core.event;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ import com.google.common.collect.ImmutableMap;
  */
 public class PiperEvent extends MapObject {
 
-  public PiperEvent() {
+  private PiperEvent() {
     super(Collections.EMPTY_MAP);
   }
   
@@ -33,6 +34,10 @@ public class PiperEvent extends MapObject {
 
   public String getType () {
     return getRequiredString("type");
+  }
+  
+  public Date getTimestamp () {
+    return getDate("timestamp");
   }
   
   public static PiperEvent of (String aType) {
@@ -55,7 +60,7 @@ public class PiperEvent extends MapObject {
   
   public static PiperEvent of (String aType, Map<String, Object> aProperties) {
     Assert.notNull(aType,"event type must not be null");
-    Map<String,Object> source = new HashMap<>(ImmutableMap.of("id",UUIDGenerator.generate(),"type", aType));
+    Map<String,Object> source = new HashMap<>(ImmutableMap.of("id",UUIDGenerator.generate(),"type", aType,"timestamp",new Date()));
     source.putAll(aProperties);
     return new PiperEvent(source);
   }
