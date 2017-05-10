@@ -19,7 +19,7 @@ import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.JobStatus;
 import com.creactiviti.piper.core.job.MutableJob;
-import com.creactiviti.piper.core.job.MutableJobTask;
+import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskExecutionRepository;
 import com.creactiviti.piper.core.task.TaskDispatcher;
@@ -46,14 +46,14 @@ public class TaskExecutionErrorHandler implements ErrorHandler<TaskExecution> {
     logger.debug("Erring task {}: {}\n{}", aTask.getId(), error.getMessage());
     
     // set task status to failed and persist
-    MutableJobTask mtask = MutableJobTask.createForUpdate(aTask);
+    SimpleTaskExecution mtask = SimpleTaskExecution.createForUpdate(aTask);
     mtask.setStatus(TaskStatus.FAILED);
     mtask.setEndTime(new Date ());
     jobTaskRepository.update(mtask);
     
     // if the task is retryable, then retry it
     if(aTask.getRetryAttempts() < aTask.getRetry()) {
-      MutableJobTask retryTask = MutableJobTask.createNewFrom(aTask);
+      SimpleTaskExecution retryTask = SimpleTaskExecution.createNewFrom(aTask);
       retryTask.setRetryAttempts(aTask.getRetryAttempts()+1);
       jobTaskRepository.create(retryTask);
       taskDispatcher.dispatch(retryTask);
@@ -61,7 +61,7 @@ public class TaskExecutionErrorHandler implements ErrorHandler<TaskExecution> {
     // if it's not retryable then we're gonna fail the job
     else {
       while(mtask.getParentId()!=null) { // mark parent tasks as FAILED as well
-        mtask = MutableJobTask.createForUpdate(jobTaskRepository.findOne(mtask.getParentId()));
+        mtask = SimpleTaskExecution.createForUpdate(jobTaskRepository.findOne(mtask.getParentId()));
         mtask.setStatus(TaskStatus.FAILED);
         mtask.setEndTime(new Date());
         jobTaskRepository.update(mtask);

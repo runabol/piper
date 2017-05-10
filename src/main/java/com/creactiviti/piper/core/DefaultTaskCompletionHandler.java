@@ -21,7 +21,7 @@ import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.JobStatus;
 import com.creactiviti.piper.core.job.MutableJob;
-import com.creactiviti.piper.core.job.MutableJobTask;
+import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.TaskExecution;
@@ -51,7 +51,7 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
     log.debug("Completing task {}", aTask.getId());
     Job job = jobRepository.findJobByTaskId (aTask.getId());
     if(job!=null) {
-      MutableJobTask task = MutableJobTask.createForUpdate(aTask);
+      SimpleTaskExecution task = SimpleTaskExecution.createForUpdate(aTask);
       task.setStatus(TaskStatus.COMPLETED);
       MutableJob mjob = new MutableJob (job);
       mjob.setCurrentTask(mjob.getCurrentTask()+1);

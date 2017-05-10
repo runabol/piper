@@ -19,7 +19,7 @@ import org.junit.Test;
 
 import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.context.MapContext;
-import com.creactiviti.piper.core.job.MutableJobTask;
+import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.messenger.Messenger;
 
 public class EachTaskDispatcherTests {
@@ -32,14 +32,14 @@ public class EachTaskDispatcherTests {
   @Test(expected=IllegalArgumentException.class)
   public void test1 ()  {
     EachTaskDispatcher dispatcher = new EachTaskDispatcher(null,null,null,null);
-    dispatcher.dispatch(MutableJobTask.create());
+    dispatcher.dispatch(SimpleTaskExecution.create());
   }
   
   @Test
   public void test2 ()  {
     when(contextRepository.peek(any())).thenReturn(new MapContext());
     EachTaskDispatcher dispatcher = new EachTaskDispatcher(taskDispatcher, taskRepo,messenger,contextRepository);
-    MutableJobTask task = MutableJobTask.create();
+    SimpleTaskExecution task = SimpleTaskExecution.create();
     task.set("list", Arrays.asList(1,2,3));
     task.set("iteratee", Collections.singletonMap("type", "print"));
     dispatcher.dispatch(task);
@@ -50,7 +50,7 @@ public class EachTaskDispatcherTests {
   @Test
   public void test3 ()  {
     EachTaskDispatcher dispatcher = new EachTaskDispatcher(taskDispatcher, taskRepo,messenger,contextRepository);
-    MutableJobTask task = MutableJobTask.create();
+    SimpleTaskExecution task = SimpleTaskExecution.create();
     task.set("list", Arrays.asList());
     task.set("iteratee", Collections.singletonMap("type", "print"));
     dispatcher.dispatch(task);

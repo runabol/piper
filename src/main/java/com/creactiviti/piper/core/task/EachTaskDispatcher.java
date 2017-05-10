@@ -14,7 +14,7 @@ import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.context.MapContext;
-import com.creactiviti.piper.core.job.MutableJobTask;
+import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.messenger.Queues;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
@@ -50,7 +50,7 @@ public class EachTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDi
     Assert.notNull(list,"'iteratee' property can't be null");
     if(list.size() > 0) {
       for(Object item : list) {
-        MutableJobTask eachTask = MutableJobTask.createFromMap(iteratee);
+        SimpleTaskExecution eachTask = SimpleTaskExecution.createFromMap(iteratee);
         eachTask.setId(UUIDGenerator.generate());
         eachTask.setParentId(aTask.getId());
         eachTask.setStatus(TaskStatus.CREATED);
@@ -71,7 +71,7 @@ public class EachTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDi
       }
     }
     else {
-      MutableJobTask completion = MutableJobTask.createForUpdate(aTask);
+      SimpleTaskExecution completion = SimpleTaskExecution.createForUpdate(aTask);
       completion.setEndTime(new Date());
       messenger.send(Queues.COMPLETIONS, completion);
     }

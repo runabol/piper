@@ -9,7 +9,7 @@ package com.creactiviti.piper.core;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.creactiviti.piper.core.job.MutableJobTask;
+import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.messenger.Queues;
 import com.creactiviti.piper.core.messenger.SynchMessenger;
 import com.creactiviti.piper.core.task.TaskExecution;
@@ -24,7 +24,7 @@ public class WorkerTests {
     messenger.receive(Queues.EVENTS, (t)-> {} );
     worker.setMessenger(messenger);
     worker.setTaskHandlerResolver((jt) -> (t) -> "done");
-    MutableJobTask task = MutableJobTask.create();
+    SimpleTaskExecution task = SimpleTaskExecution.create();
     task.setId("1234");
     worker.handle(task);
   }
@@ -40,7 +40,7 @@ public class WorkerTests {
     worker.setTaskHandlerResolver((jt) -> (t) -> {
       throw new IllegalArgumentException("bad input");
     });
-    MutableJobTask task = MutableJobTask.create();
+    SimpleTaskExecution task = SimpleTaskExecution.create();
     task.setId("1234");
     worker.handle(task);
   }

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.PayloadApplicationEvent;
 
-import com.creactiviti.piper.core.job.MutableJobTask;
+import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.task.CancelTask;
 import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskExecutionRepository;
@@ -45,7 +45,7 @@ public class TaskStartedEventHandler implements ApplicationListener<PayloadAppli
         logger.error("Unkown task: {}",taskId);
       }
       else if(task.getStatus() == TaskStatus.CREATED) {
-        MutableJobTask mtask = MutableJobTask.createForUpdate(task);
+        SimpleTaskExecution mtask = SimpleTaskExecution.createForUpdate(task);
         mtask.setStatus(TaskStatus.STARTED);
         jobTaskRepository.update(mtask);
       }

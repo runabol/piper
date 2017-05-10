@@ -27,7 +27,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.creactiviti.piper.core.context.Context;
-import com.creactiviti.piper.core.job.MutableJobTask;
+import com.creactiviti.piper.core.job.SimpleTaskExecution;
 
 /**
  * a {@link TaskEvaluator} implemenation which is based on 
@@ -49,7 +49,7 @@ public class SpelTaskEvaluator implements TaskEvaluator {
   public TaskExecution evaluate(TaskExecution aJobTask, Context aContext) {
     Map<String, Object> map = aJobTask.asMap();
     Map<String, Object> newMap = evaluateInternal(map,aContext);
-    return MutableJobTask.createFromMap(newMap);
+    return SimpleTaskExecution.createFromMap(newMap);
   }
 
   private Map<String, Object> evaluateInternal(Map<String, Object> aMap, Context aContext) {

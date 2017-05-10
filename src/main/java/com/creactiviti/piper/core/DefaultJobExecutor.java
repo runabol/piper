@@ -11,7 +11,7 @@ import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.JobStatus;
-import com.creactiviti.piper.core.job.MutableJobTask;
+import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.TaskExecution;
@@ -55,7 +55,7 @@ public class DefaultJobExecutor implements JobExecutor {
 
   private TaskExecution nextTask(Job aJob, Pipeline aPipeline) {
     PipelineTask task = aPipeline.getTasks().get(aJob.getCurrentTask()+1);
-    MutableJobTask mt = MutableJobTask.createFrom (task);
+    SimpleTaskExecution mt = SimpleTaskExecution.createFrom (task);
     mt.setJobId(aJob.getId());
     return mt;
   }

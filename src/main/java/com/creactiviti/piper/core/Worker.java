@@ -25,7 +25,7 @@ import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.event.Events;
 import com.creactiviti.piper.core.event.PiperEvent;
-import com.creactiviti.piper.core.job.MutableJobTask;
+import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.messenger.Queues;
 import com.creactiviti.piper.core.task.ControlTask;
@@ -73,7 +73,7 @@ public class Worker {
         TaskHandler<?> taskHandler = taskHandlerResolver.resolve(aTask);
         messenger.send(Queues.EVENTS, PiperEvent.of(Events.TASK_STARTED,"taskId",aTask.getId()));
         Object output = taskHandler.handle(aTask);
-        MutableJobTask completion = MutableJobTask.createForUpdate(aTask);
+        SimpleTaskExecution completion = SimpleTaskExecution.createForUpdate(aTask);
         if(output!=null) {
           completion.setOutput(output);
         }
@@ -103,7 +103,7 @@ public class Worker {
   
   private void handleException (TaskExecution aTask, Exception aException) {
     logger.error(aException.getMessage(),aException);
-    MutableJobTask jobTask = MutableJobTask.createForUpdate(aTask);
+    SimpleTaskExecution jobTask = SimpleTaskExecution.createForUpdate(aTask);
     jobTask.setError(new ErrorObject(aException.getMessage(),ExceptionUtils.getStackFrames(aException)));
     messenger.send(Queues.ERRORS, jobTask);
   }

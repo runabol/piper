@@ -24,7 +24,7 @@ import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.JobStatus;
 import com.creactiviti.piper.core.job.MutableJob;
-import com.creactiviti.piper.core.job.MutableJobTask;
+import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.CancelTask;
@@ -123,7 +123,7 @@ public class Coordinator {
     jobRepository.update(mjob);
     eventPublisher.publishEvent(PiperEvent.of(Events.JOB_STATUS,"jobId",job.getId(),"status",job.getStatus()));
     if(mjob.getExecution().size() > 0) {
-      MutableJobTask currentTask = MutableJobTask.createForUpdate(job.getExecution().get(job.getExecution().size()-1));
+      SimpleTaskExecution currentTask = SimpleTaskExecution.createForUpdate(job.getExecution().get(job.getExecution().size()-1));
       currentTask.setStatus(TaskStatus.CANCELLED);
       currentTask.setEndTime(new Date());
       jobTaskRepository.update(currentTask);

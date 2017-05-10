@@ -13,7 +13,7 @@ import org.springframework.context.ApplicationEventPublisher;
 
 import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.MutableJob;
-import com.creactiviti.piper.core.job.MutableJobTask;
+import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.task.TaskExecutionRepository;
 import com.creactiviti.piper.core.task.TaskDispatcher;
 
@@ -31,7 +31,7 @@ public class TaskExecutionErrorHandlerTests {
     handler.setEventPublisher(eventPublisher);
     handler.setJobRepository(jobRepo);
     handler.setJobTaskRepository(taskRepo);
-    MutableJobTask errorable = MutableJobTask.create();
+    SimpleTaskExecution errorable = SimpleTaskExecution.create();
     errorable.setId("1234");
     errorable.setError(new ErrorObject("something bad happened", new String[0]));
     handler.handle(errorable);
@@ -46,7 +46,7 @@ public class TaskExecutionErrorHandlerTests {
     handler.setJobRepository(jobRepo);
     handler.setJobTaskRepository(taskRepo);
     handler.setTaskDispatcher(taskDispatcher);
-    MutableJobTask errorable = MutableJobTask.createFrom("retry", 1);
+    SimpleTaskExecution errorable = SimpleTaskExecution.createFrom("retry", 1);
     errorable.setId("1234");
     errorable.setError(new ErrorObject("something bad happened", new String[0]));
     handler.handle(errorable);

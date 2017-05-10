@@ -21,21 +21,21 @@ import com.creactiviti.piper.error.Error;
 import com.creactiviti.piper.error.ErrorObject;
 
 
-public class MutableJobTask extends MutablePipelineTask implements TaskExecution {
+public class SimpleTaskExecution extends MutablePipelineTask implements TaskExecution {
 
-  private MutableJobTask () {
+  private SimpleTaskExecution () {
     this(Collections.EMPTY_MAP);
   }
   
-  private MutableJobTask (TaskExecution aSource) {
+  private SimpleTaskExecution (TaskExecution aSource) {
     this(aSource.asMap());
   }
   
-  private MutableJobTask (Map<String,Object> aSource) {
+  private SimpleTaskExecution (Map<String,Object> aSource) {
     super(aSource);
   }  
   
-  private MutableJobTask (Task aSource) {
+  private SimpleTaskExecution (Task aSource) {
     super(aSource);
   }
   
@@ -155,15 +155,15 @@ public class MutableJobTask extends MutablePipelineTask implements TaskExecution
   }
     
   /**
-   * Creates a new {@link MutableJobTask} instance 
+   * Creates a new {@link SimpleTaskExecution} instance 
    * from a {@link PipelineTask}.
    * 
    * @param aTask
    *         The {@link PipelineTask} to create this instance from.
-   * @return {@link MutableJobTask}
+   * @return {@link SimpleTaskExecution}
    */
-  public static MutableJobTask createFrom (PipelineTask aTask) {
-    MutableJobTask jobTask = new MutableJobTask (aTask);
+  public static SimpleTaskExecution createFrom (PipelineTask aTask) {
+    SimpleTaskExecution jobTask = new SimpleTaskExecution (aTask);
     jobTask.setCreateTime(new Date());
     jobTask.setId(UUIDGenerator.generate());
     jobTask.setStatus(TaskStatus.CREATED);
@@ -171,16 +171,16 @@ public class MutableJobTask extends MutablePipelineTask implements TaskExecution
   }
   
   /**
-   * Creates a new {@link MutableJobTask} instance, using the 
+   * Creates a new {@link SimpleTaskExecution} instance, using the 
    * given {@link TaskExecution} instance as a starting point. 
    * 
    * @param aJobTask
    *          The {@link TaskExecution} instance to use as a starting 
    *          point.
-   * @return the new {@link MutableJobTask}
+   * @return the new {@link SimpleTaskExecution}
    */
-  public static MutableJobTask createNewFrom (TaskExecution aJobTask) {
-    MutableJobTask mutableJobTask = new MutableJobTask(aJobTask);
+  public static SimpleTaskExecution createNewFrom (TaskExecution aJobTask) {
+    SimpleTaskExecution mutableJobTask = new SimpleTaskExecution(aJobTask);
     mutableJobTask.setId(UUIDGenerator.generate());
     mutableJobTask.setCreateTime(new Date());
     mutableJobTask.setStatus(TaskStatus.CREATED);
@@ -189,51 +189,51 @@ public class MutableJobTask extends MutablePipelineTask implements TaskExecution
   }
 
   /**
-   * Creates a {@link MutableJobTask} instance which 
+   * Creates a {@link SimpleTaskExecution} instance which 
    * is a copy of a {@link TaskExecution}.
    * 
    * @param aJobTask
    *          The {@link TaskExecution} instance to copy.
-   * @return the new {@link MutableJobTask}
+   * @return the new {@link SimpleTaskExecution}
    */
-  public static MutableJobTask createForUpdate (TaskExecution aJobTask) {
-    return new MutableJobTask(aJobTask);
+  public static SimpleTaskExecution createForUpdate (TaskExecution aJobTask) {
+    return new SimpleTaskExecution(aJobTask);
   }
   
   /**
-   * Creates an empty {@link MutableJobTask} instance.
+   * Creates an empty {@link SimpleTaskExecution} instance.
    * 
-   * @return The new {@link MutableJobTask}.
+   * @return The new {@link SimpleTaskExecution}.
    */
-  public static MutableJobTask create () {
-    return new MutableJobTask();
+  public static SimpleTaskExecution create () {
+    return new SimpleTaskExecution();
   }
   
   /**
-   * Creates a {@link MutableJobTask} instance for the given 
+   * Creates a {@link SimpleTaskExecution} instance for the given 
    * Key-Value pair.
    * 
-   * @return The new {@link MutableJobTask}.
+   * @return The new {@link SimpleTaskExecution}.
    */
-  public static MutableJobTask createFrom (String aKey, Object aValue) {
-    return new MutableJobTask(Collections.singletonMap(aKey, aValue));
+  public static SimpleTaskExecution createFrom (String aKey, Object aValue) {
+    return new SimpleTaskExecution(Collections.singletonMap(aKey, aValue));
   }
   
-  public static MutableJobTask createFrom (String aKey1, Object aValue1, String aKey2, Object aValue2) {
-    MutableJobTask task = create();
+  public static SimpleTaskExecution createFrom (String aKey1, Object aValue1, String aKey2, Object aValue2) {
+    SimpleTaskExecution task = create();
     task.set(aKey1, aValue1);
     task.set(aKey2, aValue2);
     return task;
   }
  
   /**
-   * Creates a {@link MutableJobTask} instance for the given Key-Value
+   * Creates a {@link SimpleTaskExecution} instance for the given Key-Value
    * map.
    * 
-   * @return The new {@link MutableJobTask}.
+   * @return The new {@link SimpleTaskExecution}.
    */
-  public static MutableJobTask createFromMap (Map<String,Object> aSource) {
-    return new MutableJobTask(aSource);
+  public static SimpleTaskExecution createFromMap (Map<String,Object> aSource) {
+    return new SimpleTaskExecution(aSource);
   }
   
 }
