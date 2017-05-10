@@ -30,7 +30,7 @@ import com.creactiviti.piper.core.task.TaskStatus;
  * @author Arik Cohen
  * @since Apr 10, 2017
  */
-public class JobTaskErrorHandler implements ErrorHandler<TaskExecution> {
+public class TaskExecutionErrorHandler implements ErrorHandler<TaskExecution> {
 
   private JobRepository jobRepository;
   private TaskExecutionRepository jobTaskRepository;

@@ -17,7 +17,7 @@ import com.creactiviti.piper.core.job.MutableJobTask;
 import com.creactiviti.piper.core.task.TaskExecutionRepository;
 import com.creactiviti.piper.core.task.TaskDispatcher;
 
-public class JobTaskErrorHandlerTests {
+public class TaskExecutionErrorHandlerTests {
 
   private JobRepository jobRepo = mock(JobRepository.class);
   private TaskExecutionRepository taskRepo = mock(TaskExecutionRepository.class);
@@ -27,7 +27,7 @@ public class JobTaskErrorHandlerTests {
   @Test
   public void test1 () {
     when(jobRepo.findJobByTaskId("1234")).thenReturn(new MutableJob(Collections.singletonMap("id","4567")));
-    JobTaskErrorHandler handler = new JobTaskErrorHandler();
+    TaskExecutionErrorHandler handler = new TaskExecutionErrorHandler();
     handler.setEventPublisher(eventPublisher);
     handler.setJobRepository(jobRepo);
     handler.setJobTaskRepository(taskRepo);
@@ -42,7 +42,7 @@ public class JobTaskErrorHandlerTests {
   @Test
   public void test2 () {
     when(jobRepo.findJobByTaskId("1234")).thenReturn(new MutableJob());
-    JobTaskErrorHandler handler = new JobTaskErrorHandler();
+    TaskExecutionErrorHandler handler = new TaskExecutionErrorHandler();
     handler.setJobRepository(jobRepo);
     handler.setJobTaskRepository(taskRepo);
     handler.setTaskDispatcher(taskDispatcher);

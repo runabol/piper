@@ -35,7 +35,7 @@ import com.creactiviti.piper.core.task.TaskDispatcherResolver;
 import com.creactiviti.piper.core.task.WorkTaskDispatcher;
 import com.creactiviti.piper.error.ErrorHandler;
 import com.creactiviti.piper.error.ErrorHandlerChain;
-import com.creactiviti.piper.error.JobTaskErrorHandler;
+import com.creactiviti.piper.error.TaskExecutionErrorHandler;
 
 @Configuration
 @ConditionalOnCoordinator
@@ -69,8 +69,8 @@ public class CoordinatorConfiguration {
   }
   
   @Bean
-  JobTaskErrorHandler jobTaskErrorHandler () {
-    JobTaskErrorHandler jobTaskErrorHandler = new JobTaskErrorHandler();
+  TaskExecutionErrorHandler jobTaskErrorHandler () {
+    TaskExecutionErrorHandler jobTaskErrorHandler = new TaskExecutionErrorHandler();
     jobTaskErrorHandler.setJobRepository(jobRepository);
     jobTaskErrorHandler.setJobTaskRepository(jobTaskRepository);
     jobTaskErrorHandler.setTaskDispatcher(taskDispatcher());
