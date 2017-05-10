@@ -22,8 +22,8 @@ public class JdbcTaskExecutionRepository implements TaskExecutionRepository {
   private ObjectMapper json = new ObjectMapper();
   
   @Override
-  public TaskExecution findOne(String aJobTaskId) {
-    List<TaskExecution> query = jdbc.query("select * from job_task where id = :id", Collections.singletonMap("id", aJobTaskId),this::jobTaskRowMappper);
+  public TaskExecution findOne (String aTaskExecutionId) {
+    List<TaskExecution> query = jdbc.query("select * from task_execution where id = :id", Collections.singletonMap("id", aTaskExecutionId),this::jobTaskRowMappper);
     if(query.size() == 1) {
       return query.get(0);
     }
@@ -31,34 +31,35 @@ public class JdbcTaskExecutionRepository implements TaskExecutionRepository {
   }
 
   @Override
-  public void create(TaskExecution aJobTask) {
-    SqlParameterSource sqlParameterSource = createSqlParameterSource(aJobTask);
-    jdbc.update("insert into job_task (id,parent_id,job_id,data,status,create_time) values (:id,:parentId,:jobId,:data,:status,:createTime)", sqlParameterSource);
+  public void create (TaskExecution aTaskExecution) {
+    SqlParameterSource sqlParameterSource = createSqlParameterSource(aTaskExecution);
+    jdbc.update("insert into task_execution (id,parent_id,job_id,data,status,create_time) values (:id,:parentId,:jobId,:data,:status,:createTime)", sqlParameterSource);
   }
   
   @Override
   @Transactional
-  public TaskExecution merge (TaskExecution aJobTask) {
-    SimpleTaskExecution mjobTask = SimpleTaskExecution.createForUpdate(aJobTask);
-    TaskExecution currentTask = jdbc.queryForObject("select * from job_task where id = :id for update", Collections.singletonMap("id", aJobTask.getId()),this::jobTaskRowMappper);
-    if(currentTask.getStatus().value() > aJobTask.getStatus().value()) { 
-      return currentTask;
+  public TaskExecution merge (TaskExecution aTaskExecution) {
+    TaskExecution current = jdbc.queryForObject("select * from task_execution where id = :id for update", Collections.singletonMap("id", aTaskExecution.getId()),this::jobTaskRowMappper);
+    TaskExecution merged = aTaskExecution;  
+    if(current.getStatus().isTerminated() && aTaskExecution.getStatus() == TaskStatus.STARTED) {
+      merged = SimpleTaskExecution.createForUpdate(current);
+      ((SimpleTaskExecution)merged).setStartTime(aTaskExecution.getStartTime());
     }
-    SqlParameterSource sqlParameterSource = createSqlParameterSource(mjobTask);
-    jdbc.update("update job_task set data=:data,status=:status where id = :id ", sqlParameterSource);
-    return aJobTask;
+    SqlParameterSource sqlParameterSource = createSqlParameterSource(merged);
+    jdbc.update("update task_execution set data=:data,status=:status,start_time=:startTime,end_time=:endTime where id = :id ", sqlParameterSource);
+    return merged;
   }
   
   @Override
   public List<TaskExecution> getExecution (String aJobId) {
-    return jdbc.query("select * From job_task where job_id = :jobId order by create_time asc", Collections.singletonMap("jobId", aJobId),this::jobTaskRowMappper);
+    return jdbc.query("select * From task_execution where job_id = :jobId order by create_time asc", Collections.singletonMap("jobId", aJobId),this::jobTaskRowMappper);
   }
   
   @Override
   @Transactional
   public long completeSubTask (TaskExecution aJobSubTask) {
     Assert.notNull(aJobSubTask.getParentId(), "parentId can't be null");
-    TaskExecution parentTask = jdbc.queryForObject("select * from job_task where id = :id for update", Collections.singletonMap("id", aJobSubTask.getParentId()),this::jobTaskRowMappper);
+    TaskExecution parentTask = jdbc.queryForObject("select * from task_execution where id = :id for update", Collections.singletonMap("id", aJobSubTask.getParentId()),this::jobTaskRowMappper);
     SimpleTaskExecution mparentTask = SimpleTaskExecution.createForUpdate(parentTask);
     List<Object> list = parentTask.getList("list", Object.class);
     long increment = mparentTask.increment("iterations");
@@ -71,14 +72,16 @@ public class JdbcTaskExecutionRepository implements TaskExecutionRepository {
     return SimpleTaskExecution.createFromMap(readValueFromString(aRs.getString("data")));
   }
 
-  private SqlParameterSource createSqlParameterSource(TaskExecution aJobTask) {
+  private SqlParameterSource createSqlParameterSource (TaskExecution aTaskExecution) {
     MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
-    sqlParameterSource.addValue("id", aJobTask.getId());
-    sqlParameterSource.addValue("parentId", aJobTask.getParentId());
-    sqlParameterSource.addValue("jobId", aJobTask.getJobId());
-    sqlParameterSource.addValue("data", writeValueAsJsonString(aJobTask));
-    sqlParameterSource.addValue("status", aJobTask.getStatus().toString());
-    sqlParameterSource.addValue("createTime", aJobTask.getCreateTime());
+    sqlParameterSource.addValue("id", aTaskExecution.getId());
+    sqlParameterSource.addValue("parentId", aTaskExecution.getParentId());
+    sqlParameterSource.addValue("jobId", aTaskExecution.getJobId());
+    sqlParameterSource.addValue("status", aTaskExecution.getStatus().toString());
+    sqlParameterSource.addValue("createTime", aTaskExecution.getCreateTime());
+    sqlParameterSource.addValue("startTime", aTaskExecution.getStartTime());
+    sqlParameterSource.addValue("endTime", aTaskExecution.getEndTime());
+    sqlParameterSource.addValue("data", writeValueAsJsonString(aTaskExecution));
     return sqlParameterSource;
   }
   

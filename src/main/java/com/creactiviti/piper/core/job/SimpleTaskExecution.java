@@ -11,10 +11,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
-import com.creactiviti.piper.core.task.TaskExecution;
-import com.creactiviti.piper.core.task.SimplePipelineTask;
 import com.creactiviti.piper.core.task.PipelineTask;
+import com.creactiviti.piper.core.task.SimplePipelineTask;
 import com.creactiviti.piper.core.task.Task;
+import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
 import com.creactiviti.piper.error.Error;
@@ -106,7 +106,16 @@ public class SimpleTaskExecution extends SimplePipelineTask implements TaskExecu
   public void setCreateTime(Date aDate) { 
     set("createTime", aDate);
   }
+  
+  @Override
+  public Date getStartTime() {
+    return getDate("startTime");
+  }
 
+  public void setStartTime(Date aDate) {
+    set("startTime", aDate);
+  }
+  
   @Override
   public Date getEndTime() {
     return getDate("endTime");
@@ -115,7 +124,6 @@ public class SimpleTaskExecution extends SimplePipelineTask implements TaskExecu
   public void setEndTime(Date aDate) {
     set("endTime", aDate);
   }
-
 
   @Override
   public long getExecutionTime() {

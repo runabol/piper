@@ -6,6 +6,8 @@
  */
 package com.creactiviti.piper.core.event;
 
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -13,9 +15,9 @@ import org.springframework.context.PayloadApplicationEvent;
 
 import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.task.CancelTask;
+import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskExecutionRepository;
-import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.core.task.TaskStatus;
 
 /**
@@ -46,6 +48,7 @@ public class TaskStartedEventHandler implements ApplicationListener<PayloadAppli
       }
       else if(task.getStatus() == TaskStatus.CREATED) {
         SimpleTaskExecution mtask = SimpleTaskExecution.createForUpdate(task);
+        mtask.setStartTime(new Date());
         mtask.setStatus(TaskStatus.STARTED);
         jobTaskRepository.merge(mtask);
       }

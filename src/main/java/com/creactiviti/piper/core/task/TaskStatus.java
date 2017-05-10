@@ -14,20 +14,19 @@ package com.creactiviti.piper.core.task;
  */
 public enum TaskStatus {
 
-  CREATED(0),
-  STARTED(1), 
-  FAILED(2), 
-  CANCELLED(3), 
-  COMPLETED(4);
+  CREATED(false),
+  STARTED(false), 
+  FAILED(true), 
+  CANCELLED(true), 
+  COMPLETED(true);
   
-  private int value;
+  private final boolean terminated;
   
-  TaskStatus (int aValue) {
-    value = aValue;
+  TaskStatus (boolean aTerminated) {
+    terminated = aTerminated;
   }
   
-  int value () {
-    return value;
+  public boolean isTerminated() {
+    return terminated;
   }
-  
 }

@@ -12,16 +12,18 @@ import com.creactiviti.piper.error.Errorable;
 import com.creactiviti.piper.error.Retryable;
 
 /**
- * Extends the {@link Task} interface to add execution semantics to 
- * the task. 
+ * <p>Extends the {@link PipelineTask} interface to add execution semantics to 
+ * the task.</p> 
  * 
- * {@link TaskExecution} instances capture the life cycle of a single 
+ * <p>{@link TaskExecution} instances capture the life cycle of a single 
  * execution of a task. By single execution is meant that the task
- * goes through the following states: 
+ * goes through the following states:</p> 
  * 
- * 1. CREATED
- * 2. STARTED
- * 3. COMPLETED or FAILED or CANCELLED
+ * <ol>
+ *   <li><code>CREATED</code></li>
+ *   <li><code>STARTED</code></li>
+ *   <li><code>COMPLETED</code> or <code>FAILED</code> or <code>CANCELLED</code></li>
+ * </ol>
  * 
  * @author Arik Cohen
  * @since May 8, 2017
@@ -73,6 +75,14 @@ public interface TaskExecution extends PipelineTask, Errorable, Retryable {
    * @return Date
    */
   Date getCreateTime ();
+
+  /**
+   * Get the time when this task instance 
+   * was started.
+   * 
+   * @return Date
+   */
+  Date getStartTime ();
   
   /**
    * Return the time when this task instance 
