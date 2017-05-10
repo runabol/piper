@@ -11,7 +11,7 @@ create table job (
   end_time timestamp
 );
 
-CREATE INDEX ON job (creation_date);
+CREATE INDEX ON job (create_time);
 CREATE INDEX ON job (status);
 
 drop table if exists task_execution;
@@ -40,7 +40,10 @@ create table job_context (
 
 CREATE INDEX ON job_context (job_id);
 
+drop table if exists counter;
+
 create table counter (
   id varchar(256) not null primary key,
+  create_time timestamp not null,
   value bigint not null
 );

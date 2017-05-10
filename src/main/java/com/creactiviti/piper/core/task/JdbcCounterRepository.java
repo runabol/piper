@@ -21,7 +21,7 @@ public class JdbcCounterRepository implements CounterRepository {
       jdbc.update("update counter set value = ? where id = ?",aValue,aCounterName);
     }
     catch (EmptyResultDataAccessException e) {
-      jdbc.update("insert into counter (id,value) values (?,?)",aCounterName,aValue);
+      jdbc.update("insert into counter (id,value,create_time) values (?,?,current_timestamp)",aCounterName,aValue);
     }
   }
   

@@ -29,5 +29,6 @@ create table job_context (
 
 create table counter (
   id varchar(256) not null primary key,
+  create_time timestamp not null,
   value bigint not null
 );
