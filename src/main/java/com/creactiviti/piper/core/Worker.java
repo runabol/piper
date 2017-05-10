@@ -32,6 +32,7 @@ import com.creactiviti.piper.core.task.ControlTask;
 import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskHandler;
 import com.creactiviti.piper.core.task.TaskHandlerResolver;
+import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.error.ErrorObject;
 
 /**
@@ -77,6 +78,7 @@ public class Worker {
         if(output!=null) {
           completion.setOutput(output);
         }
+        completion.setStatus(TaskStatus.COMPLETED);
         completion.setEndTime(new Date());
         messenger.send(Queues.COMPLETIONS, completion);
       }
@@ -103,9 +105,10 @@ public class Worker {
   
   private void handleException (TaskExecution aTask, Exception aException) {
     logger.error(aException.getMessage(),aException);
-    SimpleTaskExecution jobTask = SimpleTaskExecution.createForUpdate(aTask);
-    jobTask.setError(new ErrorObject(aException.getMessage(),ExceptionUtils.getStackFrames(aException)));
-    messenger.send(Queues.ERRORS, jobTask);
+    SimpleTaskExecution task = SimpleTaskExecution.createForUpdate(aTask);
+    task.setError(new ErrorObject(aException.getMessage(),ExceptionUtils.getStackFrames(aException)));
+    task.setStatus(TaskStatus.FAILED);
+    messenger.send(Queues.ERRORS, task);
   }
   
   private long calculateTimeout (TaskExecution aTask) {
