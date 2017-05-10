@@ -10,12 +10,36 @@ import java.util.List;
 
 public interface TaskExecutionRepository {
   
+  /**
+   * Find a single {@link TaskExecution} instance by its id.
+   * 
+   * @param aId
+   * @return TaskExecution
+   */
   TaskExecution findOne (String aId);
-  
+
+  /**
+   * Creates a new persistent represenation of the given {@link TaskExecution}.
+   * 
+   * @param aTaskExecution
+   */
   void create (TaskExecution aTaskExecution);
   
-  void update (TaskExecution aTaskExecution);
+  /**
+   * Merges the state of the given {@link TaskExecution} instance
+   * with its persistent representation and returns the reconciled
+   * version.
+   * 
+   * @param aTaskExecution
+   */
+  TaskExecution merge (TaskExecution aTaskExecution);
   
+  /**
+   * Returns the execution steps of the given job 
+   * 
+   * @param aJobId
+   * @return List<TaskExecution>
+   */
   List<TaskExecution> getExecution (String aJobId);
 
   long completeSubTask (TaskExecution aTaskExecution); 

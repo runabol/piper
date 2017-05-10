@@ -126,7 +126,7 @@ public class Coordinator {
       SimpleTaskExecution currentTask = SimpleTaskExecution.createForUpdate(job.getExecution().get(job.getExecution().size()-1));
       currentTask.setStatus(TaskStatus.CANCELLED);
       currentTask.setEndTime(new Date());
-      jobTaskRepository.update(currentTask);
+      jobTaskRepository.merge(currentTask);
       taskDispatcher.dispatch(new CancelTask(currentTask.getId()));
     }
     return mjob;

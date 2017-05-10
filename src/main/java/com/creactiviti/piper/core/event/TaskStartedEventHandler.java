@@ -47,7 +47,7 @@ public class TaskStartedEventHandler implements ApplicationListener<PayloadAppli
       else if(task.getStatus() == TaskStatus.CREATED) {
         SimpleTaskExecution mtask = SimpleTaskExecution.createForUpdate(task);
         mtask.setStatus(TaskStatus.STARTED);
-        jobTaskRepository.update(mtask);
+        jobTaskRepository.merge(mtask);
       }
       else if (task.getStatus() == TaskStatus.CANCELLED) {
         taskDispatcher.dispatch(new CancelTask(task.getId()));

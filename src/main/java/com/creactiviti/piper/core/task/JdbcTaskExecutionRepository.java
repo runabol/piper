@@ -38,14 +38,15 @@ public class JdbcTaskExecutionRepository implements TaskExecutionRepository {
   
   @Override
   @Transactional
-  public void update (TaskExecution aJobTask) {
+  public TaskExecution merge (TaskExecution aJobTask) {
     SimpleTaskExecution mjobTask = SimpleTaskExecution.createForUpdate(aJobTask);
     TaskExecution currentTask = jdbc.queryForObject("select * from job_task where id = :id for update", Collections.singletonMap("id", aJobTask.getId()),this::jobTaskRowMappper);
     if(currentTask.getStatus().value() > aJobTask.getStatus().value()) { 
-      return;
+      return currentTask;
     }
     SqlParameterSource sqlParameterSource = createSqlParameterSource(mjobTask);
     jdbc.update("update job_task set data=:data,status=:status where id = :id ", sqlParameterSource);
+    return aJobTask;
   }
   
   @Override
@@ -61,8 +62,8 @@ public class JdbcTaskExecutionRepository implements TaskExecutionRepository {
     SimpleTaskExecution mparentTask = SimpleTaskExecution.createForUpdate(parentTask);
     List<Object> list = parentTask.getList("list", Object.class);
     long increment = mparentTask.increment("iterations");
-    update(aJobSubTask);
-    update(mparentTask);
+    merge(aJobSubTask);
+    merge(mparentTask);
     return (list.size()-increment);
   }
   

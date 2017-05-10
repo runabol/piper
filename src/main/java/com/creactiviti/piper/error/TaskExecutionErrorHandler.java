@@ -49,7 +49,7 @@ public class TaskExecutionErrorHandler implements ErrorHandler<TaskExecution> {
     SimpleTaskExecution mtask = SimpleTaskExecution.createForUpdate(aTask);
     mtask.setStatus(TaskStatus.FAILED);
     mtask.setEndTime(new Date ());
-    jobTaskRepository.update(mtask);
+    jobTaskRepository.merge(mtask);
     
     // if the task is retryable, then retry it
     if(aTask.getRetryAttempts() < aTask.getRetry()) {
@@ -64,7 +64,7 @@ public class TaskExecutionErrorHandler implements ErrorHandler<TaskExecution> {
         mtask = SimpleTaskExecution.createForUpdate(jobTaskRepository.findOne(mtask.getParentId()));
         mtask.setStatus(TaskStatus.FAILED);
         mtask.setEndTime(new Date());
-        jobTaskRepository.update(mtask);
+        jobTaskRepository.merge(mtask);
       }
       Job job = jobRepository.findJobByTaskId(mtask.getId());
       Assert.notNull(job,"job not found for task: " + mtask.getId());
