@@ -42,8 +42,13 @@ public class EachTaskCompletionHandler implements TaskCompletionHandler {
   }
 
   @Override
-  public boolean canHandle(TaskExecution aTaskExecution) {
-    return aTaskExecution.getParentId()!=null;
+  public boolean canHandle (TaskExecution aTaskExecution) {
+    String parentId = aTaskExecution.getParentId();
+    if(parentId!=null) {
+      TaskExecution parentExecution = taskExecutionRepo.findOne(parentId);
+      return parentExecution.getType().equals("each");
+    }
+    return false;
   }
 
 }
