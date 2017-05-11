@@ -14,12 +14,13 @@ import org.springframework.stereotype.Component;
 
 import com.creactiviti.piper.core.task.Task;
 import com.creactiviti.piper.core.task.TaskHandler;
+import com.creactiviti.piper.core.uuid.UUIDGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class Delta implements TaskHandler<Object> {
 
-  private static final String CMD = "/delta/utility_scripts/_autoTask.php";
+  private static final String CMD = "/var/www/delta/utility_scripts/_autoTask.php";
   
   private final ObjectMapper json = new ObjectMapper();
   
@@ -27,11 +28,13 @@ public class Delta implements TaskHandler<Object> {
   
   @Override
   public Object handle (Task aTask) throws Exception {
+    File inputFile = new File("/var/www/delta/tmp/" + UUIDGenerator.generate());
     File outputFile = File.createTempFile("output", null);
     try (PrintStream stream = new PrintStream(outputFile);) {
+      FileUtils.writeStringToFile(inputFile, json.writeValueAsString(aTask));
       CommandLine cmd = new CommandLine ("php");
       cmd.addArgument(CMD)
-         .addArgument(String.format("input=%s",json.writeValueAsString(aTask)));
+         .addArgument(String.format("input=%s",inputFile.getAbsolutePath()));
       logger.debug("{}",cmd);
       DefaultExecutor exec = new DefaultExecutor();
       exec.setStreamHandler(new PumpStreamHandler(stream));
@@ -43,6 +46,7 @@ public class Delta implements TaskHandler<Object> {
     }
     finally {
       FileUtils.deleteQuietly(outputFile);
+      FileUtils.deleteQuietly(inputFile);
     }
   }
   
