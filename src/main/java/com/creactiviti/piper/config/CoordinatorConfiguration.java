@@ -29,6 +29,7 @@ import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.ControlTaskDispatcher;
 import com.creactiviti.piper.core.task.CounterRepository;
 import com.creactiviti.piper.core.task.EachTaskDispatcher;
+import com.creactiviti.piper.core.task.ForkTaskDispatcher;
 import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.core.task.TaskDispatcherChain;
 import com.creactiviti.piper.core.task.TaskDispatcherResolver;
@@ -43,7 +44,7 @@ import com.creactiviti.piper.error.TaskExecutionErrorHandler;
 public class CoordinatorConfiguration {
 
   @Autowired private JobRepository jobRepository;
-  @Autowired private TaskExecutionRepository jobTaskRepository;
+  @Autowired private TaskExecutionRepository taskExecutionRepo;
   @Autowired private ContextRepository<Context> contextRepository;
   @Autowired private ApplicationEventPublisher eventPublisher;
   @Autowired private PipelineRepository pipelineRepository;
@@ -56,7 +57,7 @@ public class CoordinatorConfiguration {
     coordinator.setContextRepository(contextRepository);
     coordinator.setEventPublisher(eventPublisher);
     coordinator.setJobRepository(jobRepository);
-    coordinator.setJobTaskRepository(jobTaskRepository);
+    coordinator.setJobTaskRepository(taskExecutionRepo);
     coordinator.setPipelineRepository(pipelineRepository);
     coordinator.setJobExecutor(jobExecutor());
     coordinator.setTaskDispatcher(taskDispatcher());
@@ -75,7 +76,7 @@ public class CoordinatorConfiguration {
   TaskExecutionErrorHandler jobTaskErrorHandler () {
     TaskExecutionErrorHandler jobTaskErrorHandler = new TaskExecutionErrorHandler();
     jobTaskErrorHandler.setJobRepository(jobRepository);
-    jobTaskErrorHandler.setJobTaskRepository(jobTaskRepository);
+    jobTaskErrorHandler.setJobTaskRepository(taskExecutionRepo);
     jobTaskErrorHandler.setTaskDispatcher(taskDispatcher());
     jobTaskErrorHandler.setEventPublisher(eventPublisher);
     return jobTaskErrorHandler;
@@ -97,7 +98,7 @@ public class CoordinatorConfiguration {
     taskCompletionHandler.setContextRepository(contextRepository);
     taskCompletionHandler.setJobExecutor(jobExecutor());
     taskCompletionHandler.setJobRepository(jobRepository);
-    taskCompletionHandler.setJobTaskRepository(jobTaskRepository);
+    taskCompletionHandler.setJobTaskRepository(taskExecutionRepo);
     taskCompletionHandler.setPipelineRepository(pipelineRepository);
     taskCompletionHandler.setEventPublisher(eventPublisher);
     return taskCompletionHandler;
@@ -105,7 +106,7 @@ public class CoordinatorConfiguration {
   
   @Bean
   EachTaskCompletionHandler eachTaskCompletionHandler (TaskCompletionHandler aTaskCompletionHandler) {
-    return new EachTaskCompletionHandler(jobTaskRepository,aTaskCompletionHandler,counterRepository);
+    return new EachTaskCompletionHandler(taskExecutionRepo,aTaskCompletionHandler,counterRepository);
   }
   
   @Bean
@@ -113,7 +114,7 @@ public class CoordinatorConfiguration {
     DefaultJobExecutor jobExecutor = new DefaultJobExecutor();
     jobExecutor.setContextRepository(contextRepository);
     jobExecutor.setJobRepository(jobRepository);
-    jobExecutor.setJobTaskRepository(jobTaskRepository);
+    jobExecutor.setJobTaskRepository(taskExecutionRepo);
     jobExecutor.setPipelineRepository(pipelineRepository);
     jobExecutor.setTaskDispatcher(taskDispatcher());
     return jobExecutor;
@@ -124,6 +125,7 @@ public class CoordinatorConfiguration {
     TaskDispatcherChain tashDispatcher = new TaskDispatcherChain();
     List<TaskDispatcherResolver> resolvers =  Arrays.asList(
       eachTaskDispatcher(tashDispatcher),
+      forkTaskDispatcher(tashDispatcher),
       controlTaskDispatcher(),
       workTaskDispatcher()
     );
@@ -138,7 +140,12 @@ public class CoordinatorConfiguration {
   
   @Bean
   EachTaskDispatcher eachTaskDispatcher (TaskDispatcher aTaskDispatcher) {
-    return new EachTaskDispatcher(aTaskDispatcher,jobTaskRepository,messenger,contextRepository,counterRepository);
+    return new EachTaskDispatcher(aTaskDispatcher,taskExecutionRepo,messenger,contextRepository,counterRepository);
+  }
+  
+  @Bean
+  ForkTaskDispatcher forkTaskDispatcher (TaskDispatcher aTaskDispatcher) {
+    return new ForkTaskDispatcher(aTaskDispatcher, taskExecutionRepo, messenger, contextRepository, counterRepository);
   }
   
   @Bean
@@ -148,7 +155,7 @@ public class CoordinatorConfiguration {
   
   @Bean
   TaskStartedEventHandler taskStartedEventHandler () {
-    return new TaskStartedEventHandler(jobTaskRepository, taskDispatcher());
+    return new TaskStartedEventHandler(taskExecutionRepo, taskDispatcher());
   }
   
 }
