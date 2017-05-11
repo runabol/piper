@@ -20,26 +20,41 @@ import com.creactiviti.piper.core.messenger.Queues;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
 
 /**
+ * Implements a Fork/Join construct.
+ * 
+ * <pre>
+ *   - type: fork
+ *     branches: 
+ *       - - name: randomNumber
+ *           label: Generate a random number
+ *           type: randomInt
+ *           startInclusive: 0
+ *           endInclusive: 5000
+ *         
+ *         - type: sleep
+ *           millis: ${randomNumber}
+ *         
+ *       - - name: randomNumber
+ *           label: Generate a random number
+ *           type: randomInt
+ *           startInclusive: 0
+ *           endInclusive: 5000
+ *         
+ *         - type: sleep
+ *           millis: ${randomNumber}
+ * </pre>
  * 
  * @author Arik Cohen
  * @since May 11, 2017
  */
-public class ForkTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDispatcherResolver {
+public class ForkJoinTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDispatcherResolver {
 
-  private final TaskDispatcher taskDispatcher;
-  private final TaskEvaluator taskEvaluator = new SpelTaskEvaluator();
-  private final TaskExecutionRepository taskExecutionRepo;
-  private final Messenger messenger;
-  private final ContextRepository contextRepository;
-  private final CounterRepository counterRepository;
-
-  public ForkTaskDispatcher (TaskDispatcher aTaskDispatcher, TaskExecutionRepository aTaskExecutionRepo, Messenger aMessenger, ContextRepository aContextRepository, CounterRepository aCounterRepository) {
-    taskDispatcher = aTaskDispatcher;
-    taskExecutionRepo = aTaskExecutionRepo;
-    messenger = aMessenger;
-    contextRepository = aContextRepository;
-    counterRepository = aCounterRepository;
-  }
+  private TaskDispatcher taskDispatcher;
+  private TaskEvaluator taskEvaluator = new SpelTaskEvaluator();
+  private TaskExecutionRepository taskExecutionRepo;
+  private Messenger messenger;
+  private ContextRepository contextRepository;
+  private CounterRepository counterRepository;
 
   @Override
   public void dispatch (TaskExecution aTask) {
@@ -61,6 +76,7 @@ public class ForkTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDi
         execution.setParentId(aTask.getId());
         MapContext context = new MapContext (contextRepository.peek(aTask.getId()));
         contextRepository.push(aTask.getId()+"/"+i, context);
+        contextRepository.push(execution.getId(), context);
         TaskExecution evaluatedExecution = taskEvaluator.evaluate(execution, context);
         taskExecutionRepo.create(evaluatedExecution);
         taskDispatcher.dispatch(evaluatedExecution);
@@ -79,6 +95,30 @@ public class ForkTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDi
       return this;
     }
     return null;
+  }
+  
+  public void setContextRepository(ContextRepository aContextRepository) {
+    contextRepository = aContextRepository;
+  }
+  
+  public void setCounterRepository(CounterRepository aCounterRepository) {
+    counterRepository = aCounterRepository;
+  }
+  
+  public void setMessenger(Messenger aMessenger) {
+    messenger = aMessenger;
+  }
+  
+  public void setTaskDispatcher(TaskDispatcher aTaskDispatcher) {
+    taskDispatcher = aTaskDispatcher;
+  }
+  
+  public void setTaskEvaluator(TaskEvaluator aTaskEvaluator) {
+    taskEvaluator = aTaskEvaluator;
+  }
+
+  public void setTaskExecutionRepo(TaskExecutionRepository aTaskExecutionRepo) {
+    taskExecutionRepo = aTaskExecutionRepo;
   }
 
 }

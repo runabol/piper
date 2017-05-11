@@ -73,6 +73,7 @@ public class ForkTaskCompletionHandler implements TaskCompletionHandler {
       execution.setJobId(aTaskExecution.getJobId());
       execution.setParentId(aTaskExecution.getParentId());
       Context context = contextRepository.peek(aTaskExecution.getParentId()+"/"+aTaskExecution.getInteger("branch"));
+      contextRepository.push(execution.getId(), context);
       TaskExecution evaluatedExecution = taskEvaluator.evaluate(execution, context);
       taskExecutionRepo.create(evaluatedExecution);
       taskDispatcher.dispatch(evaluatedExecution);
