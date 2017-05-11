@@ -27,7 +27,6 @@ import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskExecutionRepository;
 import com.creactiviti.piper.core.task.TaskStatus;
-import com.creactiviti.piper.core.uuid.UUIDGenerator;
 
 
 /**
@@ -60,7 +59,6 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
       if(task.getOutput() != null && task.getName() != null) {
         Context context = contextRepository.peek(job.getId());
         MapContext newContext = new MapContext(context.asMap());
-        newContext.setId(UUIDGenerator.generate());
         newContext.put(task.getName(), task.getOutput());
         contextRepository.push(job.getId(), newContext);
       }
@@ -87,8 +85,7 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
     job.setEndTime(new Date ());
     jobRepository.update(job);
     eventPublisher.publishEvent(PiperEvent.of(Events.JOB_STATUS, "jobId", aJob.getId(), "status", aJob.getStatus()));
-    int stackSize = contextRepository.stackSize(aJob.getId());
-    log.debug("Job {} completed successfully, stack size: {}",aJob.getId(),stackSize);
+    log.debug("Job {} completed successfully",aJob.getId());
   }
   
   public void setJobRepository(JobRepository aJobRepository) {

@@ -16,6 +16,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import com.creactiviti.piper.core.uuid.UUIDGenerator;
 import com.creactiviti.piper.json.JsonHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -32,16 +33,8 @@ public class JdbcContextRepository implements ContextRepository<Context> {
   
   @Override
   public void push(String aStackId, Context aContext) {
-    jdbc.update("insert into context (id,stack_id,serialized_context,create_time) values (?,?,?,?)",aContext.getId(),aStackId,JsonHelper.writeValueAsString(objectMapper, aContext), new Date());
+    jdbc.update("insert into context (id,stack_id,serialized_context,create_time) values (?,?,?,?)",UUIDGenerator.generate(),aStackId,JsonHelper.writeValueAsString(objectMapper, aContext), new Date());
   }
-
-//  @Override
-//  @Transactional
-//  public Context pop(String aStackId) {
-//    Context context = peek(aStackId);
-//    jdbc.update("delete from context where id = ?",context.getId());
-//    return context;
-//  }
 
   @Override
   public Context peek (String aStackId) {
@@ -52,12 +45,6 @@ public class JdbcContextRepository implements ContextRepository<Context> {
     catch (EmptyResultDataAccessException e) {
       return null;
     }
-  }
-  
-  @Override
-  public int stackSize(String aStackId) {
-    String sql = "select count(*) from context where stack_id = ?";
-    return jdbc.queryForObject(sql, Integer.class,aStackId);
   }
   
   @Override

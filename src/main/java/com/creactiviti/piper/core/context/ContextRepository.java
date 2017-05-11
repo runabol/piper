@@ -12,12 +12,8 @@ public interface ContextRepository<T extends Context> {
 
   void push (String aStackId, T aContext);
   
-  //T pop (String aStackId);
-  
   T peek (String aStackId);
   
   List<T> getStack (String aStackId);
-  
-  int stackSize (String aStackId);
   
 }

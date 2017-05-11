@@ -62,7 +62,6 @@ public class EachTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDi
         
         MapContext context = new MapContext (contextRepository.peek(aTask.getId()));
         
-        context.setId(UUIDGenerator.generate());
         context.set(aTask.getString("itemVar","item"), item);
         contextRepository.push(eachTask.getId(), context);
         TaskExecution evaluatedEachTask = taskEvaluator.evaluate(eachTask, context);

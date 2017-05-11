@@ -20,7 +20,6 @@ import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.core.task.TaskEvaluator;
 import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskExecutionRepository;
-import com.creactiviti.piper.core.uuid.UUIDGenerator;
 
 /**
  * 
@@ -65,7 +64,6 @@ public class DefaultJobExecutor implements JobExecutor {
     TaskExecution nextTask = nextTask(aJob, aPipeline); 
     jobRepository.update(aJob);
     MapContext context = new MapContext(contextRepository.peek(aJob.getId()));
-    context.setId(UUIDGenerator.generate());
     contextRepository.push(nextTask.getId(), context);
     TaskExecution evaluatedTask = taskEvaluator.evaluate(nextTask,context);
     jobTaskRepository.create(evaluatedTask);

@@ -90,7 +90,6 @@ public class Coordinator {
     jobRepository.create(job);
     
     MapContext context = new MapContext(params);
-    context.setId(UUIDGenerator.generate());
     contextRepository.push(job.getId(),context);
     
     messenger.send(Queues.JOBS, job);

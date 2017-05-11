@@ -10,6 +10,5 @@ import com.creactiviti.piper.core.Accessor;
 
 public interface Context extends Accessor {
 
-  String getId ();
   
 }
