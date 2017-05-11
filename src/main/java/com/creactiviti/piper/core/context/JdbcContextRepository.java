@@ -32,8 +32,9 @@ public class JdbcContextRepository implements ContextRepository<Context> {
   private ObjectMapper objectMapper = new ObjectMapper();
   
   @Override
-  public void push(String aStackId, Context aContext) {
+  public Context push(String aStackId, Context aContext) {
     jdbc.update("insert into context (id,stack_id,serialized_context,create_time) values (?,?,?,?)",UUIDGenerator.generate(),aStackId,JsonHelper.writeValueAsString(objectMapper, aContext), new Date());
+    return aContext;
   }
 
   @Override
