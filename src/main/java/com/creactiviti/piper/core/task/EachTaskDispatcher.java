@@ -31,14 +31,14 @@ public class EachTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDi
 
   private final TaskDispatcher taskDispatcher;
   private final TaskEvaluator taskEvaluator = new SpelTaskEvaluator();
-  private final TaskExecutionRepository jobTaskRepository;
+  private final TaskExecutionRepository taskExecutionRepo;
   private final Messenger messenger;
   private final ContextRepository contextRepository;
   private final CounterRepository counterRepository;
 
-  public EachTaskDispatcher (TaskDispatcher aTaskDispatcher, TaskExecutionRepository aJobTaskRepository, Messenger aMessenger, ContextRepository aContextRepository, CounterRepository aCounterRepository) {
+  public EachTaskDispatcher (TaskDispatcher aTaskDispatcher, TaskExecutionRepository aTaskExecutionRepo, Messenger aMessenger, ContextRepository aContextRepository, CounterRepository aCounterRepository) {
     taskDispatcher = aTaskDispatcher;
-    jobTaskRepository = aJobTaskRepository;
+    taskExecutionRepo = aTaskExecutionRepo;
     messenger = aMessenger;
     contextRepository = aContextRepository;
     counterRepository = aCounterRepository;
@@ -63,9 +63,9 @@ public class EachTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDi
         context.setId(UUIDGenerator.generate());
         context.set(aTask.getString("itemVar","item"), item);
         contextRepository.push(aTask.getJobId(), context);
-        try{
+        try {
           TaskExecution evaluatedEachTask = taskEvaluator.evaluate(eachTask, context);
-          jobTaskRepository.create(evaluatedEachTask);
+          taskExecutionRepo.create(evaluatedEachTask);
           taskDispatcher.dispatch(evaluatedEachTask);
         }
         finally {

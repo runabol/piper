@@ -23,3 +23,4 @@ See http://meetpiper.com
 - Clojure scripting support???
 - server-sent-event
 - send bug report through email
+- rewind to previous point in the pipeline
