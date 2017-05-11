@@ -11,6 +11,7 @@ public class CoordinatorSubscriptions {
   private int completions = 1;
   private int errors = 1;
   private int events = 1;
+  private int jobs = 1;
 
   public int getCompletions() {
     return completions;
@@ -34,6 +35,14 @@ public class CoordinatorSubscriptions {
   
   public void setEvents(int aEvents) {
     events = aEvents;
+  }
+  
+  public int getJobs() {
+    return jobs;
+  }
+  
+  public void setJobs(int aJobs) {
+    jobs = aJobs;
   }
   
 }

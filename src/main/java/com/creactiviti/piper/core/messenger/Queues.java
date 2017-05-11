@@ -12,6 +12,7 @@ public interface Queues {
 
   static final String COMPLETIONS = "completions";
   static final String ERRORS      = "errors";
+  static final String JOBS        = "jobs";
   static final String EXECUTE     = "execute";
   static final String DLQ         = "dlq";
   static final String CONTROL     = "x.control." + UUIDGenerator.generate();

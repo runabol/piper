@@ -25,6 +25,8 @@ import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.JobStatus;
 import com.creactiviti.piper.core.job.SimpleJob;
 import com.creactiviti.piper.core.job.SimpleTaskExecution;
+import com.creactiviti.piper.core.messenger.Messenger;
+import com.creactiviti.piper.core.messenger.Queues;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.CancelTask;
@@ -54,6 +56,7 @@ public class Coordinator {
   private ErrorHandler errorHandler;
   private TaskCompletionHandler taskCompletionHandler;
   private JobExecutor jobExecutor; 
+  private Messenger messenger;
   
   private static final String PIPELINE_ID = "pipelineId";
 
@@ -68,7 +71,7 @@ public class Coordinator {
    * @return Job
    *           The instance of the Job
    */
-  public Job start (Map<String,Object> aParameters) {
+  public Job create (Map<String,Object> aParameters) {
     Assert.notNull(aParameters,"parameters can't be null");
     MapObject params = MapObject.of(aParameters);
     String pipelineId = params.getRequiredString(PIPELINE_ID);
@@ -81,22 +84,29 @@ public class Coordinator {
     job.setId(UUIDGenerator.generate());
     job.setName(params.getString("name",pipeline.getName()));
     job.setPipelineId(pipeline.getId());
-    job.setStatus(JobStatus.STARTED);
-    job.setStartTime(new Date());
+    job.setStatus(JobStatus.CREATED);
     job.setCreateTime(new Date());
     log.debug("Job {} started",job.getId());
     jobRepository.create(job);
-    eventPublisher.publishEvent(PiperEvent.of(Events.JOB_STATUS,"jobId",job.getId(),"status",job.getStatus()));
-
+    
     MapContext context = new MapContext(params);
     context.setId(UUIDGenerator.generate());
     contextRepository.push(job.getId(),context);
-
-    jobExecutor.execute (job);
+    
+    messenger.send(Queues.JOBS, job);
 
     return job;
   }
 
+  public void start (Job aJob) {
+    eventPublisher.publishEvent(PiperEvent.of(Events.JOB_STATUS,"jobId",aJob.getId(),"status",aJob.getStatus()));
+    SimpleJob job = new SimpleJob(aJob);
+    job.setStartTime(new Date());
+    job.setStatus(JobStatus.STARTED);
+    jobRepository.update(job);
+    jobExecutor.execute (job);
+  }
+  
   private void validate (MapObject aParameters, Pipeline aPipeline) {
     List<Accessor> input = aPipeline.getInputs();
     for(Accessor in : input) {
@@ -222,6 +232,10 @@ public class Coordinator {
   
   public void setJobExecutor(JobExecutor aJobExecutor) {
     jobExecutor = aJobExecutor;
+  }
+  
+  public void setMessenger(Messenger aMessenger) {
+    messenger = aMessenger;
   }
   
 }

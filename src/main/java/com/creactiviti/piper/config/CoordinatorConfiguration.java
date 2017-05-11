@@ -62,6 +62,7 @@ public class CoordinatorConfiguration {
     coordinator.setTaskDispatcher(taskDispatcher());
     coordinator.setErrorHandler(errorHandler());
     coordinator.setTaskCompletionHandler(taskCompletionHandler());
+    coordinator.setMessenger(messenger);
     return coordinator;
   }
   

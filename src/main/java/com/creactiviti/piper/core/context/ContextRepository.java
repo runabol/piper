@@ -6,6 +6,8 @@
  */
 package com.creactiviti.piper.core.context;
 
+import java.util.List;
+
 public interface ContextRepository<T extends Context> {
 
   void push (String aJobId, T aContext);
@@ -13,6 +15,8 @@ public interface ContextRepository<T extends Context> {
   T pop (String aJobId);
   
   T peek (String aJobId);
+  
+  List<T> getStack (String aJobId);
   
   int stackSize (String aJobId);
   

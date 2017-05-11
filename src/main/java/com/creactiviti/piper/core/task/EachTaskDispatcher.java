@@ -59,17 +59,20 @@ public class EachTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDi
         eachTask.setStatus(TaskStatus.CREATED);
         eachTask.setJobId(aTask.getJobId());
         eachTask.setCreateTime(new Date());
-        MapContext context = new MapContext (contextRepository.peek(aTask.getJobId()));
+        
+        MapContext context = new MapContext (contextRepository.peek(aTask.getId()));
+        
         context.setId(UUIDGenerator.generate());
         context.set(aTask.getString("itemVar","item"), item);
-        contextRepository.push(aTask.getJobId(), context);
+        contextRepository.push(eachTask.getId(), context);
+        
         try {
           TaskExecution evaluatedEachTask = taskEvaluator.evaluate(eachTask, context);
           taskExecutionRepo.create(evaluatedEachTask);
           taskDispatcher.dispatch(evaluatedEachTask);
         }
         finally {
-          contextRepository.pop(aTask.getJobId());
+          contextRepository.pop(eachTask.getId());
         }
       }
     }

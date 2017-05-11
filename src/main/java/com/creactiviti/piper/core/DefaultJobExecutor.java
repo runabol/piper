@@ -6,20 +6,21 @@
  */
 package com.creactiviti.piper.core;
 
-import com.creactiviti.piper.core.context.Context;
 import com.creactiviti.piper.core.context.ContextRepository;
+import com.creactiviti.piper.core.context.MapContext;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.JobStatus;
 import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
-import com.creactiviti.piper.core.task.TaskExecution;
-import com.creactiviti.piper.core.task.TaskExecutionRepository;
 import com.creactiviti.piper.core.task.PipelineTask;
 import com.creactiviti.piper.core.task.SpelTaskEvaluator;
 import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.core.task.TaskEvaluator;
+import com.creactiviti.piper.core.task.TaskExecution;
+import com.creactiviti.piper.core.task.TaskExecutionRepository;
+import com.creactiviti.piper.core.uuid.UUIDGenerator;
 
 /**
  * 
@@ -63,7 +64,9 @@ public class DefaultJobExecutor implements JobExecutor {
   private void executeNextTask (Job aJob, Pipeline aPipeline) {
     TaskExecution nextTask = nextTask(aJob, aPipeline); 
     jobRepository.update(aJob);
-    Context context = contextRepository.peek(aJob.getId());
+    MapContext context = new MapContext(contextRepository.peek(aJob.getId()));
+    context.setId(UUIDGenerator.generate());
+    contextRepository.push(nextTask.getId(), context);
     TaskExecution evaluatedTask = taskEvaluator.evaluate(nextTask,context);
     jobTaskRepository.create(evaluatedTask);
     taskDispatcher.dispatch(evaluatedTask);
