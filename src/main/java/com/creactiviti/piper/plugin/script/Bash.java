@@ -4,7 +4,7 @@
  * Proprietary and confidential
  * Written by Arik Cohen <arik@creactiviti.com>, Apr 2017
  */
-package com.creactiviti.piper.taskhandler.script;
+package com.creactiviti.piper.plugin.script;
 
 import java.io.File;
 import java.io.PrintStream;

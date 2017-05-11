@@ -4,7 +4,7 @@
  * Proprietary and confidential
  * Written by Arik Cohen <arik@creactiviti.com>, Mar 2017
  */
-package com.creactiviti.piper.taskhandler.ffmpeg;
+package com.creactiviti.piper.plugin.ffmpeg;
 
 import java.io.File;
 import java.io.PrintStream;

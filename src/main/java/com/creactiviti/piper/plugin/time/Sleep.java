@@ -4,23 +4,19 @@
  * Proprietary and confidential
  * Written by Arik Cohen <arik@creactiviti.com>, Mar 2017
  */
-package com.creactiviti.piper.taskhandler.io;
+package com.creactiviti.piper.plugin.time;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.creactiviti.piper.core.task.Task;
 import com.creactiviti.piper.core.task.TaskHandler;
 
 @Component
-public class Print implements TaskHandler<Object> {
-
-  private Logger log = LoggerFactory.getLogger(getClass());
+public class Sleep implements TaskHandler<Object> {
 
   @Override
-  public Object handle (Task aTask) {
-    log.info(aTask.getRequiredString("text"));
+  public Object handle (Task aTask) throws InterruptedException {
+    Thread.sleep(aTask.getLong("millis", 1000));
     return null;
   }
 
