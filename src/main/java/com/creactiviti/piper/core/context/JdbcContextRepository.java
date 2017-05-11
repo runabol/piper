@@ -32,23 +32,23 @@ public class JdbcContextRepository implements ContextRepository<Context> {
   private ObjectMapper objectMapper = new ObjectMapper();
   
   @Override
-  public void push(String aJobId, Context aContext) {
-    jdbc.update("insert into job_context (id,job_id,serialized_context,create_time) values (?,?,?,?)",aContext.getId(),aJobId,JsonHelper.writeValueAsString(objectMapper, aContext), new Date());
+  public void push(String aStackId, Context aContext) {
+    jdbc.update("insert into job_context (id,stack_id,serialized_context,create_time) values (?,?,?,?)",aContext.getId(),aStackId,JsonHelper.writeValueAsString(objectMapper, aContext), new Date());
   }
 
   @Override
   @Transactional
-  public Context pop(String aJobId) {
-    Context context = peek(aJobId);
+  public Context pop(String aStackId) {
+    Context context = peek(aStackId);
     jdbc.update("delete from job_context where id = ?",context.getId());
     return context;
   }
 
   @Override
-  public Context peek (String aJobId) {
+  public Context peek (String aStackId) {
     try {
-      String sql = "select id,serialized_context from job_context where job_id = ? order by create_time desc limit 1";
-      return jdbc.queryForObject(sql,new Object[]{aJobId},this::contextRowMapper);
+      String sql = "select id,serialized_context from job_context where stack_id = ? order by create_time desc limit 1";
+      return jdbc.queryForObject(sql,new Object[]{aStackId},this::contextRowMapper);
     }
     catch (EmptyResultDataAccessException e) {
       return null;
@@ -56,15 +56,15 @@ public class JdbcContextRepository implements ContextRepository<Context> {
   }
   
   @Override
-  public int stackSize(String aJobId) {
-    String sql = "select count(*) from job_context where job_id = ?";
-    return jdbc.queryForObject(sql, Integer.class,aJobId);
+  public int stackSize(String aStackId) {
+    String sql = "select count(*) from job_context where stack_id = ?";
+    return jdbc.queryForObject(sql, Integer.class,aStackId);
   }
   
   @Override
-  public List<Context> getStack (String aJobId) {
-    String sql = "select id,serialized_context from job_context where job_id = ? order by create_time desc";
-    return jdbc.query(sql, this::contextRowMapper,aJobId);
+  public List<Context> getStack (String aStackId) {
+    String sql = "select id,serialized_context from job_context where stack_id = ? order by create_time desc";
+    return jdbc.query(sql, this::contextRowMapper,aStackId);
   }
   
   private Context contextRowMapper (ResultSet aResultSet, int aIndex) throws SQLException {

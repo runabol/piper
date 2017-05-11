@@ -33,7 +33,7 @@ drop table if exists job_context;
 
 create table job_context (
   id varchar(256) not null primary key,
-  job_id varchar(256) not null,
+  stack_id varchar(256) not null,
   create_time timestamp not null,
   serialized_context text not null
 );

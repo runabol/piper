@@ -6,7 +6,6 @@
  */
 package com.creactiviti.piper.web;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.creactiviti.piper.config.ConditionalOnCoordinator;
 import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.Page;
-import com.creactiviti.piper.core.context.Context;
-import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobRepository;
 
@@ -33,7 +30,6 @@ public class JobsController {
 
   @Autowired private JobRepository jobRepository;
   @Autowired private Coordinator coordinator;
-  @Autowired private ContextRepository contextRepository;
   
   @GetMapping(value="/jobs")
   public Page<Job> list (@RequestParam(value="p",defaultValue="1") Integer aPageNumber) {
@@ -50,11 +46,6 @@ public class JobsController {
     Job job = jobRepository.findOne (aJobId);
     Assert.notNull(job,"Unknown job: " + aJobId);
     return job;
-  }
-  
-  @GetMapping(value="/jobs/{id}/context")
-  public List<Context> context (@PathVariable("id")String aJobId) {
-    return contextRepository.getStack(aJobId);
   }
   
   @PutMapping(value="/jobs/{id}/restart")

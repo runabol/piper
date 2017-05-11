@@ -10,14 +10,14 @@ import java.util.List;
 
 public interface ContextRepository<T extends Context> {
 
-  void push (String aJobId, T aContext);
+  void push (String aStackId, T aContext);
   
-  T pop (String aJobId);
+  T pop (String aStackId);
   
-  T peek (String aJobId);
+  T peek (String aStackId);
   
-  List<T> getStack (String aJobId);
+  List<T> getStack (String aStackId);
   
-  int stackSize (String aJobId);
+  int stackSize (String aStackId);
   
 }

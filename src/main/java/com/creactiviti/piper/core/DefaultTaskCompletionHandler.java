@@ -51,6 +51,7 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
     log.debug("Completing task {}", aTask.getId());
     Job job = jobRepository.findJobByTaskId (aTask.getId());
     if(job!=null) {
+      contextRepository.pop(aTask.getId());
       SimpleTaskExecution task = SimpleTaskExecution.createForUpdate(aTask);
       task.setStatus(TaskStatus.COMPLETED);
       SimpleJob mjob = new SimpleJob (job);
