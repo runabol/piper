@@ -58,11 +58,13 @@ public class CoordinatorTests {
     Worker worker = new Worker();
     Coordinator coordinator = new Coordinator ();
    
-    SynchMessenger workerMessenger = new SynchMessenger();
-    workerMessenger.receive(Queues.COMPLETIONS, (o)->coordinator.complete((TaskExecution)o));
-    workerMessenger.receive(Queues.EVENTS, (o)->coordinator.on(o));
+    SynchMessenger messenger = new SynchMessenger();
+    messenger.receive(Queues.COMPLETIONS, (o)->coordinator.complete((TaskExecution)o));
+    messenger.receive(Queues.EVENTS, (o)->coordinator.on(o));
+    messenger.receive(Queues.JOBS, (o)->coordinator.start((Job)o));
     
-    worker.setMessenger(workerMessenger);
+    
+    worker.setMessenger(messenger);
     DefaultTaskHandlerResolver taskHandlerResolver = new DefaultTaskHandlerResolver();
     
     Map<String,TaskHandler<?>> handlers = new HashMap<>();
@@ -115,8 +117,9 @@ public class CoordinatorTests {
     taskCompletionHandler.setPipelineRepository(new FileSystemPipelineRepository());
     taskCompletionHandler.setEventPublisher(eventPublisher);
     coordinator.setTaskCompletionHandler(taskCompletionHandler);
+    coordinator.setMessenger(messenger);
         
-    Job job = coordinator.create(MapObject.of(ImmutableMap.of("pipeline","demo/hello","name","me")));
+    Job job = coordinator.create(MapObject.of(ImmutableMap.of("pipelineId","demo/hello","name","me")));
     
     Job completedJob = jobRepository.findOne(job.getId());
     
@@ -134,7 +137,7 @@ public class CoordinatorTests {
   public void testRequiredParams () {
     Coordinator coordinator = new Coordinator ();
     coordinator.setPipelineRepository(new FileSystemPipelineRepository());
-    coordinator.create(MapObject.of(Collections.singletonMap("pipeline","demo/hello")));
+    coordinator.create(MapObject.of(Collections.singletonMap("pipelineId","demo/hello")));
   }
   
 }
