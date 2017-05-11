@@ -20,7 +20,7 @@ create table task_execution (
   serialized_execution text not null
 );
 
-create table job_context (
+create table context (
   id varchar(256) not null primary key,
   stack_id varchar(256) not null,
   create_time timestamp not null,

@@ -15,7 +15,6 @@ import java.util.Map;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.creactiviti.piper.json.JsonHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,21 +32,21 @@ public class JdbcContextRepository implements ContextRepository<Context> {
   
   @Override
   public void push(String aStackId, Context aContext) {
-    jdbc.update("insert into job_context (id,stack_id,serialized_context,create_time) values (?,?,?,?)",aContext.getId(),aStackId,JsonHelper.writeValueAsString(objectMapper, aContext), new Date());
+    jdbc.update("insert into context (id,stack_id,serialized_context,create_time) values (?,?,?,?)",aContext.getId(),aStackId,JsonHelper.writeValueAsString(objectMapper, aContext), new Date());
   }
 
-  @Override
-  @Transactional
-  public Context pop(String aStackId) {
-    Context context = peek(aStackId);
-    jdbc.update("delete from job_context where id = ?",context.getId());
-    return context;
-  }
+//  @Override
+//  @Transactional
+//  public Context pop(String aStackId) {
+//    Context context = peek(aStackId);
+//    jdbc.update("delete from context where id = ?",context.getId());
+//    return context;
+//  }
 
   @Override
   public Context peek (String aStackId) {
     try {
-      String sql = "select id,serialized_context from job_context where stack_id = ? order by create_time desc limit 1";
+      String sql = "select id,serialized_context from context where stack_id = ? order by create_time desc limit 1";
       return jdbc.queryForObject(sql,new Object[]{aStackId},this::contextRowMapper);
     }
     catch (EmptyResultDataAccessException e) {
@@ -57,13 +56,13 @@ public class JdbcContextRepository implements ContextRepository<Context> {
   
   @Override
   public int stackSize(String aStackId) {
-    String sql = "select count(*) from job_context where stack_id = ?";
+    String sql = "select count(*) from context where stack_id = ?";
     return jdbc.queryForObject(sql, Integer.class,aStackId);
   }
   
   @Override
   public List<Context> getStack (String aStackId) {
-    String sql = "select id,serialized_context from job_context where stack_id = ? order by create_time desc";
+    String sql = "select id,serialized_context from context where stack_id = ? order by create_time desc";
     return jdbc.query(sql, this::contextRowMapper,aStackId);
   }
   

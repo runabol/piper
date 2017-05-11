@@ -12,7 +12,7 @@ public interface ContextRepository<T extends Context> {
 
   void push (String aStackId, T aContext);
   
-  T pop (String aStackId);
+  //T pop (String aStackId);
   
   T peek (String aStackId);
   

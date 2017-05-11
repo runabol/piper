@@ -29,16 +29,16 @@ create table task_execution (
 
 CREATE INDEX ON task_execution (job_id);
 
-drop table if exists job_context;
+drop table if exists context;
 
-create table job_context (
+create table context (
   id varchar(256) not null primary key,
   stack_id varchar(256) not null,
   create_time timestamp not null,
   serialized_context text not null
 );
 
-CREATE INDEX ON job_context (job_id);
+CREATE INDEX ON context (stack_id);
 
 drop table if exists counter;
 

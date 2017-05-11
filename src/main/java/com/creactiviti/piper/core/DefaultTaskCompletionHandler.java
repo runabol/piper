@@ -51,7 +51,6 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
     log.debug("Completing task {}", aTask.getId());
     Job job = jobRepository.findJobByTaskId (aTask.getId());
     if(job!=null) {
-      contextRepository.pop(aTask.getId());
       SimpleTaskExecution task = SimpleTaskExecution.createForUpdate(aTask);
       task.setStatus(TaskStatus.COMPLETED);
       SimpleJob mjob = new SimpleJob (job);
@@ -59,7 +58,7 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
       jobTaskRepository.merge(task);
       jobRepository.update(mjob);
       if(task.getOutput() != null && task.getName() != null) {
-        Context context = contextRepository.pop(job.getId());
+        Context context = contextRepository.peek(job.getId());
         MapContext newContext = new MapContext(context.asMap());
         newContext.setId(UUIDGenerator.generate());
         newContext.put(task.getName(), task.getOutput());
@@ -83,7 +82,6 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
   }
 
   private void complete (SimpleJob aJob) {
-    contextRepository.pop(aJob.getId());
     SimpleJob job = new SimpleJob((Job)aJob);
     job.setStatus(JobStatus.COMPLETED);
     job.setEndTime(new Date ());
