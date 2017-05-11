@@ -1,0 +1,49 @@
+package com.creactiviti.piper.plugin.delta;
+
+import java.io.File;
+import java.io.PrintStream;
+
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.ExecuteException;
+import org.apache.commons.exec.PumpStreamHandler;
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import com.creactiviti.piper.core.task.Task;
+import com.creactiviti.piper.core.task.TaskHandler;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+@Component
+public class Delta implements TaskHandler<Object> {
+
+  private static final String CMD = "/delta/utility_scripts/_autoTask.php";
+  
+  private final ObjectMapper json = new ObjectMapper();
+  
+  private Logger logger = LoggerFactory.getLogger(getClass());
+  
+  @Override
+  public Object handle (Task aTask) throws Exception {
+    File outputFile = File.createTempFile("output", null);
+    try (PrintStream stream = new PrintStream(outputFile);) {
+      CommandLine cmd = new CommandLine ("php");
+      cmd.addArgument(CMD)
+         .addArgument(String.format("input=%s",json.writeValueAsString(aTask)));
+      logger.debug("{}",cmd);
+      DefaultExecutor exec = new DefaultExecutor();
+      exec.setStreamHandler(new PumpStreamHandler(stream));
+      exec.execute(cmd);
+      return FileUtils.readFileToString(outputFile);
+    }
+    catch (ExecuteException e) {
+      throw new ExecuteException(e.getMessage(),e.getExitValue(), new RuntimeException(FileUtils.readFileToString(outputFile)));
+    }
+    finally {
+      FileUtils.deleteQuietly(outputFile);
+    }
+  }
+  
+}
