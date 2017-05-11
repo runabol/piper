@@ -26,7 +26,7 @@ import com.creactiviti.piper.core.job.JobRepository;
 
 @RestController
 @ConditionalOnCoordinator
-public class JobController {
+public class JobsController {
 
   @Autowired
   private JobRepository jobRepository;

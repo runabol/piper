@@ -32,7 +32,7 @@ public class JdbcTaskExecutionRepository implements TaskExecutionRepository {
   @Override
   public void create (TaskExecution aTaskExecution) {
     SqlParameterSource sqlParameterSource = createSqlParameterSource(aTaskExecution);
-    jdbc.update("insert into task_execution (id,parent_id,job_id,data,status,create_time) values (:id,:parentId,:jobId,:data,:status,:createTime)", sqlParameterSource);
+    jdbc.update("insert into task_execution (id,parent_id,job_id,serialized_execution,status,create_time) values (:id,:parentId,:jobId,:serializedExecution,:status,:createTime)", sqlParameterSource);
   }
   
   @Override
@@ -48,7 +48,7 @@ public class JdbcTaskExecutionRepository implements TaskExecutionRepository {
       merged.setStartTime(current.getStartTime());      
     }
     SqlParameterSource sqlParameterSource = createSqlParameterSource(merged);
-    jdbc.update("update task_execution set data=:data,status=:status,start_time=:startTime,end_time=:endTime where id = :id ", sqlParameterSource);
+    jdbc.update("update task_execution set serialized_execution=:serializedExecution,status=:status,start_time=:startTime,end_time=:endTime where id = :id ", sqlParameterSource);
     return merged;
   }
   
@@ -58,7 +58,7 @@ public class JdbcTaskExecutionRepository implements TaskExecutionRepository {
   }
   
   private TaskExecution jobTaskRowMappper (ResultSet aRs, int aIndex) throws SQLException {
-    return SimpleTaskExecution.createFromMap(readValueFromString(aRs.getString("data")));
+    return SimpleTaskExecution.createFromMap(readValueFromString(aRs.getString("serialized_execution")));
   }
 
   private SqlParameterSource createSqlParameterSource (TaskExecution aTaskExecution) {
@@ -70,7 +70,7 @@ public class JdbcTaskExecutionRepository implements TaskExecutionRepository {
     sqlParameterSource.addValue("createTime", aTaskExecution.getCreateTime());
     sqlParameterSource.addValue("startTime", aTaskExecution.getStartTime());
     sqlParameterSource.addValue("endTime", aTaskExecution.getEndTime());
-    sqlParameterSource.addValue("data", writeValueAsJsonString(aTaskExecution));
+    sqlParameterSource.addValue("serializedExecution", writeValueAsJsonString(aTaskExecution));
     return sqlParameterSource;
   }
   

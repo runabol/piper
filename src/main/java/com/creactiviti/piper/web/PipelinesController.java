@@ -21,7 +21,7 @@ import com.creactiviti.piper.core.pipeline.PipelineRepository;
 
 @RestController
 @ConditionalOnCoordinator
-public class PipelineController {
+public class PipelinesController {
 
   @Autowired
   private PipelineRepository pipelineRepository;

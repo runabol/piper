@@ -28,9 +28,9 @@ import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.CancelTask;
+import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskExecutionRepository;
-import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
 import com.creactiviti.piper.error.ErrorHandler;
@@ -55,7 +55,7 @@ public class Coordinator {
   private TaskCompletionHandler taskCompletionHandler;
   private JobExecutor jobExecutor; 
   
-  private static final String PIPELINE = "pipeline";
+  private static final String PIPELINE_ID = "pipelineId";
 
   private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -71,7 +71,7 @@ public class Coordinator {
   public Job start (Map<String,Object> aParameters) {
     Assert.notNull(aParameters,"parameters can't be null");
     MapObject params = MapObject.of(aParameters);
-    String pipelineId = params.getRequiredString(PIPELINE);
+    String pipelineId = params.getRequiredString(PIPELINE_ID);
     Pipeline pipeline = pipelineRepository.findOne(pipelineId);    
     Assert.notNull(pipeline,String.format("Unkown pipeline: %s", pipelineId));
 

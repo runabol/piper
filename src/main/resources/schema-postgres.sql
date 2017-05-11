@@ -24,7 +24,7 @@ create table task_execution (
   create_time timestamp not null,
   start_time timestamp,
   end_time timestamp,
-  data text not null
+  serialized_execution text not null
 );
 
 CREATE INDEX ON task_execution (job_id);
@@ -35,7 +35,7 @@ create table job_context (
   id varchar(256) not null primary key,
   job_id varchar(256) not null,
   create_time timestamp not null,
-  data text not null
+  serialized_context text not null
 );
 
 CREATE INDEX ON job_context (job_id);

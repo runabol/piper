@@ -31,7 +31,7 @@ public class JdbcContextRepository implements ContextRepository<Context> {
   
   @Override
   public void push(String aJobId, Context aContext) {
-    jdbc.update("insert into job_context (id,job_id,data,create_time) values (?,?,?,?)",aContext.getId(),aJobId,JsonHelper.writeValueAsString(objectMapper, aContext), new Date());
+    jdbc.update("insert into job_context (id,job_id,serialized_context,create_time) values (?,?,?,?)",aContext.getId(),aJobId,JsonHelper.writeValueAsString(objectMapper, aContext), new Date());
   }
 
   @Override
@@ -44,7 +44,7 @@ public class JdbcContextRepository implements ContextRepository<Context> {
 
   @Override
   public Context peek (String aJobId) {
-    String sql = "select id,data from job_context where job_id = ? order by create_time desc limit 1";
+    String sql = "select id,serialized_context from job_context where job_id = ? order by create_time desc limit 1";
     return jdbc.queryForObject(sql,new Object[]{aJobId},this::contextRowMapper);
   }
   
@@ -55,8 +55,8 @@ public class JdbcContextRepository implements ContextRepository<Context> {
   }
   
   private Context contextRowMapper (ResultSet aResultSet, int aIndex) throws SQLException {
-    String data = aResultSet.getString(2);
-    return new MapContext(JsonHelper.readValue(objectMapper, data, Map.class));    
+    String serialized = aResultSet.getString(2);
+    return new MapContext(JsonHelper.readValue(objectMapper, serialized, Map.class));    
   }
 
   public void setJdbcTemplate (JdbcTemplate aJdbcTemplate) {

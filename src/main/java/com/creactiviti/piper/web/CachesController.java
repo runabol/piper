@@ -21,7 +21,7 @@ import com.creactiviti.piper.config.ConditionalOnCoordinator;
 
 @RestController
 @ConditionalOnCoordinator
-public class CacheController {
+public class CachesController {
 
   @Autowired(required=false)
   private List<Clearable> clearables = Collections.emptyList();
