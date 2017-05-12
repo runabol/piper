@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Component
 public class Delta implements TaskHandler<Object> {
 
-  private static final String CMD = "/var/www/delta/utility_scripts/_autoTask.php";
+  private static final String BASE_PATH = "/var/www/delta";
   
   private final ObjectMapper json = new ObjectMapper();
   
@@ -28,12 +28,12 @@ public class Delta implements TaskHandler<Object> {
   
   @Override
   public Object handle (Task aTask) throws Exception {
-    File inputFile = new File("/var/www/delta/tmp/" + UUIDGenerator.generate());
+    File inputFile = new File(String.format("%s/tmp/%s",BASE_PATH,UUIDGenerator.generate()));
     File outputFile = File.createTempFile("output", null);
     try (PrintStream stream = new PrintStream(outputFile);) {
       FileUtils.writeStringToFile(inputFile, json.writeValueAsString(aTask));
       CommandLine cmd = new CommandLine ("php");
-      cmd.addArgument(CMD)
+      cmd.addArgument(String.format("%s/utility_scripts/_autoTask.php", BASE_PATH))
          .addArgument(String.format("input=%s",inputFile.getAbsolutePath()));
       logger.debug("{}",cmd);
       DefaultExecutor exec = new DefaultExecutor();

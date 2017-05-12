@@ -6,7 +6,6 @@ See http://meetpiper.com
 
 # Roadmap
 
-- fork/join
 - Mapper construct
 - Parallel construct
 - Search
