@@ -7,7 +7,7 @@
 package com.creactiviti.piper.core.task;
 
 /**
- * A strategy interface for dispatching {@link TaskExecution}
+ * A strategy interface for dispatching {@link Task}
  * instances to be executed.
  * 
  * @author Arik Cohen
