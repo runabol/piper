@@ -12,6 +12,7 @@ import java.util.Map;
 
 import org.springframework.util.Assert;
 
+import com.creactiviti.piper.core.ForkTaskCompletionHandler;
 import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.context.MapContext;
 import com.creactiviti.piper.core.job.SimpleTaskExecution;
@@ -20,7 +21,14 @@ import com.creactiviti.piper.core.messenger.Queues;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
 
 /**
- * Implements a Fork/Join construct.
+ * Implements a Fork/Join construct. 
+ * 
+ * Fork/Join tasks are expected to have a "branches" 
+ * property which contains a list of task list.
+ * 
+ * Each branch executes in isolation, in parallel 
+ * to the other branches in the fork and has its 
+ * own context namespace.
  * 
  * <pre>
  *   - type: fork
@@ -46,8 +54,9 @@ import com.creactiviti.piper.core.uuid.UUIDGenerator;
  * 
  * @author Arik Cohen
  * @since May 11, 2017
+ * @see ForkTaskCompletionHandler
  */
-public class ForkJoinTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDispatcherResolver {
+public class ForkTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDispatcherResolver {
 
   private TaskDispatcher taskDispatcher;
   private TaskEvaluator taskEvaluator = new SpelTaskEvaluator();

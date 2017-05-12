@@ -19,3 +19,4 @@ See http://meetpiper.com
 - rewind to previous point in the pipeline
 - analytics
 - cluster health / Workers health
+- include

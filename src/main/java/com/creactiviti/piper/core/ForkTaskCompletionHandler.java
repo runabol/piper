@@ -25,6 +25,13 @@ import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
 
 /**
+ * Handles {@link TaskExecution} completions which are the child 
+ * execution tasks of a parent <code>fork</code> {@link TaskExecution}.
+ * 
+ * This handler will either execute the next task in the branch, or if 
+ * arrived at the last task, it will complete the branch and check if
+ * all branches are now complete. If so, it will complete the overall 
+ * <code>fork</code> task.
  * 
  * @author Arik Cohen
  * @since May 11, 2017
@@ -88,12 +95,7 @@ public class ForkTaskCompletionHandler implements TaskCompletionHandler {
 
   @Override
   public boolean canHandle (TaskExecution aTaskExecution) {
-    String parentId = aTaskExecution.getParentId();
-    if(parentId!=null) {
-      TaskExecution parentExecution = taskExecutionRepo.findOne(parentId);
-      return parentExecution.getType().equals("fork");
-    }
-    return false;
+    return aTaskExecution.getParentId()!=null && aTaskExecution.get("branch")!=null;
   }
 
 }

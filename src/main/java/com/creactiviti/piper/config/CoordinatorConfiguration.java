@@ -30,7 +30,7 @@ import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.task.ControlTaskDispatcher;
 import com.creactiviti.piper.core.task.CounterRepository;
 import com.creactiviti.piper.core.task.EachTaskDispatcher;
-import com.creactiviti.piper.core.task.ForkJoinTaskDispatcher;
+import com.creactiviti.piper.core.task.ForkTaskDispatcher;
 import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.core.task.TaskDispatcherChain;
 import com.creactiviti.piper.core.task.TaskDispatcherResolver;
@@ -151,8 +151,8 @@ public class CoordinatorConfiguration {
   }
   
   @Bean
-  ForkJoinTaskDispatcher forkTaskDispatcher (TaskDispatcher aTaskDispatcher) {
-    ForkJoinTaskDispatcher forkTaskDispatcher = new ForkJoinTaskDispatcher();
+  ForkTaskDispatcher forkTaskDispatcher (TaskDispatcher aTaskDispatcher) {
+    ForkTaskDispatcher forkTaskDispatcher = new ForkTaskDispatcher();
     forkTaskDispatcher.setTaskDispatcher(aTaskDispatcher);
     forkTaskDispatcher.setTaskExecutionRepo(taskExecutionRepo);
     forkTaskDispatcher.setMessenger(messenger);
