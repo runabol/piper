@@ -14,6 +14,7 @@ See http://meetpiper.com
 - cluster health / Workers health
 - includes
 - reserved words that can't be used in pipelines.
+- job callbacks
 
 - server-sent-event
 - Job outputs? 
