@@ -102,6 +102,7 @@ public class Coordinator {
     SimpleJob job = new SimpleJob(aJob);
     job.setStartTime(new Date());
     job.setStatus(JobStatus.STARTED);
+    job.setCurrentTask(0);
     jobRepository.update(job);
     jobExecutor.execute (job);
   }

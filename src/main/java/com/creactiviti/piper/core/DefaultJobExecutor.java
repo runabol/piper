@@ -50,11 +50,11 @@ public class DefaultJobExecutor implements JobExecutor {
   }
 
   private boolean hasMoreTasks (Job aJob, Pipeline aPipeline) {
-    return aJob.getCurrentTask()+1 < aPipeline.getTasks().size();
+    return aJob.getCurrentTask() < aPipeline.getTasks().size();
   }
 
   private TaskExecution nextTask(Job aJob, Pipeline aPipeline) {
-    PipelineTask task = aPipeline.getTasks().get(aJob.getCurrentTask()+1);
+    PipelineTask task = aPipeline.getTasks().get(aJob.getCurrentTask());
     SimpleTaskExecution mt = SimpleTaskExecution.createFrom (task);
     mt.setJobId(aJob.getId());
     return mt;

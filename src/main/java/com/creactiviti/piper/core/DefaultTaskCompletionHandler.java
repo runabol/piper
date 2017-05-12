@@ -52,10 +52,8 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
     if(job!=null) {
       SimpleTaskExecution task = SimpleTaskExecution.createForUpdate(aTask);
       task.setStatus(TaskStatus.COMPLETED);
-      SimpleJob mjob = new SimpleJob (job);
-      mjob.setCurrentTask(mjob.getCurrentTask()+1);
       jobTaskRepository.merge(task);
-      jobRepository.update(mjob);
+      SimpleJob mjob = new SimpleJob (job);
       if(task.getOutput() != null && task.getName() != null) {
         Context context = contextRepository.peek(job.getId());
         MapContext newContext = new MapContext(context.asMap());
@@ -63,6 +61,8 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
         contextRepository.push(job.getId(), newContext);
       }
       if(hasMoreTasks(mjob)) {
+        mjob.setCurrentTask(mjob.getCurrentTask()+1);
+        jobRepository.update(mjob);
         jobExecutor.execute(mjob);
       }
       else {
@@ -83,6 +83,7 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
     SimpleJob job = new SimpleJob((Job)aJob);
     job.setStatus(JobStatus.COMPLETED);
     job.setEndTime(new Date ());
+    job.setCurrentTask(-1);
     jobRepository.update(job);
     eventPublisher.publishEvent(PiperEvent.of(Events.JOB_STATUS, "jobId", aJob.getId(), "status", aJob.getStatus()));
     log.debug("Job {} completed successfully",aJob.getId());
