@@ -20,6 +20,10 @@ import com.creactiviti.piper.core.messenger.Queues;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
 
 /**
+ * A {@link TaskDispatcher} implementation which implements the parallel
+ * construct. Providing a list of <code>tasks</code> the dispatcher will 
+ * execute these in parallel. As each task is complete it will be caught
+ * by the {@link ParallelTaskCompletionHandler}. 
  * 
  * @author Arik Cohen
  * @since May 12, 2017

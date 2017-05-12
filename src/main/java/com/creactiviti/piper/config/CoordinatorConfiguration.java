@@ -116,7 +116,11 @@ public class CoordinatorConfiguration {
   
   @Bean
   ParallelTaskCompletionHandler parallelTaskCompletionHandler (TaskCompletionHandler aTaskCompletionHandler) {
-    return new ParallelTaskCompletionHandler(taskExecutionRepo, aTaskCompletionHandler, counterRepository);
+    ParallelTaskCompletionHandler dispatcher = new ParallelTaskCompletionHandler();
+    dispatcher.setCounterRepository(counterRepository);
+    dispatcher.setTaskCompletionHandler(aTaskCompletionHandler);
+    dispatcher.setTaskExecutionRepository(taskExecutionRepo);
+    return dispatcher;
   }
   
   @Bean

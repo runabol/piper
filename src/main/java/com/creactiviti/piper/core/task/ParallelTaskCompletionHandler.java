@@ -10,21 +10,22 @@ import com.creactiviti.piper.core.TaskCompletionHandler;
 import com.creactiviti.piper.core.job.SimpleTaskExecution;
 
 /**
+ * <p>A {@link TaskCompletionHandler} implementation which handles completions 
+ * of parallel construct tasks.</p>
+ * 
+ * <p>This handler keeps track of how many tasks were completed so far and 
+ * when all parallel tasks completed for a given task it will then complete
+ * the overall <code>parallel</code> task.</p> 
  * 
  * @author Arik Cohen
  * @since May 12, 2017
+ * @see ParallelTaskDispatcher
  */
 public class ParallelTaskCompletionHandler implements TaskCompletionHandler {
 
-  private final TaskExecutionRepository taskExecutionRepo;
-  private final TaskCompletionHandler taskCompletionHandler;
-  private final CounterRepository counterRepository;
-  
-  public ParallelTaskCompletionHandler(TaskExecutionRepository aTaskExecutionRepo, TaskCompletionHandler aTaskCompletionHandler, CounterRepository aCounterRepository) {
-    taskExecutionRepo = aTaskExecutionRepo;
-    taskCompletionHandler = aTaskCompletionHandler;
-    counterRepository = aCounterRepository;
-  }
+  private TaskExecutionRepository taskExecutionRepo;
+  private TaskCompletionHandler taskCompletionHandler;
+  private CounterRepository counterRepository;
   
   @Override
   public void handle (TaskExecution aTaskExecution) {
@@ -46,6 +47,18 @@ public class ParallelTaskCompletionHandler implements TaskCompletionHandler {
       return parentExecution.getType().equals("parallel");
     }
     return false;
+  }
+  
+  public void setTaskExecutionRepository(TaskExecutionRepository aTaskExecutionRepo) {
+    taskExecutionRepo = aTaskExecutionRepo;
+  }
+  
+  public void setTaskCompletionHandler(TaskCompletionHandler aTaskCompletionHandler) {
+    taskCompletionHandler = aTaskCompletionHandler;
+  }
+  
+  public void setCounterRepository(CounterRepository aCounterRepository) {
+    counterRepository = aCounterRepository;
   }
 
 }

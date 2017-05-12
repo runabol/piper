@@ -18,3 +18,4 @@ See http://meetpiper.com
 - analytics
 - cluster health / Workers health
 - includes
+- reserved words that can't be used in pipelines.
