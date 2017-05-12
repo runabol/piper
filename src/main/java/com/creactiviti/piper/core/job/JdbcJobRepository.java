@@ -105,9 +105,9 @@ public class JdbcJobRepository implements JobRepository {
     map.put("currentTask", aRs.getInt("current_task"));
     map.put("pipelineId", aRs.getString("pipeline_id"));
     map.put("name", aRs.getString("name"));
-    map.put("createTime", aRs.getDate("create_time"));
-    map.put("startTime", aRs.getDate("start_time"));
-    map.put("endTime", aRs.getDate("end_time"));
+    map.put("createTime", aRs.getTimestamp("create_time"));
+    map.put("startTime", aRs.getTimestamp("start_time"));
+    map.put("endTime", aRs.getTimestamp("end_time"));
     map.put("execution", getExecution(aRs.getString("id")));
     return new SimpleJob(map);
   }

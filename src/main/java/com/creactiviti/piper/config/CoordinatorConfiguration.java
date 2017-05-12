@@ -31,6 +31,8 @@ import com.creactiviti.piper.core.task.ControlTaskDispatcher;
 import com.creactiviti.piper.core.task.CounterRepository;
 import com.creactiviti.piper.core.task.EachTaskDispatcher;
 import com.creactiviti.piper.core.task.ForkTaskDispatcher;
+import com.creactiviti.piper.core.task.ParallelTaskCompletionHandler;
+import com.creactiviti.piper.core.task.ParallelTaskDispatcher;
 import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.core.task.TaskDispatcherChain;
 import com.creactiviti.piper.core.task.TaskDispatcherResolver;
@@ -88,6 +90,7 @@ public class CoordinatorConfiguration {
     TaskCompletionHandlerChain taskCompletionHandlerChain = new TaskCompletionHandlerChain();
     taskCompletionHandlerChain.setTaskCompletionHandlers(Arrays.asList(
       eachTaskCompletionHandler(taskCompletionHandlerChain),
+      parallelTaskCompletionHandler(taskCompletionHandlerChain),
       forkTaskCompletionHandler(taskCompletionHandlerChain),
       defaultTaskCompletionHandler()
     ));
@@ -112,6 +115,11 @@ public class CoordinatorConfiguration {
   }
   
   @Bean
+  ParallelTaskCompletionHandler parallelTaskCompletionHandler (TaskCompletionHandler aTaskCompletionHandler) {
+    return new ParallelTaskCompletionHandler(taskExecutionRepo, aTaskCompletionHandler, counterRepository);
+  }
+  
+  @Bean
   ForkTaskCompletionHandler forkTaskCompletionHandler (TaskCompletionHandler aTaskCompletionHandler) {
     return new ForkTaskCompletionHandler(taskExecutionRepo, aTaskCompletionHandler, counterRepository, taskDispatcher(), contextRepository);
   }
@@ -129,15 +137,16 @@ public class CoordinatorConfiguration {
   
   @Bean
   TaskDispatcherChain taskDispatcher () {
-    TaskDispatcherChain tashDispatcher = new TaskDispatcherChain();
+    TaskDispatcherChain taskDispatcher = new TaskDispatcherChain();
     List<TaskDispatcherResolver> resolvers =  Arrays.asList(
-      eachTaskDispatcher(tashDispatcher),
-      forkTaskDispatcher(tashDispatcher),
+      eachTaskDispatcher(taskDispatcher),
+      parallelTaskDispatcher(taskDispatcher),
+      forkTaskDispatcher(taskDispatcher),
       controlTaskDispatcher(),
       workTaskDispatcher()
     );
-    tashDispatcher.setResolvers(resolvers);
-    return tashDispatcher;
+    taskDispatcher.setResolvers(resolvers);
+    return taskDispatcher;
   }
   
   @Bean
@@ -148,6 +157,17 @@ public class CoordinatorConfiguration {
   @Bean
   EachTaskDispatcher eachTaskDispatcher (TaskDispatcher aTaskDispatcher) {
     return new EachTaskDispatcher(aTaskDispatcher,taskExecutionRepo,messenger,contextRepository,counterRepository);
+  }
+  
+  @Bean
+  ParallelTaskDispatcher parallelTaskDispatcher (TaskDispatcher aTaskDispatcher) {
+    ParallelTaskDispatcher dispatcher = new ParallelTaskDispatcher();
+    dispatcher.setContextRepository(contextRepository);
+    dispatcher.setCounterRepository(counterRepository);
+    dispatcher.setMessenger(messenger);
+    dispatcher.setTaskDispatcher(aTaskDispatcher);
+    dispatcher.setTaskExecutionRepository(taskExecutionRepo);
+    return dispatcher;
   }
   
   @Bean
