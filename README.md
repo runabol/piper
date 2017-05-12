@@ -7,15 +7,14 @@ See http://meetpiper.com
 # Roadmap
 
 - Mapper construct
-- Parallel construct
 - Search
 - Job Priority
-- Job tags
-- Job outputs?
-- Streaming events (i.e. long polling)  
-- server-sent-event?
 - rewind to previous point in the pipeline
 - analytics
 - cluster health / Workers health
 - includes
 - reserved words that can't be used in pipelines.
+
+- server-sent-event
+- Job outputs? 
+- Streaming events (i.e. long polling)

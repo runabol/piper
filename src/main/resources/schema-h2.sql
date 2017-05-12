@@ -6,7 +6,8 @@ create table job (
   name varchar(256),
   start_time timestamp,
   create_time timestamp not null,
-  end_time timestamp
+  end_time timestamp,
+  tags ARRAY
 );
 
 create table task_execution (

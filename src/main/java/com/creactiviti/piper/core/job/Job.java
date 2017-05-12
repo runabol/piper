@@ -88,4 +88,11 @@ public interface Job extends Errorable {
    */
   Date getEndTime ();
   
+  /**
+   * Get the list of tags assigned to the job.
+   * 
+   * @return String[]
+   */
+  String[] getTags ();
+  
 }

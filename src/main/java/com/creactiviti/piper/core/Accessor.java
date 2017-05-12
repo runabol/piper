@@ -92,6 +92,18 @@ public interface Accessor {
    * @return The {@link MapObject} value associated with the given key.
    */
   Map<String,Object> getMap (Object aKey);
+  
+  /**
+   * Return the {@link MapObject} value associated with the given
+   * key.
+   * 
+   * @param aKey
+   *          The key associated with the desired value.
+   * @param aDefault
+   *          The default map to return if none is associated with the key.
+   * @return The {@link MapObject} value associated with the given key.
+   */
+  Map<String,Object> getMap (Object aKey, Map<String,Object> aDefault);
 
   /**
    * Return the {@link String} value associated with the given

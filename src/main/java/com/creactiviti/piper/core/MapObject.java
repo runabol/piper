@@ -236,12 +236,22 @@ public class MapObject implements Map<String, Object>, Accessor, Mutator {
   }
   
   @Override
+  public Map<String, Object> getMap(Object aKey, Map<String, Object> aDefault) {
+    Map<String, Object> value = getMap(aKey);
+    return value!=null?value:aDefault;
+  }
+  
+  @Override
   public Map<String, Object> asMap() {
     return Collections.unmodifiableMap(new HashMap<>(map));
   }
   
   @Override
   public <T> T[] getArray(Object aKey, Class<T> aElementType) {
+    Object value = get(aKey);
+    if(value.getClass().isArray() && value.getClass().getComponentType().equals(aElementType)) {
+      return (T[]) value;
+    }
     List<T> list = getList(aKey, aElementType);
     T[] toR = (T[])Array.newInstance(aElementType, list.size());
     for (int i = 0; i < list.size(); i++) {

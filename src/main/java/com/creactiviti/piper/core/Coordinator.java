@@ -6,6 +6,7 @@
  */
 package com.creactiviti.piper.core;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -59,37 +60,42 @@ public class Coordinator {
   private Messenger messenger;
   
   private static final String PIPELINE_ID = "pipelineId";
+  private static final String TAGS = "tags";
+  private static final String INPUTS = "inputs";
 
   private final Logger log = LoggerFactory.getLogger(getClass());
 
   /**
    * Starts a job instance.
    * 
-   * @param aParameters
+   * @param aRequest
    *          The Key-Value map representing the job
    *          parameters
    * @return Job
    *           The instance of the Job
    */
-  public Job create (Map<String,Object> aParameters) {
-    Assert.notNull(aParameters,"parameters can't be null");
-    MapObject params = MapObject.of(aParameters);
-    String pipelineId = params.getRequiredString(PIPELINE_ID);
+  public Job create (Map<String,Object> aRequest) {
+    Assert.notNull(aRequest,"request can't be null");
+    MapObject request = MapObject.of(aRequest);
+    String pipelineId = request.getRequiredString(PIPELINE_ID);
     Pipeline pipeline = pipelineRepository.findOne(pipelineId);    
     Assert.notNull(pipeline,String.format("Unkown pipeline: %s", pipelineId));
 
-    validate(params, pipeline);
+    validate(request.getMap(INPUTS,Collections.EMPTY_MAP), pipeline);
+    
+    List<String> tags = (List<String>) aRequest.get(TAGS);
 
     SimpleJob job = new SimpleJob();
     job.setId(UUIDGenerator.generate());
-    job.setName(params.getString("name",pipeline.getName()));
+    job.setName(request.getString("name",pipeline.getName()));
     job.setPipelineId(pipeline.getId());
     job.setStatus(JobStatus.CREATED);
     job.setCreateTime(new Date());
+    job.setTags(tags!=null?tags.toArray(new String[tags.size()]):new String[0]);
     log.debug("Job {} started",job.getId());
     jobRepository.create(job);
     
-    MapContext context = new MapContext(params);
+    MapContext context = new MapContext(request.getMap(INPUTS,Collections.EMPTY_MAP));
     contextRepository.push(job.getId(),context);
     
     messenger.send(Queues.JOBS, job);
@@ -107,11 +113,11 @@ public class Coordinator {
     jobExecutor.execute (job);
   }
   
-  private void validate (MapObject aParameters, Pipeline aPipeline) {
+  private void validate (Map<String,Object> aInputs, Pipeline aPipeline) {
     List<Accessor> input = aPipeline.getInputs();
     for(Accessor in : input) {
       if(in.getBoolean("required", false)) {
-        Assert.isTrue(aParameters.containsKey(in.get("name")), "Missing required param: " + in.get("name"));
+        Assert.isTrue(aInputs.containsKey(in.get("name")), "Missing required param: " + in.get("name"));
       }
     }
   }

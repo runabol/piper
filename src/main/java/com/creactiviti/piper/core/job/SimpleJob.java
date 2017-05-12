@@ -134,4 +134,18 @@ public class SimpleJob extends MapObject implements Job {
     return getDate("endTime");
   }
   
+  @Override
+  public String[] getTags() {
+    if(containsKey("tags")) {
+      return getArray("tags", String.class);
+    }
+    else {
+      return new String[0];
+    }
+  }
+  
+  public void setTags (String[] aTags) {
+    set("tags", aTags);
+  }
+  
 }
