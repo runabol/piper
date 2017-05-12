@@ -16,7 +16,7 @@ package com.creactiviti.piper.core.task;
 public interface TaskDispatcher<T extends Task> {
 
   /**
-   * Dispatches a {@link TaskExecution} instance.
+   * Dispatches a {@link Task} instance.
    * 
    * @param aTask
    *          The task to dispatch
