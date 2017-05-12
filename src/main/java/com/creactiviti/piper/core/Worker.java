@@ -7,6 +7,7 @@
 package com.creactiviti.piper.core;
 
 import java.time.Duration;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
@@ -23,12 +24,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
+import com.creactiviti.piper.core.context.MapContext;
 import com.creactiviti.piper.core.event.Events;
 import com.creactiviti.piper.core.event.PiperEvent;
 import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.messenger.Queues;
 import com.creactiviti.piper.core.task.ControlTask;
+import com.creactiviti.piper.core.task.SpelTaskEvaluator;
+import com.creactiviti.piper.core.task.TaskEvaluator;
 import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskHandler;
 import com.creactiviti.piper.core.task.TaskHandlerResolver;
@@ -55,6 +59,7 @@ public class Worker {
   private Messenger messenger;  
   private final ExecutorService executors = Executors.newCachedThreadPool();
   private final Map<String, Future<?>> taskExecutions = new ConcurrentHashMap<>();
+  private TaskEvaluator taskEvaluator = new SpelTaskEvaluator();
 
   private Logger logger = LoggerFactory.getLogger(getClass());
   
@@ -76,7 +81,13 @@ public class Worker {
         Object output = taskHandler.handle(aTask);
         SimpleTaskExecution completion = SimpleTaskExecution.createForUpdate(aTask);
         if(output!=null) {
-          completion.setOutput(output);
+          if(completion.getOutput() != null) {
+            TaskExecution evaluated = taskEvaluator.evaluate(completion, new MapContext (Collections.singletonMap("output", output)));
+            completion = SimpleTaskExecution.createForUpdate(evaluated);
+          }
+          else {
+            completion.setOutput(output);
+          }
         }
         completion.setStatus(TaskStatus.COMPLETED);
         completion.setEndTime(new Date());
@@ -143,5 +154,5 @@ public class Worker {
   public void setMessenger(Messenger aMessenger) {
     messenger = aMessenger;
   }
-
+  
 }

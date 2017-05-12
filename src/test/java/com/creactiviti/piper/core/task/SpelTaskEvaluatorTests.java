@@ -159,4 +159,13 @@ public class SpelTaskEvaluatorTests {
     TaskExecution evaluated = evaluator.evaluate(jt, new MapContext(ImmutableMap.of("item1", "hello","item2","world")));
     Assert.assertEquals("hello-world",evaluated.get("message"));
   }
+  
+  @Test
+  public void test17 () {
+    SpelTaskEvaluator evaluator = new SpelTaskEvaluator();
+    TaskExecution jt = SimpleTaskExecution.createFrom("someInt", "${int('1')}");
+    TaskExecution evaluated = evaluator.evaluate(jt, new MapContext(Collections.EMPTY_MAP));
+    Assert.assertEquals(Integer.valueOf(1),evaluated.get("someInt"));
+  }
+  
 }

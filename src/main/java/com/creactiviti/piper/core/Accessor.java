@@ -106,6 +106,18 @@ public interface Accessor {
   String getRequiredString (Object aKey);
   
   /**
+   * Return the value associated with the given
+   * key or throws an exception if no value is associated
+   * with the given key.
+   * 
+   * @param aKey
+   *          The key associated with the desired value.
+   * @return The value associated with the given key.
+   * @throws IllegalArgumentException if no value is associated with the given key.
+   */
+  <T> T getRequired (Object aKey);
+  
+  /**
    * Return the {@link String} value associated with the given
    * key -- converting as necessary.
    * 

@@ -289,4 +289,11 @@ public class MapObject implements Map<String, Object>, Accessor, Mutator {
   public static MapObject of (Map<String,Object> aMap) {
     return new MapObject(aMap);
   }
+
+  @Override
+  public <T> T getRequired(Object aKey) {
+    T value = (T) get(aKey);
+    Assert.notNull(value,"Unknown key: " + aKey);
+    return value;
+  }
 }

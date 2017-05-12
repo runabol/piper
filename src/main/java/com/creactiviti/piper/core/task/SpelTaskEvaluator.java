@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.apache.commons.beanutils.ConvertUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.expression.Expression;
@@ -98,6 +99,9 @@ public class SpelTaskEvaluator implements TaskEvaluator {
       if("range".equals(name)) {
         return range();
       }
+      else if("int".equals(name)) {
+        return toInt();
+      }
       return null;
     };
   }
@@ -107,6 +111,13 @@ public class SpelTaskEvaluator implements TaskEvaluator {
       List<Integer> value = IntStream.rangeClosed((int)args[0], (int)args[1])
                                      .boxed()
                                      .collect(Collectors.toList());
+      return new TypedValue(value);
+    };
+  }
+  
+  private MethodExecutor toInt () {
+    return (ctx,target,args) -> {
+      Integer value = (Integer) ConvertUtils.convert(args[0], Integer.class);
       return new TypedValue(value);
     };
   }
