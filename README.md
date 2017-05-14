@@ -15,6 +15,10 @@ See http://meetpiper.com
 - includes
 - reserved words that can't be used in pipelines.
 - job callbacks
+- Basic UI
+- ffmpeg integration
+- watermarking capability. 
+- split & stitch
 
 - server-sent-event
 - Job outputs? 
