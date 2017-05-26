@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
+import com.creactiviti.piper.core.DSL;
 import com.creactiviti.piper.core.task.PipelineTask;
 import com.creactiviti.piper.core.task.SimplePipelineTask;
 import com.creactiviti.piper.core.task.Task;
@@ -41,89 +42,89 @@ public class SimpleTaskExecution extends SimplePipelineTask implements TaskExecu
   
   @Override
   public String getId() {
-    return getString("id");
+    return getString(DSL.ID);
   }
   
   public void setId (String aId) {
-    set("id", aId);
+    set(DSL.ID, aId);
   }
   
   @Override
   public String getParentId() {
-    return getString("parentId");
+    return getString(DSL.PARENT_ID);
   }
   
   public void setParentId (String aParentId) {
-    set("parentId", aParentId);
+    set(DSL.PARENT_ID, aParentId);
   }
   
   @Override
   public String getJobId() {
-    return getString("jobId");
+    return getString(DSL.JOB_ID);
   }
 
   public void setJobId (String aJobId) {
-    set("jobId", aJobId);
+    set(DSL.JOB_ID, aJobId);
   }
 
   @Override
   public TaskStatus getStatus() {
-    String status = getString("status");
+    String status = getString(DSL.STATUS);
     if(status == null) return null;
     return TaskStatus.valueOf(status);
   }
   
   @Override
   public Object getOutput() {
-    return get("output");
+    return get(DSL.OUTPUT);
   }
   
   public void setOutput (Object aOutput) {
-    set("output", aOutput);
+    set(DSL.OUTPUT, aOutput);
   }
   
   @Override
   public Error getError() {
-    if(containsKey("error")) {
-      return new ErrorObject(getMap("error"));
+    if(containsKey(DSL.ERROR)) {
+      return new ErrorObject(getMap(DSL.ERROR));
     }
     return null;
   }
   
   public void setError (Error aError) {
-    set("error", aError);
+    set(DSL.ERROR, aError);
   }
   
   public void setStatus (TaskStatus aStatus) {
-    set("status",aStatus);
+    set(DSL.STATUS,aStatus);
   }
   
   @Override
   public Date getCreateTime() {
-    return getDate("createTime");
+    return getDate(DSL.CREATE_TIME);
   }
   
   public void setCreateTime(Date aDate) { 
-    set("createTime", aDate);
+    set(DSL.CREATE_TIME, aDate);
   }
   
   @Override
   public Date getStartTime() {
-    return getDate("startTime");
+    return getDate(DSL.START_TIME);
   }
 
   public void setStartTime(Date aDate) {
-    set("startTime", aDate);
+    set(DSL.START_TIME, aDate);
     updateExecutionTime();
   }
   
   @Override
   public Date getEndTime() {
-    return getDate("endTime");
+    return getDate(DSL.END_TIME);
   }
   
   public void setEndTime(Date aDate) {
-    set("endTime", aDate);
+    set(DSL.END_TIME, aDate);
     updateExecutionTime();
   }
 
@@ -131,34 +132,34 @@ public class SimpleTaskExecution extends SimplePipelineTask implements TaskExecu
     Date startTime = getStartTime();
     Date endTime = getEndTime();
     if(startTime != null && endTime != null) {
-      set("executionTime", endTime.getTime() - startTime.getTime());
+      set(DSL.EXECUTION_TIME, endTime.getTime() - startTime.getTime());
     }
     else {
-      set("executionTime",0);
+      set(DSL.EXECUTION_TIME,0);
     }
   }
   
   @Override
   public long getExecutionTime() {
-    if(getDate("executionTime")!=null) {
-      return getDate("executionTime").getTime();
+    if(getDate(DSL.EXECUTION_TIME)!=null) {
+      return getDate(DSL.EXECUTION_TIME).getTime();
     }
     return 0;
   }
   
   @Override
   public int getRetry() {
-    return getInteger("retry", 0);
+    return getInteger(DSL.RETRY, 0);
   }
   
   @Override
   public int getRetryAttempts() {
-    return getInteger("retryAttempts", 0);
+    return getInteger(DSL.RETRY_ATTEMPTS, 0);
   }
   
   @Override
   public String getRetryDelay() {
-    return getString("retryDelay","1s");
+    return getString(DSL.RETRY_DELAY,"1s");
   }
   
   @Override
@@ -170,12 +171,12 @@ public class SimpleTaskExecution extends SimplePipelineTask implements TaskExecu
   }
   
   public void setRetryAttempts (int aRetryAttempts) {
-    set("retryAttempts", aRetryAttempts);
+    set(DSL.RETRY_ATTEMPTS, aRetryAttempts);
   }
   
   @Override
   public int getRetryDelayFactor() {
-    return getInteger("retryDelayFactor",2);
+    return getInteger(DSL.RETRY_DELAY_FACTOR,2);
   }
     
   /**
