@@ -13,6 +13,7 @@ import java.util.Map;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.creactiviti.piper.core.Accessor;
+import com.creactiviti.piper.core.DSL;
 import com.creactiviti.piper.core.MapObject;
 import com.creactiviti.piper.core.task.PipelineTask;
 
@@ -24,17 +25,17 @@ public class SimplePipeline extends MapObject implements Pipeline {
 
   @Override
   public String getId() {
-    return getString("id");
+    return getString(DSL.ID);
   }
 
   @Override
-  public String getName() {
-    return getString("name");
+  public String getLabel() {
+    return getString(DSL.LABEL);
   }
 
   @Override
   public List<PipelineTask> getTasks() {
-    return getList("tasks", PipelineTask.class);
+    return getList(DSL.TASKS, PipelineTask.class);
   }
 
   @Override
@@ -44,6 +45,6 @@ public class SimplePipeline extends MapObject implements Pipeline {
 
   @Override
   public List<Accessor> getInputs() {
-    return getList("inputs",Accessor.class,Collections.EMPTY_LIST);
+    return getList(DSL.INPUTS,Accessor.class,Collections.EMPTY_LIST);
   }
 }

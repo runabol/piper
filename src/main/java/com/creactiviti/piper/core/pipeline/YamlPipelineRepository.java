@@ -51,5 +51,6 @@ public abstract class YamlPipelineRepository implements PipelineRepository  {
       throw Throwables.propagate(e);
     }
   }
+  
 
 }

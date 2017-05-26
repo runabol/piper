@@ -8,6 +8,7 @@ package com.creactiviti.piper.core.task;
 
 import java.util.Map;
 
+import com.creactiviti.piper.core.DSL;
 import com.creactiviti.piper.core.MapObject;
 
 
@@ -23,40 +24,40 @@ public class SimplePipelineTask extends MapObject implements PipelineTask {
   
   @Override
   public String getType() {
-    return getString("type");
+    return getString(DSL.TYPE);
   }
   
   @Override
   public String getName() {
-    return getString("name");
+    return getString(DSL.NAME);
   }
   
   @Override
   public String getLabel() {
-    return getString("label");
+    return getString(DSL.LABEL);
   }
 
   @Override
   public String getNode() {
-    return getString("node");
+    return getString(DSL.NODE);
   }
   
   public void setNode (String aNode) {
-    set("node", aNode);
+    set(DSL.NODE, aNode);
   }
   
   @Override
   public int getTaskNumber() {
-    return getInteger("taskNumber",-1);
+    return getInteger(DSL.TASK_NUMBER,-1);
   }
   
   public void setTaskNumber (int aTaskNumber) {
-    set("taskNumber", aTaskNumber);
+    set(DSL.TASK_NUMBER, aTaskNumber);
   }
   
   @Override
   public String getTimeout() {
-    return getString("timeout");
+    return getString(DSL.TIMEOUT);
   }
   
 }

@@ -13,6 +13,7 @@ import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 
+import com.creactiviti.piper.core.DSL;
 import com.creactiviti.piper.core.MapObject;
 import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.error.Error;
@@ -41,11 +42,11 @@ public class SimpleJob extends MapObject implements Job {
     
   @Override
   public String getId() {
-    return getString("id");
+    return getString(DSL.ID);
   }
   
   public void setId(String aId) {
-    set("id", aId);
+    set(DSL.ID, aId);
   }
   
   @Override
@@ -58,86 +59,82 @@ public class SimpleJob extends MapObject implements Job {
   }
   
   @Override
-  public String getName() {
-    return getString("name");
+  public String getLabel() {
+    return getString(DSL.LABEL);
   }
   
-  public void setName(String aName) {
-    set("name", aName);
+  public void setLabel(String aLabel) {
+    set(DSL.LABEL, aLabel);
   }
   
   @Override
   public Error getError() {
-    if(get("error")!=null) {
-      return new ErrorObject(getMap("error"));
+    if(get(DSL.ERROR)!=null) {
+      return new ErrorObject(getMap(DSL.ERROR));
     }
     return null;
   }
   
   public void setError (Error aError) {
-    set("error", aError);
+    set(DSL.ERROR, aError);
   }
   
   @Override
   public List<TaskExecution> getExecution() {
-    List<TaskExecution> list = getList("execution", TaskExecution.class);
+    List<TaskExecution> list = getList(DSL.EXECUTION, TaskExecution.class);
     return list!=null?list:Collections.EMPTY_LIST;
-  }
-  
-  public void setTasks(List<TaskExecution> aTasks) {
-    set("tasks", aTasks);
   }
   
   @Override
   public JobStatus getStatus() {
-    String value = getString("status");
+    String value = getString(DSL.STATUS);
     return value!=null?JobStatus.valueOf(value):null;
   }
   
   public void setStatus (JobStatus aStatus) {
-    set("status", aStatus);
+    set(DSL.STATUS, aStatus);
   }
   
   public void setEndTime(Date aEndTime) {
-    set("endTime", aEndTime);
+    set(DSL.END_TIME, aEndTime);
   }
   
   public void setStartTime(Date aStartTime) {
-    set("startTime",aStartTime);
+    set(DSL.START_TIME,aStartTime);
   }
   
   @Override
   public Date getCreateTime() {
-    return getDate("createTime");
+    return getDate(DSL.CREATE_TIME);
   }
   
   public void setCreateTime (Date aCreateTime) {
-    set("createTime",aCreateTime);
+    set(DSL.CREATE_TIME,aCreateTime);
   }
   
   @Override
   public String getPipelineId() {
-    return getString("pipelineId");
+    return getString(DSL.PIPELINE_ID);
   }
   
   public void setPipelineId(String aPipelineId) {
-    set("pipelineId",aPipelineId);
+    set(DSL.PIPELINE_ID,aPipelineId);
   }
   
   @Override
   public Date getStartTime() {
-    return getDate("startTime");
+    return getDate(DSL.START_TIME);
   }
   
   @Override
   public Date getEndTime() {
-    return getDate("endTime");
+    return getDate(DSL.END_TIME);
   }
   
   @Override
   public String[] getTags() {
-    if(containsKey("tags")) {
-      return getArray("tags", String.class);
+    if(containsKey(DSL.TAGS)) {
+      return getArray(DSL.TAGS, String.class);
     }
     else {
       return new String[0];
@@ -145,7 +142,7 @@ public class SimpleJob extends MapObject implements Job {
   }
   
   public void setTags (String[] aTags) {
-    set("tags", aTags);
+    set(DSL.TAGS, aTags);
   }
   
 }

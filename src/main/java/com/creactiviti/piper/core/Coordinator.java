@@ -87,7 +87,7 @@ public class Coordinator {
 
     SimpleJob job = new SimpleJob();
     job.setId(UUIDGenerator.generate());
-    job.setName(request.getString("name",pipeline.getName()));
+    job.setLabel(request.getString(DSL.LABEL,pipeline.getLabel()));
     job.setPipelineId(pipeline.getId());
     job.setStatus(JobStatus.CREATED);
     job.setCreateTime(new Date());

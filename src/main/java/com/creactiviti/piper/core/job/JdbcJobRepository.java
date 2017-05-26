@@ -83,7 +83,7 @@ public class JdbcJobRepository implements JobRepository {
     sqlParameterSource.addValue("status", job.getStatus().toString());
     sqlParameterSource.addValue("currentTask", job.getCurrentTask());
     sqlParameterSource.addValue("pipelineId", job.getPipelineId());
-    sqlParameterSource.addValue("name", job.getName());
+    sqlParameterSource.addValue("label", job.getLabel());
     sqlParameterSource.addValue("createTime", job.getCreateTime());
     sqlParameterSource.addValue("startTime", job.getStartTime());
     sqlParameterSource.addValue("endTime", job.getEndTime());

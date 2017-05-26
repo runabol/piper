@@ -28,7 +28,7 @@ public interface Pipeline {
   /**
    * Returns a descriptive name for the pipeline. 
    */
-  String getName ();
+  String getLabel ();
   
   /**
    * Returns the steps that make up the pipeline.

@@ -63,7 +63,7 @@ public interface Job extends Errorable {
    * 
    * @return {@link Pipeline} 
    */
-  String getName ();
+  String getLabel ();
 
   /**
    * Return the time when the job was originally 
