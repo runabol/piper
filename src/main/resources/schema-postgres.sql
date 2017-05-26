@@ -9,7 +9,7 @@ create table job (
   create_time timestamp not null,
   start_time timestamp,
   end_time timestamp,
-  tags text[]
+  tags text
 );
 
 CREATE INDEX ON job (create_time);

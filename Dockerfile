@@ -1,7 +1,8 @@
-FROM    openjdk:8-jre
+FROM       jrottenberg/ffmpeg:3.3
 
-RUN     apt-get update && apt-get -y install php5
+RUN        apt-get update && apt-get -y install php openjdk-8-jre
 
-CMD     ["java", "-Xmx1g", "-jar", "-Djava.security.egd=file:/dev/./urandom", "/app/piper.jar"]
+ENTRYPOINT []
+CMD        ["java", "-Xmx1g", "-jar", "-Djava.security.egd=file:/dev/./urandom", "/app/piper.jar"]
 
-COPY    target/piper-0.0.1-SNAPSHOT.jar /app/piper.jar
+COPY       target/piper-0.0.1-SNAPSHOT.jar /app/piper.jar

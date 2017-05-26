@@ -74,7 +74,7 @@ public class MapObject implements Map<String, Object>, Accessor, Mutator {
     }
     List<T> typedList = new ArrayList<>();
     for(Object item : list) {
-      if(aElementType.equals(Accessor.class)) {
+      if(aElementType.equals(Accessor.class) || aElementType.equals(MapObject.class)) {
         typedList.add((T)new MapObject((Map<String, Object>) item));
       }
       else {

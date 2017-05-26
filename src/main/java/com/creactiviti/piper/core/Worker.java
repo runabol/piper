@@ -97,7 +97,13 @@ public class Worker {
         // ignore
       }
       catch (Exception e) {
-        handleException(aTask, e);
+        Future<?> myFuture = taskExecutions.get(aTask.getId());
+        if(!myFuture.isCancelled()) {
+          handleException(aTask, e);
+        }
+      }
+      finally {
+        taskExecutions.remove(aTask.getId());
       }
     });
     
@@ -130,10 +136,9 @@ public class Worker {
   }
   
   /**
-   * Cancel the execution of a running task.
-   * 
-   * @param aTaskId
-   *          The ID of the task to cancel.
+   * Handle control tasks. Control tasks are used by the Coordinator
+   * to control Worker instances. For example to stop an ongoing task
+   * or to adjust something on a worker outside the context of a job.
    */
   public void handle (ControlTask aControlTask) {
     Assert.notNull(aControlTask,"task must not be null");

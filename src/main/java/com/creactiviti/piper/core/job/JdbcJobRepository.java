@@ -27,7 +27,7 @@ public class JdbcJobRepository implements JobRepository {
   private NamedParameterJdbcOperations jdbc;
   private TaskExecutionRepository jobTaskRepository;
   
-  public static final int DEFAULT_PAGE_SIZE = 25;
+  public static final int DEFAULT_PAGE_SIZE = 20;
   
   @Override
   public Job findOne(String aId) {
@@ -87,7 +87,7 @@ public class JdbcJobRepository implements JobRepository {
     sqlParameterSource.addValue("createTime", job.getCreateTime());
     sqlParameterSource.addValue("startTime", job.getStartTime());
     sqlParameterSource.addValue("endTime", job.getEndTime());
-    sqlParameterSource.addValue("tags", job.getTags());
+    sqlParameterSource.addValue("tags", String.join(",",job.getTags()));
     return sqlParameterSource;
   }
   
@@ -110,7 +110,7 @@ public class JdbcJobRepository implements JobRepository {
     map.put("startTime", aRs.getTimestamp("start_time"));
     map.put("endTime", aRs.getTimestamp("end_time"));
     map.put("execution", getExecution(aRs.getString("id")));
-    map.put("tags", aRs.getArray("tags").getArray());
+    map.put("tags", aRs.getString("tags").split(","));
     return new SimpleJob(map);
   }
   

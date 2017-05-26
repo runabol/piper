@@ -119,7 +119,7 @@ public class CoordinatorTests {
     coordinator.setTaskCompletionHandler(taskCompletionHandler);
     coordinator.setMessenger(messenger);
         
-    Job job = coordinator.create(MapObject.of(ImmutableMap.of("pipelineId","demo/hello","name","me")));
+    Job job = coordinator.create(MapObject.of(ImmutableMap.of("pipelineId","demo/hello","inputs",Collections.singletonMap("name","me"))));
     
     Job completedJob = jobRepository.findOne(job.getId());
     

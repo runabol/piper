@@ -13,6 +13,8 @@ package com.creactiviti.piper.core.task;
  */
 public class CancelTask extends SimpleControlTask {
 
+  public CancelTask () { }
+  
   public CancelTask (String aTaskId) {
     super(ControlTask.TYPE_CANCEL);
     set("taskId", aTaskId);

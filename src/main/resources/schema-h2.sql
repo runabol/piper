@@ -7,7 +7,7 @@ create table job (
   start_time timestamp,
   create_time timestamp not null,
   end_time timestamp,
-  tags ARRAY
+  tags text
 );
 
 create table task_execution (
