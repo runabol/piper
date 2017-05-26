@@ -63,13 +63,13 @@ public class JdbcJobRepository implements JobRepository {
   @Override
   public void update (Job aJob) {
     MapSqlParameterSource sqlParameterSource = createSqlParameterSource(aJob);
-    jdbc.update("update job set status=:status,start_time=:startTime,end_time=:endTime,current_task=:currentTask,pipeline_id=:pipelineId,name=:name,tags=:tags where id = :id ", sqlParameterSource);
+    jdbc.update("update job set status=:status,start_time=:startTime,end_time=:endTime,current_task=:currentTask,pipeline_id=:pipelineId,label=:label,tags=:tags where id = :id ", sqlParameterSource);
   }
 
   @Override
   public void create (Job aJob) {
     MapSqlParameterSource sqlParameterSource = createSqlParameterSource(aJob);
-    jdbc.update("insert into job (id,create_time,start_time,status,current_task,pipeline_id,name,tags) values (:id,:createTime,:startTime,:status,:currentTask,:pipelineId,:name,:tags)", sqlParameterSource);
+    jdbc.update("insert into job (id,create_time,start_time,status,current_task,pipeline_id,label,tags) values (:id,:createTime,:startTime,:status,:currentTask,:pipelineId,:label,:tags)", sqlParameterSource);
   }
 
   private MapSqlParameterSource createSqlParameterSource(Job aJob) {
@@ -105,7 +105,7 @@ public class JdbcJobRepository implements JobRepository {
     map.put("status", aRs.getString("status"));
     map.put("currentTask", aRs.getInt("current_task"));
     map.put("pipelineId", aRs.getString("pipeline_id"));
-    map.put("name", aRs.getString("name"));
+    map.put("label", aRs.getString("label"));
     map.put("createTime", aRs.getTimestamp("create_time"));
     map.put("startTime", aRs.getTimestamp("start_time"));
     map.put("endTime", aRs.getTimestamp("end_time"));

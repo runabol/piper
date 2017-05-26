@@ -90,7 +90,4 @@ public class JdbcTaskExecutionRepository implements TaskExecutionRepository {
     return JsonHelper.writeValueAsString(json, aValue);
   }
 
-
-  
-
 }
