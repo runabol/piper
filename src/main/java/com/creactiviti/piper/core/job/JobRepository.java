@@ -16,7 +16,7 @@ public interface JobRepository {
   
   void create (Job aJob);
   
-  void update (Job aJob);
+  Job merge (Job aJob);
   
   Job findJobByTaskId (String aTaskId);
   

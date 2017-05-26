@@ -20,9 +20,9 @@ import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.JobStatus;
 import com.creactiviti.piper.core.job.SimpleJob;
 import com.creactiviti.piper.core.job.SimpleTaskExecution;
+import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskExecutionRepository;
-import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.core.task.TaskStatus;
 
 /**
@@ -72,7 +72,7 @@ public class TaskExecutionErrorHandler implements ErrorHandler<TaskExecution> {
       Assert.notNull(mjob,String.format("No job found for task %s ",mtask.getId()));
       mjob.setStatus(JobStatus.FAILED);
       mjob.setEndTime(new Date ());
-      jobRepository.update(mjob);
+      jobRepository.merge(mjob);
       eventPublisher.publishEvent(PiperEvent.of(Events.JOB_STATUS, "jobId", mjob.getId(), "status", mjob.getStatus()));
     }
   }

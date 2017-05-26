@@ -77,7 +77,7 @@ public class JdbcJobRepositoryTests {
     // test immutability
     Assert.assertNotEquals(mjob.getStatus().toString(),one.getStatus().toString());  
     
-    jobRepository.update(mjob);
+    jobRepository.merge(mjob);
     one = jobRepository.findOne("2");
     Assert.assertEquals("FAILED",one.getStatus().toString());  
   }

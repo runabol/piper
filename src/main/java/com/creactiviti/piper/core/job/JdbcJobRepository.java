@@ -61,9 +61,10 @@ public class JdbcJobRepository implements JobRepository {
   }
       
   @Override
-  public void update (Job aJob) {
+  public Job merge (Job aJob) {
     MapSqlParameterSource sqlParameterSource = createSqlParameterSource(aJob);
     jdbc.update("update job set status=:status,start_time=:startTime,end_time=:endTime,current_task=:currentTask,pipeline_id=:pipelineId,label=:label,tags=:tags where id = :id ", sqlParameterSource);
+    return aJob;
   }
 
   @Override

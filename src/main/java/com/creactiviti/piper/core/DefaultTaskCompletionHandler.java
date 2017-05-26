@@ -62,7 +62,7 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
       }
       if(hasMoreTasks(mjob)) {
         mjob.setCurrentTask(mjob.getCurrentTask()+1);
-        jobRepository.update(mjob);
+        jobRepository.merge(mjob);
         jobExecutor.execute(mjob);
       }
       else {
@@ -84,7 +84,7 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
     job.setStatus(JobStatus.COMPLETED);
     job.setEndTime(new Date ());
     job.setCurrentTask(-1);
-    jobRepository.update(job);
+    jobRepository.merge(job);
     eventPublisher.publishEvent(PiperEvent.of(Events.JOB_STATUS, "jobId", aJob.getId(), "status", aJob.getStatus()));
     log.debug("Job {} completed successfully",aJob.getId());
   }

@@ -62,7 +62,7 @@ public class DefaultJobExecutor implements JobExecutor {
 
   private void executeNextTask (Job aJob, Pipeline aPipeline) {
     TaskExecution nextTask = nextTask(aJob, aPipeline); 
-    jobRepository.update(aJob);
+    jobRepository.merge(aJob);
     MapContext context = new MapContext(contextRepository.peek(aJob.getId()));
     contextRepository.push(nextTask.getId(), context);
     TaskExecution evaluatedTask = taskEvaluator.evaluate(nextTask,context);

@@ -109,7 +109,7 @@ public class Coordinator {
     job.setStartTime(new Date());
     job.setStatus(JobStatus.STARTED);
     job.setCurrentTask(0);
-    jobRepository.update(job);
+    jobRepository.merge(job);
     jobExecutor.execute (job);
   }
   
@@ -136,7 +136,7 @@ public class Coordinator {
     Assert.isTrue(job.getStatus()==JobStatus.STARTED,"Job " + aJobId + " can not be stopped as it is " + job.getStatus());
     SimpleJob mjob = new SimpleJob(job);
     mjob.setStatus(JobStatus.STOPPED);
-    jobRepository.update(mjob);
+    jobRepository.merge(mjob);
     eventPublisher.publishEvent(PiperEvent.of(Events.JOB_STATUS,"jobId",job.getId(),"status",job.getStatus()));
     if(mjob.getExecution().size() > 0) {
       SimpleTaskExecution currentTask = SimpleTaskExecution.createForUpdate(job.getExecution().get(job.getExecution().size()-1));
@@ -162,7 +162,7 @@ public class Coordinator {
     Assert.isTrue(isRestartable(job), "can't stop job " + aJobId + " as it is " + job.getStatus());
     SimpleJob mjob = new SimpleJob (job);
     mjob.setStatus(JobStatus.STARTED);
-    jobRepository.update(mjob);
+    jobRepository.merge(mjob);
     jobExecutor.execute(mjob);
     return mjob;
   }
