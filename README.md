@@ -19,6 +19,7 @@ See http://meetpiper.com
 - ffmpeg integration
 - watermarking capability. 
 - split & stitch
+- reserved words
 
 - server-sent-event
 - Job outputs? 

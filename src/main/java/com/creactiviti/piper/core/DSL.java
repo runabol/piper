@@ -59,6 +59,8 @@ public class DSL {
   
   public static final String INPUTS = "inputs";
   
+  public static final String INPUT = "input";
+  
   public static final String EXECUTION = "execution";
   
   public static final String TAGS = "tags";
@@ -74,7 +76,9 @@ public class DSL {
                                                               TASK_NUMBER,
                                                               END_TIME,
                                                               STATUS,
-                                                              ERROR
+                                                              ERROR,
+                                                              INPUT,
+                                                              OUTPUT
                                                             }; 
   
 }
