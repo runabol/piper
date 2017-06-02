@@ -6,15 +6,18 @@
  */
 package com.creactiviti.piper.config;
 
-import java.util.Arrays;
+import java.util.List;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.annotation.Order;
 
 import com.creactiviti.piper.core.pipeline.FileSystemPipelineRepository;
 import com.creactiviti.piper.core.pipeline.GitPipelineRepository;
+import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.pipeline.PipelineRepositoryChain;
 
 @Configuration
@@ -23,14 +26,13 @@ public class PipelineRepositoryConfiguration {
 
   @Bean
   @Primary
-  PipelineRepositoryChain pipelineRepository (PiperProperties piperProperties) {
-    return new PipelineRepositoryChain(Arrays.asList(
-      fileSystemPipelineRepository(),
-      gitPipelineRepository(piperProperties)
-    ));
+  PipelineRepositoryChain pipelineRepository (List<PipelineRepository> aRepositories) {
+    return new PipelineRepositoryChain(aRepositories);
   }
   
   @Bean
+  @Order(2)
+  @ConditionalOnProperty(name="piper.pipeline-repository.git.enabled",havingValue="true")
   GitPipelineRepository gitPipelineRepository (PiperProperties piperProperties) {
     GitPipelineRepository gitPipelineRepository = new GitPipelineRepository();
     gitPipelineRepository.setUrl(piperProperties.getPipelineRepository().getGit().getUrl());
@@ -39,6 +41,7 @@ public class PipelineRepositoryConfiguration {
   }
   
   @Bean
+  @Order(1)
   FileSystemPipelineRepository fileSystemPipelineRepository () {
     return new FileSystemPipelineRepository();
   }
