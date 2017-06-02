@@ -1,0 +1,8 @@
+label: Custom output
+    
+tasks:          
+
+  - type: var
+    value: "1234"
+    output: ${int(output)}
+    
