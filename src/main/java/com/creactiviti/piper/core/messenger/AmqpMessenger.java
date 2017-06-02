@@ -9,6 +9,7 @@ package com.creactiviti.piper.core.messenger;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.util.Assert;
 
+import com.creactiviti.piper.error.Prioritizable;
 import com.creactiviti.piper.error.Retryable;
 
 public class AmqpMessenger implements Messenger {
@@ -22,6 +23,10 @@ public class AmqpMessenger implements Messenger {
       if(aMessage instanceof Retryable) {
         Retryable r = (Retryable) aMessage;
         m.getMessageProperties().setDelay((int)r.getRetryDelayMillis());
+      }
+      if(aMessage instanceof Prioritizable) {
+        Prioritizable p = (Prioritizable) aMessage;
+        m.getMessageProperties().setPriority(p.getPriority());
       }
       return m;
     });
