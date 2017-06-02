@@ -50,7 +50,10 @@ public class FileSystemPipelineRepository extends YamlPipelineRepository {
   public Pipeline findOne (String aId) {
     List<Pipeline> pipelines = findAll ();
     Optional<Pipeline> findFirst = pipelines.stream().filter(p->p.getId().equals(aId)).findFirst();
-    return findFirst.isPresent()?findFirst.get():null;
+    if(findFirst.isPresent()) {
+      return findFirst.get();
+    }
+    throw new IllegalArgumentException("Unknown pipeline: " + aId);
   }
 
 }

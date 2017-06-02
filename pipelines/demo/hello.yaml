@@ -1,21 +1,27 @@
-label: Hello World
+label: Hello Demo
 
 inputs:
-  - name: name
+  - name: yourName
     label: Your Name
     type: string
     required: true
     
-tasks: 
-  - name: Print a greeting
+tasks:
+  - name: randomNumber
+    label: Generate a random number
+    type: randomInt
+    startInclusive: 0
+    endInclusive: 5000
+      
+  - label: Print a greeting
     type: print
-    text: hello world
-   
-  - name: Sleep a little
+    text: Hello ${yourName}
+       
+  - label: Sleep a little
     type: sleep
-    millis: 1000
+    millis: ${randomNumber}
     
-  - name: Print a farewell
+  - label: Print a farewell
     type: print
-    text: goodbye world
+    text: Goodbye ${yourName}
     
