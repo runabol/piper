@@ -7,7 +7,6 @@
 package com.creactiviti.piper.core;
 
 import java.time.Duration;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
@@ -82,7 +81,7 @@ public class Worker {
         SimpleTaskExecution completion = SimpleTaskExecution.createForUpdate(aTask);
         if(output!=null) {
           if(completion.getOutput() != null) {
-            TaskExecution evaluated = taskEvaluator.evaluate(completion, new MapContext (Collections.singletonMap("output", output)));
+            TaskExecution evaluated = taskEvaluator.evaluate(completion, new MapContext ("execution", new MapContext("output", output)));
             completion = SimpleTaskExecution.createForUpdate(evaluated);
           }
           else {

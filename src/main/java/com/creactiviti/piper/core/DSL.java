@@ -78,7 +78,8 @@ public class DSL {
                                                               STATUS,
                                                               ERROR,
                                                               INPUT,
-                                                              OUTPUT
+                                                              OUTPUT,
+                                                              EXECUTION
                                                             }; 
   
 }
