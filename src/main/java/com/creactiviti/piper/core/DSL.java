@@ -77,8 +77,6 @@ public class DSL {
                                                               END_TIME,
                                                               STATUS,
                                                               ERROR,
-                                                              INPUT,
-                                                              OUTPUT,
                                                               EXECUTION
                                                             }; 
   

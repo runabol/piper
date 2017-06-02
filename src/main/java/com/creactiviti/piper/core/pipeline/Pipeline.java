@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.creactiviti.piper.core.Accessor;
 import com.creactiviti.piper.core.task.PipelineTask;
+import com.creactiviti.piper.error.Errorable;
 
 /**
  * Pipelines are the the blueprints that describe
@@ -18,7 +19,7 @@ import com.creactiviti.piper.core.task.PipelineTask;
  * @author Arik Cohen
  * @since Jun 12, 2016
  */
-public interface Pipeline {
+public interface Pipeline extends Errorable {
 
   /**
    * Returns the unique identifier of the pipeline. 

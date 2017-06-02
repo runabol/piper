@@ -16,6 +16,8 @@ import com.creactiviti.piper.core.Accessor;
 import com.creactiviti.piper.core.DSL;
 import com.creactiviti.piper.core.MapObject;
 import com.creactiviti.piper.core.task.PipelineTask;
+import com.creactiviti.piper.error.Error;
+import com.creactiviti.piper.error.ErrorObject;
 
 public class SimplePipeline extends MapObject implements Pipeline {
 
@@ -46,5 +48,17 @@ public class SimplePipeline extends MapObject implements Pipeline {
   @Override
   public List<Accessor> getInputs() {
     return getList(DSL.INPUTS,Accessor.class,Collections.EMPTY_LIST);
+  }
+  
+  @Override
+  public Error getError() {
+    if(containsKey(DSL.ERROR)) {
+      return new ErrorObject(getMap(DSL.ERROR));
+    }
+    return null;
+  }
+  
+  public void setError (Error aError) {
+    set(DSL.ERROR, aError);
   }
 }

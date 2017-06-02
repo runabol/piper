@@ -9,14 +9,21 @@ package com.creactiviti.piper.core.pipeline;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.core.io.Resource;
+import org.springframework.util.Assert;
 
+import com.creactiviti.piper.core.DSL;
 import com.creactiviti.piper.core.task.SimplePipelineTask;
 import com.creactiviti.piper.core.task.Task;
+import com.creactiviti.piper.error.ErrorObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Throwables;
@@ -26,17 +33,26 @@ public abstract class YamlPipelineRepository implements PipelineRepository  {
   protected ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
   
   protected Pipeline parsePipeline (IdentifiableResource aResource) {
-    Map<String,Object> yamlMap = parse (aResource);
-    String id = aResource.getId();
-    yamlMap.put("id", id);
-    return new SimplePipeline(yamlMap);
+    try {
+      Map<String,Object> yamlMap = parse (aResource);
+      yamlMap.put(DSL.ID, aResource.getId());
+      return new SimplePipeline(yamlMap);
+    }
+    catch (Exception e) {
+      SimplePipeline pipeline = new SimplePipeline(Collections.singletonMap(DSL.ID, aResource.getId()));
+      pipeline.setError(new ErrorObject(e.getMessage(), ExceptionUtils.getStackFrames(e)));
+      return pipeline;
+    }
   }
   
   private Map<String,Object> parse (Resource aResource) {
     try (InputStream in = aResource.getInputStream()){
       String yaml = IOUtils.toString(in);
       Map<String,Object> yamlMap = mapper.readValue(yaml, Map.class);
-      List<Map<String,Object>> rawTasks = (List<Map<String, Object>>) yamlMap.get("tasks");
+      validate(yamlMap);
+      List<Map<String,Object>> rawTasks = (List<Map<String, Object>>) yamlMap.get(DSL.TASKS);
+      Assert.notNull(rawTasks,"no tasks found");
+      Assert.notEmpty(rawTasks,"no tasks found");
       List<Task> tasks = new ArrayList<>();
       for(int i=0; i<rawTasks.size(); i++) {
         Map<String, Object> rt = rawTasks.get(i);
@@ -44,11 +60,31 @@ public abstract class YamlPipelineRepository implements PipelineRepository  {
         mutableTask.setTaskNumber(i+1);
         tasks.add(mutableTask);
       }
-      yamlMap.put("tasks", tasks);
+      yamlMap.put(DSL.TASKS, tasks);
       return yamlMap;
     }
     catch (IOException e) {
       throw Throwables.propagate(e);
+    }
+  }
+  
+  private void validate (Map<String,Object> aMap) {
+    List<String> reservedWords = Arrays.asList(DSL.RESERVED_WORDS);
+    for(Entry<String,Object> entry : aMap.entrySet()) {
+      String k = entry.getKey();
+      Object v = entry.getValue();
+      Assert.isTrue(!reservedWords.contains(k),"reserved word: " + k);
+      if(v instanceof Map) {
+        validate((Map<String, Object>) v);
+      }
+      if(v instanceof List) {
+        List<Object> items = (List<Object>) v;
+        for(Object item : items) {
+          if(item instanceof Map) {
+            validate((Map<String, Object>) item);
+          }
+        }
+      }
     }
   }
   
