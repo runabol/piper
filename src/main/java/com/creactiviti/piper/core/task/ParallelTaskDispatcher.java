@@ -49,6 +49,7 @@ public class ParallelTaskDispatcher implements TaskDispatcher<TaskExecution>, Ta
         parallelTask.setStatus(TaskStatus.CREATED);
         parallelTask.setJobId(aTask.getJobId());
         parallelTask.setCreateTime(new Date());
+        parallelTask.setPriority(aTask.getPriority());
         MapContext context = new MapContext (contextRepository.peek(aTask.getId()));
         contextRepository.push(parallelTask.getId(), context);
         taskExecutionRepo.create(parallelTask);

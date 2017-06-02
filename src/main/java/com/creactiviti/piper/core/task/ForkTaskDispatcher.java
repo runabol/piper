@@ -83,6 +83,7 @@ public class ForkTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDi
         execution.setTaskNumber(0);
         execution.setJobId(aTask.getJobId());
         execution.setParentId(aTask.getId());
+        execution.setPriority(aTask.getPriority());
         MapContext context = new MapContext (contextRepository.peek(aTask.getId()));
         contextRepository.push(aTask.getId()+"/"+i, context);
         contextRepository.push(execution.getId(), context);
