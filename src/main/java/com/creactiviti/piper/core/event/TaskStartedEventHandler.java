@@ -49,9 +49,11 @@ public class TaskStartedEventHandler implements ApplicationListener<PayloadAppli
       }
       else {
         SimpleTaskExecution mtask = SimpleTaskExecution.createForUpdate(task);
-        mtask.setStartTime(event.getTimestamp());
-        mtask.setStatus(TaskStatus.STARTED);
-        jobTaskRepository.merge(mtask);
+        if(mtask.getStartTime()==null && mtask.getStatus() != TaskStatus.STARTED) {
+          mtask.setStartTime(event.getTimestamp());
+          mtask.setStatus(TaskStatus.STARTED);
+          jobTaskRepository.merge(mtask);
+        }
         if(mtask.getParentId()!=null) {
           PiperEvent pevent = PiperEvent.of(Events.TASK_STARTED,"taskId",mtask.getParentId());
           onApplicationEvent(new PayloadApplicationEvent<>(pevent,pevent));

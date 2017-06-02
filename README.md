@@ -8,7 +8,6 @@ See http://meetpiper.com
 
 - Mapper construct
 - Search
-- Job Priority
 - rewind to previous point in the pipeline
 - analytics
 - cluster health / Workers health

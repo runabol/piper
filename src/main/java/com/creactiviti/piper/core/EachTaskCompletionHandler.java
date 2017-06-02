@@ -6,6 +6,8 @@
  */
 package com.creactiviti.piper.core;
 
+import java.util.Date;
+
 import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.task.CounterRepository;
 import com.creactiviti.piper.core.task.TaskExecution;
@@ -36,7 +38,10 @@ public class EachTaskCompletionHandler implements TaskCompletionHandler {
     taskExecutionRepo.merge(mtask);
     long subtasksLeft = counterRepository.decrement(aTaskExecution.getParentId());
     if(subtasksLeft == 0) {
-      taskCompletionHandler.handle(taskExecutionRepo.findOne(aTaskExecution.getParentId()));
+      SimpleTaskExecution parentExecution = SimpleTaskExecution.createForUpdate(taskExecutionRepo.findOne(aTaskExecution.getParentId()));
+      parentExecution.setEndTime(new Date ());
+      parentExecution.setExecutionTime(parentExecution.getEndTime().getTime()-parentExecution.getStartTime().getTime());
+      taskCompletionHandler.handle(parentExecution);
       counterRepository.delete(aTaskExecution.getParentId());
     }
   }

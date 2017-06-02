@@ -74,6 +74,7 @@ public class Worker {
   public void handle (TaskExecution aTask) {
     Future<?> future = executors.submit(() -> {
       try {
+        long startTime = System.currentTimeMillis();
         logger.debug("Recived task: {}",aTask);
         TaskHandler<?> taskHandler = taskHandlerResolver.resolve(aTask);
         messenger.send(Queues.EVENTS, PiperEvent.of(Events.TASK_STARTED,"taskId",aTask.getId()));
@@ -90,6 +91,7 @@ public class Worker {
         }
         completion.setStatus(TaskStatus.COMPLETED);
         completion.setEndTime(new Date());
+        completion.setExecutionTime(System.currentTimeMillis()-startTime);
         messenger.send(Queues.COMPLETIONS, completion);
       }
       catch (InterruptedException e) {

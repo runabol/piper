@@ -1,0 +1,14 @@
+{
+	"type":"router",
+	"select":"route1",
+	"routes": [
+		{
+			"name":"route1",
+			"tasks": [
+				{
+					"type":"print"
+				}
+			]
+		}
+	]
+}
