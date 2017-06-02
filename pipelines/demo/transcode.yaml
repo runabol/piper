@@ -1,0 +1,55 @@
+label: Transcode 
+
+inputs:
+  - name: input
+    label: Input File
+    type: string
+    required: true
+    
+  - name: output
+    label: Input File
+    type: string
+    required: true
+    
+  - name: profile
+    label: Profile
+    type: string
+    required: true
+
+tasks: 
+
+  - name: height
+    label: Determine the source height
+    type: ffprobe
+    input: ${input}
+    output: ${execution.output.video[0].height}
+
+  - name: targetHeight
+    label: Calculate the target height
+    type: switch
+    expression: true
+    cases:
+      - key: ${profile=='low' AND height>480}
+        value: 480
+      - key: ${profile=='high' AND height>1080}
+        value: 1080
+    default: ${height} 
+
+  - label: Transcode
+    type: ffmpeg
+    options: [
+      -y,
+      -i, "${input}",
+      "-pix_fmt","yuv420p",
+      "-codec:v","libx264",
+      "-preset","fast",
+      "-b:v","500k",
+      "-maxrate","500k",
+      "-bufsize","1000k", 
+      "-vf","scale=-2:${targetHeight}",
+      "-threads","0",
+      "-codec:a","libfdk_aac",
+      "-b:a","128k",
+      "${output}"
+    ]
+   

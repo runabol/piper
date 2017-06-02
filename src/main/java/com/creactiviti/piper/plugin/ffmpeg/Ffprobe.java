@@ -32,13 +32,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @since May 23, 2017
  */
 @Component
-public class Ffprobe implements TaskHandler<Object> {
+public class Ffprobe implements TaskHandler<Map<String,Object>> {
 
   private final Logger log = LoggerFactory.getLogger(getClass());
   private final ObjectMapper json = new ObjectMapper();
   
   @Override
-  public Object handle(Task aTask) throws Exception {
+  public Map<String,Object> handle(Task aTask) throws Exception {
     CommandLine cmd = new CommandLine ("ffprobe");
     cmd.addArgument("-v")
        .addArgument("quiet")

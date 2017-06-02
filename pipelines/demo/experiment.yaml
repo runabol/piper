@@ -1,0 +1,27 @@
+label: Transcode 
+
+inputs:
+  - name: input
+    label: Input File
+    type: string
+    required: true
+
+tasks: 
+    
+  - name: chunks
+    type: vsplit
+    input: ${input}
+    chunkSize: 2s
+    
+  - type: each
+    list: ${chunks}
+    iteratee:
+      type: ffmpeg
+      options: [
+        "-y",
+        "-ss","${item.start}",
+        "-i", "${input}",
+        "-to","${item.end}",
+        "/tmp/chunk_${itemIndex}.mp4"
+      ]
+          

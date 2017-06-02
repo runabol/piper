@@ -52,7 +52,8 @@ public class EachTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDi
     Assert.notNull(list,"'iteratee' property can't be null");
     if(list.size() > 0) {
       counterRepository.set(aTask.getId(), list.size());
-      for(Object item : list) {
+      for(int i=0; i<list.size(); i++) {
+        Object item = list.get(i);
         SimpleTaskExecution eachTask = SimpleTaskExecution.createFromMap(iteratee);
         eachTask.setId(UUIDGenerator.generate());
         eachTask.setParentId(aTask.getId());
@@ -61,6 +62,7 @@ public class EachTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDi
         eachTask.setCreateTime(new Date());
         MapContext context = new MapContext (contextRepository.peek(aTask.getId()));
         context.set(aTask.getString("itemVar","item"), item);
+        context.set(aTask.getString("itemIndex","itemIndex"), i);
         contextRepository.push(eachTask.getId(), context);
         TaskExecution evaluatedEachTask = taskEvaluator.evaluate(eachTask, context);
         taskExecutionRepo.create(evaluatedEachTask);

@@ -13,13 +13,17 @@ See http://meetpiper.com
 - analytics
 - cluster health / Workers health
 - includes
-- reserved words that can't be used in pipelines.
 - job callbacks
 - Basic UI
 - ffmpeg integration
 - watermarking capability. 
 - split & stitch
-- reserved words
+- event subscriptions (for progress) — with event templating.
+- ffmbc integration
+- red r3d integration
+- dispatch another pipeline
+- terminate type
+- pipeline output
 
 - server-sent-event
 - Job outputs? 
