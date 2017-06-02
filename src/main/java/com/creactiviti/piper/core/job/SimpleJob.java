@@ -18,6 +18,7 @@ import com.creactiviti.piper.core.MapObject;
 import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.error.Error;
 import com.creactiviti.piper.error.ErrorObject;
+import com.creactiviti.piper.error.Prioritizable;
 
 /**
  * An implementation of the {@link Job} interface
@@ -143,6 +144,15 @@ public class SimpleJob extends MapObject implements Job {
   
   public void setTags (String[] aTags) {
     set(DSL.TAGS, aTags);
+  }
+  
+  @Override
+  public int getPriority() {
+    return getInteger(DSL.PRIORTIY, Prioritizable.DEFAULT_PRIORITY);
+  }
+  
+  public void setPriority (int aPriority) {
+    set(DSL.PRIORTIY, aPriority);
   }
   
 }

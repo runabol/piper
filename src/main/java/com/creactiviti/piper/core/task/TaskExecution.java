@@ -9,6 +9,7 @@ package com.creactiviti.piper.core.task;
 import java.util.Date;
 
 import com.creactiviti.piper.error.Errorable;
+import com.creactiviti.piper.error.Prioritizable;
 import com.creactiviti.piper.error.Retryable;
 
 /**
@@ -28,7 +29,7 @@ import com.creactiviti.piper.error.Retryable;
  * @author Arik Cohen
  * @since May 8, 2017
  */
-public interface TaskExecution extends PipelineTask, Errorable, Retryable {
+public interface TaskExecution extends PipelineTask, Errorable, Retryable, Prioritizable {
 
   /**
    * Get the unique id of the task instance.

@@ -132,7 +132,6 @@ public class CoordinatorConfiguration {
   DefaultJobExecutor jobExecutor () {
     DefaultJobExecutor jobExecutor = new DefaultJobExecutor();
     jobExecutor.setContextRepository(contextRepository);
-    jobExecutor.setJobRepository(jobRepository);
     jobExecutor.setJobTaskRepository(taskExecutionRepo);
     jobExecutor.setPipelineRepository(pipelineRepository);
     jobExecutor.setTaskDispatcher(taskDispatcher());

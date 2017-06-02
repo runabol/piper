@@ -12,6 +12,7 @@ import java.util.List;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.error.Errorable;
+import com.creactiviti.piper.error.Prioritizable;
 
 /**
  * Represents an instance of a job.
@@ -19,7 +20,7 @@ import com.creactiviti.piper.error.Errorable;
  * @author Arik Cohen
  * @since Jun 12, 2016
  */
-public interface Job extends Errorable {
+public interface Job extends Errorable, Prioritizable {
 
   /**
    * Return the ID of the job.

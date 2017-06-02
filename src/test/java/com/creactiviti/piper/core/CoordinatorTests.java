@@ -103,7 +103,6 @@ public class CoordinatorTests {
     
     DefaultJobExecutor jobExecutor = new DefaultJobExecutor ();
     jobExecutor.setContextRepository(contextRepository);
-    jobExecutor.setJobRepository(jobRepository);
     jobExecutor.setJobTaskRepository(taskRepository);
     jobExecutor.setPipelineRepository(new FileSystemPipelineRepository());
     jobExecutor.setTaskDispatcher(taskDispatcher);

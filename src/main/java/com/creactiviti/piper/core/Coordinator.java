@@ -38,6 +38,7 @@ import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
 import com.creactiviti.piper.error.ErrorHandler;
 import com.creactiviti.piper.error.Errorable;
+import com.creactiviti.piper.error.Prioritizable;
 
 /**
  * The central class responsible for coordinating 
@@ -88,6 +89,7 @@ public class Coordinator {
     SimpleJob job = new SimpleJob();
     job.setId(UUIDGenerator.generate());
     job.setLabel(request.getString(DSL.LABEL,pipeline.getLabel()));
+    job.setPriority(request.getInteger(DSL.PRIORTIY, Prioritizable.DEFAULT_PRIORITY));
     job.setPipelineId(pipeline.getId());
     job.setStatus(JobStatus.CREATED);
     job.setCreateTime(new Date());

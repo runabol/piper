@@ -20,6 +20,7 @@ import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
 import com.creactiviti.piper.error.Error;
 import com.creactiviti.piper.error.ErrorObject;
+import com.creactiviti.piper.error.Prioritizable;
 
 
 public class SimpleTaskExecution extends SimplePipelineTask implements TaskExecution {
@@ -178,6 +179,15 @@ public class SimpleTaskExecution extends SimplePipelineTask implements TaskExecu
   public int getRetryDelayFactor() {
     return getInteger(DSL.RETRY_DELAY_FACTOR,2);
   }
+  
+  @Override
+  public int getPriority() {
+    return getInteger(DSL.PRIORTIY, Prioritizable.DEFAULT_PRIORITY);
+  }
+  
+  public void setPriority (int aPriority) {
+    set(DSL.PRIORTIY, aPriority);
+  }
     
   /**
    * Creates a new {@link SimpleTaskExecution} instance 
@@ -194,7 +204,7 @@ public class SimpleTaskExecution extends SimplePipelineTask implements TaskExecu
     jobTask.setStatus(TaskStatus.CREATED);
     return jobTask;
   }
-  
+    
   /**
    * Creates a new {@link SimpleTaskExecution} instance, using the 
    * given {@link TaskExecution} instance as a starting point. 

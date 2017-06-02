@@ -7,7 +7,8 @@ create table job (
   create_time timestamp not null,
   start_time timestamp,
   end_time timestamp,
-  tags text
+  tags text,
+  priority int not null
 );
 
 create table task_execution (
@@ -18,7 +19,8 @@ create table task_execution (
   create_time timestamp not null,
   start_time timestamp,
   end_time timestamp,
-  serialized_execution text not null
+  serialized_execution text not null,
+  priority int not null
 );
 
 create table context (

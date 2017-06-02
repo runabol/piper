@@ -32,7 +32,7 @@ public class JdbcTaskExecutionRepository implements TaskExecutionRepository {
   @Override
   public void create (TaskExecution aTaskExecution) {
     SqlParameterSource sqlParameterSource = createSqlParameterSource(aTaskExecution);
-    jdbc.update("insert into task_execution (id,parent_id,job_id,serialized_execution,status,create_time) values (:id,:parentId,:jobId,:serializedExecution,:status,:createTime)", sqlParameterSource);
+    jdbc.update("insert into task_execution (id,parent_id,job_id,serialized_execution,status,create_time,priority) values (:id,:parentId,:jobId,:serializedExecution,:status,:createTime,:priority)", sqlParameterSource);
   }
   
   @Override
@@ -71,6 +71,7 @@ public class JdbcTaskExecutionRepository implements TaskExecutionRepository {
     sqlParameterSource.addValue("startTime", aTaskExecution.getStartTime());
     sqlParameterSource.addValue("endTime", aTaskExecution.getEndTime());
     sqlParameterSource.addValue("serializedExecution", writeValueAsJsonString(aTaskExecution));
+    sqlParameterSource.addValue("priority", aTaskExecution.getPriority());
     return sqlParameterSource;
   }
   

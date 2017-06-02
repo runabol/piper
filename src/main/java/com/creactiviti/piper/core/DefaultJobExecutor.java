@@ -9,7 +9,6 @@ package com.creactiviti.piper.core;
 import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.context.MapContext;
 import com.creactiviti.piper.core.job.Job;
-import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.JobStatus;
 import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.pipeline.Pipeline;
@@ -30,7 +29,6 @@ public class DefaultJobExecutor implements JobExecutor {
 
   private PipelineRepository pipelineRepository;
   private TaskExecutionRepository jobTaskRepository;
-  private JobRepository jobRepository;
   private ContextRepository contextRepository;
   private TaskDispatcher taskDispatcher;
   private TaskEvaluator taskEvaluator = new SpelTaskEvaluator();
@@ -57,12 +55,12 @@ public class DefaultJobExecutor implements JobExecutor {
     PipelineTask task = aPipeline.getTasks().get(aJob.getCurrentTask());
     SimpleTaskExecution mt = SimpleTaskExecution.createFrom (task);
     mt.setJobId(aJob.getId());
+    mt.setPriority(aJob.getPriority());
     return mt;
   }
 
   private void executeNextTask (Job aJob, Pipeline aPipeline) {
     TaskExecution nextTask = nextTask(aJob, aPipeline); 
-    jobRepository.merge(aJob);
     MapContext context = new MapContext(contextRepository.peek(aJob.getId()));
     contextRepository.push(nextTask.getId(), context);
     TaskExecution evaluatedTask = taskEvaluator.evaluate(nextTask,context);
@@ -72,10 +70,6 @@ public class DefaultJobExecutor implements JobExecutor {
   
   public void setPipelineRepository(PipelineRepository aPipelineRepository) {
     pipelineRepository = aPipelineRepository;
-  }
-  
-  public void setJobRepository(JobRepository aJobRepository) {
-    jobRepository = aJobRepository;
   }
   
   public void setJobTaskRepository(TaskExecutionRepository aJobTaskRepository) {

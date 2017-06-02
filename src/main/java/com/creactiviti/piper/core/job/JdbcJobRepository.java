@@ -70,7 +70,7 @@ public class JdbcJobRepository implements JobRepository {
   @Override
   public void create (Job aJob) {
     MapSqlParameterSource sqlParameterSource = createSqlParameterSource(aJob);
-    jdbc.update("insert into job (id,create_time,start_time,status,current_task,pipeline_id,label,tags) values (:id,:createTime,:startTime,:status,:currentTask,:pipelineId,:label,:tags)", sqlParameterSource);
+    jdbc.update("insert into job (id,create_time,start_time,status,current_task,pipeline_id,label,tags,priority) values (:id,:createTime,:startTime,:status,:currentTask,:pipelineId,:label,:tags,:priority)", sqlParameterSource);
   }
 
   private MapSqlParameterSource createSqlParameterSource(Job aJob) {
@@ -89,6 +89,7 @@ public class JdbcJobRepository implements JobRepository {
     sqlParameterSource.addValue("startTime", job.getStartTime());
     sqlParameterSource.addValue("endTime", job.getEndTime());
     sqlParameterSource.addValue("tags", String.join(",",job.getTags()));
+    sqlParameterSource.addValue("priority", job.getPriority());
     return sqlParameterSource;
   }
   
@@ -112,6 +113,7 @@ public class JdbcJobRepository implements JobRepository {
     map.put("endTime", aRs.getTimestamp("end_time"));
     map.put("execution", getExecution(aRs.getString("id")));
     map.put("tags", aRs.getString("tags").split(","));
+    map.put("priority", aRs.getInt("priority"));
     return new SimpleJob(map);
   }
   

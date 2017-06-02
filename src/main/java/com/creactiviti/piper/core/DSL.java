@@ -65,6 +65,8 @@ public class DSL {
   
   public static final String TAGS = "tags";
   
+  public static final String PRIORTIY = "priority";
+  
   public static final String[] RESERVED_WORDS = new String[]{
                                                               ID,
                                                               PARENT_ID,
@@ -77,7 +79,8 @@ public class DSL {
                                                               END_TIME,
                                                               STATUS,
                                                               ERROR,
-                                                              EXECUTION
+                                                              EXECUTION,
+                                                              PRIORTIY
                                                             }; 
   
 }
