@@ -13,7 +13,6 @@ See http://meetpiper.com
 - cluster health / Workers health
 - includes
 - job callbacks
-- Basic UI
 - ffmpeg integration
 - watermarking capability. 
 - split & stitch
