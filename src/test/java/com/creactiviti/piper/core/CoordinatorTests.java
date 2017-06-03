@@ -38,6 +38,7 @@ import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskHandler;
 import com.creactiviti.piper.core.task.WorkTaskDispatcher;
 import com.creactiviti.piper.plugin.io.Print;
+import com.creactiviti.piper.plugin.random.RandomInt;
 import com.creactiviti.piper.plugin.time.Sleep;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -69,6 +70,7 @@ public class CoordinatorTests {
     
     Map<String,TaskHandler<?>> handlers = new HashMap<>();
     handlers.put("print", new Print());
+    handlers.put("randomInt", new RandomInt());
     handlers.put("sleep", new Sleep());
     
     taskHandlerResolver.setTaskHandlers(handlers);
@@ -118,7 +120,7 @@ public class CoordinatorTests {
     coordinator.setTaskCompletionHandler(taskCompletionHandler);
     coordinator.setMessenger(messenger);
         
-    Job job = coordinator.create(MapObject.of(ImmutableMap.of("pipelineId","demo/hello","inputs",Collections.singletonMap("name","me"))));
+    Job job = coordinator.create(MapObject.of(ImmutableMap.of("pipelineId","demo/hello","inputs",Collections.singletonMap("yourName","me"))));
     
     Job completedJob = jobRepository.findOne(job.getId());
     
