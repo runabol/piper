@@ -119,12 +119,7 @@ public class CoordinatorConfiguration {
   
   @Bean
   SwitchTaskDispatcher switchTaskDispatcher (TaskDispatcher aTaskDispatcher) {
-    SwitchTaskDispatcher switchTaskDispatcher = new SwitchTaskDispatcher();
-    switchTaskDispatcher.setTaskDispatcher(aTaskDispatcher);
-    switchTaskDispatcher.setContextRepository(contextRepository);
-    switchTaskDispatcher.setTaskExecutionRepo(taskExecutionRepo);
-    switchTaskDispatcher.setMessenger(messenger);
-    return switchTaskDispatcher;
+    return new SwitchTaskDispatcher(aTaskDispatcher,taskExecutionRepo,messenger,contextRepository);
   }
   
   @Bean

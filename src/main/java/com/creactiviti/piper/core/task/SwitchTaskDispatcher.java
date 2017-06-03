@@ -28,11 +28,18 @@ import com.creactiviti.piper.core.uuid.UUIDGenerator;
  */
 public class SwitchTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDispatcherResolver {
 
-  private TaskDispatcher taskDispatcher;
-  private TaskEvaluator taskEvaluator = new SpelTaskEvaluator();
-  private TaskExecutionRepository taskExecutionRepo;
-  private ContextRepository contextRepository;
-  private Messenger messenger;
+  private final TaskDispatcher taskDispatcher;
+  private final TaskEvaluator taskEvaluator = new SpelTaskEvaluator();
+  private final TaskExecutionRepository taskExecutionRepo;
+  private final ContextRepository contextRepository;
+  private final Messenger messenger;
+  
+  public SwitchTaskDispatcher (TaskDispatcher aTaskDispatcher, TaskExecutionRepository aTaskRepo, Messenger aMessenger, ContextRepository aContextRepository) {
+    taskDispatcher = aTaskDispatcher;
+    taskExecutionRepo = aTaskRepo;
+    messenger = aMessenger;
+    contextRepository = aContextRepository;
+  }
 
   @Override
   public void dispatch (TaskExecution aTask) {
@@ -87,25 +94,5 @@ public class SwitchTaskDispatcher implements TaskDispatcher<TaskExecution>, Task
     }
     return null;
   }
-
-  public void setContextRepository(ContextRepository aContextRepository) {
-    contextRepository = aContextRepository;
-  }
-
-  public void setTaskDispatcher(TaskDispatcher aTaskDispatcher) {
-    taskDispatcher = aTaskDispatcher;
-  }
-
-  public void setTaskEvaluator(TaskEvaluator aTaskEvaluator) {
-    taskEvaluator = aTaskEvaluator;
-  }
-
-  public void setTaskExecutionRepo(TaskExecutionRepository aTaskExecutionRepo) {
-    taskExecutionRepo = aTaskExecutionRepo;
-  }
-
-  public void setMessenger(Messenger aMessenger) {
-    messenger = aMessenger;
-  }
-
+  
 }
