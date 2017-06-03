@@ -52,11 +52,11 @@ public class SimpleJob extends MapObject implements Job {
   
   @Override
   public int getCurrentTask() {
-    return getInteger("currentTask", -1);
+    return getInteger(DSL.CURRENT_TASK, -1);
   }
   
   public void setCurrentTask (int aCurrentStep) {
-    set("currentTask", aCurrentStep);
+    set(DSL.CURRENT_TASK, aCurrentStep);
   }
   
   @Override

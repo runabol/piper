@@ -12,6 +12,7 @@ import java.util.Map;
 
 import org.springframework.util.Assert;
 
+import com.creactiviti.piper.core.DSL;
 import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.context.MapContext;
 import com.creactiviti.piper.core.job.SimpleTaskExecution;
@@ -79,7 +80,7 @@ public class EachTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDi
 
   @Override
   public TaskDispatcher resolve (Task aTask) {
-    if(aTask.getType().equals("each")) {
+    if(aTask.getType().equals(DSL.EACH)) {
       return this;
     }
     return null;

@@ -8,7 +8,6 @@ package com.creactiviti.piper.core.taskhandler;
 
 import java.util.List;
 
-import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.MapObject;
@@ -21,7 +20,7 @@ import com.creactiviti.piper.core.task.TaskHandler;
  * @author Arik Cohen
  * @since May 23, 2017
  */
-@Component
+//@Component
 public class Switch implements TaskHandler<Object> {
 
   @Override

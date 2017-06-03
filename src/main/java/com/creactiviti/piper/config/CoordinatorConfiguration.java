@@ -19,6 +19,7 @@ import com.creactiviti.piper.core.DefaultJobExecutor;
 import com.creactiviti.piper.core.DefaultTaskCompletionHandler;
 import com.creactiviti.piper.core.EachTaskCompletionHandler;
 import com.creactiviti.piper.core.ForkTaskCompletionHandler;
+import com.creactiviti.piper.core.SwitchTaskCompletionHandler;
 import com.creactiviti.piper.core.TaskCompletionHandler;
 import com.creactiviti.piper.core.TaskCompletionHandlerChain;
 import com.creactiviti.piper.core.context.Context;
@@ -33,6 +34,7 @@ import com.creactiviti.piper.core.task.EachTaskDispatcher;
 import com.creactiviti.piper.core.task.ForkTaskDispatcher;
 import com.creactiviti.piper.core.task.ParallelTaskCompletionHandler;
 import com.creactiviti.piper.core.task.ParallelTaskDispatcher;
+import com.creactiviti.piper.core.task.SwitchTaskDispatcher;
 import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.core.task.TaskDispatcherChain;
 import com.creactiviti.piper.core.task.TaskDispatcherResolver;
@@ -92,6 +94,7 @@ public class CoordinatorConfiguration {
       eachTaskCompletionHandler(taskCompletionHandlerChain),
       parallelTaskCompletionHandler(taskCompletionHandlerChain),
       forkTaskCompletionHandler(taskCompletionHandlerChain),
+      switchTaskCompletionHandler(taskCompletionHandlerChain),
       defaultTaskCompletionHandler()
     ));
     return taskCompletionHandlerChain;
@@ -107,6 +110,21 @@ public class CoordinatorConfiguration {
     taskCompletionHandler.setPipelineRepository(pipelineRepository);
     taskCompletionHandler.setEventPublisher(eventPublisher);
     return taskCompletionHandler;
+  }
+  
+  @Bean
+  SwitchTaskCompletionHandler switchTaskCompletionHandler (TaskCompletionHandler aTaskCompletionHandler) {
+    return new SwitchTaskCompletionHandler(taskExecutionRepo,aTaskCompletionHandler,taskDispatcher(),contextRepository);
+  }
+  
+  @Bean
+  SwitchTaskDispatcher switchTaskDispatcher (TaskDispatcher aTaskDispatcher) {
+    SwitchTaskDispatcher switchTaskDispatcher = new SwitchTaskDispatcher();
+    switchTaskDispatcher.setTaskDispatcher(aTaskDispatcher);
+    switchTaskDispatcher.setContextRepository(contextRepository);
+    switchTaskDispatcher.setTaskExecutionRepo(taskExecutionRepo);
+    switchTaskDispatcher.setMessenger(messenger);
+    return switchTaskDispatcher;
   }
   
   @Bean
@@ -145,6 +163,7 @@ public class CoordinatorConfiguration {
       eachTaskDispatcher(taskDispatcher),
       parallelTaskDispatcher(taskDispatcher),
       forkTaskDispatcher(taskDispatcher),
+      switchTaskDispatcher(taskDispatcher),
       controlTaskDispatcher(),
       workTaskDispatcher()
     );

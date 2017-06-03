@@ -12,6 +12,7 @@ import java.util.Map;
 
 import org.springframework.util.Assert;
 
+import com.creactiviti.piper.core.DSL;
 import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.context.MapContext;
 import com.creactiviti.piper.core.job.SimpleTaskExecution;
@@ -65,7 +66,7 @@ public class ParallelTaskDispatcher implements TaskDispatcher<TaskExecution>, Ta
 
   @Override
   public TaskDispatcher resolve (Task aTask) {
-    if(aTask.getType().equals("parallel")) {
+    if(aTask.getType().equals(DSL.PARALLEL)) {
       return this;
     }
     return null;

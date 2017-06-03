@@ -67,6 +67,16 @@ public class DSL {
   
   public static final String PRIORTIY = "priority";
   
+  public static final String SWITCH = "switch";
+  
+  public static final String EACH = "each";
+  
+  public static final String PARALLEL = "parallel";
+  
+  public static final String FORK = "fork";
+  
+  public static final String CURRENT_TASK = "currentTask";
+  
   public static final String[] RESERVED_WORDS = new String[]{
                                                               ID,
                                                               PARENT_ID,
@@ -80,7 +90,8 @@ public class DSL {
                                                               STATUS,
                                                               ERROR,
                                                               EXECUTION,
-                                                              PRIORTIY
+                                                              PRIORTIY,
+                                                              CURRENT_TASK
                                                             }; 
   
 }

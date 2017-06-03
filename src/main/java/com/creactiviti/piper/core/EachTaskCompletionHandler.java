@@ -51,7 +51,7 @@ public class EachTaskCompletionHandler implements TaskCompletionHandler {
     String parentId = aTaskExecution.getParentId();
     if(parentId!=null) {
       TaskExecution parentExecution = taskExecutionRepo.findOne(parentId);
-      return parentExecution.getType().equals("each");
+      return parentExecution.getType().equals(DSL.EACH);
     }
     return false;
   }
