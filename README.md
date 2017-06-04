@@ -6,7 +6,6 @@ See http://meetpiper.com
 
 # Roadmap
 
-- Mapper construct
 - Search
 - rewind to previous point in the pipeline
 - analytics
