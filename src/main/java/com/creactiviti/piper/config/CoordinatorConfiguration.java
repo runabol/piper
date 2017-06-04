@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -53,16 +54,16 @@ public class CoordinatorConfiguration {
   @Autowired private JobRepository jobRepository;
   @Autowired private TaskExecutionRepository taskExecutionRepo;
   @Autowired private ContextRepository<Context> contextRepository;
-  @Autowired private InternalEventPublisher eventPublisher;
   @Autowired private PipelineRepository pipelineRepository;
   @Autowired private CounterRepository counterRepository;
   @Autowired private Messenger messenger;
+  @Autowired private ApplicationEventPublisher applicationEventPublisher;
   
   @Bean
   Coordinator coordinator () {
     Coordinator coordinator = new Coordinator();
     coordinator.setContextRepository(contextRepository);
-    coordinator.setEventPublisher(eventPublisher);
+    coordinator.setEventPublisher(internalEventPublisher());
     coordinator.setJobRepository(jobRepository);
     coordinator.setJobTaskRepository(taskExecutionRepo);
     coordinator.setPipelineRepository(pipelineRepository);
@@ -85,7 +86,7 @@ public class CoordinatorConfiguration {
     jobTaskErrorHandler.setJobRepository(jobRepository);
     jobTaskErrorHandler.setJobTaskRepository(taskExecutionRepo);
     jobTaskErrorHandler.setTaskDispatcher(taskDispatcher());
-    jobTaskErrorHandler.setEventPublisher(eventPublisher);
+    jobTaskErrorHandler.setEventPublisher(internalEventPublisher());
     return jobTaskErrorHandler;
   }
   
@@ -111,7 +112,7 @@ public class CoordinatorConfiguration {
     taskCompletionHandler.setJobRepository(jobRepository);
     taskCompletionHandler.setJobTaskRepository(taskExecutionRepo);
     taskCompletionHandler.setPipelineRepository(pipelineRepository);
-    taskCompletionHandler.setEventPublisher(eventPublisher);
+    taskCompletionHandler.setEventPublisher(internalEventPublisher());
     return taskCompletionHandler;
   }
   
@@ -220,6 +221,11 @@ public class CoordinatorConfiguration {
   @Bean
   TaskStartedEventHandler taskStartedEventHandler () {
     return new TaskStartedEventHandler(taskExecutionRepo, taskDispatcher());
+  }
+  
+  @Bean
+  InternalEventPublisher internalEventPublisher () {
+    return new InternalEventPublisher (applicationEventPublisher);
   }
   
 }

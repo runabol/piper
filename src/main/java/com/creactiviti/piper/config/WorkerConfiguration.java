@@ -6,6 +6,7 @@
  */
 package com.creactiviti.piper.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,13 +19,19 @@ import com.creactiviti.piper.core.task.TaskHandlerResolver;
 @ConditionalOnWorker
 public class WorkerConfiguration {
   
+  @Autowired private Messenger messenger;
+  
   @Bean
-  Worker worker (TaskHandlerResolver aTaskHandlerResolver, Messenger aMessenger, DistributedEventPublisher aDistributedEventPublisher) {
+  Worker worker (TaskHandlerResolver aTaskHandlerResolver, Messenger aMessenger) {
     Worker worker = new Worker();
     worker.setMessenger(aMessenger);
     worker.setTaskHandlerResolver(aTaskHandlerResolver);
-    worker.setEventPublisher(aDistributedEventPublisher);
+    worker.setEventPublisher(distributedEventPublisher());
     return worker;
   }
-  
+
+  @Bean
+  DistributedEventPublisher distributedEventPublisher () {
+    return new DistributedEventPublisher (messenger);
+  }
 }
