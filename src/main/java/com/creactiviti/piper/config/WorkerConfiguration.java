@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.creactiviti.piper.core.Worker;
+import com.creactiviti.piper.core.event.DistributedEventPublisher;
 import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.task.TaskHandlerResolver;
 
@@ -18,10 +19,11 @@ import com.creactiviti.piper.core.task.TaskHandlerResolver;
 public class WorkerConfiguration {
   
   @Bean
-  Worker worker (TaskHandlerResolver aTaskHandlerResolver, Messenger aMessenger) {
+  Worker worker (TaskHandlerResolver aTaskHandlerResolver, Messenger aMessenger, DistributedEventPublisher aDistributedEventPublisher) {
     Worker worker = new Worker();
     worker.setMessenger(aMessenger);
     worker.setTaskHandlerResolver(aTaskHandlerResolver);
+    worker.setEventPublisher(aDistributedEventPublisher);
     return worker;
   }
   

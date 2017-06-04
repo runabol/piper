@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.context.MapContext;
+import com.creactiviti.piper.core.event.EventPublisher;
 import com.creactiviti.piper.core.event.Events;
 import com.creactiviti.piper.core.event.PiperEvent;
 import com.creactiviti.piper.core.job.SimpleTaskExecution;
@@ -59,6 +60,7 @@ public class Worker {
   private final ExecutorService executors = Executors.newCachedThreadPool();
   private final Map<String, Future<?>> taskExecutions = new ConcurrentHashMap<>();
   private TaskEvaluator taskEvaluator = new SpelTaskEvaluator();
+  private EventPublisher eventPublisher;
 
   private Logger logger = LoggerFactory.getLogger(getClass());
   
@@ -77,7 +79,7 @@ public class Worker {
         long startTime = System.currentTimeMillis();
         logger.debug("Recived task: {}",aTask);
         TaskHandler<?> taskHandler = taskHandlerResolver.resolve(aTask);
-        messenger.send(Queues.EVENTS, PiperEvent.of(Events.TASK_STARTED,"taskId",aTask.getId()));
+        eventPublisher.publishEvent(PiperEvent.of(Events.TASK_STARTED,"taskId",aTask.getId()));
         Object output = taskHandler.handle(aTask);
         SimpleTaskExecution completion = SimpleTaskExecution.createForUpdate(aTask);
         if(output!=null) {
@@ -159,6 +161,10 @@ public class Worker {
 
   public void setMessenger(Messenger aMessenger) {
     messenger = aMessenger;
+  }
+  
+  public void setEventPublisher(EventPublisher aEventPublisher) {
+    eventPublisher = aEventPublisher;
   }
   
 }

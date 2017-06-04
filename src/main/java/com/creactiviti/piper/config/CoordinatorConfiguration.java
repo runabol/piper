@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -25,6 +24,7 @@ import com.creactiviti.piper.core.TaskCompletionHandler;
 import com.creactiviti.piper.core.TaskCompletionHandlerChain;
 import com.creactiviti.piper.core.context.Context;
 import com.creactiviti.piper.core.context.ContextRepository;
+import com.creactiviti.piper.core.event.InternalEventPublisher;
 import com.creactiviti.piper.core.event.TaskStartedEventHandler;
 import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.messenger.Messenger;
@@ -53,7 +53,7 @@ public class CoordinatorConfiguration {
   @Autowired private JobRepository jobRepository;
   @Autowired private TaskExecutionRepository taskExecutionRepo;
   @Autowired private ContextRepository<Context> contextRepository;
-  @Autowired private ApplicationEventPublisher eventPublisher;
+  @Autowired private InternalEventPublisher eventPublisher;
   @Autowired private PipelineRepository pipelineRepository;
   @Autowired private CounterRepository counterRepository;
   @Autowired private Messenger messenger;

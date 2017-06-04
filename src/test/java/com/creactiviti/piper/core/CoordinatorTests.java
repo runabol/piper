@@ -20,12 +20,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.creactiviti.piper.core.context.JdbcContextRepository;
+import com.creactiviti.piper.core.event.EventPublisher;
+import com.creactiviti.piper.core.event.PiperEvent;
 import com.creactiviti.piper.core.job.JdbcJobRepository;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobStatus;
@@ -52,7 +53,7 @@ public class CoordinatorTests {
   private DataSource dataSource;
   
   @Autowired
-  private ApplicationEventPublisher eventPublisher;
+  private EventPublisher eventPublisher;
   
   @Test
   public void testStartJob () throws SQLException {
@@ -61,7 +62,7 @@ public class CoordinatorTests {
    
     SynchMessenger messenger = new SynchMessenger();
     messenger.receive(Queues.COMPLETIONS, (o)->coordinator.complete((TaskExecution)o));
-    messenger.receive(Queues.EVENTS, (o)->coordinator.on(o));
+    messenger.receive(Queues.EVENTS, (o)->coordinator.on((PiperEvent)o));
     messenger.receive(Queues.JOBS, (o)->coordinator.start((Job)o));
     
     

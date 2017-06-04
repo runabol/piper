@@ -10,9 +10,9 @@ import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.util.Assert;
 
+import com.creactiviti.piper.core.event.EventPublisher;
 import com.creactiviti.piper.core.event.Events;
 import com.creactiviti.piper.core.event.PiperEvent;
 import com.creactiviti.piper.core.job.Job;
@@ -35,7 +35,7 @@ public class TaskExecutionErrorHandler implements ErrorHandler<TaskExecution> {
   private JobRepository jobRepository;
   private TaskExecutionRepository jobTaskRepository;
   private TaskDispatcher taskDispatcher;
-  private ApplicationEventPublisher eventPublisher;
+  private EventPublisher eventPublisher;
 
   private Logger logger = LoggerFactory.getLogger(getClass());
     
@@ -89,7 +89,7 @@ public class TaskExecutionErrorHandler implements ErrorHandler<TaskExecution> {
     taskDispatcher = aTaskDispatcher;
   }
   
-  public void setEventPublisher(ApplicationEventPublisher aEventPublisher) {
+  public void setEventPublisher(EventPublisher aEventPublisher) {
     eventPublisher = aEventPublisher;
   }
 

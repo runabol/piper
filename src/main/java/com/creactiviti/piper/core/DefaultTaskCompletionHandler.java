@@ -10,11 +10,11 @@ import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationEventPublisher;
 
 import com.creactiviti.piper.core.context.Context;
 import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.context.MapContext;
+import com.creactiviti.piper.core.event.EventPublisher;
 import com.creactiviti.piper.core.event.Events;
 import com.creactiviti.piper.core.event.PiperEvent;
 import com.creactiviti.piper.core.job.Job;
@@ -43,7 +43,7 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
   private TaskExecutionRepository jobTaskRepository;
   private ContextRepository contextRepository;
   private JobExecutor jobExecutor;
-  private ApplicationEventPublisher eventPublisher;
+  private EventPublisher eventPublisher;
   
   @Override
   public void handle (TaskExecution aTask) {
@@ -109,7 +109,7 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
     jobExecutor = aJobExecutor;
   }
   
-  public void setEventPublisher(ApplicationEventPublisher aEventPublisher) {
+  public void setEventPublisher(EventPublisher aEventPublisher) {
     eventPublisher = aEventPublisher;
   }
 

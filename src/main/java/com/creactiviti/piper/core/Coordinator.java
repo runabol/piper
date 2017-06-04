@@ -14,12 +14,12 @@ import java.util.Map;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.context.MapContext;
+import com.creactiviti.piper.core.event.EventPublisher;
 import com.creactiviti.piper.core.event.Events;
 import com.creactiviti.piper.core.event.PiperEvent;
 import com.creactiviti.piper.core.job.Job;
@@ -54,7 +54,7 @@ public class Coordinator {
   private PipelineRepository pipelineRepository;
   private JobRepository jobRepository;
   private TaskExecutionRepository jobTaskRepository;
-  private ApplicationEventPublisher eventPublisher;
+  private EventPublisher eventPublisher;
   private ContextRepository contextRepository;
   private TaskDispatcher taskDispatcher;
   private ErrorHandler errorHandler;
@@ -210,7 +210,7 @@ public class Coordinator {
    * @param aEvent
    *          The event received
    */
-  public void on (Object aEvent) {
+  public void on (PiperEvent aEvent) {
     log.debug("Received event {}",aEvent);
     eventPublisher.publishEvent(aEvent);
   }
@@ -219,10 +219,10 @@ public class Coordinator {
     contextRepository = aContextRepository;
   }
 
-  public void setEventPublisher(ApplicationEventPublisher aEventPublisher) {
+  public void setEventPublisher(EventPublisher aEventPublisher) {
     eventPublisher = aEventPublisher;
   }
-
+  
   public void setJobRepository(JobRepository aJobRepository) {
     jobRepository = aJobRepository;
   }
