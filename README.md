@@ -15,7 +15,6 @@ See http://meetpiper.com
 - job callbacks
 - ffmpeg integration
 - watermarking capability. 
-- split & stitch
 - event subscriptions (for progress) — with event templating.
 - ffmbc integration
 - red r3d integration
