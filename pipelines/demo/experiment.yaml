@@ -8,7 +8,7 @@ tasks:
     endInclusive: 3
 
   - type: switch
-    expression: c2
+    expression: c${selector}
     cases:
       - key: c1
         tasks: 
