@@ -9,7 +9,6 @@ package com.creactiviti.piper.core.event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.PayloadApplicationEvent;
 
 import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.task.CancelTask;
@@ -23,7 +22,7 @@ import com.creactiviti.piper.core.task.TaskStatus;
  * @author Arik Cohen
  * @since Apt 9, 2017
  */
-public class TaskStartedEventHandler implements ApplicationListener<PayloadApplicationEvent<PiperEvent>> {
+public class TaskStartedEventHandler implements ApplicationListener<PiperEvent> {
 
   private final TaskExecutionRepository jobTaskRepository;
   private final TaskDispatcher taskDispatcher;
@@ -36,10 +35,9 @@ public class TaskStartedEventHandler implements ApplicationListener<PayloadAppli
   }
 
   @Override
-  public void onApplicationEvent (PayloadApplicationEvent<PiperEvent> aEvent) {
-    PiperEvent event = aEvent.getPayload();
-    if(Events.TASK_STARTED.equals(event.getType())) {
-      String taskId = event.getString("taskId");
+  public void onApplicationEvent (PiperEvent aEvent) {
+    if(Events.TASK_STARTED.equals(aEvent.getType())) {
+      String taskId = aEvent.getString("taskId");
       TaskExecution task = jobTaskRepository.findOne(taskId);
       if(task == null) {
         logger.error("Unkown task: {}",taskId);
@@ -50,13 +48,13 @@ public class TaskStartedEventHandler implements ApplicationListener<PayloadAppli
       else {
         SimpleTaskExecution mtask = SimpleTaskExecution.createForUpdate(task);
         if(mtask.getStartTime()==null && mtask.getStatus() != TaskStatus.STARTED) {
-          mtask.setStartTime(event.getTimestamp());
+          mtask.setStartTime(aEvent.getCreateTime());
           mtask.setStatus(TaskStatus.STARTED);
           jobTaskRepository.merge(mtask);
         }
         if(mtask.getParentId()!=null) {
           PiperEvent pevent = PiperEvent.of(Events.TASK_STARTED,"taskId",mtask.getParentId());
-          onApplicationEvent(new PayloadApplicationEvent<>(pevent,pevent));
+          onApplicationEvent(pevent);
         }
       }
     }

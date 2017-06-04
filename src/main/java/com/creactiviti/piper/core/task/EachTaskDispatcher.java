@@ -51,6 +51,12 @@ public class EachTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDi
     Assert.notNull(list,"'list' property can't be null");
     Map<String, Object> iteratee = aTask.getMap("iteratee");
     Assert.notNull(list,"'iteratee' property can't be null");
+    
+    SimpleTaskExecution parentEachTask = SimpleTaskExecution.createForUpdate(aTask);
+    parentEachTask.setStartTime(new Date ());
+    parentEachTask.setStatus(TaskStatus.STARTED);
+    taskExecutionRepo.merge(parentEachTask);
+    
     if(list.size() > 0) {
       counterRepository.set(aTask.getId(), list.size());
       for(int i=0; i<list.size(); i++) {

@@ -47,23 +47,29 @@ public class MapTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDis
     Assert.notNull(list,"'list' property can't be null");
     Map<String, Object> iteratee = aTask.getMap("iteratee");
     Assert.notNull(list,"'iteratee' property can't be null");
+    
+    SimpleTaskExecution parentMapTask = SimpleTaskExecution.createForUpdate(aTask);
+    parentMapTask.setStartTime(new Date ());
+    parentMapTask.setStatus(TaskStatus.STARTED);
+    taskExecutionRepo.merge(parentMapTask);
+    
     if(list.size() > 0) {
       counterRepository.set(aTask.getId(), list.size());
       for(int i=0; i<list.size(); i++) {
         Object item = list.get(i);
-        SimpleTaskExecution eachTask = SimpleTaskExecution.createFromMap(iteratee);
-        eachTask.setId(UUIDGenerator.generate());
-        eachTask.setParentId(aTask.getId());
-        eachTask.setStatus(TaskStatus.CREATED);
-        eachTask.setJobId(aTask.getJobId());
-        eachTask.setCreateTime(new Date());
-        eachTask.setPriority(aTask.getPriority());
-        eachTask.setTaskNumber(i+1);
+        SimpleTaskExecution mapTask = SimpleTaskExecution.createFromMap(iteratee);
+        mapTask.setId(UUIDGenerator.generate());
+        mapTask.setParentId(aTask.getId());
+        mapTask.setStatus(TaskStatus.CREATED);
+        mapTask.setJobId(aTask.getJobId());
+        mapTask.setCreateTime(new Date());
+        mapTask.setPriority(aTask.getPriority());
+        mapTask.setTaskNumber(i+1);
         MapContext context = new MapContext (contextRepository.peek(aTask.getId()));
         context.set(aTask.getString("itemVar","item"), item);
         context.set(aTask.getString("itemIndex","itemIndex"), i);
-        contextRepository.push(eachTask.getId(), context);
-        TaskExecution evaluatedEachTask = taskEvaluator.evaluate(eachTask, context);
+        contextRepository.push(mapTask.getId(), context);
+        TaskExecution evaluatedEachTask = taskEvaluator.evaluate(mapTask, context);
         taskExecutionRepo.create(evaluatedEachTask);
         taskDispatcher.dispatch(evaluatedEachTask);
       }
