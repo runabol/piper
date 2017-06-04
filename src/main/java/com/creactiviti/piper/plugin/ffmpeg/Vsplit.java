@@ -36,7 +36,7 @@ public class Vsplit implements TaskHandler<List<Map<String,Object>>> {
     Assert.notNull(frate,"could not determine Frame Rate");
     double frateCeil = Math.ceil(frate);
     double timeUnit = frateCeil/frate;
-    double chunkSize = chunkSizeInSeconds(aTask.getRequiredString("chunkSize"))*timeUnit;
+    double chunkSize = chunkSizeInSeconds(aTask.getString("chunkSize","60s"))*timeUnit;
     double start = 0;
     double end = 0;
     while(start<duration) {

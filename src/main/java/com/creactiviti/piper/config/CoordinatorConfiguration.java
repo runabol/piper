@@ -19,6 +19,7 @@ import com.creactiviti.piper.core.DefaultJobExecutor;
 import com.creactiviti.piper.core.DefaultTaskCompletionHandler;
 import com.creactiviti.piper.core.EachTaskCompletionHandler;
 import com.creactiviti.piper.core.ForkTaskCompletionHandler;
+import com.creactiviti.piper.core.MapTaskCompletionHandler;
 import com.creactiviti.piper.core.SwitchTaskCompletionHandler;
 import com.creactiviti.piper.core.TaskCompletionHandler;
 import com.creactiviti.piper.core.TaskCompletionHandlerChain;
@@ -32,6 +33,7 @@ import com.creactiviti.piper.core.task.ControlTaskDispatcher;
 import com.creactiviti.piper.core.task.CounterRepository;
 import com.creactiviti.piper.core.task.EachTaskDispatcher;
 import com.creactiviti.piper.core.task.ForkTaskDispatcher;
+import com.creactiviti.piper.core.task.MapTaskDispatcher;
 import com.creactiviti.piper.core.task.ParallelTaskCompletionHandler;
 import com.creactiviti.piper.core.task.ParallelTaskDispatcher;
 import com.creactiviti.piper.core.task.SwitchTaskDispatcher;
@@ -92,6 +94,7 @@ public class CoordinatorConfiguration {
     TaskCompletionHandlerChain taskCompletionHandlerChain = new TaskCompletionHandlerChain();
     taskCompletionHandlerChain.setTaskCompletionHandlers(Arrays.asList(
       eachTaskCompletionHandler(taskCompletionHandlerChain),
+      mapTaskCompletionHandler(taskCompletionHandlerChain),
       parallelTaskCompletionHandler(taskCompletionHandlerChain),
       forkTaskCompletionHandler(taskCompletionHandlerChain),
       switchTaskCompletionHandler(taskCompletionHandlerChain),
@@ -128,6 +131,11 @@ public class CoordinatorConfiguration {
   }
   
   @Bean
+  MapTaskCompletionHandler mapTaskCompletionHandler (TaskCompletionHandler aTaskCompletionHandler) {
+    return new MapTaskCompletionHandler(taskExecutionRepo,aTaskCompletionHandler,counterRepository);
+  }
+  
+  @Bean
   ParallelTaskCompletionHandler parallelTaskCompletionHandler (TaskCompletionHandler aTaskCompletionHandler) {
     ParallelTaskCompletionHandler dispatcher = new ParallelTaskCompletionHandler();
     dispatcher.setCounterRepository(counterRepository);
@@ -156,6 +164,7 @@ public class CoordinatorConfiguration {
     TaskDispatcherChain taskDispatcher = new TaskDispatcherChain();
     List<TaskDispatcherResolver> resolvers =  Arrays.asList(
       eachTaskDispatcher(taskDispatcher),
+      mapTaskDispatcher(taskDispatcher),
       parallelTaskDispatcher(taskDispatcher),
       forkTaskDispatcher(taskDispatcher),
       switchTaskDispatcher(taskDispatcher),
@@ -175,6 +184,11 @@ public class CoordinatorConfiguration {
   EachTaskDispatcher eachTaskDispatcher (TaskDispatcher aTaskDispatcher) {
     return new EachTaskDispatcher(aTaskDispatcher,taskExecutionRepo,messenger,contextRepository,counterRepository);
   }
+  
+  @Bean
+  MapTaskDispatcher mapTaskDispatcher (TaskDispatcher aTaskDispatcher) {
+    return new MapTaskDispatcher(aTaskDispatcher,taskExecutionRepo,messenger,contextRepository,counterRepository);
+  }  
   
   @Bean
   ParallelTaskDispatcher parallelTaskDispatcher (TaskDispatcher aTaskDispatcher) {

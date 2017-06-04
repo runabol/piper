@@ -17,6 +17,15 @@ public interface TaskExecutionRepository {
    * @return TaskExecution
    */
   TaskExecution findOne (String aId);
+  
+  /**
+   * Returns a collection of {@link TaskExecution} instances which 
+   * are the children of the given parent id.
+   * 
+   * @param aParentId
+   * @return
+   */
+  List<TaskExecution> findByParentId (String aParentId);
 
   /**
    * Creates a new persistent represenation of the given {@link TaskExecution}.

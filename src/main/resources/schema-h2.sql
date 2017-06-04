@@ -20,7 +20,8 @@ create table task_execution (
   start_time timestamp,
   end_time timestamp,
   serialized_execution text not null,
-  priority int not null
+  priority int not null,
+  task_number int not null
 );
 
 create table context (

@@ -28,11 +28,16 @@ public class JdbcTaskExecutionRepository implements TaskExecutionRepository {
     }
     return null;
   }
+  
+  @Override
+  public List<TaskExecution> findByParentId(String aParentId) {
+    return jdbc.query("select * from task_execution where parent_id = :parentId order by task_number", Collections.singletonMap("parentId", aParentId),this::jobTaskRowMappper);
+  }
 
   @Override
   public void create (TaskExecution aTaskExecution) {
     SqlParameterSource sqlParameterSource = createSqlParameterSource(aTaskExecution);
-    jdbc.update("insert into task_execution (id,parent_id,job_id,serialized_execution,status,create_time,priority) values (:id,:parentId,:jobId,:serializedExecution,:status,:createTime,:priority)", sqlParameterSource);
+    jdbc.update("insert into task_execution (id,parent_id,job_id,serialized_execution,status,create_time,priority,task_number) values (:id,:parentId,:jobId,:serializedExecution,:status,:createTime,:priority,:taskNumber)", sqlParameterSource);
   }
   
   @Override
@@ -72,6 +77,7 @@ public class JdbcTaskExecutionRepository implements TaskExecutionRepository {
     sqlParameterSource.addValue("endTime", aTaskExecution.getEndTime());
     sqlParameterSource.addValue("serializedExecution", writeValueAsJsonString(aTaskExecution));
     sqlParameterSource.addValue("priority", aTaskExecution.getPriority());
+    sqlParameterSource.addValue("taskNumber", aTaskExecution.getTaskNumber());
     return sqlParameterSource;
   }
   
