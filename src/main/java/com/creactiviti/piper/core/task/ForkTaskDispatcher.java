@@ -69,6 +69,10 @@ public class ForkTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDi
   public void dispatch (TaskExecution aTask) {
     List<List> branches = aTask.getList("branches", List.class);
     Assert.notNull(branches,"'branches' property can't be null");
+    SimpleTaskExecution forkTask = SimpleTaskExecution.createForUpdate(aTask);
+    forkTask.setStartTime(new Date ());
+    forkTask.setStatus(TaskStatus.STARTED);
+    taskExecutionRepo.merge(forkTask);
     if(branches.size() > 0) {
       counterRepository.set(aTask.getId(), branches.size());
       for(int i=0; i<branches.size(); i++) {
@@ -80,7 +84,7 @@ public class ForkTaskDispatcher implements TaskDispatcher<TaskExecution>, TaskDi
         execution.setStatus(TaskStatus.CREATED);
         execution.setCreateTime(new Date());
         execution.set("branch", i);
-        execution.setTaskNumber(0);
+        execution.setTaskNumber(1);
         execution.setJobId(aTask.getJobId());
         execution.setParentId(aTask.getId());
         execution.setPriority(aTask.getPriority());

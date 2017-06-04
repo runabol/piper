@@ -70,6 +70,7 @@ public class SwitchTaskCompletionHandler implements TaskCompletionHandler {
       execution.setParentId(switchTask.getId());
       execution.setPriority(switchTask.getPriority());
       MapContext context = new MapContext (contextRepository.peek(switchTask.getId()));
+      contextRepository.push(execution.getId(), context);
       TaskExecution evaluatedExecution = taskEvaluator.evaluate(execution, context);
       taskExecutionRepo.create(evaluatedExecution);
       taskDispatcher.dispatch(evaluatedExecution);

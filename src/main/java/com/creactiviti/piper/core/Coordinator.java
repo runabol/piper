@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -37,6 +38,7 @@ import com.creactiviti.piper.core.task.TaskExecutionRepository;
 import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
 import com.creactiviti.piper.error.ErrorHandler;
+import com.creactiviti.piper.error.ErrorObject;
 import com.creactiviti.piper.error.Errorable;
 import com.creactiviti.piper.error.Prioritizable;
 
@@ -180,7 +182,14 @@ public class Coordinator {
    *          The task to complete.
    */
   public void complete (TaskExecution aTask) {
-    taskCompletionHandler.handle(aTask);
+    try {
+      taskCompletionHandler.handle(aTask);
+    }
+    catch (Exception e) {
+      SimpleTaskExecution exec = SimpleTaskExecution.createForUpdate(aTask);
+      exec.setError(new ErrorObject(e.getMessage(), ExceptionUtils.getStackFrames(e)));
+      handleError(exec);
+    }
   }
 
   /**

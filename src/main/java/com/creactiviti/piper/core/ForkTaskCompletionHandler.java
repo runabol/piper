@@ -69,8 +69,8 @@ public class ForkTaskCompletionHandler implements TaskCompletionHandler {
     TaskExecution fork = taskExecutionRepo.findOne(aTaskExecution.getParentId());
     List<List> list = fork.getList("branches", List.class);
     List<Map<String,Object>> branch = list.get(aTaskExecution.getInteger("branch"));
-    if(aTaskExecution.getTaskNumber()+1 < branch.size()) {
-      Map<String,Object> task = (Map<String, Object>) branch.get(aTaskExecution.getTaskNumber()+1);
+    if(aTaskExecution.getTaskNumber() < branch.size()) {
+      Map<String,Object> task = (Map<String, Object>) branch.get(aTaskExecution.getTaskNumber());
       SimpleTaskExecution execution = SimpleTaskExecution.createFromMap(task);
       execution.setId(UUIDGenerator.generate());
       execution.setStatus(TaskStatus.CREATED);
@@ -89,7 +89,10 @@ public class ForkTaskCompletionHandler implements TaskCompletionHandler {
     else {
       long branchesLeft = counterRepository.decrement(aTaskExecution.getParentId());
       if(branchesLeft == 0) {
-        taskCompletionHandler.handle(taskExecutionRepo.findOne(aTaskExecution.getParentId()));
+        SimpleTaskExecution forkTask = SimpleTaskExecution.createForUpdate(taskExecutionRepo.findOne(aTaskExecution.getParentId()));
+        forkTask.setEndTime(new Date ());
+        forkTask.setExecutionTime(forkTask.getEndTime().getTime()-forkTask.getStartTime().getTime());
+        taskCompletionHandler.handle(forkTask);
       }
     }
   }

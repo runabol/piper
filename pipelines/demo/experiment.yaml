@@ -1,0 +1,64 @@
+label: Hello Experiment
+    
+tasks:          
+
+  - name: selector
+    type: randomInt
+    startInclusive: 1
+    endInclusive: 3
+
+  - type: switch
+    expression: c2
+    cases:
+      - key: c1
+        tasks: 
+          - type: print
+            label: "hello c1"
+            text: "hello c1"
+            
+          - type: sleep
+            millis: 3000 
+            
+      - key: c2
+        tasks: 
+          - type: print
+            label: "hello c2"
+            text: "hello c2"
+            
+          - type: sleep
+            millis: 1000
+            
+          - type: fork
+            branches: 
+               - - name: randomNumber
+                   label: Generate a random number
+                   type: randomInt
+                   startInclusive: 0
+                   endInclusive: 5000
+                   
+                 - type: sleep
+                   millis: ${randomNumber}
+                   
+               - - name: randomNumber
+                   label: Generate a random number
+                   type: randomInt
+                   startInclusive: 0
+                   endInclusive: 5000
+                   
+                 - type: sleep
+                   millis: ${randomNumber}
+                   
+                 - type: each
+                   list: [1000, 2000, 4000]
+                   iteratee: 
+                     type: sleep
+                     millis: ${item}
+            
+    default: 
+          - type: print
+            label: "hello default"
+            text: "hello default"
+            
+          - type: sleep
+            millis: 1000
+             
