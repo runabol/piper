@@ -66,7 +66,7 @@ public class CoordinatorConfiguration {
   Coordinator coordinator () {
     Coordinator coordinator = new Coordinator();
     coordinator.setContextRepository(contextRepository);
-    coordinator.setEventPublisher(distributedEventPublisher());
+    coordinator.setEventPublisher(coordinatorEventPublisher());
     coordinator.setJobRepository(jobRepository);
     coordinator.setJobTaskRepository(taskExecutionRepo);
     coordinator.setPipelineRepository(pipelineRepository);
@@ -89,7 +89,7 @@ public class CoordinatorConfiguration {
     jobTaskErrorHandler.setJobRepository(jobRepository);
     jobTaskErrorHandler.setJobTaskRepository(taskExecutionRepo);
     jobTaskErrorHandler.setTaskDispatcher(taskDispatcher());
-    jobTaskErrorHandler.setEventPublisher(distributedEventPublisher());
+    jobTaskErrorHandler.setEventPublisher(coordinatorEventPublisher());
     return jobTaskErrorHandler;
   }
   
@@ -115,7 +115,7 @@ public class CoordinatorConfiguration {
     taskCompletionHandler.setJobRepository(jobRepository);
     taskCompletionHandler.setJobTaskRepository(taskExecutionRepo);
     taskCompletionHandler.setPipelineRepository(pipelineRepository);
-    taskCompletionHandler.setEventPublisher(distributedEventPublisher());
+    taskCompletionHandler.setEventPublisher(coordinatorEventPublisher());
     return taskCompletionHandler;
   }
   
@@ -232,7 +232,7 @@ public class CoordinatorConfiguration {
   }
   
   @Bean
-  DistributedEventPublisher distributedEventPublisher () {
+  DistributedEventPublisher coordinatorEventPublisher () {
     return new DistributedEventPublisher (messenger);
   }
   

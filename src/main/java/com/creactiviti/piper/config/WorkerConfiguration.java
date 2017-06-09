@@ -26,12 +26,12 @@ public class WorkerConfiguration {
     Worker worker = new Worker();
     worker.setMessenger(aMessenger);
     worker.setTaskHandlerResolver(aTaskHandlerResolver);
-    worker.setEventPublisher(distributedEventPublisher());
+    worker.setEventPublisher(workerEventPublisher());
     return worker;
   }
 
   @Bean
-  DistributedEventPublisher distributedEventPublisher () {
+  DistributedEventPublisher workerEventPublisher () {
     return new DistributedEventPublisher (messenger);
   }
 }
