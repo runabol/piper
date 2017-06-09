@@ -46,7 +46,7 @@ public class JobStatusWebhookEventHandler implements ApplicationListener<Payload
     }
     List<Accessor> webhooks = job.getWebhooks();
     for(Accessor webhook : webhooks) {
-      if(aEvent.getType().equals(webhook.getRequiredString(DSL.TYPE))) {
+      if(Events.JOB_STATUS.equals(aEvent.getType())) {
         MapObject webhookEvent = new MapObject(webhook.asMap());
         webhookEvent.put("source",aEvent.asMap());
         rest.postForObject(webhook.getRequiredString(DSL.URL), webhookEvent, String.class);
