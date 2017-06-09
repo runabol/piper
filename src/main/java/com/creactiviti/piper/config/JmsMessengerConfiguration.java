@@ -32,6 +32,7 @@ import org.springframework.jms.support.converter.MessageType;
 
 import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.Worker;
+import com.creactiviti.piper.core.event.EventListener;
 import com.creactiviti.piper.core.messenger.Exchanges;
 import com.creactiviti.piper.core.messenger.JmsMessenger;
 import com.creactiviti.piper.core.messenger.Queues;
@@ -49,6 +50,9 @@ public class JmsMessengerConfiguration implements JmsListenerConfigurer {
   @Lazy
   @Autowired(required=false)
   private Coordinator coordinator;
+
+  @Autowired
+  private EventListener eventListener;
   
   @Autowired
   private ObjectMapper objectMapper;
@@ -91,7 +95,7 @@ public class JmsMessengerConfiguration implements JmsListenerConfigurer {
     if(coordinatorProperties.isEnabled()) {
       registerListenerEndpoint(aRegistrar, Queues.COMPLETIONS, coordinatorProperties.getSubscriptions().getCompletions() , coordinator, "complete");
       registerListenerEndpoint(aRegistrar, Queues.ERRORS, coordinatorProperties.getSubscriptions().getErrors(), coordinator, "handleError");
-      registerListenerEndpoint(aRegistrar, Queues.EVENTS, coordinatorProperties.getSubscriptions().getEvents(), coordinator, "on");
+      registerListenerEndpoint(aRegistrar, Queues.EVENTS, coordinatorProperties.getSubscriptions().getEvents(), eventListener, "onApplicationEvent");
       registerListenerEndpoint(aRegistrar, Queues.JOBS, coordinatorProperties.getSubscriptions().getJobs(), coordinator, "start");
     }
     if(workerProperties.isEnabled()) {

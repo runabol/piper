@@ -130,6 +130,21 @@ public interface Accessor {
   <T> T getRequired (Object aKey);
   
   /**
+   * Return the value -- converting to the desired return type -- 
+   * associated with the given key or throws an exception if no 
+   * value is associated with the given key. 
+   * 
+   * 
+   * @param aKey
+   *          The key associated with the desired value.
+   * @param aReturnType
+   *          The type to return the value as -- converting
+   *          as neccessary.
+   * @return The value associated with the given key.
+   */
+  <T> T getRequired (Object aKey, Class<T> aValueType);
+  
+  /**
    * Return the {@link String} value associated with the given
    * key -- converting as necessary.
    * 

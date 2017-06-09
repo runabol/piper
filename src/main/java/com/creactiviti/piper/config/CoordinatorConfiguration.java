@@ -25,7 +25,9 @@ import com.creactiviti.piper.core.TaskCompletionHandler;
 import com.creactiviti.piper.core.TaskCompletionHandlerChain;
 import com.creactiviti.piper.core.context.Context;
 import com.creactiviti.piper.core.context.ContextRepository;
-import com.creactiviti.piper.core.event.InternalEventPublisher;
+import com.creactiviti.piper.core.event.DistributedEventPublisher;
+import com.creactiviti.piper.core.event.EventListener;
+import com.creactiviti.piper.core.event.SpringEventListener;
 import com.creactiviti.piper.core.event.TaskStartedEventHandler;
 import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.messenger.Messenger;
@@ -46,6 +48,7 @@ import com.creactiviti.piper.core.task.WorkTaskDispatcher;
 import com.creactiviti.piper.error.ErrorHandler;
 import com.creactiviti.piper.error.ErrorHandlerChain;
 import com.creactiviti.piper.error.TaskExecutionErrorHandler;
+import com.creactiviti.piper.webhook.WebhookEventHandler;
 
 @Configuration
 @ConditionalOnCoordinator
@@ -63,7 +66,7 @@ public class CoordinatorConfiguration {
   Coordinator coordinator () {
     Coordinator coordinator = new Coordinator();
     coordinator.setContextRepository(contextRepository);
-    coordinator.setEventPublisher(internalEventPublisher());
+    coordinator.setEventPublisher(distributedEventPublisher());
     coordinator.setJobRepository(jobRepository);
     coordinator.setJobTaskRepository(taskExecutionRepo);
     coordinator.setPipelineRepository(pipelineRepository);
@@ -86,7 +89,7 @@ public class CoordinatorConfiguration {
     jobTaskErrorHandler.setJobRepository(jobRepository);
     jobTaskErrorHandler.setJobTaskRepository(taskExecutionRepo);
     jobTaskErrorHandler.setTaskDispatcher(taskDispatcher());
-    jobTaskErrorHandler.setEventPublisher(internalEventPublisher());
+    jobTaskErrorHandler.setEventPublisher(distributedEventPublisher());
     return jobTaskErrorHandler;
   }
   
@@ -112,7 +115,7 @@ public class CoordinatorConfiguration {
     taskCompletionHandler.setJobRepository(jobRepository);
     taskCompletionHandler.setJobTaskRepository(taskExecutionRepo);
     taskCompletionHandler.setPipelineRepository(pipelineRepository);
-    taskCompletionHandler.setEventPublisher(internalEventPublisher());
+    taskCompletionHandler.setEventPublisher(distributedEventPublisher());
     return taskCompletionHandler;
   }
   
@@ -224,8 +227,18 @@ public class CoordinatorConfiguration {
   }
   
   @Bean
-  InternalEventPublisher internalEventPublisher () {
-    return new InternalEventPublisher (applicationEventPublisher);
+  WebhookEventHandler webhookEventHandler () {
+    return new WebhookEventHandler(jobRepository);
+  }
+  
+  @Bean
+  DistributedEventPublisher distributedEventPublisher () {
+    return new DistributedEventPublisher (messenger);
+  }
+  
+  @Bean
+  EventListener eventListener (ApplicationEventPublisher aApplicationEventPublisher) {
+    return new SpringEventListener(aApplicationEventPublisher);
   }
   
 }

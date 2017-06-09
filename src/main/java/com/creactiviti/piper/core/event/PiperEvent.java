@@ -94,6 +94,11 @@ public class PiperEvent extends ApplicationEvent implements Accessor {
   public <T> T getRequired(Object aKey) {
     return getSource().getRequired(aKey);
   }
+  
+  @Override
+  public <T> T getRequired(Object aKey, Class<T> aValueType) {
+    return getSource().getRequired(aKey, aValueType);
+  }
 
   public String getString(Object aKey, String aDefaultValue) {
     return getSource().getString(aKey, aDefaultValue);

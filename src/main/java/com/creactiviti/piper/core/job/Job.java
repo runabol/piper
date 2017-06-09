@@ -9,6 +9,7 @@ package com.creactiviti.piper.core.job;
 import java.util.Date;
 import java.util.List;
 
+import com.creactiviti.piper.core.Accessor;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.error.Errorable;
@@ -95,5 +96,21 @@ public interface Job extends Errorable, Prioritizable {
    * @return String[]
    */
   String[] getTags ();
+
+  /**
+   * Get the key-value map of inputs passed 
+   * to the job when it was created.
+   * 
+   * @return {@link Accessor}
+   */
+  Accessor getInputs ();
+
+  /**
+   * Get the list of webhooks configured
+   * for this job.
+   * 
+   * @return {@link List}
+   */
+  List<Accessor> getWebhooks ();
   
 }

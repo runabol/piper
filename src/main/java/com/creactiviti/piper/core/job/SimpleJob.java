@@ -13,6 +13,7 @@ import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 
+import com.creactiviti.piper.core.Accessor;
 import com.creactiviti.piper.core.DSL;
 import com.creactiviti.piper.core.MapObject;
 import com.creactiviti.piper.core.task.TaskExecution;
@@ -153,6 +154,25 @@ public class SimpleJob extends MapObject implements Job {
   
   public void setPriority (int aPriority) {
     set(DSL.PRIORTIY, aPriority);
+  }
+  
+  @Override
+  public Accessor getInputs() {
+    Map<String, Object> map = getMap(DSL.INPUTS);
+    return map!=null?new MapObject(map):new MapObject();
+  }
+  
+  public void setInputs (Accessor aInputs) {
+    set(DSL.INPUTS,aInputs);
+  }
+  
+  @Override
+  public List<Accessor> getWebhooks() {
+    return getList(DSL.WEBHOOKS, MapObject.class, Collections.EMPTY_LIST);
+  }
+  
+  public void setWebhooks (List<Accessor> aWebhooks) {
+    set(DSL.WEBHOOKS,aWebhooks);
   }
   
 }

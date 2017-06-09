@@ -20,6 +20,7 @@ See http://meetpiper.com
 - dispatch another pipeline
 - terminate type
 - pipeline output
+- webhooks
 
 - server-sent-event
 - Job outputs? 

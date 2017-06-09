@@ -1,0 +1,16 @@
+{
+  "pipelineId":"demo/hello",
+  "inputs":{
+  	"yourName":"Joe"
+  },
+  "webhooks": [
+  	{
+  	  "type":"task.started",
+  	  "url":"http://example.com/callme/tasks/1234"	
+  	},
+  	{
+  	  "type":"job.status",
+  	  "url":"http://example.com/callme/job/1234"	
+  	}
+  ]
+}

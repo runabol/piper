@@ -104,6 +104,13 @@ public class MapObject implements Map<String, Object>, Accessor, Mutator {
   }
   
   @Override
+  public <T> T getRequired(Object aKey, Class<T> aValueType) {
+    T value = get(aKey,aValueType);
+    Assert.notNull(value,"Unknown key: " + aKey);
+    return value;
+  }
+  
+  @Override
   public String getString (Object aKey, String aDefault) {
     String value = getString(aKey);
     return value != null ? value : aDefault;

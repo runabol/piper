@@ -26,7 +26,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.creactiviti.piper.core.context.JdbcContextRepository;
 import com.creactiviti.piper.core.event.EventPublisher;
-import com.creactiviti.piper.core.event.PiperEvent;
 import com.creactiviti.piper.core.job.JdbcJobRepository;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobStatus;
@@ -62,7 +61,6 @@ public class CoordinatorTests {
    
     SynchMessenger messenger = new SynchMessenger();
     messenger.receive(Queues.COMPLETIONS, (o)->coordinator.complete((TaskExecution)o));
-    messenger.receive(Queues.EVENTS, (o)->coordinator.on((PiperEvent)o));
     messenger.receive(Queues.JOBS, (o)->coordinator.start((Job)o));
     
     

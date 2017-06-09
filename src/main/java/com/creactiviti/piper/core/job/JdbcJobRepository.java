@@ -21,11 +21,15 @@ import com.creactiviti.piper.core.Page;
 import com.creactiviti.piper.core.ResultPage;
 import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskExecutionRepository;
+import com.creactiviti.piper.json.JsonHelper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JdbcJobRepository implements JobRepository {
 
   private NamedParameterJdbcOperations jdbc;
   private TaskExecutionRepository jobTaskRepository;
+  
+  private final ObjectMapper json = new ObjectMapper();
   
   public static final int DEFAULT_PAGE_SIZE = 20;
   
@@ -70,7 +74,7 @@ public class JdbcJobRepository implements JobRepository {
   @Override
   public void create (Job aJob) {
     MapSqlParameterSource sqlParameterSource = createSqlParameterSource(aJob);
-    jdbc.update("insert into job (id,create_time,start_time,status,current_task,pipeline_id,label,tags,priority) values (:id,:createTime,:startTime,:status,:currentTask,:pipelineId,:label,:tags,:priority)", sqlParameterSource);
+    jdbc.update("insert into job (id,create_time,start_time,status,current_task,pipeline_id,label,tags,priority,inputs,webhooks) values (:id,:createTime,:startTime,:status,:currentTask,:pipelineId,:label,:tags,:priority,:inputs,:webhooks)", sqlParameterSource);
   }
 
   private MapSqlParameterSource createSqlParameterSource(Job aJob) {
@@ -90,6 +94,8 @@ public class JdbcJobRepository implements JobRepository {
     sqlParameterSource.addValue("endTime", job.getEndTime());
     sqlParameterSource.addValue("tags", String.join(",",job.getTags()));
     sqlParameterSource.addValue("priority", job.getPriority());
+    sqlParameterSource.addValue("inputs", JsonHelper.writeValueAsString(json,job.getInputs()));
+    sqlParameterSource.addValue("webhooks", JsonHelper.writeValueAsString(json,job.getWebhooks()));
     return sqlParameterSource;
   }
   
@@ -112,8 +118,10 @@ public class JdbcJobRepository implements JobRepository {
     map.put("startTime", aRs.getTimestamp("start_time"));
     map.put("endTime", aRs.getTimestamp("end_time"));
     map.put("execution", getExecution(aRs.getString("id")));
-    map.put("tags", aRs.getString("tags").split(","));
+    map.put("tags", aRs.getString("tags").length()>0?aRs.getString("tags").split(","):new String[0]);
     map.put("priority", aRs.getInt("priority"));
+    map.put("inputs", JsonHelper.readValue(json,aRs.getString("inputs"),Map.class));
+    map.put("webhooks", JsonHelper.readValue(json,aRs.getString("webhooks"),List.class));
     return new SimpleJob(map);
   }
   

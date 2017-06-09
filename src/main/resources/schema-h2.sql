@@ -7,8 +7,10 @@ create table job (
   start_time timestamp,
   create_time timestamp not null,
   end_time timestamp,
-  tags text,
-  priority int not null
+  tags text not null,
+  priority int not null,
+  inputs text not null,
+  webhooks text not null
 );
 
 create table task_execution (
