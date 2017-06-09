@@ -85,6 +85,8 @@ public class DSL {
   
   public static final String REQUIRED = "required";
   
+  public static final String EVENT = "event";
+  
   public static final String[] RESERVED_WORDS = new String[]{
                                                               ID,
                                                               PARENT_ID,

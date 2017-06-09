@@ -79,7 +79,7 @@ public class Worker {
         long startTime = System.currentTimeMillis();
         logger.debug("Recived task: {}",aTask);
         TaskHandler<?> taskHandler = taskHandlerResolver.resolve(aTask);
-        eventPublisher.publishEvent(PiperEvent.of(Events.TASK_STARTED,"taskId",aTask.getId()));
+        eventPublisher.publishEvent(PiperEvent.of(Events.TASK_STARTED,"taskId",aTask.getId(),"jobId",aTask.getJobId()));
         Object output = taskHandler.handle(aTask);
         SimpleTaskExecution completion = SimpleTaskExecution.createForUpdate(aTask);
         if(output!=null) {

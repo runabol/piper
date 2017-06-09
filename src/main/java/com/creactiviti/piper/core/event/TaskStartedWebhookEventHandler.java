@@ -25,7 +25,7 @@ import com.creactiviti.piper.core.job.JobRepository;
  * @author Arik Cohen
  * @since Jun 9, 2017
  */
-public class JobStatusWebhookEventHandler implements ApplicationListener<PayloadApplicationEvent<PiperEvent>>{
+public class TaskStartedWebhookEventHandler implements ApplicationListener<PayloadApplicationEvent<PiperEvent>>{
   
   private final JobRepository jobRepository;
   
@@ -33,7 +33,7 @@ public class JobStatusWebhookEventHandler implements ApplicationListener<Payload
   
   private final RestTemplate rest = new RestTemplate();
   
-  public JobStatusWebhookEventHandler(JobRepository aJobRepository) {
+  public TaskStartedWebhookEventHandler(JobRepository aJobRepository) {
     jobRepository = aJobRepository;
   }
   
@@ -46,7 +46,7 @@ public class JobStatusWebhookEventHandler implements ApplicationListener<Payload
     }
     List<Accessor> webhooks = job.getWebhooks();
     for(Accessor webhook : webhooks) {
-      if(Events.JOB_STATUS.equals(webhook.getRequiredString(DSL.TYPE))) {
+      if(Events.TASK_STARTED.equals(webhook.getRequiredString(DSL.TYPE))) {
         MapObject webhookEvent = new MapObject(webhook.asMap());
         webhookEvent.put(DSL.EVENT,aEvent.asMap());
         rest.postForObject(webhook.getRequiredString(DSL.URL), webhookEvent, String.class);
@@ -56,7 +56,7 @@ public class JobStatusWebhookEventHandler implements ApplicationListener<Payload
   
   @Override
   public void onApplicationEvent (PayloadApplicationEvent<PiperEvent> aEvent) {
-    if(aEvent.getPayload().getType().equals(Events.JOB_STATUS)) {
+    if(aEvent.getPayload().getType().equals(Events.TASK_STARTED)) {
       handleEvent(aEvent.getPayload());
     }
   }
