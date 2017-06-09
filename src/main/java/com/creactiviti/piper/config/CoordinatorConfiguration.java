@@ -27,9 +27,9 @@ import com.creactiviti.piper.core.context.Context;
 import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.event.DistributedEventPublisher;
 import com.creactiviti.piper.core.event.EventListener;
+import com.creactiviti.piper.core.event.JobStatusWebhookEventHandler;
 import com.creactiviti.piper.core.event.SpringEventListener;
 import com.creactiviti.piper.core.event.TaskStartedEventHandler;
-import com.creactiviti.piper.core.event.WebhookEventHandler;
 import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
@@ -227,8 +227,8 @@ public class CoordinatorConfiguration {
   }
   
   @Bean
-  WebhookEventHandler webhookEventHandler () {
-    return new WebhookEventHandler(jobRepository);
+  JobStatusWebhookEventHandler webhookEventHandler () {
+    return new JobStatusWebhookEventHandler(jobRepository);
   }
   
   @Bean

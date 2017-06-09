@@ -85,7 +85,7 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
     job.setEndTime(new Date ());
     job.setCurrentTask(-1);
     jobRepository.merge(job);
-    eventPublisher.publishEvent(PiperEvent.of(Events.JOB_STATUS, "jobId", aJob.getId(), "status", aJob.getStatus()));
+    eventPublisher.publishEvent(PiperEvent.of(Events.JOB_STATUS, "jobId", aJob.getId(), "status", job.getStatus()));
     log.debug("Job {} completed successfully",aJob.getId());
   }
   
