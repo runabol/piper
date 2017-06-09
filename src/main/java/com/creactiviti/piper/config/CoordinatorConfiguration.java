@@ -29,6 +29,7 @@ import com.creactiviti.piper.core.event.DistributedEventPublisher;
 import com.creactiviti.piper.core.event.EventListener;
 import com.creactiviti.piper.core.event.SpringEventListener;
 import com.creactiviti.piper.core.event.TaskStartedEventHandler;
+import com.creactiviti.piper.core.event.WebhookEventHandler;
 import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
@@ -48,7 +49,6 @@ import com.creactiviti.piper.core.task.WorkTaskDispatcher;
 import com.creactiviti.piper.error.ErrorHandler;
 import com.creactiviti.piper.error.ErrorHandlerChain;
 import com.creactiviti.piper.error.TaskExecutionErrorHandler;
-import com.creactiviti.piper.webhook.WebhookEventHandler;
 
 @Configuration
 @ConditionalOnCoordinator

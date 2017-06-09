@@ -1,4 +1,10 @@
-package com.creactiviti.piper.webhook;
+/* 
+ * Copyright (C) Creactiviti LLC - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Arik Cohen <arik@creactiviti.com>, Jun 2017
+ */
+package com.creactiviti.piper.core.event;
 
 import java.util.List;
 
@@ -9,11 +15,14 @@ import org.springframework.web.client.RestTemplate;
 
 import com.creactiviti.piper.core.Accessor;
 import com.creactiviti.piper.core.DSL;
-import com.creactiviti.piper.core.event.Events;
-import com.creactiviti.piper.core.event.PiperEvent;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobRepository;
 
+/**
+ * 
+ * @author Arik Cohen
+ * @since Jun 9, 2017
+ */
 public class WebhookEventHandler implements ApplicationListener<PiperEvent>{
   
   private final JobRepository jobRepository;
