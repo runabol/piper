@@ -44,7 +44,7 @@ public class WebhookEventHandler implements ApplicationListener<PiperEvent>{
     }
     List<Accessor> webhooks = job.getWebhooks();
     for(Accessor webhook : webhooks) {
-      if(Events.JOB_STATUS.equals(webhook.getRequiredString(DSL.TYPE))) {
+      if(aEvent.getType().equals(webhook.getRequiredString(DSL.TYPE))) {
         rest.postForObject(webhook.getRequiredString(DSL.URL), aEvent, String.class);
       }
     }
