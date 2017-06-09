@@ -28,9 +28,6 @@ import com.google.common.collect.ImmutableMap;
 @SuppressWarnings("serial")
 public class PiperEvent extends ApplicationEvent implements Accessor {
 
-  public static final String TASK_STARTED = "task.started";
-  public static final String JOB_STATUS = "job.status";
-  
   private PiperEvent() {
     super(new MapObject());
   }
