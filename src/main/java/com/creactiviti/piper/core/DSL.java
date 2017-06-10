@@ -87,6 +87,10 @@ public class DSL {
   
   public static final String EVENT = "event";
   
+  public static final String OUTPUTS = "outputs";
+  
+  public static final String VALUE = "value";
+  
   public static final String[] RESERVED_WORDS = new String[]{
                                                               ID,
                                                               PARENT_ID,

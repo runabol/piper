@@ -7,6 +7,7 @@
 package com.creactiviti.piper.core;
 
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,8 @@ import com.creactiviti.piper.core.job.SimpleJob;
 import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
+import com.creactiviti.piper.core.task.SpelTaskEvaluator;
+import com.creactiviti.piper.core.task.TaskEvaluator;
 import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskExecutionRepository;
 import com.creactiviti.piper.core.task.TaskStatus;
@@ -44,6 +47,7 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
   private ContextRepository contextRepository;
   private JobExecutor jobExecutor;
   private EventPublisher eventPublisher;
+  private TaskEvaluator taskEvaluator = new SpelTaskEvaluator(); 
   
   @Override
   public void handle (TaskExecution aTask) {
@@ -80,10 +84,19 @@ public class DefaultTaskCompletionHandler implements TaskCompletionHandler {
   }
 
   private void complete (SimpleJob aJob) {
+    Pipeline pipeline = pipelineRepository.findOne(aJob.getPipelineId());
+    List<Accessor> outputs = pipeline.getOutputs();
+    Context context = contextRepository.peek(aJob.getId());
+    SimpleTaskExecution jobOutput = SimpleTaskExecution.create(); 
+    for(Accessor output : outputs) {
+      jobOutput.set(output.getRequiredString(DSL.NAME), output.getRequiredString(DSL.VALUE));
+    }
+    TaskExecution evaledjobOutput = taskEvaluator.evaluate(jobOutput, context);
     SimpleJob job = new SimpleJob((Job)aJob);
     job.setStatus(JobStatus.COMPLETED);
     job.setEndTime(new Date ());
     job.setCurrentTask(-1);
+    job.setOutputs(evaledjobOutput);
     jobRepository.merge(job);
     eventPublisher.publishEvent(PiperEvent.of(Events.JOB_STATUS, "jobId", aJob.getId(), "status", job.getStatus()));
     log.debug("Job {} completed successfully",aJob.getId());

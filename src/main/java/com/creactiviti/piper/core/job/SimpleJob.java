@@ -161,9 +161,19 @@ public class SimpleJob extends MapObject implements Job {
     Map<String, Object> map = getMap(DSL.INPUTS);
     return map!=null?new MapObject(map):new MapObject();
   }
-  
+    
   public void setInputs (Accessor aInputs) {
     set(DSL.INPUTS,aInputs);
+  }
+  
+  @Override
+  public Accessor getOutputs() {
+    Map<String, Object> map = getMap(DSL.OUTPUTS);
+    return map!=null?new MapObject(map):new MapObject();
+  }
+  
+  public void setOutputs (Accessor aOutputs) {
+    set(DSL.OUTPUTS,aOutputs);
   }
   
   @Override

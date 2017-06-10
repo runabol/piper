@@ -10,7 +10,8 @@ create table job (
   tags text not null,
   priority int not null,
   inputs text not null,
-  webhooks text not null
+  webhooks text not null,
+  outputs text not null
 );
 
 create table task_execution (

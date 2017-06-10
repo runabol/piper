@@ -37,7 +37,12 @@ public interface Pipeline extends Errorable {
   List<PipelineTask> getTasks ();
 
   /**
-   * Returns the pipeline's expected input
+   * Returns the pipeline's expected inputs
    */
   List<Accessor> getInputs ();
+
+  /**
+   * Returns the pipeline's expected outputs
+   */
+  List<Accessor> getOutputs ();
 }

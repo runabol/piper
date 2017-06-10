@@ -51,6 +51,11 @@ public class SimplePipeline extends MapObject implements Pipeline {
   }
   
   @Override
+  public List<Accessor> getOutputs() {
+    return getList(DSL.OUTPUTS,Accessor.class,Collections.EMPTY_LIST);
+  }
+  
+  @Override
   public Error getError() {
     if(containsKey(DSL.ERROR)) {
       return new ErrorObject(getMap(DSL.ERROR));

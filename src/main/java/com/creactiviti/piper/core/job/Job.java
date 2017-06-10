@@ -106,6 +106,14 @@ public interface Job extends Errorable, Prioritizable {
   Accessor getInputs ();
 
   /**
+   * Get the key-value map of outputs returned
+   * by the job.
+   * 
+   * @return {@link Accessor}
+   */
+  Accessor getOutputs ();
+
+  /**
    * Get the list of webhooks configured
    * for this job.
    * 

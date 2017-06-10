@@ -83,13 +83,12 @@ public class Coordinator {
     String pipelineId = jobParams.getRequiredString(PIPELINE_ID);
     Pipeline pipeline = pipelineRepository.findOne(pipelineId);    
     Assert.notNull(pipeline,String.format("Unkown pipeline: %s", pipelineId));
+    Assert.isNull(pipeline.getError(), pipeline.getError()!=null?String.format("%s: %s",pipelineId,pipeline.getError().getMessage()):null);
 
     validate (jobParams, pipeline);
     
     MapObject inputs = MapObject.of(jobParams.getMap(INPUTS,Collections.EMPTY_MAP));
-    
     List<Accessor> webhooks = jobParams.getList(WEBHOOKS, MapObject.class, Collections.EMPTY_LIST);
-    
     List<String> tags = (List<String>) aJobParams.get(TAGS);
 
     SimpleJob job = new SimpleJob();

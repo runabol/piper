@@ -6,6 +6,10 @@ inputs:
     type: string
     required: true
     
+outputs:
+  - name: myMagicNumber
+    value: ${randomNumber}
+    
 tasks:
   - name: randomNumber
     label: Generate a random number

@@ -67,14 +67,14 @@ public class JdbcJobRepository implements JobRepository {
   @Override
   public Job merge (Job aJob) {
     MapSqlParameterSource sqlParameterSource = createSqlParameterSource(aJob);
-    jdbc.update("update job set status=:status,start_time=:startTime,end_time=:endTime,current_task=:currentTask,pipeline_id=:pipelineId,label=:label,tags=:tags where id = :id ", sqlParameterSource);
+    jdbc.update("update job set status=:status,start_time=:startTime,end_time=:endTime,current_task=:currentTask,pipeline_id=:pipelineId,label=:label,tags=:tags,outputs=:outputs where id = :id ", sqlParameterSource);
     return aJob;
   }
 
   @Override
   public void create (Job aJob) {
     MapSqlParameterSource sqlParameterSource = createSqlParameterSource(aJob);
-    jdbc.update("insert into job (id,create_time,start_time,status,current_task,pipeline_id,label,tags,priority,inputs,webhooks) values (:id,:createTime,:startTime,:status,:currentTask,:pipelineId,:label,:tags,:priority,:inputs,:webhooks)", sqlParameterSource);
+    jdbc.update("insert into job (id,create_time,start_time,status,current_task,pipeline_id,label,tags,priority,inputs,webhooks,outputs) values (:id,:createTime,:startTime,:status,:currentTask,:pipelineId,:label,:tags,:priority,:inputs,:webhooks,:outputs)", sqlParameterSource);
   }
 
   private MapSqlParameterSource createSqlParameterSource(Job aJob) {
@@ -95,6 +95,7 @@ public class JdbcJobRepository implements JobRepository {
     sqlParameterSource.addValue("tags", String.join(",",job.getTags()));
     sqlParameterSource.addValue("priority", job.getPriority());
     sqlParameterSource.addValue("inputs", JsonHelper.writeValueAsString(json,job.getInputs()));
+    sqlParameterSource.addValue("outputs", JsonHelper.writeValueAsString(json,job.getOutputs()));
     sqlParameterSource.addValue("webhooks", JsonHelper.writeValueAsString(json,job.getWebhooks()));
     return sqlParameterSource;
   }
@@ -121,6 +122,7 @@ public class JdbcJobRepository implements JobRepository {
     map.put("tags", aRs.getString("tags").length()>0?aRs.getString("tags").split(","):new String[0]);
     map.put("priority", aRs.getInt("priority"));
     map.put("inputs", JsonHelper.readValue(json,aRs.getString("inputs"),Map.class));
+    map.put("outputs", JsonHelper.readValue(json,aRs.getString("outputs"),Map.class));
     map.put("webhooks", JsonHelper.readValue(json,aRs.getString("webhooks"),List.class));
     return new SimpleJob(map);
   }

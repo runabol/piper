@@ -69,8 +69,22 @@ public abstract class YamlPipelineRepository implements PipelineRepository  {
   }
   
   private void validate (Map<String,Object> aMap) {
+    validateReservedWords(aMap);
+    validateOutputs(aMap);
+  }
+
+  private void validateOutputs (Map<String, Object> aPipeline) {
+    List<Map<String,Object>> outputs = (List<Map<String, Object>>) aPipeline.get(DSL.OUTPUTS);
+    for(int i=0; outputs!=null&&i<outputs.size();i++) {
+      Map<String, Object> output = outputs.get(i);
+      Assert.notNull(output.get(DSL.NAME),"output definition must specify a 'name'");
+      Assert.notNull(output.get(DSL.VALUE),"output definition must specify a 'value'");
+    }
+  }
+  
+  private void validateReservedWords(Map<String, Object> aPipeline) {
     List<String> reservedWords = Arrays.asList(DSL.RESERVED_WORDS);
-    for(Entry<String,Object> entry : aMap.entrySet()) {
+    for(Entry<String,Object> entry : aPipeline.entrySet()) {
       String k = entry.getKey();
       Object v = entry.getValue();
       Assert.isTrue(!reservedWords.contains(k),"reserved word: " + k);
