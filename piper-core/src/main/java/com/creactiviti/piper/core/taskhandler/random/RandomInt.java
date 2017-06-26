@@ -4,7 +4,7 @@
  * Proprietary and confidential
  * Written by Arik Cohen <arik@creactiviti.com>, Mar 2017
  */
-package com.creactiviti.piper.plugin.random;
+package com.creactiviti.piper.core.taskhandler.random;
 
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Component;

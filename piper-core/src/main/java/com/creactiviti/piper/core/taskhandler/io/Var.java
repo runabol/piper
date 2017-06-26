@@ -2,26 +2,26 @@
  * Copyright (C) Creactiviti LLC - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
- * Written by Arik Cohen <arik@creactiviti.com>, Mar 2017
+ * Written by Arik Cohen <arik@creactiviti.com>, May 2017
  */
-package com.creactiviti.piper.plugin.io;
+package com.creactiviti.piper.core.taskhandler.io;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.creactiviti.piper.core.task.Task;
 import com.creactiviti.piper.core.task.TaskHandler;
 
+/**
+ * 
+ * @author Arik Cohen
+ * @since May 11, 2017
+ */
 @Component
-public class Print implements TaskHandler<Object> {
-
-  private Logger log = LoggerFactory.getLogger(getClass());
+public class Var implements TaskHandler<Object> {
 
   @Override
   public Object handle (Task aTask) {
-    log.info(aTask.getRequiredString("text"));
-    return null;
+    return aTask.getRequired("value");
   }
 
 }

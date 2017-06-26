@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 
 import com.creactiviti.piper.core.job.SimpleTaskExecution;
-import com.creactiviti.piper.plugin.script.Bash;
+import com.creactiviti.piper.core.taskhandler.script.Bash;
 
 public class BashTests {
 
