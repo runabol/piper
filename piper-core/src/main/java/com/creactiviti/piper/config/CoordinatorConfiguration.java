@@ -61,7 +61,6 @@ public class CoordinatorConfiguration {
   @Autowired private PipelineRepository pipelineRepository;
   @Autowired private CounterRepository counterRepository;
   @Autowired private Messenger messenger;
-  @Autowired private ApplicationEventPublisher applicationEventPublisher;
   
   @Bean
   Coordinator coordinator () {

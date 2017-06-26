@@ -6,7 +6,7 @@
 	<groupId>com.creactiviti.piper</groupId>
 	<artifactId>piper</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>pom</packaging>
 
 	<name>piper</name>
 	<description>Piper -- Distributed Pipeline Engine</description>
@@ -129,5 +129,9 @@
 		</plugins>
 	</build>
 
-
+	<modules>
+		<module>piper-plugin-ffmpeg</module>
+		<module>piper-core</module>
+	</modules>
+	
 </project>
