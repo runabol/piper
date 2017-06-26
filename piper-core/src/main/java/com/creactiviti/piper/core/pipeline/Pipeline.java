@@ -9,8 +9,8 @@ package com.creactiviti.piper.core.pipeline;
 import java.util.List;
 
 import com.creactiviti.piper.core.Accessor;
+import com.creactiviti.piper.core.error.Errorable;
 import com.creactiviti.piper.core.task.PipelineTask;
-import com.creactiviti.piper.error.Errorable;
 
 /**
  * Pipelines are the the blueprints that describe

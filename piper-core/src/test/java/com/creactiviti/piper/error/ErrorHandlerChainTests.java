@@ -5,6 +5,8 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.creactiviti.piper.core.error.ErrorHandler;
+import com.creactiviti.piper.core.error.ErrorHandlerChain;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.SimpleJob;
 import com.creactiviti.piper.core.job.SimpleTaskExecution;

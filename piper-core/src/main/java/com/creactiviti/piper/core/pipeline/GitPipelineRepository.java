@@ -9,8 +9,8 @@ package com.creactiviti.piper.core.pipeline;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.creactiviti.piper.git.GitOperations;
-import com.creactiviti.piper.git.JGitTemplate;
+import com.creactiviti.piper.core.git.GitOperations;
+import com.creactiviti.piper.core.git.JGitTemplate;
 
 public class GitPipelineRepository extends YamlPipelineRepository  {
 

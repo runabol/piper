@@ -12,15 +12,15 @@ import java.util.Date;
 import java.util.Map;
 
 import com.creactiviti.piper.core.DSL;
+import com.creactiviti.piper.core.error.Error;
+import com.creactiviti.piper.core.error.ErrorObject;
+import com.creactiviti.piper.core.error.Prioritizable;
 import com.creactiviti.piper.core.task.PipelineTask;
 import com.creactiviti.piper.core.task.SimplePipelineTask;
 import com.creactiviti.piper.core.task.Task;
 import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
-import com.creactiviti.piper.error.Error;
-import com.creactiviti.piper.error.ErrorObject;
-import com.creactiviti.piper.error.Prioritizable;
 
 
 public class SimpleTaskExecution extends SimplePipelineTask implements TaskExecution {

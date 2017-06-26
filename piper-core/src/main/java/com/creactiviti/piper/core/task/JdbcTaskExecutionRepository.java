@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.creactiviti.piper.core.job.SimpleTaskExecution;
-import com.creactiviti.piper.json.JsonHelper;
+import com.creactiviti.piper.core.json.JsonHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JdbcTaskExecutionRepository implements TaskExecutionRepository {

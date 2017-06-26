@@ -10,6 +10,8 @@ import java.util.Collections;
 
 import org.junit.Test;
 
+import com.creactiviti.piper.core.error.ErrorObject;
+import com.creactiviti.piper.core.error.TaskExecutionErrorHandler;
 import com.creactiviti.piper.core.event.EventPublisher;
 import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.SimpleJob;

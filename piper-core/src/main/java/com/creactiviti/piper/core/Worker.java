@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.context.MapContext;
+import com.creactiviti.piper.core.error.ErrorObject;
 import com.creactiviti.piper.core.event.EventPublisher;
 import com.creactiviti.piper.core.event.Events;
 import com.creactiviti.piper.core.event.PiperEvent;
@@ -37,7 +38,6 @@ import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskHandler;
 import com.creactiviti.piper.core.task.TaskHandlerResolver;
 import com.creactiviti.piper.core.task.TaskStatus;
-import com.creactiviti.piper.error.ErrorObject;
 
 /**
  * <p>The class responsible for executing tasks spawned by the {@link Coordinator}.</p>

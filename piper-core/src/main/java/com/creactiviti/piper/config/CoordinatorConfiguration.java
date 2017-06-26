@@ -25,6 +25,9 @@ import com.creactiviti.piper.core.TaskCompletionHandler;
 import com.creactiviti.piper.core.TaskCompletionHandlerChain;
 import com.creactiviti.piper.core.context.Context;
 import com.creactiviti.piper.core.context.ContextRepository;
+import com.creactiviti.piper.core.error.ErrorHandler;
+import com.creactiviti.piper.core.error.ErrorHandlerChain;
+import com.creactiviti.piper.core.error.TaskExecutionErrorHandler;
 import com.creactiviti.piper.core.event.DistributedEventPublisher;
 import com.creactiviti.piper.core.event.EventListener;
 import com.creactiviti.piper.core.event.JobStatusWebhookEventHandler;
@@ -47,9 +50,6 @@ import com.creactiviti.piper.core.task.TaskDispatcherChain;
 import com.creactiviti.piper.core.task.TaskDispatcherResolver;
 import com.creactiviti.piper.core.task.TaskExecutionRepository;
 import com.creactiviti.piper.core.task.WorkTaskDispatcher;
-import com.creactiviti.piper.error.ErrorHandler;
-import com.creactiviti.piper.error.ErrorHandlerChain;
-import com.creactiviti.piper.error.TaskExecutionErrorHandler;
 
 @Configuration
 @ConditionalOnCoordinator

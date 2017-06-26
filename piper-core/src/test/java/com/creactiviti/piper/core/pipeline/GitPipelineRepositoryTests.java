@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
-import com.creactiviti.piper.git.GitOperations;
+import com.creactiviti.piper.core.git.GitOperations;
 
 public class GitPipelineRepositoryTests {
   

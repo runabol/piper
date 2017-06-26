@@ -16,7 +16,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.util.Assert;
 
-import com.creactiviti.piper.cache.Clearable;
+import com.creactiviti.piper.core.cache.Clearable;
 
 /**
  * @author Arik Cohen

@@ -1,4 +1,4 @@
-package com.creactiviti.piper.metrics;
+package com.creactiviti.piper.core.metrics;
 
 import java.util.Arrays;
 import java.util.Collection;

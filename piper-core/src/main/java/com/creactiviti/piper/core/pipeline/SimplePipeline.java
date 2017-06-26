@@ -15,9 +15,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.creactiviti.piper.core.Accessor;
 import com.creactiviti.piper.core.DSL;
 import com.creactiviti.piper.core.MapObject;
+import com.creactiviti.piper.core.error.Error;
+import com.creactiviti.piper.core.error.ErrorObject;
 import com.creactiviti.piper.core.task.PipelineTask;
-import com.creactiviti.piper.error.Error;
-import com.creactiviti.piper.error.ErrorObject;
 
 public class SimplePipeline extends MapObject implements Pipeline {
 

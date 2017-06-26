@@ -4,7 +4,7 @@
  * Proprietary and confidential
  * Written by Arik Cohen <arik@creactiviti.com>, Apr 2017
  */
-package com.creactiviti.piper.error;
+package com.creactiviti.piper.core.error;
 
 /**
  * An interface which indiciates that a message

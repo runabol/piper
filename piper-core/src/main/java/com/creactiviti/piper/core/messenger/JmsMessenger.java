@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.util.Assert;
 
-import com.creactiviti.piper.error.Retryable;
+import com.creactiviti.piper.core.error.Retryable;
 
 public class JmsMessenger implements Messenger {
 

@@ -18,6 +18,10 @@ import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.context.MapContext;
+import com.creactiviti.piper.core.error.ErrorHandler;
+import com.creactiviti.piper.core.error.ErrorObject;
+import com.creactiviti.piper.core.error.Errorable;
+import com.creactiviti.piper.core.error.Prioritizable;
 import com.creactiviti.piper.core.event.EventPublisher;
 import com.creactiviti.piper.core.event.Events;
 import com.creactiviti.piper.core.event.PiperEvent;
@@ -36,10 +40,6 @@ import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskExecutionRepository;
 import com.creactiviti.piper.core.task.TaskStatus;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
-import com.creactiviti.piper.error.ErrorHandler;
-import com.creactiviti.piper.error.ErrorObject;
-import com.creactiviti.piper.error.Errorable;
-import com.creactiviti.piper.error.Prioritizable;
 
 /**
  * The central class responsible for coordinating 

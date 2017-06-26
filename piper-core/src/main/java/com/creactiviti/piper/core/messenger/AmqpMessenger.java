@@ -9,8 +9,8 @@ package com.creactiviti.piper.core.messenger;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.util.Assert;
 
-import com.creactiviti.piper.error.Prioritizable;
-import com.creactiviti.piper.error.Retryable;
+import com.creactiviti.piper.core.error.Prioritizable;
+import com.creactiviti.piper.core.error.Retryable;
 
 public class AmqpMessenger implements Messenger {
 

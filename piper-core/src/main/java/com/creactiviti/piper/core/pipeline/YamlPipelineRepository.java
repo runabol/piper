@@ -21,9 +21,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.DSL;
+import com.creactiviti.piper.core.error.ErrorObject;
 import com.creactiviti.piper.core.task.SimplePipelineTask;
 import com.creactiviti.piper.core.task.Task;
-import com.creactiviti.piper.error.ErrorObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Throwables;

@@ -16,8 +16,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import com.creactiviti.piper.core.json.JsonHelper;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;
-import com.creactiviti.piper.json.JsonHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**

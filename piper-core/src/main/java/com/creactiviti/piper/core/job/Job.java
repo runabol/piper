@@ -10,10 +10,10 @@ import java.util.Date;
 import java.util.List;
 
 import com.creactiviti.piper.core.Accessor;
+import com.creactiviti.piper.core.error.Errorable;
+import com.creactiviti.piper.core.error.Prioritizable;
 import com.creactiviti.piper.core.pipeline.Pipeline;
 import com.creactiviti.piper.core.task.TaskExecution;
-import com.creactiviti.piper.error.Errorable;
-import com.creactiviti.piper.error.Prioritizable;
 
 /**
  * Represents an instance of a job.

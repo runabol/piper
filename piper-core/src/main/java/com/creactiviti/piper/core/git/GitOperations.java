@@ -4,7 +4,7 @@
  * Proprietary and confidential
  * Written by Arik Cohen <arik@creactiviti.com>, Mar 2017
  */
-package com.creactiviti.piper.git;
+package com.creactiviti.piper.core.git;
 
 import java.util.List;
 

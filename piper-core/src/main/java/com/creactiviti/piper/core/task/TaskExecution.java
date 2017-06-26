@@ -8,9 +8,9 @@ package com.creactiviti.piper.core.task;
 
 import java.util.Date;
 
-import com.creactiviti.piper.error.Errorable;
-import com.creactiviti.piper.error.Prioritizable;
-import com.creactiviti.piper.error.Retryable;
+import com.creactiviti.piper.core.error.Errorable;
+import com.creactiviti.piper.core.error.Prioritizable;
+import com.creactiviti.piper.core.error.Retryable;
 
 /**
  * <p>Extends the {@link PipelineTask} interface to add execution semantics to 

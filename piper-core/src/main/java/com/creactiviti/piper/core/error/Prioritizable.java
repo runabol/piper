@@ -4,7 +4,7 @@
  * Proprietary and confidential
  * Written by Arik Cohen <arik@creactiviti.com>, Jun 2017
  */
-package com.creactiviti.piper.error;
+package com.creactiviti.piper.core.error;
 
 /**
  * 

@@ -4,10 +4,10 @@
  * Proprietary and confidential
  * Written by Arik Cohen <arik@creactiviti.com>, Apr 2017
  */
-package com.creactiviti.piper.metrics;
+package com.creactiviti.piper.core.metrics;
 
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.endpoint.PublicMetrics;
@@ -20,21 +20,24 @@ import com.creactiviti.piper.core.job.JobRepository;
 
 /**
  * a {@link PublicMetrics} implementaion which calculates 
- * the number of jobs currently running.
+ * the number of jobs completed today.
  * 
  * @author Arik Cohen
  * @since Apr 8, 2017
  */
 @Component
 @ConditionalOnCoordinator 
-public class RunningJobsMetrics implements PublicMetrics {
+public class JobsCompletedMetrics implements PublicMetrics {
 
   @Autowired
   private JobRepository jobRepository;
   
   @Override
   public Collection<Metric<?>> metrics() {
-    return Collections.singletonList(new Metric("jobs.running", jobRepository.countRunningJobs()));
+    return Arrays.asList(
+        new Metric<>("jobs.completed.today", jobRepository.countCompletedJobsToday()),
+        new Metric<>("jobs.completed.yesterday", jobRepository.countCompletedJobsYesterday())
+    );
   }
 
 }

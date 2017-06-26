@@ -16,10 +16,10 @@ import org.springframework.beans.BeanUtils;
 import com.creactiviti.piper.core.Accessor;
 import com.creactiviti.piper.core.DSL;
 import com.creactiviti.piper.core.MapObject;
+import com.creactiviti.piper.core.error.Error;
+import com.creactiviti.piper.core.error.ErrorObject;
+import com.creactiviti.piper.core.error.Prioritizable;
 import com.creactiviti.piper.core.task.TaskExecution;
-import com.creactiviti.piper.error.Error;
-import com.creactiviti.piper.error.ErrorObject;
-import com.creactiviti.piper.error.Prioritizable;
 
 /**
  * An implementation of the {@link Job} interface

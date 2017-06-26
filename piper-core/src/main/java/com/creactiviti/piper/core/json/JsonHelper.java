@@ -4,7 +4,7 @@
  * Proprietary and confidential
  * Written by Arik Cohen <arik@creactiviti.com>, Mar 2017
  */
-package com.creactiviti.piper.json;
+package com.creactiviti.piper.core.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Throwables;

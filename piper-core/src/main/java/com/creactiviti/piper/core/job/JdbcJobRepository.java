@@ -19,9 +19,9 @@ import org.springframework.util.Assert;
 
 import com.creactiviti.piper.core.Page;
 import com.creactiviti.piper.core.ResultPage;
+import com.creactiviti.piper.core.json.JsonHelper;
 import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskExecutionRepository;
-import com.creactiviti.piper.json.JsonHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JdbcJobRepository implements JobRepository {
