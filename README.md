@@ -309,6 +309,15 @@ Execute the demo pipeline:
 curl -s -X POST -H Content-Type:application/json -d '{"pipelineId":"demo/hello","inputs":{"yourName":"Joe Jones"}}' http://localhost:8080/jobs
 ```
 
+
+## Using Git as a Pipeline Repository backend
+
+```
+piper.pipeline-repository.git.enabled=true
+piper.pipeline-repository.git.url=git@github.com:creactiviti/piper-pipelines.git # switch to yours
+piper.pipeline-repository.git.search-paths=demo/ # the repo folders you want to locate pipelines in.
+```
+
 # License
 
 ## Piper Community Edition
