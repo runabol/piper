@@ -35,7 +35,7 @@ public class PipelineRepositoryConfiguration {
   @Bean
   @Order(2)
   @ConditionalOnProperty(name="piper.pipeline-repository.filesystem.enabled",havingValue="true")
-  ResourceBasedPipelineRepository fileSystemBasedPipelineRepository (@Value("piper.pipeline-repository.filesystem.base-path") String aBasePath) {
+  ResourceBasedPipelineRepository fileSystemBasedPipelineRepository (@Value("${piper.pipeline-repository.filesystem.base-path}") String aBasePath) {
     return new ResourceBasedPipelineRepository(String.format("file:%s", aBasePath));
   }
   

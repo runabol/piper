@@ -186,7 +186,9 @@ Produces a new collection of values by mapping each value in `list` through the 
     file: ${item}
 ``` 
 
-# Getting started
+# Tutorials
+
+## Hello World
 
 Build Piper:
 
@@ -244,6 +246,34 @@ Which should give you something like this as a response:
 If you'll refresh your browser page now you should see the executing job. 
 
 In case you are wondering, the `demo/hello` pipeline is located at <a href="https://github.com/creactiviti/piper/blob/master/piper-core/src/main/resources/pipelines/demo/hello.yaml" target="_blank">here</a>
+
+
+## Writing your first pipeline
+
+create a directory in your filesystem which path ends with `pipelines/` (e.g. `/home/me/pipelines/`) and create a file in there called `mypipeline.yaml`.
+
+Edit the file and the following text:
+
+```
+label: My Pipeline
+
+inputs:
+  - name: name
+    type: string
+    required: true
+
+tasks:      
+  - label: Print a greeting
+    type: print
+    text: Hello ${name}
+       
+  - label: Print a farewell
+    type: print
+    text: Goodbye ${name}
+    
+```  
+
+
 
 
 # License

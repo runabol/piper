@@ -17,6 +17,8 @@ public class ResourceBasedPipelineRepository extends YamlPipelineRepository {
   
   private String locationPattern = "classpath:pipelines/**/*.yaml";
   
+  private static final String PREFIX = "pipelines/";
+  
   public ResourceBasedPipelineRepository() {}
   
   public ResourceBasedPipelineRepository(String aLocationPattern) {
@@ -41,7 +43,7 @@ public class ResourceBasedPipelineRepository extends YamlPipelineRepository {
   private Pipeline read (Resource aResource) {
     try {
       String uri = aResource.getURI().toString();
-      String id = uri.substring(uri.lastIndexOf("pipelines/")+10,uri.lastIndexOf('.'));
+      String id = uri.substring(uri.lastIndexOf(PREFIX)+PREFIX.length(),uri.lastIndexOf('.'));
       return parsePipeline(new IdentifiableResource(id, aResource));
     }
     catch (IOException e) {
