@@ -15,7 +15,7 @@ import com.google.common.base.Throwables;
 
 public class ResourceBasedPipelineRepository extends YamlPipelineRepository {
   
-  private String locationPattern = "file:pipelines/**/*.yaml";
+  private String locationPattern = "classpath:pipelines/**/*.yaml";
   
   public ResourceBasedPipelineRepository() {}
   

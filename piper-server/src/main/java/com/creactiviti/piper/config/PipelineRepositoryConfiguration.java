@@ -37,7 +37,7 @@ public class PipelineRepositoryConfiguration {
   
   @Bean
   @Order(1)
-  ResourceBasedPipelineRepository fileSystemPipelineRepository () {
+  ResourceBasedPipelineRepository resourceBasedPipelineRepository () {
     return new ResourceBasedPipelineRepository();
   }
   
