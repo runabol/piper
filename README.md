@@ -194,10 +194,10 @@ Build Piper:
 ./scripts/build.sh
 ```
 
-Start Piper in memory without any external dependencies:
+Start Piper in memory without any external dependencies. Great for hassle-free development:
 
 ```
-./scripts/all.sh
+./scripts/development.sh
 ```
 
 Go to the browser at [http://localhost:8080/jobs](http://localhost:8080/jobs)
