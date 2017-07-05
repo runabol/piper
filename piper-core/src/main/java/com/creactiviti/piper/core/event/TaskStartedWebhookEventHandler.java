@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.PayloadApplicationEvent;
 import org.springframework.web.client.RestTemplate;
 
 import com.creactiviti.piper.core.Accessor;
@@ -20,7 +18,7 @@ import com.creactiviti.piper.core.job.JobRepository;
  * @author Arik Cohen
  * @since Jun 9, 2017
  */
-public class TaskStartedWebhookEventHandler implements ApplicationListener<PayloadApplicationEvent<PiperEvent>>{
+public class TaskStartedWebhookEventHandler implements  EventListener {
   
   private final JobRepository jobRepository;
   
@@ -50,9 +48,9 @@ public class TaskStartedWebhookEventHandler implements ApplicationListener<Paylo
   }
   
   @Override
-  public void onApplicationEvent (PayloadApplicationEvent<PiperEvent> aEvent) {
-    if(aEvent.getPayload().getType().equals(Events.TASK_STARTED)) {
-      handleEvent(aEvent.getPayload());
+  public void onApplicationEvent (PiperEvent aEvent) {
+    if(aEvent.getType().equals(Events.TASK_STARTED)) {
+      handleEvent(aEvent);
     }
   }
   
