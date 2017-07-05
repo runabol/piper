@@ -13,13 +13,21 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 
 import com.google.common.base.Throwables;
 
-public class FileSystemPipelineRepository extends YamlPipelineRepository {
+public class ResourceBasedPipelineRepository extends YamlPipelineRepository {
+  
+  private String locationPattern = "file:pipelines/**/*.yaml";
+  
+  public ResourceBasedPipelineRepository() {}
+  
+  public ResourceBasedPipelineRepository(String aLocationPattern) {
+    locationPattern = aLocationPattern;
+  }
 
   @Override
   public List<Pipeline> findAll () {
     try {
       ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-      Resource[] resources = resolver.getResources("file:pipelines/**/*.yaml");
+      Resource[] resources = resolver.getResources(locationPattern);
       return Arrays.asList(resources)
                    .stream()
                    .map(r -> read(r))

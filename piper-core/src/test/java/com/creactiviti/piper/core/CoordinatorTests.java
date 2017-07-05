@@ -25,7 +25,7 @@ import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobStatus;
 import com.creactiviti.piper.core.messenger.Queues;
 import com.creactiviti.piper.core.messenger.SynchMessenger;
-import com.creactiviti.piper.core.pipeline.FileSystemPipelineRepository;
+import com.creactiviti.piper.core.pipeline.ResourceBasedPipelineRepository;
 import com.creactiviti.piper.core.task.DefaultTaskHandlerResolver;
 import com.creactiviti.piper.core.task.JdbcTaskExecutionRepository;
 import com.creactiviti.piper.core.task.TaskExecution;
@@ -85,7 +85,7 @@ public class CoordinatorTests {
     jobRepository.setJobTaskRepository(taskRepository);
     
     coordinator.setJobRepository(jobRepository);
-    coordinator.setPipelineRepository(new FileSystemPipelineRepository());
+    coordinator.setPipelineRepository(new ResourceBasedPipelineRepository());
     coordinator.setJobTaskRepository(taskRepository);
     
     SynchMessenger coordinatorMessenger = new SynchMessenger();
@@ -97,7 +97,7 @@ public class CoordinatorTests {
     DefaultJobExecutor jobExecutor = new DefaultJobExecutor ();
     jobExecutor.setContextRepository(contextRepository);
     jobExecutor.setJobTaskRepository(taskRepository);
-    jobExecutor.setPipelineRepository(new FileSystemPipelineRepository());
+    jobExecutor.setPipelineRepository(new ResourceBasedPipelineRepository());
     jobExecutor.setTaskDispatcher(taskDispatcher);
     coordinator.setJobExecutor(jobExecutor);
     
@@ -106,7 +106,7 @@ public class CoordinatorTests {
     taskCompletionHandler.setJobExecutor(jobExecutor);
     taskCompletionHandler.setJobRepository(jobRepository);
     taskCompletionHandler.setJobTaskRepository(taskRepository);
-    taskCompletionHandler.setPipelineRepository(new FileSystemPipelineRepository());
+    taskCompletionHandler.setPipelineRepository(new ResourceBasedPipelineRepository());
     taskCompletionHandler.setEventPublisher((e)->{});
     coordinator.setTaskCompletionHandler(taskCompletionHandler);
     coordinator.setMessenger(messenger);
@@ -128,7 +128,7 @@ public class CoordinatorTests {
   @Test(expected=IllegalArgumentException.class)
   public void testRequiredParams () {
     Coordinator coordinator = new Coordinator ();
-    coordinator.setPipelineRepository(new FileSystemPipelineRepository());
+    coordinator.setPipelineRepository(new ResourceBasedPipelineRepository());
     coordinator.create(MapObject.of(Collections.singletonMap("pipelineId","demo/hello")));
   }
   

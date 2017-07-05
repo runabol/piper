@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 
-import com.creactiviti.piper.core.pipeline.FileSystemPipelineRepository;
+import com.creactiviti.piper.core.pipeline.ResourceBasedPipelineRepository;
 import com.creactiviti.piper.core.pipeline.GitPipelineRepository;
 import com.creactiviti.piper.core.pipeline.PipelineRepository;
 import com.creactiviti.piper.core.pipeline.PipelineRepositoryChain;
@@ -37,8 +37,8 @@ public class PipelineRepositoryConfiguration {
   
   @Bean
   @Order(1)
-  FileSystemPipelineRepository fileSystemPipelineRepository () {
-    return new FileSystemPipelineRepository();
+  ResourceBasedPipelineRepository fileSystemPipelineRepository () {
+    return new ResourceBasedPipelineRepository();
   }
   
   
