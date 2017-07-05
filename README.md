@@ -65,6 +65,23 @@ tasks:
 ```
 
 
+So tasks are nothing but a collection of key-value pairs. At a minimum each task contains a `type` property which maps to an appropriate `TaskHandler` that needs to execute it.
+
+Tasks may also specify a `name` property which can be used to name the output of the task so it can be used later in the pipeline.
+
+The `label` property is used to give a human-readble description for the task.
+
+The `node` property can be used to route tasks to work queues other than the default `tasks` queue. This allows one to design a cluster of worker nodes of different types, of different capacity, different 3rd party software dependencies and so on.
+
+The `retry` property can be used to specify the number of times that a task is allowed to automatically retry in case of a failure.
+
+The `timeout` property can be used to specify the number of seconds/minutes/hours that a task may execute before it is cancelled.
+
+The `output` property can be used to modify the output of the task in some fashion. e.g. convert it to an integer.
+
+All other key-value pairs are task-specific and may or may not be required depending on the specific task.
+
+
 # License
 
 ## Piper Community Edition
