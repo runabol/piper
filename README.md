@@ -279,6 +279,9 @@ Execute your workflow
 curl -s -X POST -H Content-Type:application/json -d '{"pipelineId":"mypipeline","inputs":{"name":"Arik"}}' http://localhost:8080/jobs
 ```
 
+You can make changes to your pipeline and execute the `./scripts/clear.sh` to clear the cache to reload the pipeline.
+
+
 # License
 
 ## Piper Community Edition
