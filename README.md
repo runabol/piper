@@ -26,7 +26,7 @@ For example here's the `RandomInt` `TaskHandler` implementation:
 While it doesn't do much beyond generating a random integer, it does  demonstrate how a `TaskHandler` works. a `Task` instance is passed as  an argument to 
 the `TaskHandler` which contains all the Key-Value pairs of that task.
 
-The `TaskHandler` is then responsible for executing the task using this input and optionally returning a result which can be used by other the pipeline tasks downstream.
+The `TaskHandler` is then responsible for executing the task using this input and optionally returning an output which can be used by other pipeline tasks downstream.
 
 # License
 
