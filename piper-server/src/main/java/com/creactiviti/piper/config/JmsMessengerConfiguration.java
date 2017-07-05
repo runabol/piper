@@ -13,7 +13,6 @@ import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFac
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.jms.annotation.JmsListenerConfigurer;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
@@ -38,12 +37,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @ConditionalOnProperty(name="piper.messenger.provider",havingValue="jms")
 public class JmsMessengerConfiguration implements JmsListenerConfigurer {
 
-  @Lazy
-  @Autowired(required=false)
+  @Autowired
   private Worker worker;
   
-  @Lazy
-  @Autowired(required=false)
+  @Autowired
   private Coordinator coordinator;
 
   @Autowired

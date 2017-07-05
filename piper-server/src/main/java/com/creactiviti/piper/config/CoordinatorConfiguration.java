@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.DefaultJobExecutor;
@@ -24,7 +25,6 @@ import com.creactiviti.piper.core.error.ErrorHandler;
 import com.creactiviti.piper.core.error.ErrorHandlerChain;
 import com.creactiviti.piper.core.error.TaskExecutionErrorHandler;
 import com.creactiviti.piper.core.event.DistributedEventPublisher;
-import com.creactiviti.piper.core.event.EventListenerChain;
 import com.creactiviti.piper.core.event.JobStatusWebhookEventListener;
 import com.creactiviti.piper.core.event.TaskStartedEventListener;
 import com.creactiviti.piper.core.event.TaskStartedWebhookEventListener;
@@ -54,7 +54,7 @@ public class CoordinatorConfiguration {
   @Autowired private ContextRepository<Context> contextRepository;
   @Autowired private PipelineRepository pipelineRepository;
   @Autowired private CounterRepository counterRepository;
-  @Autowired private Messenger messenger;
+  @Autowired @Lazy private Messenger messenger;
   
   @Bean
   Coordinator coordinator () {
@@ -220,15 +220,7 @@ public class CoordinatorConfiguration {
     return new DistributedEventPublisher (messenger);
   }
   
-  
-  @Bean
-  EventListenerChain eventListener () {
-    return new EventListenerChain(Arrays.asList(
-        taskStartedEventListener(),
-        webhookEventHandler(),
-        taskStartedWebhookEventListener()));
-  }
-  
+   
   @Bean
   TaskStartedEventListener taskStartedEventListener () {
     return new TaskStartedEventListener(taskExecutionRepo, taskDispatcher());
