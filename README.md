@@ -23,6 +23,9 @@ For example here's the `RandomInt` `TaskHandler` implementation:
   }
  ```
 
+## License
+Piper is released under version 2.0 of the [Apache License][].
+
 
 # Roadmap
 
