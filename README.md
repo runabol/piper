@@ -303,6 +303,12 @@ From another terminal window, start a Worker:
 ./scripts/worker.sh 
 ```
 
+Execute the demo pipeline: 
+
+```
+curl -s -X POST -H Content-Type:application/json -d '{"pipelineId":"demo/hello","inputs":{"yourName":"Joe Jones"}}' http://localhost:8080/jobs
+```
+
 # License
 
 ## Piper Community Edition
