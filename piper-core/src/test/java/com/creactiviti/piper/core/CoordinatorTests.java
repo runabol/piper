@@ -20,7 +20,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.creactiviti.piper.core.context.JdbcContextRepository;
-import com.creactiviti.piper.core.event.EventPublisher;
 import com.creactiviti.piper.core.job.JdbcJobRepository;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobStatus;
@@ -46,9 +45,6 @@ public class CoordinatorTests {
   @Autowired
   private DataSource dataSource;
   
-  @Autowired
-  private EventPublisher eventPublisher;
-  
   @Test
   public void testStartJob () throws SQLException {
     Worker worker = new Worker();
@@ -60,6 +56,7 @@ public class CoordinatorTests {
     
     
     worker.setMessenger(messenger);
+    worker.setEventPublisher((e)->{});
     DefaultTaskHandlerResolver taskHandlerResolver = new DefaultTaskHandlerResolver();
     
     Map<String,TaskHandler<?>> handlers = new HashMap<>();
@@ -95,7 +92,7 @@ public class CoordinatorTests {
     coordinatorMessenger.receive(Queues.TASKS, (o)->worker.handle((TaskExecution)o));
     WorkTaskDispatcher taskDispatcher = new WorkTaskDispatcher(coordinatorMessenger);
     coordinator.setTaskDispatcher(taskDispatcher);
-    coordinator.setEventPublisher(eventPublisher);
+    coordinator.setEventPublisher((e)->{});
     
     DefaultJobExecutor jobExecutor = new DefaultJobExecutor ();
     jobExecutor.setContextRepository(contextRepository);
@@ -110,7 +107,7 @@ public class CoordinatorTests {
     taskCompletionHandler.setJobRepository(jobRepository);
     taskCompletionHandler.setJobTaskRepository(taskRepository);
     taskCompletionHandler.setPipelineRepository(new FileSystemPipelineRepository());
-    taskCompletionHandler.setEventPublisher(eventPublisher);
+    taskCompletionHandler.setEventPublisher((e)->{});
     coordinator.setTaskCompletionHandler(taskCompletionHandler);
     coordinator.setMessenger(messenger);
         

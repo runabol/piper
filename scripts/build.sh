@@ -1,3 +1,3 @@
 #!/bin/bash
 
-cd ../ && mvn clean package -DskipTests
+cd ../ && mvn clean package

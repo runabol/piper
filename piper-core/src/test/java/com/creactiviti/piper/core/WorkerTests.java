@@ -18,9 +18,11 @@ public class WorkerTests {
     messenger.receive(Queues.COMPLETIONS, (t)-> Assert.assertTrue(((TaskExecution)t).getOutput().equals("done")) );
     messenger.receive(Queues.EVENTS, (t)-> {} );
     worker.setMessenger(messenger);
+    worker.setEventPublisher((e)->{});
     worker.setTaskHandlerResolver((jt) -> (t) -> "done");
     SimpleTaskExecution task = SimpleTaskExecution.create();
     task.setId("1234");
+    task.setJobId("4567");
     worker.handle(task);
   }
   
@@ -32,11 +34,13 @@ public class WorkerTests {
     messenger.receive(Queues.ERRORS, (t)-> Assert.assertTrue( ((TaskExecution)t).getError().getMessage().equals("bad input") ) );
     messenger.receive(Queues.EVENTS, (t)-> {} );
     worker.setMessenger(messenger);
+    worker.setEventPublisher((e)->{});
     worker.setTaskHandlerResolver((jt) -> (t) -> {
       throw new IllegalArgumentException("bad input");
     });
     SimpleTaskExecution task = SimpleTaskExecution.create();
     task.setId("1234");
+    task.setJobId("4567");
     worker.handle(task);
   }
   
