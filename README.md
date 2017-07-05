@@ -314,7 +314,7 @@ curl -s -X POST -H Content-Type:application/json -d '{"pipelineId":"demo/hello",
 
 Rather than storing the pipelines in your local file system you can use Git to store them for you. This has great advantages, not the least of which is pipeline versioning, Pull Requests and everything else Git has to offer.
 
-To enable Git as a pipeline repository enable the `piper.pipeline-repository.git.enabled` flag in `./scripts/development.sh`. By default, Piper will use the demo repository [piper-pipelines](https://github.com/creactiviti/piper-pipelines).
+To enable Git as a pipeline repository set the `piper.pipeline-repository.git.enabled` flag to `true` in `./scripts/development.sh` and restart Piper. By default, Piper will use the demo repository [piper-pipelines](https://github.com/creactiviti/piper-pipelines).
 
 You can change it by using the `piper.pipeline-repository.git.url` and `piper.pipeline-repository.git.search-paths` configuration parameters.  
 
