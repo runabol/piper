@@ -200,7 +200,31 @@ Start Piper in memory without any external dependencies. Great for hassle-free d
 ./scripts/development.sh
 ```
 
-Go to the browser at [http://localhost:8080/jobs](http://localhost:8080/jobs)
+Go to the browser at <a href="http://localhost:8080/jobs" target="_blank">http://localhost:8080/jobs</a>
+
+Which should give you something like:
+
+```
+{
+  number: 0,
+  totalItems: 0,
+  size: 0,
+  totalPages: 0,
+  items: [ ]
+}
+```
+
+The `/jobs` endpoint lists all jobs that are either running or were previously run on Piper.
+
+Start a demo job:
+
+```
+curl -s -X POST -H Content-Type:application/json -d '{"pipelineId":"demo/hello","inputs":{"yourName":"Joe Jones"}}' http://localhost:8080/jobs | jq .
+```
+
+If you'll refresh your browser page now you should see the executing job. 
+
+In case you are wondering, the `demo/hello` pipeline is located at <a href="https://github.com/creactiviti/piper/blob/master/piper-core/src/main/resources/pipelines/demo/hello.yaml" target="_blank">here</a>
 
 
 # License
