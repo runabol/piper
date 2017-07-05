@@ -28,6 +28,43 @@ the `TaskHandler` which contains all the Key-Value pairs of that task.
 
 The `TaskHandler` is then responsible for executing the task using this input and optionally returning an output which can be used by other pipeline tasks downstream.
 
+
+# Pipelines
+
+Piper pipelines are authored in YAML, a JSON superset. 
+
+Here is an example of a basic pipeline definition.
+
+```
+name: Hello Demo
+
+inputs:                --+
+  - name: yourName       |
+    label: Your Name     | - This defines the inputs
+    type: string         |   expected by the pipeline
+    required: true     --+
+
+tasks: 
+  - name: randomNumber               --+
+    label: Generate a random number    |
+    type: randomInt                    | - This is a task
+    startInclusive: 0                  |
+    endInclusive: 10000              --+
+                            
+  - label: Print a greeting 
+    type: print             
+    text: Hello ${yourName} 
+                           
+  - label: Sleep a little
+    type: sleep             --+
+    millis: ${randomNumber}   | - tasks may refer to the result of a previous task
+                            --+
+  - label: Print a farewell
+    type: print
+    text: Goodbye ${yourName}
+```
+
+
 # License
 
 ## Piper Community Edition
