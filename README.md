@@ -250,7 +250,7 @@ In case you are wondering, the `demo/hello` pipeline is located at <a href="http
 
 ## Writing your first pipeline
 
-create a directory in your filesystem which path ends with `pipelines/` (e.g. `/home/me/pipelines/`) and create a file in there called `mypipeline.yaml`.
+Create the directory `~/piper/pipelines` and create a file in there called `mypipeline.yaml`.
 
 Edit the file and the following text:
 
