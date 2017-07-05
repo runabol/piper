@@ -96,7 +96,22 @@ Piper is composed of the following components:
 
 **Pipeline Repository**: The component where pipelines (workflows) are created, edited etc. by pipeline engineers.
 
-# Building from source
+# Control Flow
+
+Piper support the following construct to control the flow of execution:
+
+## Each
+
+Applies the function `iteratee` to each item in `list`, in parallel. Note, that since this function applies iteratee to each item in parallel, there is no guarantee that the `iteratee` functions will complete in order.
+
+
+```
+- type: each
+  list: [1000,2000,3000]
+  iteratee:
+    type: sleep         
+    millis: ${item} 
+```
 
 
 
