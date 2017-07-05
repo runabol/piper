@@ -86,20 +86,11 @@
 	  </dependencies>
 	</dependencyManagement>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
 
 	<modules>
+	    <module>piper-server</module>
 		<module>piper-core</module>
 		<module>piper-plugin-ffmpeg</module>
-		<module>piper-plugin-delta</module>
-        <module>piper-server</module>
   </modules>
 	
 </project>
