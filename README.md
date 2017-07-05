@@ -188,19 +188,19 @@ Produces a new collection of values by mapping each value in `list` through the 
 
 # Getting started
 
-Build the sources:
+Build Piper:
 
 ```
 ./scripts/build.sh
 ```
 
-Start Piper in memory without any dependencies:
+Start Piper in memory without any external dependencies:
 
 ```
 ./scripts/all.sh
 ```
 
-Go to the browser at [http://localhost:8080/jobs][]
+Go to the browser at [http://localhost:8080/jobs](http://localhost:8080/jobs)
 
 
 # License
