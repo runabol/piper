@@ -21,7 +21,9 @@ For example here's the `RandomInt` `TaskHandler` implementation:
     }
     
   }
- ```
+```
+
+
 
 # License
 
@@ -30,14 +32,3 @@ Piper Community is a fully featured product released under the Apache v2 license
 
 ## Piper Enterprise Edition
 Piper Enterprise is designed for commercial deployments where scale and availability are important. 
-
-
-# Roadmap
-
-- Search
-- rewind to previous point in the pipeline
-- analytics
-- cluster health / Workers health
-- includes
-- job callbacks
-- dispatch another pipeline
