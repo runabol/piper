@@ -23,8 +23,13 @@ For example here's the `RandomInt` `TaskHandler` implementation:
   }
  ```
 
-## License
-Piper is released under version 2.0 of the [Apache License][].
+# License
+
+## Piper Community Edition
+Piper Community is a fully featured product released under the Apache v2 license. I chose Apache v2 because it means that Piper Community Edition can be used for free with your project: whether in the cloud or behind the firewall. 
+
+## Piper Enterprise Edition
+Piper Enterprise is designed for commercial deployments where scale and availability are important. 
 
 
 # Roadmap
