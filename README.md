@@ -273,8 +273,11 @@ tasks:
     
 ```  
 
+Execute your workflow
 
-
+```
+curl -s -X POST -H Content-Type:application/json -d '{"pipelineId":"mypipeline","inputs":{"name":"Arik"}}' http://localhost:8080/jobs
+```
 
 # License
 
