@@ -86,7 +86,7 @@ All other key-value pairs are task-specific and may or may not be required depen
 
 Piper is composed of the following components: 
 
-1. Coordinator: The Coordinator is the like the central nervous system of Piper. It keeps tracks of jobs, dishes out work to be done by Worker machines, keeps track of failures, retries and other job-level details. Unlike Worker machines it does not execute actual work but delegate all task activities to Worker instnaces. 
+**Coordinator**: The Coordinator is the like the central nervous system of Piper. It keeps tracks of jobs, dishes out work to be done by Worker machines, keeps track of failures, retries and other job-level details. Unlike Worker machines it does not execute actual work but delegate all task activities to Worker instnaces. 
 
 2. Worker. Workers are the work horses of Piper. These are the instances that actually execute tasks requested to be done by the Coordinator machine. Unlike the Coordinator, the workers are stateless, which by that is meant that they do not interact with a database or keep any state in memory about the job or anything else. This makes it very easy to scale up and down the number of workers in the system without fear of losing application state. 
 
