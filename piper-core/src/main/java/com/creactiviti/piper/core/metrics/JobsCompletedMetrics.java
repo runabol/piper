@@ -14,7 +14,7 @@ import org.springframework.boot.actuate.endpoint.PublicMetrics;
 import org.springframework.boot.actuate.metrics.Metric;
 import org.springframework.stereotype.Component;
 
-import com.creactiviti.piper.config.ConditionalOnCoordinator;
+import com.creactiviti.piper.core.annotations.ConditionalOnCoordinator;
 import com.creactiviti.piper.core.job.JobRepository;
 
 
@@ -26,7 +26,7 @@ import com.creactiviti.piper.core.job.JobRepository;
  * @since Apr 8, 2017
  */
 @Component
-@ConditionalOnCoordinator 
+@ConditionalOnCoordinator
 public class JobsCompletedMetrics implements PublicMetrics {
 
   @Autowired

@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.creactiviti.piper.core.Worker;
+import com.creactiviti.piper.core.annotations.ConditionalOnWorker;
 import com.creactiviti.piper.core.event.DistributedEventPublisher;
 import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.task.TaskHandlerResolver;

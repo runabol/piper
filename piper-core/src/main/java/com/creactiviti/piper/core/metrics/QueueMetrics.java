@@ -12,7 +12,7 @@ import org.springframework.boot.actuate.metrics.Metric;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import com.creactiviti.piper.config.ConditionalOnCoordinator;
+import com.creactiviti.piper.core.annotations.ConditionalOnCoordinator;
 import com.rabbitmq.http.client.Client;
 import com.rabbitmq.http.client.domain.QueueInfo;
 

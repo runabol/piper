@@ -4,7 +4,7 @@
  * Proprietary and confidential
  * Written by Arik Cohen <arik@creactiviti.com>, Mar 2017
  */
-package com.creactiviti.piper.config;
+package com.creactiviti.piper.core.annotations;
 
 import org.springframework.boot.autoconfigure.condition.ConditionMessage;
 import org.springframework.boot.autoconfigure.condition.ConditionOutcome;

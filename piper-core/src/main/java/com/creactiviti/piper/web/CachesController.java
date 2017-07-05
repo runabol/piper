@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.creactiviti.piper.config.ConditionalOnCoordinator;
+import com.creactiviti.piper.core.annotations.ConditionalOnCoordinator;
 import com.creactiviti.piper.core.cache.Clearable;
 
 @RestController

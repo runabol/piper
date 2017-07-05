@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.creactiviti.piper.config.ConditionalOnCoordinator;
 import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.Page;
+import com.creactiviti.piper.core.annotations.ConditionalOnCoordinator;
 import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobRepository;
 

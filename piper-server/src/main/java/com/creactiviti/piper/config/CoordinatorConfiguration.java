@@ -23,6 +23,7 @@ import com.creactiviti.piper.core.MapTaskCompletionHandler;
 import com.creactiviti.piper.core.SwitchTaskCompletionHandler;
 import com.creactiviti.piper.core.TaskCompletionHandler;
 import com.creactiviti.piper.core.TaskCompletionHandlerChain;
+import com.creactiviti.piper.core.annotations.ConditionalOnCoordinator;
 import com.creactiviti.piper.core.context.Context;
 import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.error.ErrorHandler;
