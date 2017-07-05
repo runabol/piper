@@ -6,5 +6,5 @@ java -jar \
      -Dpiper.coordinator.enabled=false \
      -Dserver.port=8181 \
      -Dpiper.worker.enabled=true \
-     -Dpiper.worker.subscriptions.tasks=200 \
+     -Dpiper.worker.subscriptions.tasks=10 \
      piper-server/target/piper-server-0.0.1-SNAPSHOT.jar 
