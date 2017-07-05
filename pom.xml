@@ -77,6 +77,12 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		
+		<dependency>
+			<groupId>com.creactiviti.piper</groupId>
+			<artifactId>piper-plugin-ffmpeg</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		
 	  </dependencies>
 	</dependencyManagement>
 

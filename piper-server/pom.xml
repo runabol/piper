@@ -35,6 +35,11 @@
 		<groupId>com.creactiviti.piper</groupId>
 		<artifactId>piper-core</artifactId>
 	</dependency>
+	
+	<dependency>
+		<groupId>com.creactiviti.piper</groupId>
+		<artifactId>piper-plugin-ffmpeg</artifactId>
+	</dependency>
 			
     
   </dependencies>
