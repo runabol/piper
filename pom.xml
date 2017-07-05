@@ -93,7 +93,7 @@
 		<module>piper-core</module>
 		<module>piper-plugin-ffmpeg</module>
 		<module>piper-plugin-delta</module>
-    <module>piper-server</module>
+        <module>piper-server</module>
   </modules>
 	
 </project>
