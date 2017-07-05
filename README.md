@@ -281,6 +281,27 @@ curl -s -X POST -H Content-Type:application/json -d '{"pipelineId":"mypipeline",
 
 You can make changes to your pipeline and execute the `./scripts/clear.sh` to clear the cache to reload the pipeline.
 
+## Scaling Piper
+
+Depending on your workload you will probably exhaust the ability to run Piper on a single node fairly quickly. Good, because that's where the fun begins. 
+
+Start RabbitMQ: 
+
+```
+./scripts/rabbit.sh
+```
+
+Start the Coordinator: 
+
+```
+./scripts/coordinator.sh 
+```
+
+From another terminal window, start a Worker:
+
+```
+./scripts/worker.sh 
+```
 
 # License
 
