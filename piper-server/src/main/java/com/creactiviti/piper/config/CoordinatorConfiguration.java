@@ -7,7 +7,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 
 import com.creactiviti.piper.core.Coordinator;
 import com.creactiviti.piper.core.DefaultJobExecutor;
@@ -25,9 +24,8 @@ import com.creactiviti.piper.core.error.ErrorHandler;
 import com.creactiviti.piper.core.error.ErrorHandlerChain;
 import com.creactiviti.piper.core.error.TaskExecutionErrorHandler;
 import com.creactiviti.piper.core.event.DistributedEventPublisher;
-import com.creactiviti.piper.core.event.EventListener;
 import com.creactiviti.piper.core.event.EventListenerChain;
-import com.creactiviti.piper.core.event.JobStatusWebhookEventHandler;
+import com.creactiviti.piper.core.event.JobStatusWebhookEventListener;
 import com.creactiviti.piper.core.event.TaskStartedEventListener;
 import com.creactiviti.piper.core.event.TaskStartedWebhookEventListener;
 import com.creactiviti.piper.core.job.JobRepository;
@@ -160,7 +158,6 @@ public class CoordinatorConfiguration {
   }
   
   @Bean
-  @Primary
   TaskDispatcherChain taskDispatcher () {
     TaskDispatcherChain taskDispatcher = new TaskDispatcherChain();
     List<TaskDispatcherResolver> resolvers =  Arrays.asList(
@@ -225,24 +222,26 @@ public class CoordinatorConfiguration {
   
   
   @Bean
-  @Primary
-  EventListenerChain eventListener (List<EventListener> aEventListeners) {
-    return new EventListenerChain(aEventListeners);
+  EventListenerChain eventListener () {
+    return new EventListenerChain(Arrays.asList(
+        taskStartedEventListener(),
+        webhookEventHandler(),
+        taskStartedWebhookEventListener()));
   }
   
   @Bean
-  TaskStartedEventListener taskStartedEventHandler (TaskExecutionRepository aTaskExecutionRepo, TaskDispatcher aTaskDispatcher) {
-    return new TaskStartedEventListener(aTaskExecutionRepo, aTaskDispatcher);
+  TaskStartedEventListener taskStartedEventListener () {
+    return new TaskStartedEventListener(taskExecutionRepo, taskDispatcher());
   }
   
   @Bean
-  JobStatusWebhookEventHandler webhookEventHandler (JobRepository aJobRepository) {
-    return new JobStatusWebhookEventHandler(aJobRepository);
+  JobStatusWebhookEventListener webhookEventHandler () {
+    return new JobStatusWebhookEventListener(jobRepository);
   }
   
   @Bean
-  TaskStartedWebhookEventListener taskStartedWebhookEventHandler (JobRepository aJobRepository) {
-    return new TaskStartedWebhookEventListener(aJobRepository);
+  TaskStartedWebhookEventListener taskStartedWebhookEventListener () {
+    return new TaskStartedWebhookEventListener(jobRepository);
   }
   
 }
