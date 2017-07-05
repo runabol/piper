@@ -186,6 +186,22 @@ Produces a new collection of values by mapping each value in `list` through the 
     file: ${item}
 ``` 
 
+# Getting started
+
+Build the sources:
+
+```
+mvn clean package
+```
+
+Start Piper in memory without any dependencies:
+
+```
+cd scripts/
+./all.sh
+```
+
+
 # License
 
 ## Piper Community Edition
