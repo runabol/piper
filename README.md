@@ -98,7 +98,7 @@ Piper is composed of the following components:
 
 # Control Flow
 
-Piper support the following construct to control the flow of execution:
+Piper support the following constructs to control the flow of execution:
 
 ## Each
 
@@ -113,8 +113,78 @@ Applies the function `iteratee` to each item in `list`, in parallel. Note, that 
     millis: ${item} 
 ```
 
+This will generate three parallel tasks, one for each items in the list, which will `sleep` for 1, 2 and 3 seconds respectively.
 
+## Parallel
 
+Run the `tasks` collection of functions in parallel, without waiting until the previous function has completed.
+
+```
+- type: parallel
+  tasks: 
+    - type: print
+      millis: hello
+        
+    - type: print
+      text: goodbye
+```
+
+## Fork/Join
+
+Executes each branch in the `branches` as a seperate and isolated sub-flow. Branches are executed internally in sequence.
+
+```
+- type: fork
+  branches: 
+     - - name: randomNumber                 <-- branch 1 start here
+         label: Generate a random number
+         type: randomInt
+         startInclusive: 0
+         endInclusive: 5000
+           
+       - type: sleep
+         millis: ${randomNumber}
+           
+     - - name: randomNumber                 <-- branch 2 start here
+         label: Generate a random number
+         type: randomInt
+         startInclusive: 0
+         endInclusive: 5000
+           
+       - type: sleep
+         millis: ${randomNumber}      
+```
+
+## Switch
+
+Executes one and only one branch of execution based on the `expression` value.
+
+```
+- type: switch
+  expression: ${selector} <-- determines which case will be executed
+  cases: 
+     - key: hello                 <-- case 1 start here
+       tasks: 
+         - type: print
+           text: hello world
+     - key: bye                   <-- case 2 start here
+       tasks: 
+         - type: print
+           text: goodbye world
+```
+
+## Map
+
+Produces a new collection of values by mapping each value in `list` through the `iteratee` function. The `iteratee` is called with an item from `list` in parallel. When the `iteratee` is finished executing on all items the `map` task will return a list of execution results in an order which corresponds to the order of the source `list`.
+
+```
+- name: fileSizes 
+  type: map
+  list: ["/path/to/file1.txt","/path/to/file2.txt","/path/to/file3.txt"]
+  iteratee:
+    type: filesize         
+    file: ${item}
+``` 
 
 # License
 
