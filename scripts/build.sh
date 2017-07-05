@@ -1,3 +1,3 @@
 #!/bin/bash
 
-cd ../ && mvn clean package
+mvn clean package

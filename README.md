@@ -191,13 +191,13 @@ Produces a new collection of values by mapping each value in `list` through the 
 Build the sources:
 
 ```
-mvn clean package
+./scripts/build.sh
 ```
 
 Start Piper in memory without any dependencies:
 
 ```
-cd ./scripts/all.sh
+./scripts/all.sh
 ```
 
 Go to the browser at [http://localhost:8080/jobs][]
