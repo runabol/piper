@@ -6,7 +6,7 @@ In Piper, work to be done is defined as a set of tasks called a Pipeline. Pipeli
 
 # Tasks
 
-Tasks are the basic building blocks of a pipeline. Each task has a type property which maps to a TaskHandler implementation which is responsible for carrying out the task.
+Tasks are the basic building blocks of a pipeline. Each task has a `type` property which maps to a `TaskHandler` implementation, responsible for carrying out the task.
 
 For example here's the `RandomInt` `TaskHandler` implementation:
 
