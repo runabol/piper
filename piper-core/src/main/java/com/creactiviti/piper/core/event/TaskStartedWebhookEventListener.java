@@ -18,7 +18,7 @@ import com.creactiviti.piper.core.job.JobRepository;
  * @author Arik Cohen
  * @since Jun 9, 2017
  */
-public class TaskStartedWebhookEventHandler implements  EventListener {
+public class TaskStartedWebhookEventListener implements  EventListener {
   
   private final JobRepository jobRepository;
   
@@ -26,7 +26,7 @@ public class TaskStartedWebhookEventHandler implements  EventListener {
   
   private final RestTemplate rest = new RestTemplate();
   
-  public TaskStartedWebhookEventHandler(JobRepository aJobRepository) {
+  public TaskStartedWebhookEventListener(JobRepository aJobRepository) {
     jobRepository = aJobRepository;
   }
   

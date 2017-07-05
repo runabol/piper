@@ -16,15 +16,15 @@ import com.creactiviti.piper.core.task.TaskStatus;
  * @author Arik Cohen
  * @since Apt 9, 2017
  */
-public class TaskStartedEventHandler implements EventListener {
+public class TaskStartedEventListener implements EventListener {
 
-  private final TaskExecutionRepository jobTaskRepository;
+  private final TaskExecutionRepository taskExecutionRepository;
   private final TaskDispatcher taskDispatcher;
   
   private final Logger logger = LoggerFactory.getLogger(getClass());
   
-  public TaskStartedEventHandler (TaskExecutionRepository aJobTaskRepository, TaskDispatcher aTaskDispatcher) {
-    jobTaskRepository = aJobTaskRepository;
+  public TaskStartedEventListener (TaskExecutionRepository aTaskExecutionRepository, TaskDispatcher aTaskDispatcher) {
+    taskExecutionRepository = aTaskExecutionRepository;
     taskDispatcher = aTaskDispatcher;
   }
 
@@ -32,7 +32,7 @@ public class TaskStartedEventHandler implements EventListener {
   public void onApplicationEvent (PiperEvent aEvent) {
     if(Events.TASK_STARTED.equals(aEvent.getType())) {
       String taskId = aEvent.getString("taskId");
-      TaskExecution task = jobTaskRepository.findOne(taskId);
+      TaskExecution task = taskExecutionRepository.findOne(taskId);
       if(task == null) {
         logger.error("Unkown task: {}",taskId);
       }
@@ -44,7 +44,7 @@ public class TaskStartedEventHandler implements EventListener {
         if(mtask.getStartTime()==null && mtask.getStatus() != TaskStatus.STARTED) {
           mtask.setStartTime(aEvent.getCreateTime());
           mtask.setStatus(TaskStatus.STARTED);
-          jobTaskRepository.merge(mtask);
+          taskExecutionRepository.merge(mtask);
         }
         if(mtask.getParentId()!=null) {
           PiperEvent pevent = PiperEvent.of(Events.TASK_STARTED,"taskId",mtask.getParentId());
