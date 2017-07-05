@@ -82,6 +82,21 @@ The `output` property can be used to modify the output of the task in some fashi
 All other key-value pairs are task-specific and may or may not be required depending on the specific task.
 
 
+# Architecture
+
+Piper is composed of the following components: 
+
+1. Coordinator: The Coordinator is the like the central nervous system of Piper. It keeps tracks of jobs, dishes out work to be done by Worker machines, keeps track of failures, retries and other job-level details. Unlike Worker machines it does not execute actual work but delegate all task activities to Worker instnaces. 
+
+2. Worker. Workers are the work horses of Piper. These are the instances that actually execute tasks requested to be done by the Coordinator machine. Unlike the Coordinator, the workers are stateless, which by that is meant that they do not interact with a database or keep any state in memory about the job or anything else. This makes it very easy to scale up and down the number of workers in the system without fear of losing application state. 
+
+3. Message Broker.  All communication between the Coordinator and the Worker nodes is done through a messaging broker. This has many advantages: a) if all workers are busy the message broker will simply queue the message until they can handle it. b) when workers boot up they subscribe to the appropriate queues for the type of work they are intended to handle c) if a worker crashes the task will automatically get re-queued to be handle by another worker. 
+
+4. Database. This piece holds all the jobs state in the system, what tasks completed, failed etc. It is used by the Coordinator as its mind. 
+
+5. Pipeline Repository. The component where pipelines (workflows) are created, edited etc. by workflow engineers.
+
+
 # License
 
 ## Piper Community Edition
