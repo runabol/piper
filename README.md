@@ -200,7 +200,7 @@ Start Piper in memory without any dependencies:
 cd ./scripts/all.sh
 ```
 
-Go to the browser at [http://localhost:8080/jobs][http://localhost:8080/jobs]
+Go to the browser at [http://localhost:8080/jobs][]
 
 
 # License
