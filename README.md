@@ -219,8 +219,27 @@ The `/jobs` endpoint lists all jobs that are either running or were previously r
 Start a demo job:
 
 ```
-curl -s -X POST -H Content-Type:application/json -d '{"pipelineId":"demo/hello","inputs":{"yourName":"Joe Jones"}}' http://localhost:8080/jobs | jq .
+curl -s -X POST -H Content-Type:application/json -d '{"pipelineId":"demo/hello","inputs":{"yourName":"Joe Jones"}}' http://localhost:8080/jobs
 ```
+
+Which should give you something like: 
+
+```
+{
+  "createTime": "2017-07-05T16:56:27.402+0000",
+  "webhooks": [],
+  "inputs": {
+    "yourName": "Joe Jones"
+  },
+  "id": "8221553af238431ab006cc178eb59129",
+  "label": "Hello Demo",
+  "priority": 0,
+  "pipelineId": "demo/hello",
+  "status": "CREATED",
+  "tags": []
+}
+```
+
 
 If you'll refresh your browser page now you should see the executing job. 
 
