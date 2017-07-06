@@ -94,7 +94,7 @@ Piper is composed of the following components:
   1. if all workers are busy the message broker will simply queue the message until they can handle it. 
   2. when workers boot up they subscribe to the appropriate queues for the type of work they are intended to handle 
   3. if a worker crashes the task will automatically get re-queued to be handle by another worker.
-  4. Last but not least, workers and task handler implementations can be written in any language since they decoupled completely through message passing.  
+  4. Last but not least, workers and `TaskHandler` implementations can be written in any language since they decoupled completely through message passing.  
 
 **Database**: This piece holds all the jobs state in the system, what tasks completed, failed etc. It is used by the Coordinator as its "mind". 
 
