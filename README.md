@@ -90,7 +90,11 @@ Piper is composed of the following components:
 
 **Worker**: Workers are the work horses of Piper. These are the Piper nodes that actually execute tasks requested to be done by the Coordinator machine. Unlike the Coordinator, the workers are stateless, which by that is meant that they do not interact with a database or keep any state in memory about the job or anything else. This makes it very easy to scale up and down the number of workers in the system without fear of losing application state. 
 
-**Message Broker**:  All communication between the Coordinator and the Worker nodes is done through a messaging broker. This has many advantages: a) if all workers are busy the message broker will simply queue the message until they can handle it. b) when workers boot up they subscribe to the appropriate queues for the type of work they are intended to handle c) if a worker crashes the task will automatically get re-queued to be handle by another worker. 
+**Message Broker**:  All communication between the Coordinator and the Worker nodes is done through a messaging broker. This has many advantages: 
+  1. if all workers are busy the message broker will simply queue the message until they can handle it. 
+  2. when workers boot up they subscribe to the appropriate queues for the type of work they are intended to handle 
+  3. if a worker crashes the task will automatically get re-queued to be handle by another worker.
+  4. Last but not least, workers and task handler implementations can be written in any language since they decoupled completely through message passing.  
 
 **Database**: This piece holds all the jobs state in the system, what tasks completed, failed etc. It is used by the Coordinator as its "mind". 
 
