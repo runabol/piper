@@ -320,7 +320,24 @@ curl -s -X POST -H Content-Type:application/json -d '{"pipelineId":"demo/hello",
 ```
 
 
-## Using Git as a Pipeline Repository backend
+## Transcoding a Video
+
+Note: You must have [ffmpeg](ffmpeg.org) installed on your worker machine to get this demo to work
+
+
+Transcode a source video to an SD (480p) output:
+
+```
+curl -s -X POST -H Content-Type:application/json -d '{"pipelineId":"video/transcode","inputs":{"input":"/path/to/video/input.mov","output":"/path/to/video/output.mp4","profile":"sd"}}' http://localhost:8080/jobs | jq .
+```
+
+Transcode a source video to an HD (1080p) output:
+
+```
+curl -s -X POST -H Content-Type:application/json -d '{"pipelineId":"video/transcode","inputs":{"input":"/path/to/video/input.mov","output":"/path/to/video/output.mp4","profile":"hd"}}' http://localhost:8080/jobs | jq .
+```
+
+# Using Git as a Pipeline Repository backend
 
 Rather than storing the pipelines in your local file system you can use Git to store them for you. This has great advantages, not the least of which is pipeline versioning, Pull Requests and everything else Git has to offer.
 
