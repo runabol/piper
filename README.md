@@ -328,13 +328,24 @@ Note: You must have [ffmpeg](ffmpeg.org) installed on your worker machine to get
 Transcode a source video to an SD (480p) output:
 
 ```
-curl -s -X POST -H Content-Type:application/json -d '{"pipelineId":"video/transcode","inputs":{"input":"/path/to/video/input.mov","output":"/path/to/video/output.mp4","profile":"sd"}}' http://localhost:8080/jobs | jq .
+curl -s -X POST -H Content-Type:application/json -d '{"pipelineId":"video/transcode","inputs":{"input":"/path/to/video/input.mov","output":"/path/to/video/output.mp4","profile":"sd"}}' http://localhost:8080/jobs
 ```
 
 Transcode a source video to an HD (1080p) output:
 
 ```
-curl -s -X POST -H Content-Type:application/json -d '{"pipelineId":"video/transcode","inputs":{"input":"/path/to/video/input.mov","output":"/path/to/video/output.mp4","profile":"hd"}}' http://localhost:8080/jobs | jq .
+curl -s -X POST -H Content-Type:application/json -d '{"pipelineId":"video/transcode","inputs":{"input":"/path/to/video/input.mov","output":"/path/to/video/output.mp4","profile":"hd"}}' http://localhost:8080/jobs
+```
+
+## Transcoding a Video (Split & Stitch)
+
+This tutorial demostrates how to transcode a source video by splitting it to chunks and transcoding these chunks in parallel, potentially by multiple nodes.
+
+Note: You must have [ffmpeg](ffmpeg.org) installed on your worker machine to get this demo to work
+
+
+```
+curl -s -X POST -H Content-Type:application/json -d '{"pipelineId":"video/split_n_stitch","inputs":{"input":"/path/to/input.mov","output":"/path/to/output.mp4"}}' http://localhost:8080/jobs 
 ```
 
 # Using Git as a Pipeline Repository backend
