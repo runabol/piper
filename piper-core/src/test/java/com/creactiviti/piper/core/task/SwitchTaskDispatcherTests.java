@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -75,12 +76,13 @@ public class SwitchTaskDispatcherTests {
       ImmutableMap.of("key", "k1","tasks",Arrays.asList(ImmutableMap.of("type","print"))),
       ImmutableMap.of("key", "k2","tasks",Arrays.asList(ImmutableMap.of("type","sleep")))
     ));
-    task.set("default", Arrays.asList(ImmutableMap.of("type","var")));
+    task.set("default", Collections.singletonMap("value", "1234"));
     task.set("expression", "k99");
     dispatcher.dispatch(task);
-    ArgumentCaptor<TaskExecution> argument = ArgumentCaptor.forClass(TaskExecution.class);
-    verify(taskDispatcher,times(1)).dispatch(argument.capture());
-    Assert.assertEquals("var", argument.getValue().getType());
+    ArgumentCaptor<String> arg1 = ArgumentCaptor.forClass(String.class);
+    ArgumentCaptor<TaskExecution> arg2 = ArgumentCaptor.forClass(TaskExecution.class);
+    verify(messenger,times(1)).send(arg1.capture(),arg2.capture());
+    Assert.assertEquals("1234", arg2.getValue().getOutput());
   }
   
 }

@@ -10,5 +10,5 @@ java -jar \
      -Dpiper.pipeline-repository.git.url=git@github.com:creactiviti/piper-pipelines.git \
      -Dpiper.pipeline-repository.git.search-paths=demo/,video/ \
      -Dpiper.pipeline-repository.filesystem.enabled=true \
-     -Dpiper.pipeline-repository.filesystem.base-path=$HOME/piper/**/*.yaml \
+     -Dpiper.pipeline-repository.filesystem.location-pattern=$HOME/piper/**/*.yaml \
      piper-server/target/piper-server-0.0.1-SNAPSHOT.jar

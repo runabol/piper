@@ -177,6 +177,10 @@ Executes one and only one branch of execution based on the `expression` value.
        tasks: 
          - type: print
            text: goodbye world
+  default:
+    - tasks:
+        -type: print
+         text: something else
 ```
 
 ## Map

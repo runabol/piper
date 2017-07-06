@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.util.Assert;
 
+import com.creactiviti.piper.core.Accessor;
 import com.creactiviti.piper.core.MapObject;
 import com.creactiviti.piper.core.SwitchTaskCompletionHandler;
 import com.creactiviti.piper.core.context.ContextRepository;
@@ -42,46 +43,56 @@ public class SwitchTaskDispatcher implements TaskDispatcher<TaskExecution>, Task
     switchTask.setStartTime(new Date ());
     switchTask.setStatus(TaskStatus.STARTED);
     taskExecutionRepo.merge(switchTask);
-    List<MapObject> tasks = resolveCase(aTask);
-    if(tasks.size() > 0) {
-      MapObject task = tasks.get(0);
-      SimpleTaskExecution execution = SimpleTaskExecution.createFromMap(task);
-      execution.setId(UUIDGenerator.generate());
-      execution.setStatus(TaskStatus.CREATED);
-      execution.setCreateTime(new Date());
-      execution.setTaskNumber(1);
-      execution.setJobId(switchTask.getJobId());
-      execution.setParentId(switchTask.getId());
-      execution.setPriority(switchTask.getPriority());
-      MapContext context = new MapContext (contextRepository.peek(switchTask.getId()));
-      contextRepository.push(execution.getId(), context);
-      TaskExecution evaluatedExecution = taskEvaluator.evaluate(execution, context);
-      taskExecutionRepo.create(evaluatedExecution);
-      taskDispatcher.dispatch(evaluatedExecution);
+    Accessor selectedCase = resolveCase(aTask);
+    if(selectedCase.containsKey("tasks")) {
+      List<MapObject> tasks = selectedCase.getList("tasks", MapObject.class,Collections.emptyList());
+      if(tasks.size() > 0) {
+        MapObject task = tasks.get(0);
+        SimpleTaskExecution execution = SimpleTaskExecution.createFromMap(task);
+        execution.setId(UUIDGenerator.generate());
+        execution.setStatus(TaskStatus.CREATED);
+        execution.setCreateTime(new Date());
+        execution.setTaskNumber(1);
+        execution.setJobId(switchTask.getJobId());
+        execution.setParentId(switchTask.getId());
+        execution.setPriority(switchTask.getPriority());
+        MapContext context = new MapContext (contextRepository.peek(switchTask.getId()));
+        contextRepository.push(execution.getId(), context);
+        TaskExecution evaluatedExecution = taskEvaluator.evaluate(execution, context);
+        taskExecutionRepo.create(evaluatedExecution);
+        taskDispatcher.dispatch(evaluatedExecution);
+      }
+      else  {
+        SimpleTaskExecution completion = SimpleTaskExecution.createForUpdate(aTask);
+        completion.setStartTime(new Date());
+        completion.setEndTime(new Date());
+        completion.setExecutionTime(0);
+        messenger.send(Queues.COMPLETIONS, completion);
+      }
     }
-    else  {
+    else {
       SimpleTaskExecution completion = SimpleTaskExecution.createForUpdate(aTask);
       completion.setStartTime(new Date());
       completion.setEndTime(new Date());
       completion.setExecutionTime(0);
+      completion.setOutput(selectedCase.get("value"));
       messenger.send(Queues.COMPLETIONS, completion);
     }
   }
 
-  private List<MapObject> resolveCase (TaskExecution aSwitch) {
+  private Accessor resolveCase (TaskExecution aSwitch) {
     Object expression = aSwitch.getRequired("expression");
     List<MapObject> cases = aSwitch.getList("cases", MapObject.class);
     Assert.notNull(cases,"you must specify 'cases' in a switch statement");
     for(MapObject oneCase : cases) {
       Object key = oneCase.getRequired("key");
-      List<MapObject> tasks = oneCase.getList("tasks",MapObject.class);
       if(key.equals(expression)) {
-        return tasks;
+        return oneCase;
       }
     }
-    return aSwitch.getList("default", MapObject.class,Collections.emptyList());
+    return new MapObject( aSwitch.getMap("default",Collections.emptyMap()) );    
   }
-
+  
   @Override
   public TaskDispatcher resolve (Task aTask) {
     if(aTask.getType().equals("switch")) {
