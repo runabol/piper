@@ -358,11 +358,9 @@ You can change it by using the `piper.pipeline-repository.git.url` and `piper.pi
 
 
 # License
+Piper is released under version 2.0 of the [Apache License][]. 
 
-## Piper Community Edition
-Piper Community is a fully featured product released under version 2.0 of the [Apache License][]. I chose Apache v2 because it means that Piper Community Edition can be used for free with your project: whether in the cloud or behind the firewall. 
-
-## Piper Enterprise Edition
-Piper Enterprise is designed for commercial deployments where scale and availability are important. Contact [me](mailto:arik@creactiviti.com) for details.
+## Support
+If you need professional support feel free to contact [me](mailto:arik@creactiviti.com) for details.
 
 [Apache License]: http://www.apache.org/licenses/LICENSE-2.0
