@@ -322,7 +322,7 @@ curl -s -X POST -H Content-Type:application/json -d '{"pipelineId":"demo/hello",
 
 ## Transcoding a Video
 
-Note: You must have [ffmpeg](ffmpeg.org) installed on your worker machine to get this demo to work
+Note: You must have [ffmpeg](https://ffmpeg.org) installed on your worker machine to get this demo to work
 
 
 Transcode a source video to an SD (480p) output:
@@ -341,7 +341,7 @@ curl -s -X POST -H Content-Type:application/json -d '{"pipelineId":"video/transc
 
 This tutorial demostrates how to transcode a source video by splitting it to chunks and transcoding these chunks in parallel, potentially by multiple nodes.
 
-Note: You must have [ffmpeg](ffmpeg.org) installed on your worker machine to get this demo to work
+Note: You must have [ffmpeg](https://hub.docker.com/r/jrottenberg/ffmpeg/) installed on your worker machine to get this demo to work
 
 
 ```
