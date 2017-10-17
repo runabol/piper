@@ -14,7 +14,7 @@ import com.creactiviti.piper.core.job.Job;
 import com.creactiviti.piper.core.job.JobRepository;
 import com.creactiviti.piper.core.job.JobStatus;
 import com.creactiviti.piper.core.job.SimpleJob;
-import com.creactiviti.piper.core.job.SimpleTaskExecution;
+import com.creactiviti.piper.core.task.SimpleTaskExecution;
 import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskExecutionRepository;

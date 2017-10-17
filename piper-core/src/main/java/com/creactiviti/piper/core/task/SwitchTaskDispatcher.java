@@ -12,7 +12,6 @@ import com.creactiviti.piper.core.MapObject;
 import com.creactiviti.piper.core.SwitchTaskCompletionHandler;
 import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.context.MapContext;
-import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.messenger.Messenger;
 import com.creactiviti.piper.core.messenger.Queues;
 import com.creactiviti.piper.core.uuid.UUIDGenerator;

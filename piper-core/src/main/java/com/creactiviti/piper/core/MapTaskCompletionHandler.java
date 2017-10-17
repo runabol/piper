@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.task.CounterRepository;
+import com.creactiviti.piper.core.task.SimpleTaskExecution;
 import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskExecutionRepository;
 import com.creactiviti.piper.core.task.TaskStatus;

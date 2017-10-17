@@ -3,7 +3,6 @@ package com.creactiviti.piper.core.task;
 
 import com.creactiviti.piper.core.DSL;
 import com.creactiviti.piper.core.TaskCompletionHandler;
-import com.creactiviti.piper.core.job.SimpleTaskExecution;
 
 /**
  * <p>A {@link TaskCompletionHandler} implementation which handles completions 

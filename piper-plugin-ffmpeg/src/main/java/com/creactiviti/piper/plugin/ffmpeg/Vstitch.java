@@ -17,7 +17,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
 
-import com.creactiviti.piper.core.job.SimpleTaskExecution;
+import com.creactiviti.piper.core.task.SimpleTaskExecution;
 import com.creactiviti.piper.core.task.Task;
 import com.creactiviti.piper.core.task.TaskHandler;
 

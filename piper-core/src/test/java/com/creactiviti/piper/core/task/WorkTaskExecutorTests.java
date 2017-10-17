@@ -4,7 +4,6 @@ package com.creactiviti.piper.core.task;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.messenger.Queues;
 
 public class WorkTaskExecutorTests {

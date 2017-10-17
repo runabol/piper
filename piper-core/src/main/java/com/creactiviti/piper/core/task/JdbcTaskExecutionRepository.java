@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.json.JsonHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

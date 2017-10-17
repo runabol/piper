@@ -10,7 +10,7 @@ import org.springframework.util.Assert;
 import com.creactiviti.piper.core.context.Context;
 import com.creactiviti.piper.core.context.ContextRepository;
 import com.creactiviti.piper.core.context.MapContext;
-import com.creactiviti.piper.core.job.SimpleTaskExecution;
+import com.creactiviti.piper.core.task.SimpleTaskExecution;
 import com.creactiviti.piper.core.task.SpelTaskEvaluator;
 import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.core.task.TaskEvaluator;

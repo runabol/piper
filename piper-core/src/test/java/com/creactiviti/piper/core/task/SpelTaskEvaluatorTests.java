@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import com.creactiviti.piper.core.MapObject;
 import com.creactiviti.piper.core.context.MapContext;
-import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.google.common.collect.ImmutableMap;
 
 public class SpelTaskEvaluatorTests {

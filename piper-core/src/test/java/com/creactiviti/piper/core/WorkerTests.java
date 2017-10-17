@@ -4,9 +4,9 @@ package com.creactiviti.piper.core;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.messenger.Queues;
 import com.creactiviti.piper.core.messenger.SynchMessenger;
+import com.creactiviti.piper.core.task.SimpleTaskExecution;
 import com.creactiviti.piper.core.task.TaskExecution;
 
 public class WorkerTests {

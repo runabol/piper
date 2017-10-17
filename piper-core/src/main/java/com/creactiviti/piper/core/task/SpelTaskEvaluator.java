@@ -23,7 +23,6 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.creactiviti.piper.core.context.Context;
-import com.creactiviti.piper.core.job.SimpleTaskExecution;
 
 /**
  * a {@link TaskEvaluator} implemenation which is based on 

@@ -4,8 +4,8 @@ package com.creactiviti.piper.core.event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.creactiviti.piper.core.job.SimpleTaskExecution;
 import com.creactiviti.piper.core.task.CancelTask;
+import com.creactiviti.piper.core.task.SimpleTaskExecution;
 import com.creactiviti.piper.core.task.TaskDispatcher;
 import com.creactiviti.piper.core.task.TaskExecution;
 import com.creactiviti.piper.core.task.TaskExecutionRepository;
