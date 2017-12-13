@@ -370,6 +370,8 @@ piper.worker.enabled=true
 # you may also route pipeline tasks to other arbitrarilty named task queues by specifying the "node"
 # property on any give task. 
 # E.g. node: captions will route to the captions queue which a worker would subscribe to with piper.worker.subscriptions.captions
+# note: queue must be created before tasks can be routed to it. Piper will create the queue if it isn't already there when the worker
+# bootstraps.
 piper.worker.subscriptions.tasks=5 
 # enable a git-based pipeline repository
 piper.pipeline-repository.git.enabled=true
