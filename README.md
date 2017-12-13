@@ -389,6 +389,18 @@ piper.pipeline-repository.filesystem.location-pattern=$HOME/piper/**/*.yaml
 
 [creactiviti/piper](https://hub.docker.com/r/creactiviti/piper)
 
+Hello World in Docker:
+
+```
+docker run --name=piper --rm -it -e piper.worker.enabled=true -e piper.coordinator.enabled=true -e piper.worker.subscriptions.tasks=1 -p 8080:8080 creactiviti/piper
+```
+
+```
+ curl -s -X POST -H Content-Type:application/json -d '{"pipelineId":"demo/hello","inputs":{"yourName":"Joe Jones"}}' http://localhost:8080/jobs
+```
+
+
+
 # License
 Piper is released under version 2.0 of the [Apache License][]. 
 
