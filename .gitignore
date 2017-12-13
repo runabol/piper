@@ -5,4 +5,7 @@ target
 .DS_Store
 .factorypath
 .springBeans
+.idea/
 /.apt_generated/
+*.iml
+.sts4-cache/

@@ -128,17 +128,17 @@ public class JdbcJobRepository implements JobRepository {
 
   @Override
   public int countRunningJobs() {
-    return jdbc.queryForObject("select count(*) from job where status='STARTED'", Collections.EMPTY_MAP, Integer.class);
+    return (int) jdbc.queryForObject("select count(*) from job where status='STARTED'", Collections.EMPTY_MAP, Integer.class);
   }
 
   @Override
   public int countCompletedJobsToday() {
-    return jdbc.queryForObject("select count(*) from job where status='COMPLETED' and end_time >= current_date", Collections.EMPTY_MAP, Integer.class);
+    return (int)jdbc.queryForObject("select count(*) from job where status='COMPLETED' and end_time >= current_date", Collections.EMPTY_MAP, Integer.class);
   }
 
   @Override
   public int countCompletedJobsYesterday() {
-    return jdbc.queryForObject("select count(*) from job where status='COMPLETED' and end_time >= current_date-1 and end_time < current_date-1 ", Collections.EMPTY_MAP, Integer.class);
+    return (int)jdbc.queryForObject("select count(*) from job where status='COMPLETED' and end_time >= current_date-1 and end_time < current_date-1 ", Collections.EMPTY_MAP, Integer.class);
   }
 
 }
