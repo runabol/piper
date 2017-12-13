@@ -348,6 +348,7 @@ Note: You must have [ffmpeg](https://hub.docker.com/r/jrottenberg/ffmpeg/) insta
 curl -s -X POST -H Content-Type:application/json -d '{"pipelineId":"video/split_n_stitch","inputs":{"input":"/path/to/input.mov","output":"/path/to/output.mp4"}}' http://localhost:8080/jobs 
 ```
 
+
 # Using Git as a Pipeline Repository backend
 
 Rather than storing the pipelines in your local file system you can use Git to store them for you. This has great advantages, not the least of which is pipeline versioning, Pull Requests and everything else Git has to offer.
@@ -356,6 +357,31 @@ To enable Git as a pipeline repository set the `piper.pipeline-repository.git.en
 
 You can change it by using the `piper.pipeline-repository.git.url` and `piper.pipeline-repository.git.search-paths` configuration parameters.  
 
+# Configuration
+
+```
+# messaging provider between Coordinator and Workers (jms | amqp) default: jms
+piper.messenger.provider=jms
+# turn on the Coordinator process
+piper.coordinator.enabled=true
+# turn on the Worker process and listen to tasks.
+piper.worker.enabled=true
+# when worker is enabled, subscribe to the default "tasks" queue with 5 concurrent consumers. 
+# you may also route pipeline tasks to other arbitrarilty named task queues by specifying the "node"
+# property on any give task. 
+# E.g. node: captions will route to the captions queue which a worker would subscribe to with piper.worker.subscriptions.captions
+piper.worker.subscriptions.tasks=5 
+# enable a git-based pipeline repository
+piper.pipeline-repository.git.enabled=true
+# The URL to the Git Repo
+piper.pipeline-repository.git.url=git@github.com:creactiviti/piper-pipelines.git
+# folders within the git repo that are scanned for pipelines.
+piper.pipeline-repository.git.search-paths=demo/,video/
+# enable file system based pipeline repository
+piper.pipeline-repository.filesystem.enabled=true
+# location of pipelines on the file system.
+piper.pipeline-repository.filesystem.location-pattern=$HOME/piper/**/*.yaml
+```
 
 # License
 Piper is released under version 2.0 of the [Apache License][]. 
