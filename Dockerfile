@@ -1,6 +1,6 @@
 FROM       jrottenberg/ffmpeg:3.3
 
-RUN        apt-get update && apt-get -y install php openjdk-8-jre
+RUN        apt-get update && apt-get -y install openjdk-8-jre python3
 
 ENTRYPOINT []
 CMD        ["java", "-Xmx1g", "-jar", "-Djava.security.egd=file:/dev/./urandom", "/app/piper.jar"]
