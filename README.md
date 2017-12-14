@@ -398,14 +398,37 @@ spring.datasource.username= # Login user of the database.
 
 Hello World in Docker:
 
+Create an empty directory: 
+
 ```
-docker run --name=piper --rm -it -e piper.worker.enabled=true -e piper.coordinator.enabled=true -e piper.worker.subscriptions.tasks=1 -p 8080:8080 creactiviti/piper
+mkdir pipelines
+cd pipelines
+```
+
+Create a simple pipeline file --  `hello.yaml` -- and paste the following to it: 
+
+```
+label: Hello World
+    
+inputs:
+  - name: name
+    label: Your Name
+    type: string
+    required: true
+    
+tasks:      
+  - label: Print Hello Message
+    type: print
+    text: "Hello ${name}!"
 ```
 
 ```
- curl -s -X POST -H Content-Type:application/json -d '{"pipelineId":"demo/hello","inputs":{"yourName":"Joe Jones"}}' http://localhost:8080/jobs
+docker run --name=piper --rm -it -e piper.worker.enabled=true -e piper.coordinator.enabled=true -e piper.worker.subscriptions.tasks=1 -e piper.pipeline-repository.filesystem.enabled=true -e piper.pipeline-repository.filesystem.location-pattern=/pipelines/**/*.yaml -v $PWD:/pipelines -p 8080:8080 creactiviti/piper
 ```
 
+```
+curl -s -X POST -H Content-Type:application/json -d '{"pipelineId":"hello","inputs":{"name":"Joe Jones"}}' http://localhost:8080/jobs
+```
 
 
 # License
