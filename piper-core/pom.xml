@@ -71,8 +71,8 @@
 	</dependency>
 	
 	<dependency>	
-	    <groupId>org.eclipse.jgit</groupId>
-	    <artifactId>org.eclipse.jgit</artifactId>
+		<groupId>org.eclipse.jgit</groupId>
+		<artifactId>org.eclipse.jgit</artifactId>
 	</dependency>
 	
 	<dependency>
@@ -81,29 +81,32 @@
 	</dependency>
 	
 	<dependency>
-	    <groupId>com.h2database</groupId>
-	    <artifactId>h2</artifactId>
+		<groupId>com.h2database</groupId>
+		<artifactId>h2</artifactId>
 	</dependency>
 	
 	<dependency>
-	    <groupId>org.postgresql</groupId>
-	    <artifactId>postgresql</artifactId>
+		<groupId>org.postgresql</groupId>
+		<artifactId>postgresql</artifactId>
 	</dependency>
 
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    
+	<dependency>
+		<groupId>mysql</groupId>
+		<artifactId>mysql-connector-java</artifactId>
+	</dependency>
+
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<scope>test</scope>
+	</dependency>
+
 	<dependency>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-test</artifactId>
 		<scope>test</scope>
 	</dependency>
 	
-    
+
   </dependencies>
-  
-  
 </project>
