@@ -19,6 +19,7 @@ package com.creactiviti.piper.core;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.creactiviti.piper.core.context.Context;
 import com.creactiviti.piper.core.context.ContextRepository;
@@ -99,6 +100,23 @@ public class ForkTaskCompletionHandler implements TaskCompletionHandler {
       long branchesLeft = counterRepository.decrement(aTaskExecution.getParentId());
       if(branchesLeft == 0) {
         SimpleTaskExecution forkTask = SimpleTaskExecution.createForUpdate(taskExecutionRepo.findOne(aTaskExecution.getParentId()));
+
+        Map<String, Object> branchesContext = taskExecutionRepo
+                .findByParentId(forkTask.getId())
+                .stream()
+                .filter(it -> it.getName() != null)
+                .filter(it -> it.getOutput() != null)
+                .collect(Collectors.toMap(
+                        TaskExecution::getName,
+                        TaskExecution::getOutput));
+
+        if (!branchesContext.isEmpty() && forkTask.getName() != null) {
+          Context context = contextRepository.peek(forkTask.getJobId());
+          MapContext newContext = new MapContext(context);
+          newContext.put(fork.getName(), branchesContext);
+          contextRepository.push(forkTask.getJobId(), newContext);
+        }
+
         forkTask.setEndTime(new Date ());
         forkTask.setExecutionTime(forkTask.getEndTime().getTime()-forkTask.getStartTime().getTime());
         taskCompletionHandler.handle(forkTask);
