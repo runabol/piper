@@ -15,8 +15,7 @@ public class GitPipelineRepositoryTests {
   
   @Test
   public void test1 () {
-    GitPipelineRepository r = new GitPipelineRepository();
-    r.setGitOperations(new DummyGitOperations());
+    GitPipelineRepository r = new GitPipelineRepository(new DummyGitOperations());
     List<Pipeline> findAll = r.findAll();
     Assert.assertEquals("demo/hello/123",findAll.iterator().next().getId());
   }
