@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.AbbreviatedObjectId;
 import org.eclipse.jgit.lib.Constants;
@@ -30,6 +31,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +42,11 @@ import com.creactiviti.piper.core.pipeline.IdentifiableResource;
 import com.google.common.base.Throwables;
 import com.google.common.io.Files;
 
+/**
+ * 
+ * @author Arik Cohen
+ * @since June 13, 2018
+ */
 public class JGitTemplate implements GitOperations {
 
   private Logger logger = LoggerFactory.getLogger(getClass());
@@ -47,6 +54,15 @@ public class JGitTemplate implements GitOperations {
   private static final String LATEST = "latest";
 
   private File repositoryDir = null;
+  
+  private String username;
+  
+  private String password;
+  
+  public JGitTemplate(String aUsername, String aPassword) {
+    username = aUsername;
+    password = aPassword;
+  }
 
   @Override
   public List<IdentifiableResource> getHeadFiles (String aUrl, String aBranch, String... aSearchPaths) {
@@ -82,11 +98,17 @@ public class JGitTemplate implements GitOperations {
     try {
       clear();
       logger.info("Cloning {} {}", aUrl,aBranch);
-      Git git = Git.cloneRepository()
-                   .setURI(aUrl)
-                   .setBranch(aBranch)
-                   .setDirectory(repositoryDir)
-                   .call();
+      CloneCommand cloneCommand = Git.cloneRepository()
+                                     .setURI(aUrl)
+                                     .setBranch(aBranch)
+                                     .setDirectory(repositoryDir);
+      
+      if(username != null && password != null) {
+        cloneCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password));
+      }
+      
+      Git git = cloneCommand.call();
+      
       return (git.getRepository());
     }
     catch (Exception e) {
