@@ -44,7 +44,6 @@ import com.google.common.base.Throwables;
 import com.google.common.io.Files;
 
 /**
- * 
  * @author Arik Cohen
  * @since June 13, 2018
  */
