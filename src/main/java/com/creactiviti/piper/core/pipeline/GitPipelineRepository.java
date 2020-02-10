@@ -23,29 +23,20 @@ import com.creactiviti.piper.core.git.JGitTemplate;
 
 public class GitPipelineRepository extends YamlPipelineRepository  {
 
-  private final String url;
-  private final String[] searchPaths;
-  private final String branch;
   private final GitOperations git;
   
   public GitPipelineRepository (String aUrl, String[] aSearchPaths, String aBranch, String aUsername, String aPassword) {
-   url = aUrl;
-   searchPaths = aSearchPaths;
-   branch = aBranch;
-   git = new JGitTemplate(aUsername, aPassword); 
+   git = new JGitTemplate(aUrl,aBranch,aSearchPaths,aUsername, aPassword); 
   }
   
   public GitPipelineRepository (GitOperations aGitOperations) {
-    url = "";
-    searchPaths = new String[0];
-    branch = "master";
     git = aGitOperations; 
    }
   
   @Override
   public List<Pipeline> findAll () {
     synchronized(this) {
-      List<IdentifiableResource> resources = git.getHeadFiles(url, branch, searchPaths);
+      List<IdentifiableResource> resources = git.getHeadFiles();
       List<Pipeline> pipelines = resources.stream()
                                           .map(r -> parsePipeline(r))
                                           .collect(Collectors.toList());
@@ -56,7 +47,7 @@ public class GitPipelineRepository extends YamlPipelineRepository  {
   @Override
   public Pipeline findOne (String aId) {
     synchronized(this) {
-      IdentifiableResource resource = git.getFile(url, branch, aId);
+      IdentifiableResource resource = git.getFile(aId);
       return parsePipeline(resource);
     }
   }

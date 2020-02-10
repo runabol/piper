@@ -56,22 +56,31 @@ public class JGitTemplate implements GitOperations {
 
   private File repositoryDir = null;
   
-  private String username;
+  private final String url;
   
-  private String password;
+  private final String branch;
   
-  public JGitTemplate(String aUsername, String aPassword) {
+  private String[] searchPaths;
+  
+  private final String username;
+  
+  private final String password;
+  
+  public JGitTemplate (String aUrl, String aBranch, String[] aSearchPaths, String aUsername, String aPassword) {
+    url = aUrl;
+    branch = aBranch;
+    searchPaths = aSearchPaths;
     username = aUsername;
     password = aPassword;
   }
 
   @Override
-  public List<IdentifiableResource> getHeadFiles (String aUrl, String aBranch, String... aSearchPaths) {
-    Repository repo = getRepository(aUrl,aBranch);
-    return getHeadFiles(repo, aSearchPaths);
+  public List<IdentifiableResource> getHeadFiles () {
+    Repository repo = getRepository();
+    return getHeadFiles(repo, searchPaths);
   }
 
-  private List<IdentifiableResource> getHeadFiles (Repository aRepository, String... aSearchPaths) {
+  private List<IdentifiableResource> getHeadFiles (Repository aRepository, String[] aSearchPaths) {
     List<String> searchPaths = Arrays.asList(aSearchPaths);
     List<IdentifiableResource> resources = new ArrayList<>();
     try (ObjectReader reader = aRepository.newObjectReader(); RevWalk walk = new RevWalk(reader); TreeWalk treeWalk = new TreeWalk(aRepository,reader);) {
@@ -95,13 +104,13 @@ public class JGitTemplate implements GitOperations {
     } 
   }
 
-  private synchronized Repository getRepository(String aUrl, String aBranch) {
+  private synchronized Repository getRepository() {
     try {
       clear();
-      logger.info("Cloning {} {}", aUrl,aBranch);
+      logger.info("Cloning {} {}", url,branch);
       CloneCommand cloneCommand = Git.cloneRepository()
-                                     .setURI(aUrl)
-                                     .setBranch(aBranch)
+                                     .setURI(url)
+                                     .setBranch(branch)
                                      .setDirectory(repositoryDir);
       if(StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) {
         cloneCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password));
@@ -115,9 +124,9 @@ public class JGitTemplate implements GitOperations {
   }
 
   @Override
-  public IdentifiableResource getFile(String aUrl, String aBranch, String aFileId) {
+  public IdentifiableResource getFile(String aFileId) {
     try {
-      Repository repository = getRepository(aUrl,aBranch);
+      Repository repository = getRepository();
       int blobIdDelim = aFileId.lastIndexOf(':');
       if(blobIdDelim > -1) {
         String path = aFileId.substring(0,blobIdDelim);
@@ -136,7 +145,7 @@ public class JGitTemplate implements GitOperations {
   private IdentifiableResource readBlob (Repository aRepo, String aPath, String aBlobId) throws Exception {
     try (ObjectReader reader = aRepo.newObjectReader()) {
       if(aBlobId.equals(LATEST)) {
-        List<IdentifiableResource> headFiles = getHeadFiles(aRepo, aPath);
+        List<IdentifiableResource> headFiles = getHeadFiles(aRepo, new String[] {aPath});
         Assert.notEmpty(headFiles,"could not find: " + aPath + ":" + aBlobId);
         return headFiles.get(0);
       }
