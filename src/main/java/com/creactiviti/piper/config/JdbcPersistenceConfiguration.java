@@ -15,6 +15,7 @@
  */
 package com.creactiviti.piper.config;
 
+import com.creactiviti.piper.core.pipeline.JdbcPipelineRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,6 +47,13 @@ public class JdbcPersistenceConfiguration {
     jdbcJobRepository.setJdbcOperations(aJdbcTemplate);
     jdbcJobRepository.setJobTaskRepository(jdbcJobTaskRepository(aJdbcTemplate,aObjectMapper));
     return jdbcJobRepository;
+  }
+
+  @Bean
+  JdbcPipelineRepository jdbcPipelineRepository (NamedParameterJdbcTemplate aJdbcTemplate) {
+    JdbcPipelineRepository jdbcPipelineRepository = new JdbcPipelineRepository();
+    jdbcPipelineRepository.setJdbc(aJdbcTemplate);
+    return jdbcPipelineRepository;
   }
   
   @Bean

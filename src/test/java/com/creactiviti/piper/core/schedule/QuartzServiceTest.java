@@ -1,5 +1,7 @@
 package com.creactiviti.piper.core.schedule;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.quartz.JobExecutionContext;
@@ -15,8 +17,12 @@ import java.util.Map;
 class MyJob extends QuartzJobBean {
 
     @Override
-    protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        System.out.println("MyJob, jobExecutionContext = " + jobExecutionContext);
+    protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
+        try {
+            System.out.println("MyJob, context = " + new ObjectMapper().writeValueAsString(context.getMergedJobDataMap()));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 }
 

@@ -55,3 +55,15 @@ create table counter (
   create_time timestamp    not null,
   value       bigint       not null
 );
+
+drop table if exists pipeline cascade;
+
+create table pipeline
+(
+    id      varchar(256) not null primary key,
+    label   varchar(50)  not null,
+    tasks   json         not null,
+    inputs  json         null,
+    outputs json         null,
+    retry   int          null
+);

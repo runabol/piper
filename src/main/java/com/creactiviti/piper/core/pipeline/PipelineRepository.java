@@ -29,4 +29,6 @@ public interface PipelineRepository {
   
   List<Pipeline> findAll ();
 
+  default void create (Pipeline aPipeline) {}
+
 }
