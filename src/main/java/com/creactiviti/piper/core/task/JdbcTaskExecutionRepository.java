@@ -53,7 +53,7 @@ public class JdbcTaskExecutionRepository implements TaskExecutionRepository {
     String sql = "insert into task_execution " + 
                  "  (id,parent_id,job_id,serialized_execution,status,progress,create_time,priority,task_number) " + 
                  "values " + 
-                 "  (:id,:parentId,:jobId,(:serializedExecution)::jsonb,:status,:progress,:createTime,:priority,:taskNumber)";
+                 "  (:id,:parentId,:jobId,:serializedExecution,:status,:progress,:createTime,:priority,:taskNumber)";
     jdbc.update(sql, sqlParameterSource);
   }
   
@@ -71,7 +71,7 @@ public class JdbcTaskExecutionRepository implements TaskExecutionRepository {
     }
     SqlParameterSource sqlParameterSource = createSqlParameterSource(merged);
     String sql = "update task_execution set " + 
-                 "  serialized_execution=(:serializedExecution)::jsonb,status=:status,progress=:progress,start_time=:startTime,end_time=:endTime where id = :id ";
+                 "  serialized_execution=(:serializedExecution),status=:status,progress=:progress,start_time=:startTime,end_time=:endTime where id = :id ";
     jdbc.update(sql, sqlParameterSource);
     return merged;
   }

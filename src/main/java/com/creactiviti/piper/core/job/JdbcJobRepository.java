@@ -73,7 +73,7 @@ public class JdbcJobRepository implements JobRepository {
     Integer totalItems = jdbc.getJdbcOperations().queryForObject("select count(*) from job",Integer.class);
     int offset = (aPageNumber-1) * DEFAULT_PAGE_SIZE;
     int limit = DEFAULT_PAGE_SIZE;
-    List<JobSummary> items = jdbc.query(String.format("select * from job order by create_time desc offset %s limit %s",offset,limit),this::jobSummaryRowMappper);
+    List<JobSummary> items = jdbc.query(String.format("select * from job order by create_time desc limit %s, %s",offset,limit),this::jobSummaryRowMappper);
     ResultPage<JobSummary> resultPage = new ResultPage<>(JobSummary.class);
     resultPage.setItems(items);
     resultPage.setNumber(items.size()>0?aPageNumber:0);
@@ -85,14 +85,14 @@ public class JdbcJobRepository implements JobRepository {
   @Override
   public Job merge (Job aJob) {
     MapSqlParameterSource sqlParameterSource = createSqlParameterSource(aJob);
-    jdbc.update("update job set status=:status,start_time=:startTime,end_time=:endTime,current_task=:currentTask,pipeline_id=:pipelineId,label=:label,outputs=(:outputs)::jsonb where id = :id ", sqlParameterSource);
+    jdbc.update("update job set status=:status,start_time=:startTime,end_time=:endTime,current_task=:currentTask,pipeline_id=:pipelineId,label=:label,outputs=:outputs where id = :id ", sqlParameterSource);
     return aJob;
   }
 
   @Override
   public void create (Job aJob) {
     MapSqlParameterSource sqlParameterSource = createSqlParameterSource(aJob);
-    jdbc.update("insert into job (id,create_time,start_time,status,current_task,pipeline_id,label,priority,inputs,webhooks,outputs,parent_task_execution_id) values (:id,:createTime,:startTime,:status,:currentTask,:pipelineId,:label,:priority,(:inputs)::jsonb,(:webhooks)::jsonb,(:outputs)::jsonb,:parentTaskExecutionId)", sqlParameterSource);
+    jdbc.update("insert into job (id,create_time,start_time,status,current_task,pipeline_id,label,priority,inputs,webhooks,outputs,parent_task_execution_id) values (:id,:createTime,:startTime,:status,:currentTask,:pipelineId,:label,:priority,:inputs,:webhooks,:outputs,:parentTaskExecutionId)", sqlParameterSource);
   }
 
   private MapSqlParameterSource createSqlParameterSource(Job aJob) {
@@ -174,12 +174,12 @@ public class JdbcJobRepository implements JobRepository {
 
   @Override
   public int countCompletedJobsToday() {
-    return jdbc.queryForObject("select count(*) from job where status='COMPLETED' and end_time >= current_date", Map.of(), Integer.class);
+    return jdbc.queryForObject("select count(*) from job where status='COMPLETED' and end_time >= CURDATE()", Map.of(), Integer.class);
   }
 
   @Override
   public int countCompletedJobsYesterday() {
-    return jdbc.queryForObject("select count(*) from job where status='COMPLETED' and end_time >= current_date-1 and end_time < current_date", Map.of(), Integer.class);
+    return jdbc.queryForObject("select count(*) from job where status='COMPLETED' and end_time >= CURDATE()-1 and end_time < current_date", Map.of(), Integer.class);
   }
 
 
