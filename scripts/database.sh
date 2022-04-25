@@ -1,10 +1,9 @@
 #!/bin/bash
 
-docker rm -f postgres
+docker rm -f mysql
 
-docker run --name postgres \
-  -e POSTGRES_DB=piper \
-  -e POSTGRES_USER=piper \
-  -e POSTGRES_PASSWORD=piper \
-  -p 5432:5432 \
-  -d postgres:11
+docker run --name mysql \
+  -e MYSQL_DATABASE=db_example \
+  -e MYSQL_ROOT_PASSWORD=admin123 \
+  -p 3306:3306 \
+  -d mysql:8
