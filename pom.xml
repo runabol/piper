@@ -139,6 +139,12 @@
 		    <artifactId>java-jq</artifactId>
 		    <version>1.1.0</version>
 		</dependency>
+
+		<!-- quartz -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-quartz</artifactId>
+		</dependency>
 		
 	</dependencies>
 	
