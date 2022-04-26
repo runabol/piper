@@ -17,6 +17,7 @@ package com.creactiviti.piper.config;
 
 import java.util.List;
 
+import com.creactiviti.piper.core.pipeline.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -24,20 +25,24 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
-
-import com.creactiviti.piper.core.pipeline.GitPipelineRepository;
-import com.creactiviti.piper.core.pipeline.PipelineRepository;
-import com.creactiviti.piper.core.pipeline.PipelineRepositoryChain;
-import com.creactiviti.piper.core.pipeline.ResourceBasedPipelineRepository;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @Configuration
 @EnableConfigurationProperties(PiperProperties.class)
 public class PipelineRepositoryConfiguration {
 
   @Bean
-  @Primary
+//  @Primary
   PipelineRepositoryChain pipelineRepository (List<PipelineRepository> aRepositories) {
     return new PipelineRepositoryChain(aRepositories);
+  }
+
+  @Bean
+  @Primary
+  JdbcPipelineRepository jdbcPipelineRepository (NamedParameterJdbcTemplate aJdbcTemplate) {
+    JdbcPipelineRepository jdbcPipelineRepository = new JdbcPipelineRepository();
+    jdbcPipelineRepository.setJdbc(aJdbcTemplate);
+    return jdbcPipelineRepository;
   }
      
   @Bean

@@ -49,13 +49,7 @@ public class JdbcPersistenceConfiguration {
     return jdbcJobRepository;
   }
 
-  @Bean
-  JdbcPipelineRepository jdbcPipelineRepository (NamedParameterJdbcTemplate aJdbcTemplate) {
-    JdbcPipelineRepository jdbcPipelineRepository = new JdbcPipelineRepository();
-    jdbcPipelineRepository.setJdbc(aJdbcTemplate);
-    return jdbcPipelineRepository;
-  }
-  
+
   @Bean
   JdbcContextRepository jdbcContextRepository (JdbcTemplate aJdbcTemplate, ObjectMapper aObjectMapper) {
     JdbcContextRepository repo = new JdbcContextRepository();

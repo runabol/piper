@@ -16,11 +16,16 @@
 package com.creactiviti.piper.web;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.creactiviti.piper.core.Coordinator;
+import com.creactiviti.piper.core.pipeline.PipelineService;
+import com.creactiviti.piper.core.pipeline.SimplePipeline;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.HandlerMapping;
 
@@ -32,9 +37,16 @@ import com.creactiviti.piper.core.pipeline.PipelineRepository;
 @ConditionalOnCoordinator
 public class PipelinesController {
 
-  @Autowired
-  private PipelineRepository pipelineRepository;
-  
+  private final PipelineRepository pipelineRepository;
+  private final PipelineService pipelineService;
+  private final Coordinator coordinator;
+
+  public PipelinesController(PipelineRepository pipelineRepository, PipelineService pipelineService, Coordinator coordinator) {
+    this.pipelineRepository = pipelineRepository;
+    this.pipelineService = pipelineService;
+    this.coordinator = coordinator;
+  }
+
   @GetMapping("/pipelines")
   public List<Pipeline> list () {
     return pipelineRepository.findAll();
@@ -45,6 +57,11 @@ public class PipelinesController {
     String path = (String) aRequest.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
     String pipelineId = path.replaceFirst("/pipelines/", "");
     return pipelineRepository.findOne(pipelineId);
+  }
+
+  @PostMapping("/pipelines")
+  public void create (@RequestBody Map<String, Object> aSource) {
+    pipelineService.save(new SimplePipeline(aSource));
   }
   
 }
