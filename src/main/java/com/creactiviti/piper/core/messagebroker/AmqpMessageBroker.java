@@ -15,6 +15,8 @@
  */
 package com.creactiviti.piper.core.messagebroker;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.util.Assert;
 
@@ -23,10 +25,13 @@ import com.creactiviti.piper.core.error.Retryable;
 
 public class AmqpMessageBroker implements MessageBroker {
 
+  private final Logger logger = LoggerFactory.getLogger(getClass());
+
   private AmqpTemplate amqpTemplate;
 
   @Override
   public void send (String aRoutingKey, Object aMessage) {
+    logger.debug("send. aRoutingKey: " + aRoutingKey + ", aMessage: " + aMessage);
     Assert.notNull(aRoutingKey,"routing key can't be null");
     amqpTemplate.convertAndSend(determineExchange(aRoutingKey),determineRoutingKey(aRoutingKey),aMessage, (m) -> {
       if(aMessage instanceof Retryable) {
