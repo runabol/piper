@@ -1,12 +1,16 @@
+# Project Status
+
+I no longer maintain this project. You might want to check out [tork](https://github.com/runabol/tork) as an alternative solution.
+
 # Introduction
 
-Piper is an open-source, distributed workflow engine built on Spring Boot, designed to be dead simple. 
+Piper is an open-source, distributed workflow engine built on Spring Boot, designed to be dead simple.
 
-Piper can run on one or a thousand machines depending on your scaling needs. 
+Piper can run on one or a thousand machines depending on your scaling needs.
 
 In Piper, work to be done is defined as a set of tasks called a Pipeline. Pipelines can be sourced from many locations but typically they live on a Git repository where they can be versioned and tracked.
 
-Piper was originally built to support the need to transcode massive amounts of video in parallel. Since transcoding video is a CPU and time instensive process I had to scale horizontally. Moreover, I needed a way to monitor these long running jobs, auto-retry them and otherwise control their execution. 
+Piper was originally built to support the need to transcode massive amounts of video in parallel. Since transcoding video is a CPU and time instensive process I had to scale horizontally. Moreover, I needed a way to monitor these long running jobs, auto-retry them and otherwise control their execution.
 
 # Tasks
 
@@ -23,19 +27,18 @@ For example here's the `RandomInt` `TaskHandler` implementation:
       int endInclusive = aTask.getInteger("endInclusive", 100);
       return RandomUtils.nextInt(startInclusive, endInclusive);
     }
-    
+
   }
 ```
 
-While it doesn't do much beyond generating a random integer, it does  demonstrate how a `TaskHandler` works. a `Task` instance is passed as  an argument to 
+While it doesn't do much beyond generating a random integer, it does demonstrate how a `TaskHandler` works. a `Task` instance is passed as an argument to
 the `TaskHandler` which contains all the Key-Value pairs of that task.
 
 The `TaskHandler` is then responsible for executing the task using this input and optionally returning an output which can be used by other pipeline tasks downstream.
 
-
 # Pipelines
 
-Piper pipelines are authored in YAML, a JSON superset. 
+Piper pipelines are authored in YAML, a JSON superset.
 
 Here is an example of a basic pipeline definition.
 
@@ -47,22 +50,22 @@ inputs:                --+
     label: Your Name     | - This defines the inputs
     type: string         |   expected by the pipeline
     required: true     --+
-    
+
 outputs:                 --+
   - name: myMagicNumber    | - You can output any of the job's
     value: ${randomNumber} |   variable as the job's output.
-                         --+   
-tasks: 
+                         --+
+tasks:
   - name: randomNumber               --+
     label: Generate a random number    |
     type: random/int                   | - This is a task
     startInclusive: 0                  |
     endInclusive: 10000              --+
-                            
-  - label: Print a greeting 
-    type: io/print             
-    text: Hello ${yourName} 
-                           
+
+  - label: Print a greeting
+    type: io/print
+    text: Hello ${yourName}
+
   - label: Sleep a little
     type: time/sleep        --+
     millis: ${randomNumber}   | - tasks may refer to the result of a previous task
@@ -71,7 +74,6 @@ tasks:
     type: io/print
     text: Goodbye ${yourName}
 ```
-
 
 So tasks are nothing but a collection of key-value pairs. At a minimum each task contains a `type` property which maps to an appropriate `TaskHandler` that needs to execute it.
 
@@ -89,22 +91,22 @@ The `output` property can be used to modify the output of the task in some fashi
 
 All other key-value pairs are task-specific and may or may not be required depending on the specific task.
 
-
 # Architecture
 
-Piper is composed of the following components: 
+Piper is composed of the following components:
 
-**Coordinator**: The Coordinator is the like the central nervous system of Piper. It keeps tracks of jobs, dishes out work to be done by Worker machines, keeps track of failures, retries and other job-level details. Unlike Worker nodes, it does not execute actual work but delegate all task activities to Worker instances. 
+**Coordinator**: The Coordinator is the like the central nervous system of Piper. It keeps tracks of jobs, dishes out work to be done by Worker machines, keeps track of failures, retries and other job-level details. Unlike Worker nodes, it does not execute actual work but delegate all task activities to Worker instances.
 
-**Worker**: Workers are the work horses of Piper. These are the Piper nodes that actually execute tasks requested to be done by the Coordinator machine. Unlike the Coordinator, the workers are stateless, which by that is meant that they do not interact with a database or keep any state in memory about the job or anything else. This makes it very easy to scale up and down the number of workers in the system without fear of losing application state. 
+**Worker**: Workers are the work horses of Piper. These are the Piper nodes that actually execute tasks requested to be done by the Coordinator machine. Unlike the Coordinator, the workers are stateless, which by that is meant that they do not interact with a database or keep any state in memory about the job or anything else. This makes it very easy to scale up and down the number of workers in the system without fear of losing application state.
 
-**Message Broker**:  All communication between the Coordinator and the Worker nodes is done through a messaging broker. This has many advantages: 
-  1. if all workers are busy the message broker will simply queue the message until they can handle it. 
-  2. when workers boot up they subscribe to the appropriate queues for the type of work they are intended to handle 
-  3. if a worker crashes the task will automatically get re-queued to be handle by another worker.
-  4. Last but not least, workers and `TaskHandler` implementations can be written in any language since they decoupled completely through message passing.  
+**Message Broker**: All communication between the Coordinator and the Worker nodes is done through a messaging broker. This has many advantages:
 
-**Database**: This piece holds all the jobs state in the system, what tasks completed, failed etc. It is used by the Coordinator as its "mind". 
+1. if all workers are busy the message broker will simply queue the message until they can handle it.
+2. when workers boot up they subscribe to the appropriate queues for the type of work they are intended to handle
+3. if a worker crashes the task will automatically get re-queued to be handle by another worker.
+4. Last but not least, workers and `TaskHandler` implementations can be written in any language since they decoupled completely through message passing.
+
+**Database**: This piece holds all the jobs state in the system, what tasks completed, failed etc. It is used by the Coordinator as its "mind".
 
 **Pipeline Repository**: The component where pipelines (workflows) are created, edited etc. by pipeline engineers.
 
@@ -116,13 +118,12 @@ Piper support the following constructs to control the flow of execution:
 
 Applies the function `iteratee` to each item in `list`, in parallel. Note, that since this function applies iteratee to each item in parallel, there is no guarantee that the `iteratee` functions will complete in order.
 
-
 ```
 - type: each
   list: [1000,2000,3000]
   iteratee:
-    type: time/sleep         
-    millis: ${item} 
+    type: time/sleep
+    millis: ${item}
 ```
 
 This will generate three parallel tasks, one for each items in the list, which will `sleep` for 1, 2 and 3 seconds respectively.
@@ -133,10 +134,10 @@ Run the `tasks` collection of functions in parallel, without waiting until the p
 
 ```
 - type: parallel
-  tasks: 
+  tasks:
     - type: io/print
       text: hello
-        
+
     - type: io/print
       text: goodbye
 ```
@@ -147,24 +148,24 @@ Executes each branch in the `branches` as a seperate and isolated sub-flow. Bran
 
 ```
 - type: fork
-  branches: 
+  branches:
      - - name: randomNumber                 <-- branch 1 start here
          label: Generate a random number
          type: random/int
          startInclusive: 0
          endInclusive: 5000
-           
+
        - type: time/sleep
          millis: ${randomNumber}
-           
+
      - - name: randomNumber                 <-- branch 2 start here
          label: Generate a random number
          type: random/int
          startInclusive: 0
          endInclusive: 5000
-           
+
        - type: time/sleep
-         millis: ${randomNumber}      
+         millis: ${randomNumber}
 ```
 
 ## Switch
@@ -174,13 +175,13 @@ Executes one and only one branch of execution based on the `expression` value.
 ```
 - type: switch
   expression: ${selector} <-- determines which case will be executed
-  cases: 
+  cases:
      - key: hello                 <-- case 1 start here
-       tasks: 
+       tasks:
          - type: io/print
            text: hello world
      - key: bye                   <-- case 2 start here
-       tasks: 
+       tasks:
          - type: io/print
            text: goodbye world
   default:
@@ -194,34 +195,33 @@ Executes one and only one branch of execution based on the `expression` value.
 Produces a new collection of values by mapping each value in `list` through the `iteratee` function. The `iteratee` is called with an item from `list` in parallel. When the `iteratee` is finished executing on all items the `map` task will return a list of execution results in an order which corresponds to the order of the source `list`.
 
 ```
-- name: fileSizes 
+- name: fileSizes
   type: map
   list: ["/path/to/file1.txt","/path/to/file2.txt","/path/to/file3.txt"]
   iteratee:
-    type: io/filesize         
+    type: io/filesize
     file: ${item}
 ```
 
 ## Subflow
 
-Starts a new job as a sub-flow of the current job. Output of the sub-flow job is the output of the task. 
+Starts a new job as a sub-flow of the current job. Output of the sub-flow job is the output of the task.
 
-```    
+```
 - type: subflow
   pipelineId: copy_files
-  inputs: 
+  inputs:
     - source: /path/to/source/dir
     - destination: /path/to/destination/dir
 ```
 
 ## Pre/Post/Finalize
 
-Each task can define a set of tasks that will be executed prior to its execution (`pre`), 
-after its succesful execution (`post`) and at the end of the task's lifecycle regardless of the outcome of the task's 
-execution (`finalize`). 
+Each task can define a set of tasks that will be executed prior to its execution (`pre`),
+after its succesful execution (`post`) and at the end of the task's lifecycle regardless of the outcome of the task's
+execution (`finalize`).
 
 `pre/post/finalize` tasks always execute on the same node which will execute the task itself and are considered to be an atomic part of the task. That is, failure in any of the `pre/post/finalize` tasks is considered a failure of the entire task.
-
 
 ```
   - label: 240p
@@ -239,18 +239,17 @@ execution (`finalize`).
         value: "${temptDir()}/${uuid()}"
       - type: io/mkdir
         path: "${workDir}"
-    post: 
+    post:
       - type: s3/putObject
         uri: s3://my-bucket/240p.mp4
     finalize:
       - type: io/rm
         path: ${workDir}
-```   
-
+```
 
 ## Webhooks
 
-Piper provide the ability to register HTTP webhooks to receieve notifications for certain events. 
+Piper provide the ability to register HTTP webhooks to receieve notifications for certain events.
 
 Registering webhooks is done when creating the job. E.g.:
 
@@ -261,9 +260,9 @@ Registering webhooks is done when creating the job. E.g.:
     ...
   },
   "webhooks": [{
-    "type": "job.status", 
+    "type": "job.status",
     "url": "http://example.com",
-    "retry": {   # optional configuration for retry attempts in case of webhook failure 
+    "retry": {   # optional configuration for retry attempts in case of webhook failure
       "initialInterval":"3s" # default 2s
       "maxInterval":"10s" # default 30s
       "maxAttempts": 4 # default 5
@@ -273,12 +272,11 @@ Registering webhooks is done when creating the job. E.g.:
 }
 ```
 
-`type` is the type of event you would like to be notified on and `url` is the URL that Piper would be calling when the event occurs. 
+`type` is the type of event you would like to be notified on and `url` is the URL that Piper would be calling when the event occurs.
 
 Supported types are `job.status` and `task.started`.
 
 # Task Handlers
-
 
 [core/var](src/main/java/com/creactiviti/piper/taskhandler/core/Var.java)
 
@@ -412,7 +410,6 @@ Supported types are `job.status` and `task.started`.
     - /path/to/chunk_004.mp4
   output: /path/to/stitched/file.mp4
 ```
-
 
 [random/int](src/main/java/com/creactiviti/piper/taskhandler/random/RandomInt.java)
 
@@ -660,7 +657,7 @@ Start a local RabbitMQ instance:
 
 ```
 ./scripts/rabbit.sh
-``` 
+```
 
 Build Piper:
 
@@ -700,7 +697,7 @@ curl -s \
      http://localhost:8080/jobs
 ```
 
-Which should give you something like this as a response: 
+Which should give you something like this as a response:
 
 ```
 {
@@ -718,11 +715,9 @@ Which should give you something like this as a response:
 }
 ```
 
-
-If you'll refresh your browser page now you should see the executing job. 
+If you'll refresh your browser page now you should see the executing job.
 
 In case you are wondering, the `demo/hello` pipeline is located at <a href="https://github.com/creactiviti/piper/blob/master/piper-core/src/main/resources/pipelines/demo/hello.yaml" target="_blank">here</a>
-
 
 ## Writing your first pipeline
 
@@ -738,16 +733,16 @@ inputs:
     type: string
     required: true
 
-tasks:      
+tasks:
   - label: Print a greeting
     type: io/print
     text: Hello ${name}
-       
+
   - label: Print a farewell
     type: io/print
     text: Goodbye ${name}
-    
-```  
+
+```
 
 Execute your workflow
 
@@ -759,27 +754,27 @@ You can make changes to your pipeline and execute the `./scripts/clear.sh` to cl
 
 ## Scaling Piper
 
-Depending on your workload you will probably exhaust the ability to run Piper on a single node fairly quickly. Good, because that's where the fun begins. 
+Depending on your workload you will probably exhaust the ability to run Piper on a single node fairly quickly. Good, because that's where the fun begins.
 
-Start RabbitMQ: 
+Start RabbitMQ:
 
 ```
 ./scripts/rabbit.sh
 ```
 
-Start the Coordinator: 
+Start the Coordinator:
 
 ```
-./scripts/coordinator.sh 
+./scripts/coordinator.sh
 ```
 
 From another terminal window, start a Worker:
 
 ```
-./scripts/worker.sh 
+./scripts/worker.sh
 ```
 
-Execute the demo pipeline: 
+Execute the demo pipeline:
 
 ```
 curl -s \
@@ -789,11 +784,9 @@ curl -s \
      http://localhost:8080/jobs
 ```
 
-
 ## Transcoding a Video
 
 Note: You must have [ffmpeg](https://ffmpeg.org) installed on your worker machine to get this demo to work
-
 
 Transcode a source video to an SD (480p) output:
 
@@ -829,7 +822,7 @@ Rather than storing the pipelines in your local file system you can use Git to s
 
 To enable Git as a pipeline repository set the `piper.pipeline-repository.git.enabled` flag to `true` in `./scripts/development.sh` and restart Piper. By default, Piper will use the demo repository [piper-pipelines](https://github.com/creactiviti/piper-pipelines).
 
-You can change it by using the `piper.pipeline-repository.git.url` and `piper.pipeline-repository.git.search-paths` configuration parameters.  
+You can change it by using the `piper.pipeline-repository.git.url` and `piper.pipeline-repository.git.search-paths` configuration parameters.
 
 # Configuration
 
@@ -840,13 +833,13 @@ piper.message-broker.provider=jms
 piper.coordinator.enabled=true
 # turn on the Worker process and listen to tasks.
 piper.worker.enabled=true
-# when worker is enabled, subscribe to the default "tasks" queue with 5 concurrent consumers. 
+# when worker is enabled, subscribe to the default "tasks" queue with 5 concurrent consumers.
 # you may also route pipeline tasks to other arbitrarilty named task queues by specifying the "node"
-# property on any give task. 
+# property on any give task.
 # E.g. node: captions will route to the captions queue which a worker would subscribe to with piper.worker.subscriptions.captions
 # note: queue must be created before tasks can be routed to it. Piper will create the queue if it isn't already there when the worker
 # bootstraps.
-piper.worker.subscriptions.tasks=5 
+piper.worker.subscriptions.tasks=5
 # enable a git-based pipeline repository
 piper.pipeline-repository.git.enabled=true
 # The URL to the Git Repo
@@ -869,6 +862,7 @@ spring.datasource.initialization-mode=never # change to always when bootstrappin
 ```
 
 # Docker
+
 [creactiviti/piper](https://hub.docker.com/r/creactiviti/piper)
 Hello World in Docker:
 
@@ -878,12 +872,15 @@ Start a local Postgres database:
 ./scripts/database.sh
 ```
 
-Create an empty directory: 
+Create an empty directory:
+
 ```
 mkdir pipelines
 cd pipelines
 ```
-Create a simple pipeline file --  `hello.yaml` -- and paste the following to it: 
+
+Create a simple pipeline file -- `hello.yaml` -- and paste the following to it:
+
 ```
 label: Hello World
 inputs:
@@ -891,11 +888,12 @@ inputs:
     label: Your Name
     type: core/var
     required: true
-tasks:      
+tasks:
   - label: Print Hello Message
     type: io/print
     text: "Hello ${name}!"
 ```
+
 ```
 docker run \
   --name=piper \
@@ -913,6 +911,7 @@ docker run \
   -p 8080:8080 \
   creactiviti/piper
 ```
+
 ```
 curl -s \
      -X POST \
@@ -920,5 +919,7 @@ curl -s \
      -d '{"pipelineId":"hello","inputs":{"name":"Joe Jones"}}' \
      http://localhost:8080/jobs
 ```
+
 # License
-Piper is released under version 2.0 of the [Apache License](LICENSE). 
+
+Piper is released under version 2.0 of the [Apache License](LICENSE).
